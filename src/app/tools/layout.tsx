@@ -1,0 +1,575 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  X,
+  CheckCircle2,
+  Circle,
+  ExternalLink,
+  ChevronDown,
+  ChevronRight,
+} from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
+import S4CLogo from '@/components/S4CLogo'
+import DarkModeToggle from '@/components/tools/DarkModeToggle'
+import { TOOLS_BY_STAGE, type ToolDef } from '@/lib/tools-data'
+import { getProgress } from '@/lib/progress'
+
+const STAGE_CONFIG = {
+  1: { label: 'Pre-incubación', color: '#7C3AED', bg: 'rgba(124,58,237,0.07)' },
+  2: { label: 'Incubación', color: '#059669', bg: 'rgba(5,150,105,0.07)' },
+  3: { label: 'Aceleración', color: '#D97706', bg: 'rgba(217,119,6,0.07)' },
+} as const
+
+function StageSidebarSection({
+  stageNum,
+  tools,
+  completedIds,
+  currentPath,
+}: {
+  stageNum: 1 | 2 | 3
+  tools: ToolDef[]
+  completedIds: Set<string>
+  currentPath: string
+}) {
+  const cfg = STAGE_CONFIG[stageNum]
+  const [open, setOpen] = useState(true)
+  const completedCount = tools.filter((t) => completedIds.has(t.id)).length
+
+  return (
+    <div style={{ marginBottom: '0.25rem' }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.5rem 0.75rem',
+          borderRadius: 8,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          marginBottom: '0.25rem',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: cfg.color,
+              flexShrink: 0,
+            }}
+          />
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              color: cfg.color,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            {cfg.label}
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.625rem',
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            {completedCount}/{tools.length}
+          </span>
+          {open ? <ChevronDown size={12} color="#9CA3AF" /> : <ChevronRight size={12} color="#9CA3AF" />}
+        </div>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2, paddingLeft: '0.375rem' }}>
+              {tools.map((tool) => {
+                const active = currentPath === `/tools/${tool.id}`
+                const done = completedIds.has(tool.id)
+                return (
+                  <Link
+                    key={tool.id}
+                    href={`/tools/${tool.id}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.4375rem 0.625rem',
+                      borderRadius: 8,
+                      background: active ? cfg.bg : 'transparent',
+                      border: active ? `1px solid ${cfg.color}22` : '1px solid transparent',
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) e.currentTarget.style.background = 'transparent'
+                    }}
+                  >
+                    {done ? (
+                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                    ) : (
+                      <Circle
+                        size={13}
+                        color={active ? cfg.color : '#D1D5DB'}
+                        style={{ flexShrink: 0 }}
+                      />
+                    )}
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        fontWeight: active ? 600 : 400,
+                        color: active
+                          ? cfg.color
+                          : done
+                          ? 'var(--color-text-secondary)'
+                          : 'var(--color-text-secondary)',
+                        lineHeight: 1.3,
+                        flex: 1,
+                      }}
+                    >
+                      {tool.shortName}
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+export default function ToolsLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading, logout } = useAuth()
+  const router = useRouter()
+  const pathname = usePathname()
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/')
+    }
+  }, [user, loading, router])
+
+  // Apply dark mode on mount, clean up on unmount (so landing stays light)
+  useEffect(() => {
+    const saved = localStorage.getItem('s4c_dark_mode')
+    if (saved === 'true') {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    }
+    return () => {
+      document.documentElement.removeAttribute('data-theme')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      const progress = getProgress(user.id)
+      setCompletedIds(new Set(Object.entries(progress).filter(([, v]) => v.completed).map(([k]) => k)))
+    }
+  }, [user, pathname])
+
+  if (loading || !user) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--color-bg-primary)',
+        }}
+      >
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            border: '3px solid #E5E7EB',
+            borderTopColor: '#059669',
+            animation: 'spin 0.8s linear infinite',
+          }}
+        />
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      </div>
+    )
+  }
+
+  const totalTools = Object.values(TOOLS_BY_STAGE).flat().length
+  const completedCount = completedIds.size
+
+  const sidebarContent = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        padding: '1.25rem 0.875rem',
+        overflowY: 'auto',
+      }}
+    >
+      {/* Logo */}
+      <Link
+        href="/"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          textDecoration: 'none',
+          marginBottom: '1.5rem',
+          padding: '0 0.375rem',
+        }}
+      >
+        <S4CLogo size={30} />
+        <span
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 700,
+            fontSize: '0.9rem',
+            color: 'var(--color-text-primary)',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          Startups<span style={{ color: '#059669' }}>4</span>Climate
+        </span>
+      </Link>
+
+      {/* User info */}
+      <div
+        style={{
+          padding: '0.875rem',
+          borderRadius: 12,
+          background: 'linear-gradient(135deg, rgba(5,150,105,0.06), rgba(5,150,105,0.02))',
+          border: '1px solid rgba(5,150,105,0.12)',
+          marginBottom: '1.25rem',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            fontWeight: 600,
+            color: 'var(--color-text-primary)',
+            marginBottom: '0.125rem',
+          }}
+        >
+          {user.name}
+        </div>
+        <div
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.75rem',
+            color: 'var(--color-text-secondary)',
+            marginBottom: '0.625rem',
+          }}
+        >
+          {user.startup}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '0.375rem',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.625rem',
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Progreso general
+          </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              color: '#059669',
+            }}
+          >
+            {completedCount}/{totalTools}
+          </span>
+        </div>
+        <div style={{ height: 4, borderRadius: 2, background: 'rgba(5,150,105,0.12)' }}>
+          <div
+            style={{
+              height: '100%',
+              borderRadius: 2,
+              background: '#059669',
+              width: `${(completedCount / totalTools) * 100}%`,
+              transition: 'width 0.6s ease',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Dashboard link */}
+      <Link
+        href="/tools"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.5rem 0.75rem',
+          borderRadius: 8,
+          background: pathname === '/tools' ? 'rgba(5,150,105,0.07)' : 'transparent',
+          border: pathname === '/tools' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+          textDecoration: 'none',
+          marginBottom: '0.75rem',
+          transition: 'all 0.15s',
+        }}
+        onMouseEnter={(e) => {
+          if (pathname !== '/tools') e.currentTarget.style.background = 'var(--color-bg-muted)'
+        }}
+        onMouseLeave={(e) => {
+          if (pathname !== '/tools') e.currentTarget.style.background = 'transparent'
+        }}
+      >
+        <LayoutDashboard
+          size={15}
+          color={pathname === '/tools' ? '#059669' : '#9CA3AF'}
+        />
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            fontWeight: pathname === '/tools' ? 600 : 400,
+            color: pathname === '/tools' ? '#059669' : 'var(--color-text-secondary)',
+          }}
+        >
+          Dashboard
+        </span>
+      </Link>
+
+      <div
+        style={{
+          height: 1,
+          background: 'var(--color-border)',
+          margin: '0 0.375rem 0.75rem',
+        }}
+      />
+
+      {/* Tools by stage */}
+      {([1, 2, 3] as const).map((stage) => (
+        <StageSidebarSection
+          key={stage}
+          stageNum={stage}
+          tools={TOOLS_BY_STAGE[stage]}
+          completedIds={completedIds}
+          currentPath={pathname}
+        />
+      ))}
+
+      {/* Bottom actions */}
+      <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
+        <div style={{ height: 1, background: 'var(--color-border)', margin: '0 0.375rem 1rem' }} />
+        <DarkModeToggle />
+        <Link
+          href="/"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            textDecoration: 'none',
+            color: 'var(--color-text-muted)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            transition: 'color 0.15s',
+            marginBottom: '0.25rem',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+        >
+          <ExternalLink size={13} />
+          Volver al inicio
+        </Link>
+        <button
+          onClick={logout}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--color-text-muted)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            width: '100%',
+            textAlign: 'left',
+            transition: 'color 0.15s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#DC2626')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+        >
+          <LogOut size={13} />
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  )
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        background: 'var(--color-bg-primary)',
+      }}
+    >
+      {/* Desktop sidebar */}
+      <aside
+        className="hidden lg:flex"
+        style={{
+          width: 240,
+          flexShrink: 0,
+          background: 'var(--color-bg-card)',
+          borderRight: '1px solid var(--color-border)',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          zIndex: 40,
+          flexDirection: 'column',
+        }}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile header */}
+      <header
+        className="lg:hidden"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          height: 56,
+          background: 'var(--color-bg-card)',
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid var(--color-border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 1rem',
+        }}
+      >
+        <Link
+          href="/tools"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            textDecoration: 'none',
+          }}
+        >
+          <S4CLogo size={28} />
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>
+            Plataforma
+          </span>
+        </Link>
+        <button
+          onClick={() => setMobileOpen((o) => !o)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--color-text-primary)',
+            display: 'flex',
+          }}
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </header>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 55,
+                background: 'rgba(0,0,0,0.3)',
+              }}
+            />
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.28, ease: 'easeInOut' }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: 260,
+                zIndex: 60,
+                background: 'var(--color-bg-card)',
+                borderRight: '1px solid var(--color-border)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {sidebarContent}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main content */}
+      <main
+        style={{
+          flex: 1,
+          marginLeft: 0,
+          paddingTop: 0,
+          minHeight: '100vh',
+        }}
+        className="lg:ml-[240px] pt-14 lg:pt-0"
+      >
+        {children}
+      </main>
+    </div>
+  )
+}

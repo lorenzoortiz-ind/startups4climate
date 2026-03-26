@@ -36,6 +36,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude / agents
+.claude/
+.agents/
+
+# google docs / misc files in root
+*.gdoc
+*.pdf
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

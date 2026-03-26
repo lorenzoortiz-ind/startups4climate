@@ -10,9 +10,6 @@ import {
   CheckCircle2,
   ArrowRight,
   CalendarCheck,
-  Download,
-  Users,
-  Building2,
   BarChart3,
   Search,
   LineChart,
@@ -164,50 +161,6 @@ const investorServices: InvestorService[] = [
   },
 ]
 
-// ──── Tiers overview (mismo que landing) ────
-const tiers = [
-  {
-    icon: Download,
-    level: 'Nivel 1',
-    title: 'Productos Digitales',
-    ticket: 'Low Ticket',
-    color: '#059669',
-    items: [
-      'Modelos financieros avanzados para climate tech',
-      'Kits legales para deep tech',
-      'Base de datos premium: +500 VCs climáticos',
-      'Plantillas TEA y análisis de ciclo de vida',
-    ],
-  },
-  {
-    icon: Users,
-    level: 'Nivel 2',
-    title: 'Sesiones',
-    ticket: 'Mid Ticket',
-    color: '#0891B2',
-    featured: true,
-    items: [
-      'Stress-test del pitch deck',
-      'Pre-evaluación de impacto climático',
-      'Taller estratégico de pilotos B2B y offtakes',
-      'Roadmap de blended finance',
-    ],
-  },
-  {
-    icon: Building2,
-    level: 'Nivel 3',
-    title: 'Consultoría Experta',
-    ticket: 'High Ticket',
-    color: '#D97706',
-    items: [
-      'CFO as a service para blended finance',
-      'Corporate matchmaking',
-      'Gestión integral del data room',
-      'Diseño de proyectos para fondos internacionales',
-    ],
-  },
-]
-
 function ServiceCard({ service, index, accentColor }: { service: Service | InvestorService; index: number; accentColor: string }) {
   const Icon = service.icon
   return (
@@ -313,82 +266,17 @@ export default function ServiciosPage() {
                 fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.025em',
                 color: 'var(--color-text-primary)', marginBottom: '1.25rem',
               }}>
-                Acompañamiento experto para cada etapa del{' '}
-                <span style={{ color: '#059669' }}>climate journey</span>
+                Servicios profesionales para{' '}
+                <span style={{ color: '#059669' }}>climate tech</span>
               </h1>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '1.125rem', lineHeight: 1.7,
                 color: 'var(--color-text-secondary)', maxWidth: 600, margin: '0 auto',
               }}>
-                Consultoría especializada para fundadores e inversores de climate tech en Latinoamérica.
-                Desde productos digitales hasta advisory de alto nivel.
+                Servicios profesionales de consultoría, sesiones estratégicas y advisory
+                para fundadores e inversores de climate tech en Latinoamérica.
               </p>
             </motion.div>
-          </div>
-        </section>
-
-        {/* Tiers overview */}
-        <section style={{ padding: '4rem 0', background: 'white' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-              {tiers.map((tier, i) => (
-                <motion.div
-                  key={tier.level}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                  style={{
-                    background: `${tier.color}08`,
-                    borderRadius: 20,
-                    border: tier.featured ? `2px solid ${tier.color}` : '1px solid var(--color-border)',
-                    padding: '2rem',
-                    position: 'relative',
-                    display: 'flex', flexDirection: 'column',
-                  }}
-                >
-                  {tier.featured && (
-                    <div style={{
-                      position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
-                      padding: '0.25rem 0.875rem', borderRadius: 9999, background: tier.color,
-                      fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', fontWeight: 700,
-                      color: 'white', letterSpacing: '0.05em',
-                    }}>
-                      MÁS POPULAR
-                    </div>
-                  )}
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 12,
-                    background: `${tier.color}12`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem',
-                  }}>
-                    <tier.icon size={22} strokeWidth={1.5} color={tier.color} />
-                  </div>
-                  <span style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', fontWeight: 600,
-                    color: tier.color, textTransform: 'uppercase', letterSpacing: '0.08em',
-                  }}>
-                    {tier.level} — {tier.ticket}
-                  </span>
-                  <h3 style={{
-                    fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700,
-                    color: 'var(--color-text-primary)', margin: '0.5rem 0 1.25rem',
-                  }}>
-                    {tier.title}
-                  </h3>
-                  <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
-                    {tier.items.map(item => (
-                      <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                        <ArrowRight size={14} color={tier.color} style={{ marginTop: 4, flexShrink: 0 }} />
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', lineHeight: 1.55, color: 'var(--color-text-secondary)' }}>
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </section>
 

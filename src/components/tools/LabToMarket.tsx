@@ -66,7 +66,7 @@ export default function LabToMarket({ userId, onComplete, onGenerateReport }: To
       ...prev,
       sections: typeof updater === 'function' ? updater(prev.sections) : updater,
     }))
-  const [openSections, setOpenSections] = useState(new Set(INITIAL_SECTIONS.map((s) => s.id)))
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set())
 
   const updateStatus = (secId: string, itemId: string, status: Status) =>
     setSections((s) => s.map((sec) => sec.id === secId ? { ...sec, items: sec.items.map((it) => it.id === itemId ? { ...it, status } : it) } : sec))

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { getToolData, saveToolData } from './progress'
+import { getToolData, saveToolData, syncToolDataToSupabase } from './progress'
 
 /**
  * Hook that loads tool data from localStorage on mount and auto-saves on change with debounce.
@@ -34,6 +34,8 @@ export function useToolState<T extends Record<string, unknown>>(
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
       saveToolData(userId, toolId, { values: stateRef.current })
+      // After localStorage save, sync to Supabase in background
+      syncToolDataToSupabase(userId, toolId, { values: stateRef.current }).catch(() => {})
     }, 500)
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)

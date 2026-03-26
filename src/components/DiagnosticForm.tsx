@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react'
-import { getSupabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 /* ─── Schema ─── */
 const contactSchema = z.object({
@@ -227,10 +227,9 @@ export default function DiagnosticForm() {
     if (step === 11 && !submitted) {
       const { total, matched } = calculateResults()
 
-      // Supabase insert
+      // Supabase inserts
       const insertLead = async () => {
         try {
-          const supabase = getSupabase()
           await supabase.from('diagnostic_leads').insert({
             nombre: answers.nombre,
             email: answers.email,
@@ -250,7 +249,40 @@ export default function DiagnosticForm() {
           // Continue to results even if DB fails
         }
       }
+
+      // Save to diagnostics table with dimension scores
+      const insertDiagnostic = async () => {
+        try {
+          const dimensionScores = {
+            trl: scores.P2 || 0,
+            crl: scores.P3 || 0,
+            impacto: scores.P5 || 0,
+            financiamiento: scores.P6 || 0,
+            equipo: scores.P8 || 0,
+            data_room: scores.P10 || 0,
+          }
+
+          // Look up user by email to get their UUID
+          const { data: userData } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', answers.email?.toLowerCase())
+            .single()
+
+          await supabase.from('diagnostics').insert({
+            user_id: userData?.id || null,
+            score: total,
+            profile: matched.tag,
+            answers,
+            dimension_scores: dimensionScores,
+          })
+        } catch {
+          // Continue to results even if DB fails
+        }
+      }
+
       insertLead()
+      insertDiagnostic()
 
       setTimeout(() => {
         setSubmitted(true)

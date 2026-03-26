@@ -69,7 +69,7 @@ const SECTIONS = [
 
 export default function ReverseDueDiligence({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [values, setValues] = useToolState(userId, 'reverse-dd', {} as Record<string, string>)
-  const [openSections, setOpenSections] = useState(new Set(SECTIONS.map((s) => s.id)))
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set())
 
   const allQuestions = SECTIONS.flatMap((s) => s.questions)
   const filled = allQuestions.filter((q) => values[q.id]?.trim()).length

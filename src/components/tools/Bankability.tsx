@@ -83,7 +83,7 @@ export default function Bankability({ userId, onComplete, onGenerateReport }: To
       ...prev,
       sections: typeof updater === 'function' ? updater(prev.sections) : updater,
     }))
-  const [openSections, setOpenSections] = useState(new Set(INITIAL_SECTIONS.map((s) => s.id)))
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set())
   const [openNotes, setOpenNotes] = useState<string | null>(null)
 
   const updateItem = (secId: string, itemId: string, field: keyof BankItem, value: string) =>

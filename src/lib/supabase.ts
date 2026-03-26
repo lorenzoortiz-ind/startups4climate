@@ -1,20 +1,9 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
-let _supabase: SupabaseClient | null = null
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export function getSupabase(): SupabaseClient {
-  if (!_supabase) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-    _supabase = createClient(supabaseUrl, supabaseAnonKey)
-  }
-  return _supabase
-}
-
-// Convenience export for client-side usage
-export const supabase = {
-  from: (table: string) => getSupabase().from(table),
-}
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export interface DiagnosticLead {
   source: 'startups4climate'

@@ -1,3 +1,5 @@
+import { supabase } from './supabase'
+
 const PROGRESS_KEY = 's4c_tool_progress'
 
 export interface ToolProgressEntry {
@@ -76,4 +78,71 @@ export function getToolData(userId: string, toolId: string): Record<string, unkn
 export function countCompleted(userId: string): number {
   const p = getProgress(userId)
   return Object.values(p).filter((e) => e.completed).length
+}
+
+/* ─── Supabase sync functions ─── */
+
+/**
+ * Upsert tool data to Supabase `tool_data` table.
+ * Fires in background — callers should `.catch(() => {})`.
+ */
+export async function syncToolDataToSupabase(
+  userId: string,
+  toolId: string,
+  data: Record<string, unknown>
+) {
+  const { error } = await supabase
+    .from('tool_data')
+    .upsert(
+      {
+        user_id: userId,
+        tool_id: toolId,
+        data,
+        last_saved: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,tool_id' }
+    )
+  if (error) throw error
+}
+
+/**
+ * Load tool data from Supabase `tool_data` table.
+ */
+export async function loadToolDataFromSupabase(
+  userId: string,
+  toolId: string
+): Promise<Record<string, unknown> | null> {
+  const { data, error } = await supabase
+    .from('tool_data')
+    .select('data')
+    .eq('user_id', userId)
+    .eq('tool_id', toolId)
+    .single()
+
+  if (error || !data) return null
+  return (data.data as Record<string, unknown>) ?? null
+}
+
+/**
+ * Sync completion status to Supabase `tool_data` table.
+ */
+export async function syncProgressToSupabase(
+  userId: string,
+  toolId: string,
+  completed: boolean,
+  reportGenerated: boolean
+) {
+  const { error } = await supabase
+    .from('tool_data')
+    .upsert(
+      {
+        user_id: userId,
+        tool_id: toolId,
+        completed,
+        report_generated: reportGenerated,
+        last_saved: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,tool_id' }
+    )
+  if (error) throw error
 }

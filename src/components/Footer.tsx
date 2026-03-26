@@ -9,9 +9,9 @@ const footerLinks = {
     { label: 'Herramientas gratuitas', href: '/tools', isPage: true },
   ],
   servicios: [
-    { label: 'Para fundadores', href: '/servicios#fundadores', isPage: true },
-    { label: 'Para inversores', href: '/servicios#inversores', isPage: true },
-    { label: 'Todos los servicios', href: '/servicios', isPage: true },
+    { label: 'Productos digitales', href: '/productos', isPage: true },
+    { label: 'Servicios para fundadores', href: '/servicios#fundadores', isPage: true },
+    { label: 'Servicios para inversores', href: '/servicios#inversores', isPage: true },
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },

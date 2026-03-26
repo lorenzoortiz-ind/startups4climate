@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export interface User {
   id: string
@@ -73,29 +74,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false)
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const users = getUsers()
-    const record = users[email.toLowerCase()]
-    if (!record) return { error: 'No encontramos una cuenta con ese email.' }
-    if (record.password !== btoa(password)) return { error: 'Contraseña incorrecta.' }
-    setUser(record.user)
-    localStorage.setItem(SESSION_KEY, record.user.id)
-    return {}
-  }, [])
-
   const register = useCallback(
     async (email: string, password: string, name: string, startup: string) => {
       const users = getUsers()
       if (users[email.toLowerCase()]) return { error: 'Ya existe una cuenta con ese email.' }
-      const newUser: User = {
-        id: crypto.randomUUID(),
-        name,
-        email: email.toLowerCase(),
-        startup,
-        stage: null,
-        diagnosticScore: null,
-        createdAt: new Date().toISOString(),
+
+      let newUser: User
+
+      try {
+        // Try to insert into Supabase first to get a UUID
+        const { data, error } = await supabase
+          .from('users')
+          .insert({
+            name,
+            email: email.toLowerCase(),
+            startup,
+          })
+          .select()
+          .single()
+
+        if (error) throw error
+
+        newUser = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          startup: data.startup,
+          stage: data.stage || null,
+          diagnosticScore: data.diagnostic_score || null,
+          createdAt: data.created_at || new Date().toISOString(),
+        }
+      } catch {
+        // Fallback: create user locally if Supabase is unreachable
+        newUser = {
+          id: crypto.randomUUID(),
+          name,
+          email: email.toLowerCase(),
+          startup,
+          stage: null,
+          diagnosticScore: null,
+          createdAt: new Date().toISOString(),
+        }
       }
+
+      // Always store in localStorage as cache/fallback
       users[email.toLowerCase()] = { password: btoa(password), user: newUser }
       saveUsers(users)
       setUser(newUser)
@@ -104,6 +126,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     []
   )
+
+  const login = useCallback(async (email: string, password: string) => {
+    const users = getUsers()
+    const localRecord = users[email.toLowerCase()]
+
+    try {
+      // Try Supabase lookup first
+      const { data, error } = await supabase
+        .from('users')
+        .select()
+        .eq('email', email.toLowerCase())
+        .single()
+
+      if (!error && data) {
+        // Verify password against localStorage (passwords are only stored locally)
+        if (localRecord && localRecord.password !== btoa(password)) {
+          return { error: 'Contraseña incorrecta.' }
+        }
+
+        const loadedUser: User = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          startup: data.startup,
+          stage: data.stage || null,
+          diagnosticScore: data.diagnostic_score || null,
+          createdAt: data.created_at || new Date().toISOString(),
+        }
+
+        // Update localStorage cache with Supabase data
+        users[email.toLowerCase()] = {
+          password: localRecord?.password || btoa(password),
+          user: loadedUser,
+        }
+        saveUsers(users)
+        setUser(loadedUser)
+        localStorage.setItem(SESSION_KEY, loadedUser.id)
+        return {}
+      }
+    } catch {
+      // Supabase unreachable — fall back to localStorage
+    }
+
+    // Fallback to localStorage-only login
+    if (!localRecord) return { error: 'No encontramos una cuenta con ese email.' }
+    if (localRecord.password !== btoa(password)) return { error: 'Contraseña incorrecta.' }
+    setUser(localRecord.user)
+    localStorage.setItem(SESSION_KEY, localRecord.user.id)
+    return {}
+  }, [])
 
   const logout = useCallback(() => {
     setUser(null)
@@ -130,6 +202,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       users[user.email] = record
       saveUsers(users)
       setUser(updated)
+
+      // Sync to Supabase in background
+      Promise.resolve(
+        supabase
+          .from('users')
+          .update({ stage, diagnostic_score: score })
+          .eq('id', user.id)
+      ).catch(() => {})
     },
     [user]
   )

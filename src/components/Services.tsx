@@ -1,39 +1,39 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Rocket, TrendingUp } from 'lucide-react'
+import { ArrowRight, Package, Briefcase } from 'lucide-react'
 import Link from 'next/link'
 
 const categories = [
   {
-    icon: Rocket,
-    title: 'Para fundadores',
+    icon: Package,
+    title: 'Productos digitales',
     color: '#059669',
     bg: 'rgba(5,150,105,0.04)',
-    description: 'Herramientas, sesiones y consultoría para que tu startup climática levante capital con confianza.',
+    description: 'Modelos financieros, kits legales, bases de datos y plantillas listas para usar. Compra lo que necesitas y empieza hoy.',
     items: [
-      'Productos digitales: modelos financieros, kits legales y bases de datos',
-      'Sesiones estratégicas de pitch y pilotos B2B',
-      'Consultoría experta en blended finance y data room',
-      'Diseño de proyectos para fondos internacionales',
+      'Modelos financieros avanzados',
+      'Kits legales para deep tech',
+      'Base de datos de +500 VCs climáticos',
+      'Plantillas TEA y pitch deck',
     ],
-    link: '/servicios#fundadores',
-    linkText: 'Ver servicios para fundadores',
+    link: '/productos',
+    linkText: 'Ver productos →',
   },
   {
-    icon: TrendingUp,
-    title: 'Para inversores',
+    icon: Briefcase,
+    title: 'Servicios profesionales',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.04)',
-    description: 'Pipeline cualificado de startups climáticas con datos institucionales y métricas de impacto claras.',
+    description: 'Consultoría especializada para fundadores e inversores de climate tech. Desde sesiones estratégicas hasta advisory de alto nivel.',
     items: [
-      'Deal flow estructurado por TRL y vertical',
-      'DD readiness scoring y reducción de tiempo de due diligence',
-      'Portfolio monitoring con métricas climate-native',
-      'Acceso a proyectos con offtakes pre-negociados',
+      'Para fundadores: pitch, financiamiento, go-to-market',
+      'Para inversores: deal flow, DD scoring, portfolio monitoring',
+      'CFO as a service para blended finance',
+      'Diseño de proyectos para fondos internacionales',
     ],
-    link: '/servicios#inversores',
-    linkText: 'Ver servicios para inversores',
+    link: '/servicios',
+    linkText: 'Ver servicios →',
   },
 ]
 
@@ -73,7 +73,7 @@ export default function Services() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Acompañamiento a la medida de tu velocidad
+            Todo lo que necesitas para escalar tu climate tech
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -170,30 +170,6 @@ export default function Services() {
               </Link>
             </motion.div>
           ))}
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-          <Link
-            href="/servicios"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.75rem 1.75rem',
-              borderRadius: 9999,
-              background: 'rgba(5,150,105,0.06)',
-              color: '#059669',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.9375rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              border: '1px solid rgba(5,150,105,0.15)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            Ver todos los servicios
-            <ArrowRight size={16} />
-          </Link>
         </div>
       </div>
     </section>

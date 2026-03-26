@@ -100,7 +100,7 @@ export default function DataRoom({ userId, onComplete, onGenerateReport }: ToolC
   const categories = state.categories
   const setCategories = (updater: DocCategory[] | ((prev: DocCategory[]) => DocCategory[])) =>
     setState((prev) => ({ ...prev, categories: typeof updater === 'function' ? updater(prev.categories) : updater }))
-  const [openCats, setOpenCats] = useState<Set<string>>(new Set(INITIAL_CATEGORIES.map((c) => c.id)))
+  const [openCats, setOpenCats] = useState<Set<string>>(new Set())
 
   const updateStatus = (catId: string, docId: string, status: Status) => {
     setCategories((cats) =>

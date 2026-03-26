@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Problema', href: '#problema' },
   { label: 'Plataforma', href: '#plataforma' },
   { label: 'Ciclo de Vida', href: '#ciclo-de-vida' },
+  { label: 'Productos', href: '/productos', isPage: true },
   { label: 'Servicios', href: '/servicios', isPage: true },
 ]
 

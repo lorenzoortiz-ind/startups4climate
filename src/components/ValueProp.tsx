@@ -1,38 +1,38 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Zap, Target, Globe, Landmark } from 'lucide-react'
+import { Zap, Target, BookOpen, Globe } from 'lucide-react'
 
 const pillars = [
   {
     icon: Zap,
-    title: 'Herramientas directas, a tu ritmo',
-    subtitle: 'Pragmatismo sin distracciones',
-    description: 'Olvídate de programas rígidos de 12 semanas. Accede a herramientas listas para usar (Excel, Notion, Figma) exactamente cuando tu startup las necesita.',
+    title: 'Herramientas paso a paso',
+    subtitle: 'A tu ritmo, sin rigidez',
+    description: 'A tu ritmo, sin programas rigidos de 12 semanas. 24 herramientas que siguen una metodologia probada basada en los 24 pasos del MIT Disciplined Entrepreneurship.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
   },
   {
     icon: Target,
-    title: 'Diagnóstico a la medida',
-    subtitle: 'Adiós a la talla única',
-    description: 'Evaluamos tu madurez tecnológica (TRL) y comercial para darte un plan de acción exacto. No pierdas tiempo en simuladores financieros si apenas estás validando la ciencia.',
+    title: 'Diagnostico personalizado',
+    subtitle: 'Tu punto de partida exacto',
+    description: 'Evaluamos en que etapa estas y te mostramos exactamente que herramientas necesitas ahora. Sin perder tiempo en lo que no corresponde a tu momento.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
   {
-    icon: Globe,
-    title: 'Hablamos el idioma del impacto',
-    subtitle: 'Lo que exigen los inversores',
-    description: 'Nuestras herramientas están construidas con métricas climáticas reales: calculadoras de Green Premium, proyecciones de emisiones (ERP) y simuladores de Cap Table con grants.',
+    icon: BookOpen,
+    title: 'Marco conceptual incluido',
+    subtitle: 'No asumimos que ya sabes todo',
+    description: 'Cada herramienta viene con una explicacion de por que la necesitas y las bases teoricas detras. Aprendes mientras construyes — no necesitas un MBA para empezar.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
   {
-    icon: Landmark,
-    title: 'Tu puente hacia el capital',
-    subtitle: 'Alineación hacia tu primera planta',
-    description: 'Te preparamos desde el día uno para tu meta final: financiar y desplegar tu primera instalación comercial, integrando la lógica del blended finance en cada paso.',
+    icon: Globe,
+    title: 'Acceso desde cualquier lugar',
+    subtitle: 'Democratizacion real',
+    description: 'Cualquier founder en Latinoamerica con internet puede acceder. Sin filtros, sin aplicaciones, sin esperar turno. La plataforma esta disponible para ti hoy.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
   },
@@ -74,7 +74,7 @@ export default function ValueProp() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Un ecosistema diseñado para la realidad del Climate Tech
+            Todo lo que necesitas para construir tu startup de impacto
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -82,7 +82,8 @@ export default function ValueProp() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            Comprendemos que construyes infraestructura. Nuestras herramientas te acompañan en las trincheras del emprendimiento climático, brindándote apoyo estructurado sin fricciones innecesarias.
+            La plataforma que democratiza el desarrollo de startups de impacto en Latinoamerica.
+            Herramientas estructuradas, metodologia probada y acceso libre para cualquier founder.
           </p>
         </motion.div>
 

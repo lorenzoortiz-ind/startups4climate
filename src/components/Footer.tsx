@@ -5,13 +5,13 @@ import Link from 'next/link'
 const footerLinks = {
   plataforma: [
     { label: 'Diagnóstico gratuito', href: '#diagnostico' },
-    { label: 'Ciclo de vida', href: '#ciclo-de-vida' },
-    { label: 'Herramientas gratuitas', href: '/tools', isPage: true },
+    { label: 'Roadmap de herramientas', href: '#ciclo-de-vida' },
+    { label: 'Acceder a la plataforma', href: '/tools', isPage: true },
   ],
-  servicios: [
-    { label: 'Productos digitales', href: '/productos', isPage: true },
-    { label: 'Servicios para fundadores', href: '/servicios#fundadores', isPage: true },
-    { label: 'Servicios para inversores', href: '/servicios#inversores', isPage: true },
+  recursos: [
+    { label: 'Blog (coming soon)', href: '#' },
+    { label: 'Metodología', href: '#' },
+    { label: 'Stack Tecnológico', href: '/tools/recursos', isPage: true },
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },
@@ -44,7 +44,7 @@ export default function Footer() {
               </span>
             </div>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: '#6B7280', maxWidth: 280 }}>
-              Estructura y capital para escalar soluciones climáticas en Latinoamérica.
+              Democratizando el desarrollo de startups de impacto en Latinoamérica.
             </p>
           </div>
 

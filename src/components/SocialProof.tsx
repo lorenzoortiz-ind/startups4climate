@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 
-const partners = ['IDB Lab', 'GIZ', 'CAF', 'UNEP', 'COP16', 'Horizonte Europa']
+const partners = ['MIT', 'Y Combinator', 'Lean Startup', 'Stanford', 'Sequoia', 'Techstars']
 
 export default function SocialProof() {
   return (
@@ -24,7 +24,7 @@ export default function SocialProof() {
             letterSpacing: '0.1em',
             marginBottom: '1.5rem',
           }}>
-            Herramientas validadas por el ecosistema climático de Latam
+            Metodologia basada en frameworks del MIT, Y Combinator, y las mejores practicas globales de emprendimiento
           </p>
           <div style={{
             display: 'flex',

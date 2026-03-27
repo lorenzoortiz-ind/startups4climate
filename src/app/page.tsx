@@ -6,7 +6,6 @@ import ValueProp from '@/components/ValueProp'
 import StartupLifecycle from '@/components/StartupLifecycle'
 import DiagnosticFeature from '@/components/DiagnosticFeature'
 import DiagnosticForm from '@/components/DiagnosticForm'
-import Services from '@/components/Services'
 import AboutRedesignLab from '@/components/AboutRedesignLab'
 import CTAFinal from '@/components/CTAFinal'
 import Footer from '@/components/Footer'
@@ -25,7 +24,6 @@ export default function Home() {
         <StartupLifecycle />
         <DiagnosticFeature />
         <DiagnosticForm />
-        <Services />
         <AboutRedesignLab />
         <CTAFinal />
       </main>

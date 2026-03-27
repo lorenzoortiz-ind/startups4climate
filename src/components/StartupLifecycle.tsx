@@ -2,67 +2,98 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FlaskConical, Rocket, Building2, ChevronRight } from 'lucide-react'
+import { FlaskConical, Rocket, Building2, TrendingUp, ChevronRight } from 'lucide-react'
 
 const stages = [
   {
     id: 'pre-incubacion',
     icon: FlaskConical,
     number: '01',
-    title: 'Pre-incubación',
-    subtitle: 'Del Laboratorio al Mercado',
-    trl: 'TRL 1-4',
-    focus: 'Validación de la ciencia y descubrimiento del cliente',
+    title: 'Pre-incubacion',
+    subtitle: 'Ideacion y Descubrimiento',
+    focus: 'Define tu proposito, descubre tu mercado y entiende a tu usuario',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
     borderColor: 'rgba(124,58,237,0.15)',
     tools: [
-      { name: 'Calculadora TRL/CRL', desc: 'Framework de evaluación de madurez tecnológica y comercial basado en estándares NASA/Horizonte Europa' },
-      { name: 'Climate Lean Canvas', desc: 'Modelo de negocio adaptado con bloques de impacto ambiental, LCA preliminar y riesgos regulatorios' },
-      { name: 'Guía Lab-to-Market', desc: 'Manual de transferencia de tecnología, licencias IP y estructuración de spin-offs universitarias' },
-      { name: 'Matriz de Stakeholders', desc: 'Mapeo de actores regulatorios, clientes B2B/B2G y tomadores de decisión corporativos' },
-      { name: 'Auditoría de Equipo Fundador', desc: 'Evaluación de brechas entre perfiles científicos y comerciales para ser invertible' },
+      { name: 'Proposito & Equipo', category: 'Equipo', desc: 'Define la mision de tu startup y evalua las capacidades y brechas de tu equipo fundador.' },
+      { name: 'Segmentacion de Mercado', category: 'Mercado', desc: 'Identifica y mapea los segmentos de mercado donde tu solucion puede generar mayor impacto.' },
+      { name: 'Beachhead Market', category: 'Estrategia', desc: 'Selecciona tu primer mercado de entrada usando criterios de accesibilidad, tamano y traccion.' },
+      { name: 'Perfil del Usuario Final', category: 'Cliente', desc: 'Construye un perfil detallado de tu usuario final: comportamientos, necesidades y contexto.' },
+      { name: 'Calculo del TAM', category: 'Mercado', desc: 'Estima el tamano total de tu mercado direccionable con metodologias bottom-up y top-down.' },
+      { name: 'Perfil de la Persona', category: 'Cliente', desc: 'Crea un arquetipo detallado de tu cliente ideal con datos demograficos, motivaciones y puntos de dolor.' },
     ],
   },
   {
     id: 'incubacion',
     icon: Rocket,
     number: '02',
-    title: 'Incubación',
-    subtitle: 'Construcción del Negocio y Tracción',
-    trl: 'TRL 4-7',
-    focus: 'Construcción del modelo de negocio y unit economics',
+    title: 'Incubacion',
+    subtitle: 'Validacion y Producto',
+    focus: 'Valida tu propuesta de valor y disenr tu producto minimo viable',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
     borderColor: 'rgba(5,150,105,0.15)',
     tools: [
-      { name: 'Matriz Modelos de Negocio Climáticos', desc: 'Guía interactiva: SaaS vs Licensing vs Hardware-as-a-Service (HaaS) — vende desempeño, no equipos' },
-      { name: 'Calculadora Unit Economics & Green Premium', desc: 'Desglose de costos marginales y proyección de paridad de precios vs. alternativa fósil' },
-      { name: 'Estimador ERP (Emisiones)', desc: 'Calculadora basada en IRIS+ y Project Frame para modelar reducción de megatoneladas de CO2eq' },
-      { name: 'Framework Pilotos B2B & LOIs', desc: 'Plantillas legales para estructurar PoCs con KPIs que detonan Offtake Agreements automáticos' },
-      { name: 'Pitch Deck "Science-to-Business"', desc: 'Plantilla diseñada para inversores climáticos: TEA, ruta de escalamiento, panorama regulatorio y ERP' },
+      { name: 'Caso de Uso del Ciclo Completo', category: 'Producto', desc: 'Mapea el recorrido completo de tu usuario desde el descubrimiento hasta la retencion y referencia.' },
+      { name: 'Especificacion de Producto', category: 'Producto', desc: 'Define las funcionalidades clave, la arquitectura y los requerimientos tecnicos de tu producto.' },
+      { name: 'Propuesta de Valor Cuantificada', category: 'Estrategia', desc: 'Cuantifica el valor que entregas a tu cliente en terminos medibles: ahorro, eficiencia o impacto.' },
+      { name: 'Primeros 10 Clientes', category: 'Ventas', desc: 'Estrategia para identificar, contactar y convertir tus primeros 10 clientes pagadores o usuarios.' },
+      { name: 'Core y Posicionamiento', category: 'Marketing', desc: 'Define tu ventaja competitiva sostenible y como te posicionas frente a alternativas en el mercado.' },
+      { name: 'Lean Canvas de Impacto', category: 'Modelo de Negocio', desc: 'Modelo de negocio en una pagina adaptado para startups de impacto con metricas sociales y ambientales.' },
     ],
   },
   {
     id: 'aceleracion',
     icon: Building2,
     number: '03',
-    title: 'Aceleración',
-    subtitle: 'Investment ready y primera planta',
-    trl: 'TRL 7-9',
-    focus: 'Preparación para inversión y estructuración de capital',
+    title: 'Aceleracion',
+    subtitle: 'Modelo de Negocio y Crecimiento',
+    focus: 'Estructura tu modelo de negocio, pricing y proceso de ventas',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
     borderColor: 'rgba(217,119,6,0.15)',
     tools: [
-      { name: 'Simulador Cap Table Complejo', desc: 'Modelo Excel avanzado que simula la interacción de VC, grants y venture debt en múltiples rondas' },
-      { name: 'Mapeador Climate Capital Stack', desc: 'Directorio de +500 VCs climáticos, CVCs, agencias gubernamentales y fondos de blended finance' },
-      { name: 'Arquitectura Data Room Climático', desc: 'Índice de carpetas y checklists para Due Diligence ESG, técnico, LCA, FTO de patentes' },
-      { name: 'Framework Bankability & Offtakes', desc: 'Plantillas de Advance Market Commitments con Fortune 500s — la llave de oro para la bancabilidad' },
-      { name: 'Reverse Due Diligence', desc: 'Tablero para evaluar la paciencia del capital, tesis ESG y valor agregado de cada fondo inversor' },
+      { name: 'DMU (Unidad de Decision)', category: 'Ventas', desc: 'Identifica a todas las personas involucradas en la decision de compra y sus motivaciones.' },
+      { name: 'Proceso de Adquisicion', category: 'Marketing', desc: 'Disena el embudo completo de adquisicion de clientes: desde awareness hasta conversion.' },
+      { name: 'Modelo de Negocio', category: 'Modelo de Negocio', desc: 'Estructura tu modelo de ingresos, canales de distribucion y relacion con el cliente.' },
+      { name: 'Framework de Pricing', category: 'Finanzas', desc: 'Define tu estrategia de precios basada en valor percibido, costos y dinamica competitiva.' },
+      { name: 'LTV y Unit Economics', category: 'Finanzas', desc: 'Calcula el valor de vida del cliente, costo de adquisicion y la rentabilidad por unidad.' },
+      { name: 'Proceso de Ventas', category: 'Ventas', desc: 'Disena tu proceso de ventas repetible: desde la prospectacion hasta el cierre y seguimiento.' },
+    ],
+  },
+  {
+    id: 'escalamiento',
+    icon: TrendingUp,
+    number: '04',
+    title: 'Escalamiento',
+    subtitle: 'Producto, Plan y Fundraising',
+    focus: 'Valida tu traccion, construye tu producto y prepara tu ronda de inversion',
+    color: '#0891B2',
+    bg: 'rgba(8,145,178,0.06)',
+    borderColor: 'rgba(8,145,178,0.15)',
+    tools: [
+      { name: 'Supuestos Clave', category: 'Estrategia', desc: 'Identifica y prioriza los supuestos criticos que deben validarse antes de escalar tu negocio.' },
+      { name: 'MVBP (Producto Minimo Viable)', category: 'Producto', desc: 'Define y construye la version minima de tu producto que prueba tu propuesta de valor central.' },
+      { name: 'Validacion de Traccion', category: 'Mercado', desc: 'Mide y documenta las metricas de traccion que demuestran product-market fit a inversores.' },
+      { name: 'Plan de Producto y Expansion', category: 'Estrategia', desc: 'Disenr la hoja de ruta de producto y la estrategia de expansion a nuevos mercados y segmentos.' },
+      { name: 'Pitch Deck', category: 'Finanzas', desc: 'Crea una presentacion de inversion profesional con narrativa, metricas y ask claros.' },
+      { name: 'Cap Table y Fundraising', category: 'Finanzas', desc: 'Estructura tu tabla de capitalizacion y prepara tu estrategia de levantamiento de capital.' },
     ],
   },
 ]
+
+const categoryColors: Record<string, string> = {
+  'Equipo': '#7C3AED',
+  'Mercado': '#059669',
+  'Estrategia': '#0891B2',
+  'Cliente': '#D97706',
+  'Producto': '#2563EB',
+  'Ventas': '#DC2626',
+  'Marketing': '#DB2777',
+  'Modelo de Negocio': '#059669',
+  'Finanzas': '#D97706',
+}
 
 export default function StartupLifecycle() {
   const [activeStage, setActiveStage] = useState(0)
@@ -93,7 +124,7 @@ export default function StartupLifecycle() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            Ciclo de Vida
+            24 Herramientas en 4 Etapas
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -112,7 +143,8 @@ export default function StartupLifecycle() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            Más de 15 herramientas operativas de alto valor, organizadas según tu nivel de madurez tecnológica y comercial. Descubre tu arsenal.
+            24 herramientas operativas organizadas en 4 etapas de desarrollo. Basadas en la
+            metodologia Disciplined Entrepreneurship del MIT. Descubre tu arsenal.
           </p>
         </motion.div>
 
@@ -130,8 +162,8 @@ export default function StartupLifecycle() {
               onClick={() => setActiveStage(i)}
               style={{
                 flex: '1 1 0',
-                minWidth: 200,
-                padding: '1.25rem 1.5rem',
+                minWidth: 180,
+                padding: '1.25rem 1.25rem',
                 borderRadius: 14,
                 border: activeStage === i ? `2px solid ${s.color}` : '1px solid var(--color-border)',
                 background: activeStage === i ? s.bg : 'white',
@@ -165,7 +197,7 @@ export default function StartupLifecycle() {
               </div>
               <h3 style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
+                fontSize: '0.9375rem',
                 fontWeight: 700,
                 color: activeStage === i ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                 marginBottom: '0.125rem',
@@ -174,10 +206,10 @@ export default function StartupLifecycle() {
               </h3>
               <p style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
+                fontSize: '0.75rem',
                 color: 'var(--color-text-muted)',
               }}>
-                {s.trl}
+                6 herramientas
               </p>
             </button>
           ))}
@@ -276,15 +308,31 @@ export default function StartupLifecycle() {
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                     <ChevronRight size={16} color={stage.color} style={{ marginTop: 3, flexShrink: 0 }} />
                     <div>
-                      <h4 style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '0.9375rem',
-                        fontWeight: 700,
-                        color: 'var(--color-text-primary)',
-                        marginBottom: '0.375rem',
-                      }}>
-                        {tool.name}
-                      </h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.375rem', flexWrap: 'wrap' }}>
+                        <h4 style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.9375rem',
+                          fontWeight: 700,
+                          color: 'var(--color-text-primary)',
+                        }}>
+                          {tool.name}
+                        </h4>
+                        <span style={{
+                          padding: '0.1rem 0.5rem',
+                          borderRadius: 6,
+                          background: `${categoryColors[tool.category] || stage.color}10`,
+                          border: `1px solid ${categoryColors[tool.category] || stage.color}25`,
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.5625rem',
+                          fontWeight: 600,
+                          color: categoryColors[tool.category] || stage.color,
+                          letterSpacing: '0.02em',
+                          textTransform: 'uppercase',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          {tool.category}
+                        </span>
+                      </div>
                       <p style={{
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',

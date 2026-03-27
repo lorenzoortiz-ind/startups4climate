@@ -4,9 +4,9 @@ import { motion } from 'framer-motion'
 import { Clock, BarChart2, ArrowRight } from 'lucide-react'
 
 const features = [
-  { icon: Clock, title: 'Evaluación rápida', desc: 'Diseñado para fundadores ocupados. En menos de 5 minutos sabrás exactamente dónde estás.' },
-  { icon: BarChart2, title: 'Análisis integral', desc: 'Calificamos tu madurez tecnológica (TRL), validación de mercado y preparación financiera con un scoring preciso' },
-  { icon: ArrowRight, title: 'Hoja de ruta clara', desc: 'Al finalizar, desbloqueas el acceso directo a la Caja de Herramientas correspondiente a tu etapa exacta.' },
+  { icon: Clock, title: 'Evaluacion rapida', desc: 'Disenado para founders ocupados. En menos de 5 minutos sabras exactamente en que etapa esta tu startup y que necesitas priorizar.' },
+  { icon: BarChart2, title: 'Analisis integral', desc: 'Calificamos tu idea, mercado, equipo y modelo de negocio con un scoring preciso que te ubica en una de las 4 etapas del desarrollo.' },
+  { icon: ArrowRight, title: 'Ruta de herramientas personalizada', desc: 'Al finalizar, desbloqueas acceso directo a las herramientas que corresponden a tu etapa exacta. Sin adivinar, sin perder tiempo.' },
 ]
 
 export default function DiagnosticFeature() {
@@ -36,7 +36,7 @@ export default function DiagnosticFeature() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            Diagnóstico Gratuito
+            Diagnostico Gratuito
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -47,17 +47,18 @@ export default function DiagnosticFeature() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Diagnóstico de Climate Readiness
+            Diagnostico de Startup Readiness
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
             fontSize: '1.0625rem',
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
-            maxWidth: 560,
+            maxWidth: 600,
             margin: '0 auto 2.5rem',
           }}>
-            10 preguntas críticas que evalúan tu tecnología, modelo y estructura de capital. Descubre tu etapa real y accede inmediatamente a las herramientas que necesitas hoy.
+            10 preguntas que evaluan tu idea, mercado, equipo y modelo de negocio.
+            Descubre tu etapa real y accede a las herramientas que necesitas hoy.
           </p>
         </motion.div>
 

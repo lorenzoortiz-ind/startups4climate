@@ -6,17 +6,17 @@ import Image from 'next/image'
 const founders = [
   {
     photo: '/eddie.png',
-    name: 'Eddie Ajalcriña',
+    name: 'Eddie Ajalcrina',
     role: 'Co-Founder & CEO',
-    bio: 'Estrategia climática y desarrollo de negocio en Latam. Experiencia en blended finance y ecosistemas de innovación.',
-    tags: ['Climate Strategy', 'Blended Finance', 'Business Dev'],
+    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovacion y conexion con capital.',
+    tags: ['Impact Strategy', 'Business Dev', 'LATAM Ecosystems'],
   },
   {
     photo: '/lorenzo.png',
     name: 'Lorenzo Ortiz',
     role: 'Co-Founder & CTO',
-    bio: 'Tecnología, producto y diseño de plataformas. Background en ingeniería de software y deep tech.',
-    tags: ['Product & Tech', 'Software Engineering', 'Deep Tech'],
+    bio: 'Tecnologia, producto y diseno de plataformas. Background en ingenieria de software y construccion de herramientas para founders.',
+    tags: ['Product & Tech', 'Software Engineering', 'Startup Tools'],
   },
 ]
 
@@ -49,7 +49,7 @@ export default function AboutRedesignLab() {
               textTransform: 'uppercase',
               marginBottom: '1.25rem',
             }}>
-              Quiénes Somos
+              Quienes Somos
             </span>
 
             <h2 style={{
@@ -79,9 +79,9 @@ export default function AboutRedesignLab() {
               color: 'var(--color-text-secondary)',
               marginBottom: '1.5rem',
             }}>
-              Diseñamos la infraestructura operativa que los fundadores de climate tech necesitan
-              para dejar de improvisar con frameworks genéricos y concentrar toda su energía en
-              escalar soluciones reales para el planeta.
+              Estamos democratizando el desarrollo de startups de impacto en Latinoamerica.
+              Construimos la infraestructura operativa que los founders necesitan para dejar de
+              improvisar y enfocarse en lo que importa: crear soluciones que transformen la region.
             </p>
 
             <div style={{
@@ -89,7 +89,7 @@ export default function AboutRedesignLab() {
               flexWrap: 'wrap',
               gap: '0.5rem',
             }}>
-              {['Climate Tech', 'Latam', 'Blended Finance', 'Deep Tech', 'Impact'].map(tag => (
+              {['Startups de Impacto', 'LATAM', 'Metodologia MIT', 'Acceso Democratico', 'All-in-One'].map(tag => (
                 <span key={tag} style={{
                   padding: '0.25rem 0.75rem',
                   borderRadius: 9999,

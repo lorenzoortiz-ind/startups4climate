@@ -47,7 +47,7 @@ export default function CTAFinal() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            El mundo necesita tu solución. Nosotros te damos las herramientas para escalarla.
+            Tu idea puede cambiar Latinoamerica. Nosotros te damos las herramientas para lograrlo.
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -57,7 +57,9 @@ export default function CTAFinal() {
             maxWidth: 520,
             margin: '0 auto 2rem',
           }}>
-            15 herramientas operativas diseñadas para climate tech en Latam. Desde TRL hasta bancabilidad. Acceso gratuito.
+            24 herramientas para llevarte de la idea al negocio validado. Desde la
+            segmentacion de mercado hasta el pitch deck y fundraising. Acceso gratuito,
+            sin filtros, desde cualquier lugar.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
             {user ? (
@@ -103,7 +105,7 @@ export default function CTAFinal() {
                     transition: 'all 0.2s',
                   }}
                 >
-                  Acceder al Toolkit <ArrowRight size={20} />
+                  Acceder a la Plataforma <ArrowRight size={20} />
                 </button>
                 <a
                   href="#diagnostico"
@@ -123,7 +125,7 @@ export default function CTAFinal() {
                     transition: 'all 0.2s',
                   }}
                 >
-                  Ver diagnóstico
+                  Diagnostico Rapido
                 </a>
               </>
             )}

@@ -13,10 +13,57 @@ const contactSchema = z.object({
   nombre: z.string().min(2, 'Nombre requerido'),
   email: z.string().email('Email inválido'),
   startup_name: z.string().min(2, 'Nombre de startup requerido'),
+  startup_description: z.string().min(10, 'Mínimo 10 caracteres'),
+  vertical: z.string().min(1, 'Selecciona una vertical'),
+  country: z.string().min(1, 'Selecciona un país'),
+  phone: z.string().optional(),
   website: z.string().optional(),
 })
 
 type ContactData = z.infer<typeof contactSchema>
+
+/* ─── Dropdown Options ─── */
+const verticalOptions = [
+  'Fintech',
+  'Healthtech',
+  'Edtech',
+  'Agritech',
+  'Cleantech / Climatech',
+  'Biotech',
+  'Deep Tech',
+  'Proptech',
+  'Legaltech',
+  'Insurtech',
+  'Mobility / Logística',
+  'E-commerce / Marketplace',
+  'SaaS / Enterprise',
+  'Social Impact',
+  'Foodtech',
+  'Otro',
+]
+
+const countryOptions = [
+  'México',
+  'Colombia',
+  'Argentina',
+  'Chile',
+  'Perú',
+  'Brasil',
+  'Ecuador',
+  'Bolivia',
+  'Uruguay',
+  'Paraguay',
+  'Venezuela',
+  'Costa Rica',
+  'Panamá',
+  'Guatemala',
+  'Honduras',
+  'El Salvador',
+  'Nicaragua',
+  'República Dominicana',
+  'Cuba',
+  'Otro',
+]
 
 /* ─── Questions ─── */
 interface Question {
@@ -30,60 +77,63 @@ interface Question {
 const questions: Question[] = [
   {
     id: 'P1',
-    text: '¿Cuál es la naturaleza principal de tu tecnología climática?',
-    subtitle: 'Naturaleza Tecnológica',
+    text: '¿En qué vertical se encuentra tu startup?',
+    subtitle: 'Naturaleza del Producto',
     type: 'tag',
     options: [
-      { label: 'Software / SaaS Climático (datos, mercados de carbono)', value: 'software' },
-      { label: 'Deep Tech / Bioeconomía (nuevos materiales, química, biología)', value: 'deeptech' },
-      { label: 'Hard-Tech / Infraestructura (energía, captura directa, maquinaria)', value: 'hardtech' },
+      { label: 'SaaS / Software', value: 'saas' },
+      { label: 'Hardware / IoT', value: 'hardware' },
+      { label: 'Deep Tech / Biotech', value: 'deeptech' },
+      { label: 'Marketplace / Plataforma', value: 'marketplace' },
+      { label: 'Servicios / Consultoría', value: 'services' },
     ],
   },
   {
     id: 'P2',
-    text: '¿En qué fase de desarrollo tecnológico te encuentras hoy?',
-    subtitle: 'Nivel de Madurez Tecnológica (TRL)',
+    text: '¿En qué fase de desarrollo se encuentra tu startup hoy?',
+    subtitle: 'Nivel de Madurez',
     type: 'score',
     options: [
-      { label: 'Idea o prueba de concepto en laboratorio (TRL 1-3)', value: 'trl1-3', score: 1 },
-      { label: 'Prototipo funcional validado en entorno controlado (TRL 4-5)', value: 'trl4-5', score: 2 },
-      { label: 'Piloto comercial u operando a pequeña escala (TRL 6-7)', value: 'trl6-7', score: 3 },
-      { label: 'Planta a escala comercial / FOAK o despliegue masivo (TRL 8-9)', value: 'trl8-9', score: 4 },
+      { label: 'Idea o prueba de concepto inicial', value: 'idea', score: 1 },
+      { label: 'Prototipo funcional o MVP lanzado', value: 'prototype', score: 2 },
+      { label: 'Pilotos con clientes o primeros usuarios activos', value: 'pilots', score: 3 },
+      { label: 'Ingresos recurrentes y tracción demostrada', value: 'revenue', score: 4 },
     ],
   },
   {
     id: 'P3',
     text: '¿Cuál es el estado actual de la validación de tu mercado?',
-    subtitle: 'Validación Comercial (CRL)',
+    subtitle: 'Validación Comercial',
     type: 'score',
     options: [
       { label: 'Validando el problema mediante entrevistas (Customer Discovery)', value: 'discovery', score: 1 },
       { label: 'Tenemos LOIs (Cartas de Intención) o pilotos no pagados', value: 'lois', score: 2 },
-      { label: 'Pilotos B2B pagados o primeros ingresos iniciales', value: 'pilots', score: 3 },
-      { label: 'Ingresos recurrentes demostrados o Acuerdos Offtake firmados', value: 'revenue', score: 4 },
+      { label: 'Pilotos pagados o primeros ingresos iniciales', value: 'pilots', score: 3 },
+      { label: 'Ingresos recurrentes demostrados o contratos firmados', value: 'revenue', score: 4 },
     ],
   },
   {
     id: 'P4',
-    text: '¿Cómo planeas entregar y cobrar tu solución al cliente?',
-    subtitle: 'Intensidad de Capital',
+    text: '¿Cuál es tu modelo de ingresos principal?',
+    subtitle: 'Modelo de Negocio',
     type: 'tag',
     options: [
-      { label: 'Suscripción puramente digital (SaaS)', value: 'saas' },
-      { label: 'Venta directa del equipo/hardware al cliente (CAPEX para el cliente)', value: 'capex' },
-      { label: 'Hardware-as-a-Service / PPA (OPEX para el cliente)', value: 'haas' },
-      { label: 'Licenciamiento de Propiedad Intelectual (IP)', value: 'licensing' },
+      { label: 'Suscripción (SaaS)', value: 'saas' },
+      { label: 'Venta directa', value: 'direct' },
+      { label: 'Marketplace / comisiones', value: 'marketplace' },
+      { label: 'Freemium', value: 'freemium' },
+      { label: 'Licenciamiento', value: 'licensing' },
     ],
   },
   {
     id: 'P5',
-    text: '¿Cómo cuantificas el impacto climático de tu startup?',
+    text: '¿Cómo mides el impacto positivo de tu startup?',
     subtitle: 'Medición de Impacto',
     type: 'score',
     options: [
       { label: 'Aún no medimos o solo tenemos una narrativa cualitativa', value: 'none', score: 1 },
-      { label: 'Tenemos un cálculo interno básico de emisiones reducidas (ERP)', value: 'basic', score: 2 },
-      { label: 'Contamos con un Análisis de Ciclo de Vida (LCA) o verificación de terceros', value: 'lca', score: 4 },
+      { label: 'Tenemos métricas básicas internas de impacto', value: 'basic', score: 2 },
+      { label: 'Contamos con verificación de terceros o certificaciones', value: 'verified', score: 4 },
     ],
   },
   {
@@ -95,24 +145,25 @@ const questions: Question[] = [
       { label: 'Bootstrapping / Buscamos menos de $250k', value: 'bootstrap', score: 1 },
       { label: 'Entre $250k y $1.5M (Pre-Seed / Seed)', value: 'seed', score: 2 },
       { label: 'Entre $1.5M y $5M (Series A)', value: 'seriesA', score: 3 },
-      { label: 'Más de $5M (FOAK / Series B o posterior)', value: 'foak', score: 4 },
+      { label: 'Más de $5M (Series B o posterior)', value: 'seriesB', score: 4 },
     ],
   },
   {
     id: 'P7',
-    text: '¿Qué estructura de capital estás priorizando?',
-    subtitle: 'Estructura del Capital',
+    text: '¿Cuántas personas hay en tu equipo fundador?',
+    subtitle: 'Equipo Fundador',
     type: 'tag',
     options: [
-      { label: 'Exclusivamente Venture Capital (Equity / SAFEs)', value: 'vc' },
-      { label: 'Grants (Subvenciones gubernamentales o corporativas no dilutivas)', value: 'grants' },
-      { label: 'Financiamiento mixto (Blended Finance): VC + Deuda + Grants', value: 'blended' },
+      { label: 'Solo founder', value: 'solo' },
+      { label: '2 cofounders', value: 'duo' },
+      { label: '3+ cofounders', value: 'trio' },
+      { label: 'Equipo completo (>5)', value: 'full' },
     ],
   },
   {
     id: 'P8',
     text: '¿Cuál es el balance actual del equipo fundador?',
-    subtitle: 'Equipo Fundador',
+    subtitle: 'Composición del Equipo',
     type: 'score',
     options: [
       { label: 'Perfil 100% técnico/científico', value: 'tech', score: 1 },
@@ -122,26 +173,26 @@ const questions: Question[] = [
   },
   {
     id: 'P9',
-    text: '¿Cuál es el principal obstáculo que no te deja dormir hoy?',
+    text: '¿Cuál es tu principal obstáculo hoy?',
     subtitle: 'Cuello de Botella Operativo',
     type: 'tag',
     options: [
-      { label: 'Desarrollar la tecnología o patentar la ciencia', value: 'tech' },
-      { label: 'Estructurar financieramente nuestro modelo y Unit Economics', value: 'finance' },
-      { label: 'Cerrar ventas complejas con corporativos (Pilotos a Offtakes)', value: 'sales' },
-      { label: 'Superar el Due Diligence técnico/ESG de inversores institucionales', value: 'dd' },
+      { label: 'Encontrar product-market fit', value: 'pmf' },
+      { label: 'Conseguir clientes', value: 'customers' },
+      { label: 'Estructurar financieramente', value: 'finance' },
+      { label: 'Levantar inversión', value: 'fundraising' },
     ],
   },
   {
     id: 'P10',
     text: '¿Si un inversor te pidiera acceso a tu Data Room hoy, qué tan listo estás?',
-    subtitle: 'Preparación del Data Room',
+    subtitle: 'Preparación para Inversión',
     type: 'score',
     options: [
       { label: 'No tenemos Data Room estructurado aún', value: 'none', score: 1 },
       { label: 'Tenemos Pitch Deck básico y proyecciones a 12 meses', value: 'basic', score: 2 },
       { label: 'Financieros completos, Cap Table y documentos legales listos', value: 'ready', score: 3 },
-      { label: 'Todo lo anterior + Análisis Técnico-Económico (TEA) y auditorías listas', value: 'full', score: 4 },
+      { label: 'Todo lo anterior + métricas de tracción y auditorías listas', value: 'full', score: 4 },
     ],
   },
 ]
@@ -151,28 +202,59 @@ const profiles = [
   {
     range: [6, 11] as [number, number],
     name: 'ETAPA 1: Pre-incubación',
-    tag: 'Lab-to-Market',
-    description: 'Tu startup está en fase de validación científica y búsqueda de mercado. Las herramientas de esta etapa te ayudarán a estructurar tu propuesta y encontrar tu early adopter.',
-    tools: ['Calculadora TRL/CRL', 'Climate Lean Canvas', 'Guía Lab-to-Market', 'Auditoría de Equipo'],
+    tag: 'Ideación',
+    description: 'Tu startup está en fase de encontrar su idea y entender el mercado. Las herramientas de esta etapa te ayudarán a definir tu propósito, segmentar tu mercado y perfilar a tu usuario ideal.',
+    tools: ['Propósito & Equipo', 'Segmentación de Mercado', 'Beachhead Market', 'Perfil del Usuario'],
     color: '#7C3AED',
   },
   {
     range: [12, 18] as [number, number],
     name: 'ETAPA 2: Incubación',
-    tag: 'Go-to-Market',
-    description: 'Tu ciencia está probada y necesitas construir un modelo de negocio escalable. Enfócate en unit economics, demostración de impacto y cerrar tus primeros pilotos B2B.',
-    tools: ['Calculadora Unit Economics', 'Estimador ERP', 'Framework Pilotos B2B', 'Pitch Deck S2B'],
+    tag: 'Validación',
+    description: 'Es momento de construir tu producto y conseguir tus primeros clientes. Enfócate en validar tu propuesta de valor, iterar con usuarios reales y estructurar tu modelo de negocio.',
+    tools: ['Propuesta de Valor', 'Primeros 10 Clientes', 'Lean Canvas', 'Especificación de Producto'],
     color: '#059669',
   },
   {
-    range: [19, 24] as [number, number],
+    range: [19, 21] as [number, number],
     name: 'ETAPA 3: Aceleración',
-    tag: 'FOAK / Scale',
-    description: 'Estás listo para levantar capital significativo y financiar tu primera instalación comercial. Estructura tu blended finance y prepárate para el Due Diligence institucional.',
-    tools: ['Simulador Cap Table', 'Mapeador Capital Stack', 'Data Room Climático', 'Framework Offtakes'],
+    tag: 'Crecimiento',
+    description: 'Tu modelo de negocio está validado y es momento de escalar. Optimiza tus unit economics, profesionaliza tu proceso de ventas y afina tu estrategia de pricing.',
+    tools: ['Unit Economics', 'Proceso de Ventas', 'Modelo de Negocio', 'Framework de Pricing'],
     color: '#D97706',
   },
+  {
+    range: [22, 24] as [number, number],
+    name: 'ETAPA 4: Escalamiento',
+    tag: 'Escala',
+    description: 'Estás listo para levantar capital significativo y ejecutar tu plan de producto a gran escala. Prepara tu pitch deck, estructura tu cap table y valida tu tracción para inversores.',
+    tools: ['Pitch Deck', 'Cap Table', 'Plan de Producto', 'Validación de Tracción'],
+    color: '#0891B2',
+  },
 ]
+
+/* ─── Shared Styles ─── */
+const inputStyle = {
+  width: '100%',
+  padding: '0.75rem 1rem',
+  borderRadius: 10,
+  border: '1px solid var(--color-border)',
+  fontFamily: 'var(--font-body)',
+  fontSize: '0.875rem',
+  color: 'var(--color-text-primary)',
+  outline: 'none',
+  transition: 'border-color 0.2s',
+  background: 'var(--color-bg-primary)',
+} as const
+
+const labelStyle = {
+  display: 'block',
+  fontFamily: 'var(--font-body)',
+  fontSize: '0.8125rem',
+  fontWeight: 600,
+  color: 'var(--color-text-primary)',
+  marginBottom: '0.375rem',
+} as const
 
 /* ─── Component ─── */
 const TOTAL_STEPS = 12 // 0: contact, 1-10: questions, 11: loading, 12: results
@@ -234,14 +316,18 @@ export default function DiagnosticForm() {
             nombre: answers.nombre,
             email: answers.email,
             startup_name: answers.startup_name,
+            startup_description: answers.startup_description || null,
+            vertical: answers.vertical || null,
+            country: answers.country || null,
+            phone: answers.phone || null,
             website: answers.website || null,
             score: total,
             profile: matched.tag,
             answers: JSON.stringify(answers),
             tags: JSON.stringify({
-              tech_type: answers.P1,
-              capital_intensity: answers.P4,
-              capital_structure: answers.P7,
+              product_type: answers.P1,
+              revenue_model: answers.P4,
+              team_size: answers.P7,
               bottleneck: answers.P9,
             }),
           })
@@ -254,8 +340,8 @@ export default function DiagnosticForm() {
       const insertDiagnostic = async () => {
         try {
           const dimensionScores = {
-            trl: scores.P2 || 0,
-            crl: scores.P3 || 0,
+            madurez: scores.P2 || 0,
+            validacion: scores.P3 || 0,
             impacto: scores.P5 || 0,
             financiamiento: scores.P6 || 0,
             equipo: scores.P8 || 0,
@@ -289,7 +375,7 @@ export default function DiagnosticForm() {
         setStep(12)
       }, 2500)
     }
-  }, [step, submitted, calculateResults, answers])
+  }, [step, submitted, calculateResults, answers, scores])
 
   // Counter animation
   useEffect(() => {
@@ -300,6 +386,14 @@ export default function DiagnosticForm() {
   }, [step, countUp, totalScore])
 
   const progress = step <= 11 ? ((step) / 11) * 100 : 100
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = '#059669'
+  }
+
+  const handleBlur = (fieldName: keyof ContactData) => (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    e.currentTarget.style.borderColor = errors[fieldName] ? '#DC2626' : 'var(--color-border)'
+  }
 
   return (
     <section id="diagnostico" style={{ padding: '4rem 0 6rem', background: 'var(--color-bg-warm)' }}>
@@ -315,7 +409,7 @@ export default function DiagnosticForm() {
           {/* Top gradient accent */}
           <div style={{
             height: 4,
-            background: 'linear-gradient(90deg, #059669, #0D9488, #F97316)',
+            background: 'linear-gradient(90deg, #7C3AED, #059669, #D97706, #0891B2)',
           }} />
 
           {/* Progress bar */}
@@ -357,41 +451,189 @@ export default function DiagnosticForm() {
                     Ingresa tus datos para recibir tu reporte personalizado.
                   </p>
                   <form onSubmit={handleSubmit(handleContactSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {[
-                      { name: 'nombre' as const, label: 'Tu nombre', placeholder: 'María García' },
-                      { name: 'email' as const, label: 'Email', placeholder: 'maria@startup.com' },
-                      { name: 'startup_name' as const, label: 'Nombre de tu startup', placeholder: 'CleanTech Solutions' },
-                      { name: 'website' as const, label: 'Sitio web (opcional)', placeholder: 'https://...' },
-                    ].map(field => (
-                      <div key={field.name}>
-                        <label style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
-                          {field.label}
-                        </label>
-                        <input
-                          {...register(field.name)}
-                          placeholder={field.placeholder}
-                          style={{
-                            width: '100%',
-                            padding: '0.75rem 1rem',
-                            borderRadius: 10,
-                            border: `1px solid ${errors[field.name] ? '#DC2626' : 'var(--color-border)'}`,
-                            fontFamily: 'var(--font-body)',
-                            fontSize: '0.875rem',
-                            color: 'var(--color-text-primary)',
-                            outline: 'none',
-                            transition: 'border-color 0.2s',
-                            background: 'var(--color-bg-primary)',
-                          }}
-                          onFocus={e => (e.currentTarget.style.borderColor = '#059669')}
-                          onBlur={e => (e.currentTarget.style.borderColor = errors[field.name] ? '#DC2626' : 'var(--color-border)')}
-                        />
-                        {errors[field.name] && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                            {errors[field.name]?.message}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                    {/* Nombre */}
+                    <div>
+                      <label style={labelStyle}>Tu nombre</label>
+                      <input
+                        {...register('nombre')}
+                        placeholder="María García"
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.nombre ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('nombre')}
+                      />
+                      {errors.nombre && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.nombre.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label style={labelStyle}>Email</label>
+                      <input
+                        {...register('email')}
+                        placeholder="maria@startup.com"
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.email ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('email')}
+                      />
+                      {errors.email && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Startup Name */}
+                    <div>
+                      <label style={labelStyle}>Nombre de tu startup</label>
+                      <input
+                        {...register('startup_name')}
+                        placeholder="Mi Startup"
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.startup_name ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('startup_name')}
+                      />
+                      {errors.startup_name && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.startup_name.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Startup Description (textarea) */}
+                    <div>
+                      <label style={labelStyle}>Describe brevemente tu startup</label>
+                      <textarea
+                        {...register('startup_description')}
+                        placeholder="¿Qué problema resuelve tu startup y para quién?"
+                        rows={3}
+                        style={{
+                          ...inputStyle,
+                          resize: 'vertical' as const,
+                          minHeight: 80,
+                          borderColor: errors.startup_description ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('startup_description')}
+                      />
+                      {errors.startup_description && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.startup_description.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Vertical (dropdown) */}
+                    <div>
+                      <label style={labelStyle}>Vertical de tu startup</label>
+                      <select
+                        {...register('vertical')}
+                        defaultValue=""
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.vertical ? '#DC2626' : 'var(--color-border)',
+                          appearance: 'none',
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 1rem center',
+                          paddingRight: '2.5rem',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('vertical')}
+                      >
+                        <option value="" disabled>Selecciona una vertical</option>
+                        {verticalOptions.map(v => (
+                          <option key={v} value={v}>{v}</option>
+                        ))}
+                      </select>
+                      {errors.vertical && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.vertical.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Country (dropdown) */}
+                    <div>
+                      <label style={labelStyle}>País</label>
+                      <select
+                        {...register('country')}
+                        defaultValue=""
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.country ? '#DC2626' : 'var(--color-border)',
+                          appearance: 'none',
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 1rem center',
+                          paddingRight: '2.5rem',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('country')}
+                      >
+                        <option value="" disabled>Selecciona un país</option>
+                        {countryOptions.map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                      {errors.country && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.country.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Phone (optional) */}
+                    <div>
+                      <label style={labelStyle}>Teléfono (WhatsApp)</label>
+                      <input
+                        {...register('phone')}
+                        placeholder="+52 55 1234 5678"
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.phone ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('phone')}
+                      />
+                      {errors.phone && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.phone.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Website (optional) */}
+                    <div>
+                      <label style={labelStyle}>Sitio web (opcional)</label>
+                      <input
+                        {...register('website')}
+                        placeholder="https://..."
+                        style={{
+                          ...inputStyle,
+                          borderColor: errors.website ? '#DC2626' : 'var(--color-border)',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur('website')}
+                      />
+                      {errors.website && (
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                          {errors.website.message}
+                        </p>
+                      )}
+                    </div>
+
                     <button
                       type="submit"
                       style={{
@@ -507,7 +749,7 @@ export default function DiagnosticForm() {
                     Analizando tu startup...
                   </h3>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-                    Calculando tu Climate Readiness Score y preparando tu roadmap personalizado.
+                    Calculando tu Startup Readiness Score y preparando tu roadmap personalizado.
                   </p>
                 </motion.div>
               )}
@@ -523,7 +765,7 @@ export default function DiagnosticForm() {
                   <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                     <CheckCircle2 size={32} color="#059669" style={{ margin: '0 auto 0.75rem' }} />
                     <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
-                      Tu Climate Readiness Score
+                      Tu Startup Readiness Score
                     </h3>
                     <div style={{
                       fontFamily: 'var(--font-mono)',
@@ -564,6 +806,7 @@ export default function DiagnosticForm() {
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Incubación</span>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
                     </div>
                   </div>
 
@@ -611,9 +854,7 @@ export default function DiagnosticForm() {
                   {/* CTAs */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <a
-                      href="https://calendly.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/tools"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -630,10 +871,12 @@ export default function DiagnosticForm() {
                         textDecoration: 'none',
                       }}
                     >
-                      Agenda una Sesión Estratégica <ArrowRight size={18} />
+                      Acceder a las Herramientas <ArrowRight size={18} />
                     </a>
                     <a
-                      href="#ciclo-de-vida"
+                      href="https://calendly.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -650,7 +893,7 @@ export default function DiagnosticForm() {
                         textDecoration: 'none',
                       }}
                     >
-                      Explorar Herramientas Gratuitas
+                      Agenda una Sesión Estratégica
                     </a>
                   </div>
                 </motion.div>

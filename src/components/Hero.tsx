@@ -90,7 +90,7 @@ export default function Hero() {
                 }}
               >
                 <Zap size={14} strokeWidth={2} />
-                El toolkit operativo para Climate Tech en Latam
+                La plataforma all-in-one para startups de impacto en LATAM
               </span>
             </motion.div>
 
@@ -108,11 +108,11 @@ export default function Hero() {
                 marginBottom: '1.5rem',
               }}
             >
-              Del laboratorio al mercado:{' '}
+              De la idea al negocio validado:{' '}
               <span className="gradient-text">
-                escala tu climate tech
+                24 herramientas para transformar
               </span>{' '}
-              con herramientas reales
+              tu startup de impacto
             </motion.h1>
 
             <motion.p
@@ -128,9 +128,9 @@ export default function Hero() {
                 marginBottom: '2rem',
               }}
             >
-              15 herramientas operativas diseñadas para startups climáticas en Latam.
-              Diagnostica tu madurez tecnológica, estructura tu capital stack y prepara
-              tu empresa para levantar inversión — todo en un solo lugar.
+              24 herramientas organizadas en 4 etapas, basadas en las mejores
+              metodologías del mundo. Desde la ideación hasta el fundraising,
+              con acceso libre para cualquier founder en Latinoamérica.
             </motion.p>
 
             <motion.div
@@ -158,7 +158,7 @@ export default function Hero() {
                   boxShadow: '0 4px 16px rgba(5,150,105,0.3)',
                 }}
               >
-                {user ? 'Ir a mi Plataforma' : 'Acceder al Toolkit Gratuito'}
+                {user ? 'Ir a mi Plataforma' : 'Acceder a la Plataforma'}
                 <ArrowRight size={18} />
               </button>
               <a
@@ -179,7 +179,7 @@ export default function Hero() {
                   transition: 'all 0.2s ease',
                 }}
               >
-                Diagnóstico Rápido
+                Diagnostico Rapido
               </a>
             </motion.div>
 
@@ -197,8 +197,8 @@ export default function Hero() {
               }}
             >
               {[
-                { value: '15', label: 'Herramientas funcionales' },
-                { value: '3', label: 'Etapas del ciclo' },
+                { value: '24', label: 'Herramientas' },
+                { value: '4', label: 'Etapas' },
                 { value: '100%', label: 'Gratuito' },
               ].map((stat) => (
                 <div key={stat.label}>
@@ -238,7 +238,7 @@ export default function Hero() {
                 left: 0,
                 right: 0,
                 height: 4,
-                background: 'linear-gradient(90deg, #059669, #0D9488, #F97316)',
+                background: 'linear-gradient(90deg, #7C3AED, #059669, #D97706, #0891B2)',
                 borderRadius: '20px 20px 0 0',
               }} />
 
@@ -253,14 +253,14 @@ export default function Hero() {
                   color: 'var(--color-text-muted)',
                   marginLeft: '0.5rem',
                 }}>
-                  climate_readiness_report.json
+                  startup_readiness_report.json
                 </span>
               </div>
 
               {/* Score display */}
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  Climate Readiness Score
+                  Startup Readiness Score
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '3rem', fontWeight: 700, color: '#059669', lineHeight: 1 }}>
                   72<span style={{ fontSize: '1.25rem', color: 'var(--color-text-muted)' }}>/100</span>
@@ -276,17 +276,17 @@ export default function Hero() {
                   fontWeight: 600,
                   color: '#059669',
                 }}>
-                  ETAPA 2: INCUBACIÓN
+                  ETAPA 2: INCUBACION
                 </div>
               </div>
 
               {/* Dimension bars */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {[
-                  { label: 'Madurez Tecnológica (TRL)', value: 75, color: '#059669' },
-                  { label: 'Validación Comercial', value: 60, color: '#0D9488' },
-                  { label: 'Readiness Financiero', value: 45, color: '#F59E0B' },
-                  { label: 'Preparación Data Room', value: 55, color: '#0891B2' },
+                  { label: 'Validacion de Mercado', value: 75, color: '#059669' },
+                  { label: 'Propuesta de Valor', value: 60, color: '#7C3AED' },
+                  { label: 'Traccion Comercial', value: 45, color: '#D97706' },
+                  { label: 'Estructura de Negocio', value: 55, color: '#0891B2' },
                 ].map((dim) => (
                   <div key={dim.label}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
@@ -321,7 +321,7 @@ export default function Hero() {
                   Herramientas Recomendadas
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
-                  {['Calculadora HaaS', 'Estimador ERP', 'Pitch Deck S2B'].map(tool => (
+                  {['Lean Canvas de Impacto', 'Propuesta de Valor', 'Perfil del Usuario'].map(tool => (
                     <span key={tool} style={{
                       padding: '0.2rem 0.625rem',
                       borderRadius: 6,

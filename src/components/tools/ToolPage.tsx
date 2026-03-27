@@ -10,6 +10,9 @@ import {
   Clock,
   FileText,
   ChevronRight,
+  ChevronDown,
+  BookOpen,
+  Lightbulb,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { getToolById } from '@/lib/tools-data'
@@ -17,22 +20,12 @@ import { markToolCompleted, markReportGenerated, getProgress } from '@/lib/progr
 import ServiceBanner from './ServiceBanner'
 
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
+// Note: New tools will show "en construcción" until their components are created
 const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> = {
-  'trl-calculator': dynamic(() => import('./TRLCalculator')),
   'lean-canvas': dynamic(() => import('./LeanCanvas')),
-  'lab-to-market': dynamic(() => import('./LabToMarket')),
-  'stakeholder-matrix': dynamic(() => import('./StakeholderMatrix')),
-  'founder-audit': dynamic(() => import('./FounderAudit')),
-  'business-models': dynamic(() => import('./BusinessModels')),
-  'unit-economics': dynamic(() => import('./UnitEconomics')),
-  'erp-estimator': dynamic(() => import('./ERPEstimator')),
-  'pilots-framework': dynamic(() => import('./PilotsFramework')),
-  'pitch-deck': dynamic(() => import('./PitchDeck')),
-  'cap-table': dynamic(() => import('./CapTable')),
-  'capital-stack': dynamic(() => import('./CapitalStack')),
-  'data-room': dynamic(() => import('./DataRoom')),
-  'bankability': dynamic(() => import('./Bankability')),
-  'reverse-dd': dynamic(() => import('./ReverseDueDiligence')),
+  'cap-table-fundraising': dynamic(() => import('./CapTable')),
+  'pitch-deck-builder': dynamic(() => import('./PitchDeck')),
+  'ltv-unit-economics': dynamic(() => import('./UnitEconomics')),
 }
 
 export interface ToolComponentProps {
@@ -44,6 +37,7 @@ export interface ToolComponentProps {
 export default function ToolPage({ toolId }: { toolId: string }) {
   const { user } = useAuth()
   const tool = getToolById(toolId)
+  const [preambOpen, setPreambOpen] = useState(false)
   const [completed, setCompleted] = useState(() => {
     if (!user) return false
     const p = getProgress(user.id)
@@ -444,6 +438,91 @@ export default function ToolPage({ toolId }: { toolId: string }) {
           </div>
         </motion.div>
 
+        {/* Preámbulo — Why you need this tool */}
+        {tool.preambulo && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.08 }}
+            style={{ marginBottom: '1.5rem' }}
+          >
+            <button
+              onClick={() => setPreambOpen(!preambOpen)}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1rem 1.25rem',
+                borderRadius: preambOpen ? '14px 14px 0 0' : 14,
+                background: 'var(--color-bg-card)',
+                border: '1px solid var(--color-border)',
+                borderBottom: preambOpen ? '1px solid var(--color-border)' : undefined,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              <div style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: `${tool.stageColor}10`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <BookOpen size={18} color={tool.stageColor} />
+              </div>
+              <div style={{ flex: 1, textAlign: 'left' }}>
+                <span style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '0.9375rem',
+                  fontWeight: 700,
+                  color: 'var(--color-text-primary)',
+                }}>
+                  ¿Por qué necesitas esta herramienta?
+                </span>
+                <span style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.75rem',
+                  color: 'var(--color-text-muted)',
+                  marginTop: '0.125rem',
+                }}>
+                  Lee el contexto antes de comenzar
+                </span>
+              </div>
+              <ChevronDown
+                size={18}
+                color="var(--color-text-muted)"
+                style={{
+                  transition: 'transform 0.2s',
+                  transform: preambOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                }}
+              />
+            </button>
+            {preambOpen && (
+              <div style={{
+                padding: '1.25rem 1.5rem',
+                background: 'var(--color-bg-card)',
+                border: '1px solid var(--color-border)',
+                borderTop: 'none',
+                borderRadius: '0 0 14px 14px',
+              }}>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.8,
+                  color: 'var(--color-text-secondary)',
+                }}>
+                  {tool.preambulo}
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
+
         {/* Tool content */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -469,6 +548,44 @@ export default function ToolPage({ toolId }: { toolId: string }) {
               }}
             >
               Herramienta en construcción...
+            </div>
+          )}
+          {/* Recommendations after completion */}
+          {completed && (
+            <div style={{
+              marginTop: '1.5rem',
+              padding: '1.25rem 1.5rem',
+              borderRadius: 14,
+              background: `${tool.stageColor}08`,
+              border: `1px solid ${tool.stageColor}18`,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                <Lightbulb size={20} color={tool.stageColor} style={{ marginTop: 2, flexShrink: 0 }} />
+                <div>
+                  <h4 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '0.9375rem',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '0.5rem',
+                  }}>
+                    Recomendaciones para mejorar
+                  </h4>
+                  <ul style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    lineHeight: 1.7,
+                    color: 'var(--color-text-secondary)',
+                    paddingLeft: '1rem',
+                    margin: 0,
+                  }}>
+                    <li>Revisa tus respuestas con tu equipo cofundador y busca puntos ciegos.</li>
+                    <li>Valida la información con datos reales de tu mercado, no suposiciones.</li>
+                    <li>Genera el reporte y compártelo con un mentor o advisor para feedback externo.</li>
+                    <li>Itera: esta herramienta no se llena una sola vez. Vuelve a ella conforme avances.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
           <ServiceBanner toolId={toolId} toolName={tool.name} />

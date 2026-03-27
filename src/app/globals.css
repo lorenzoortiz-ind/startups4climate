@@ -59,23 +59,26 @@
 /* Dark mode — applied via data-theme="dark" on html */
 :root[data-theme="dark"],
 [data-theme="dark"] {
-  --color-bg-primary:    #0F1117;
-  --color-bg-warm:       #141620;
-  --color-bg-card:       #1A1D27;
-  --color-bg-muted:      #252833;
+  --color-bg-primary:    #121318;
+  --color-bg-warm:       #161820;
+  --color-bg-card:       #1C1E28;
+  --color-bg-muted:      #23262F;
 
-  --color-text-primary:   #F1F2F4;
-  --color-text-secondary: #A1A7B4;
-  --color-text-muted:     #6B7280;
-  --color-text-on-dark:   #F9FAFB;
+  --color-text-primary:   #E8EAED;
+  --color-text-secondary: #9BA1B0;
+  --color-text-muted:     #5F6575;
+  --color-text-on-dark:   #F3F4F6;
 
-  --color-border:         #2D3140;
-  --color-border-strong:  #3D4155;
+  --color-border:         #2A2D38;
+  --color-border-strong:  #383C4A;
 
-  --shadow-sm:       0 1px 2px rgba(0,0,0,0.2);
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
-  --shadow-elevated: 0 4px 20px rgba(0,0,0,0.3);
-  --shadow-glow:     0 4px 30px rgba(5,150,105,0.15);
+  --shadow-sm:       0 1px 2px rgba(0,0,0,0.25);
+  --shadow-card:     0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15);
+  --shadow-elevated: 0 4px 20px rgba(0,0,0,0.35);
+  --shadow-glow:     0 4px 30px rgba(5,150,105,0.12);
+
+  --gradient-hero: linear-gradient(135deg, #1a1520 0%, #181a22 30%, #161820 60%, #121a18 100%);
+  --gradient-warm: linear-gradient(135deg, #1a1520 0%, #1a1818 50%, #121a18 100%);
 }
 
 @theme inline {

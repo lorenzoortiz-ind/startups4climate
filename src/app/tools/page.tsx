@@ -291,9 +291,9 @@ export default function ToolsDashboard() {
     const stagesCovered = new Set(completedTools.map((t) => t.stage))
 
     const stageNames: Record<number, string> = {
-      1: 'Pre-incubacion',
-      2: 'Incubacion',
-      3: 'Aceleracion',
+      1: 'Pre-incubación',
+      2: 'Incubación',
+      3: 'Aceleración',
       4: 'Escalamiento',
     }
     const stageColors: Record<number, string> = {
@@ -416,13 +416,13 @@ export default function ToolsDashboard() {
         transition={{ duration: 0.3 }}
         style={{
           display: 'flex',
-          gap: '0.25rem',
+          gap: '0.5rem',
           marginBottom: '2rem',
           background: 'var(--color-bg-card)',
           borderRadius: 12,
           border: '1px solid var(--color-border)',
-          padding: '0.25rem',
-          overflow: 'auto',
+          padding: '0.75rem 2rem',
+          overflow: 'visible',
         }}
       >
         {NAV_TABS.map((tab) => (
@@ -615,6 +615,56 @@ export default function ToolsDashboard() {
               </button>
             )}
           </div>
+        </div>
+      </motion.div>
+
+      {/* ─── Stage indicator banner ─── */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.05 }}
+        style={{ marginBottom: '1.5rem' }}
+      >
+        <div
+          style={{
+            background: STAGE_META[userStageNum as 1 | 2 | 3 | 4].bg,
+            border: `1px solid ${STAGE_META[userStageNum as 1 | 2 | 3 | 4].border}`,
+            borderRadius: 14,
+            padding: '0.875rem 1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+          }}
+        >
+          {(() => {
+            const StageIcon = STAGE_ICONS[userStageNum as 1 | 2 | 3 | 4]
+            return (
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: `${STAGE_META[userStageNum as 1 | 2 | 3 | 4].color}18`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <StageIcon size={18} color={STAGE_META[userStageNum as 1 | 2 | 3 | 4].color} />
+              </div>
+            )
+          })()}
+          <span
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.9375rem',
+              fontWeight: 700,
+              color: STAGE_META[userStageNum as 1 | 2 | 3 | 4].color,
+            }}
+          >
+            Tu startup está en la etapa de {STAGE_META[userStageNum as 1 | 2 | 3 | 4].name}
+          </span>
         </div>
       </motion.div>
 

@@ -24,68 +24,68 @@ interface Service {
 const services: Service[] = [
   {
     icon: Presentation,
-    title: 'Diseno de Pitch Deck para Inversores Climaticos',
+    title: 'Diseño de Pitch Deck para Inversores Climáticos',
     description:
-      'Disenamos pitch decks listos para inversores especializados en climate tech. Incluye narrativa estrategica, visualizacion de datos de impacto y proyecciones financieras alineadas con tesis climaticas.',
+      'Diseñamos pitch decks listos para inversores especializados en climate tech. Incluye narrativa estratégica, visualización de datos de impacto y proyecciones financieras alineadas con tesis climáticas.',
     includes: [
-      'Narrativa y storytelling climatico',
-      'Visualizacion de metricas de impacto y unit economics',
-      'Proyecciones financieras a 5 anos con escenarios',
-      'Diseno profesional listo para enviar',
+      'Narrativa y storytelling climático',
+      'Visualización de métricas de impacto y unit economics',
+      'Proyecciones financieras a 5 años con escenarios',
+      'Diseño profesional listo para enviar',
     ],
-    mailto: 'Pitch Deck para Inversores Climaticos',
+    mailto: 'Pitch Deck para Inversores Climáticos',
   },
   {
     icon: Calculator,
-    title: 'Modelacion Financiera y Unit Economics',
+    title: 'Modelación Financiera y Unit Economics',
     description:
-      'Modelos financieros a medida para startups de deep tech y hardware climatico. Analisis de escenarios, modelacion DSCR, y outputs listos para due diligence con inversores.',
+      'Modelos financieros a medida para startups de deep tech y hardware climático. Análisis de escenarios, modelación DSCR, y outputs listos para due diligence con inversores.',
     includes: [
       'Modelo financiero completo en Excel/Sheets',
-      'Analisis de escenarios (base, optimista, conservador)',
-      'Modelacion de DSCR y debt capacity',
+      'Análisis de escenarios (base, optimista, conservador)',
+      'Modelación de DSCR y debt capacity',
       'Unit economics detallado con sensitivity analysis',
     ],
-    mailto: 'Modelacion Financiera y Unit Economics',
+    mailto: 'Modelación Financiera y Unit Economics',
   },
   {
     icon: Rocket,
-    title: 'Estrategia de Go-to-Market Climatico',
+    title: 'Estrategia de Go-to-Market Climático',
     description:
-      'Estrategia de entrada al mercado adaptada a climate tech en Latam. Desde customer discovery hasta estructuracion de pilotos, pricing y desarrollo de partnerships estrategicos.',
+      'Estrategia de entrada al mercado adaptada a climate tech en Latam. Desde customer discovery hasta estructuración de pilotos, pricing y desarrollo de partnerships estratégicos.',
     includes: [
-      'Customer discovery y segmentacion de mercado',
-      'Estructuracion de pilotos B2B y offtake agreements',
+      'Customer discovery y segmentación de mercado',
+      'Estructuración de pilotos B2B y offtake agreements',
       'Estrategia de pricing y revenue model',
-      'Pipeline de partnerships y canales de distribucion',
+      'Pipeline de partnerships y canales de distribución',
     ],
-    mailto: 'Estrategia de Go-to-Market Climatico',
+    mailto: 'Estrategia de Go-to-Market Climático',
   },
   {
     icon: ShieldCheck,
-    title: 'Preparacion para Due Diligence',
+    title: 'Preparación para Due Diligence',
     description:
-      'Paquete completo de preparacion para DD: data room organizado, revision legal, auditoria de propiedad intelectual y documentacion tecnica lista para inversores.',
+      'Paquete completo de preparación para DD: data room organizado, revisión legal, auditoría de propiedad intelectual y documentación técnica lista para inversores.',
     includes: [
-      'Estructuracion y poblacion del data room',
-      'Revision legal y compliance check',
-      'Auditoria de IP y documentacion de patentes',
+      'Estructuración y población del data room',
+      'Revisión legal y compliance check',
+      'Auditoría de IP y documentación de patentes',
       'Technical documentation y risk assessment',
     ],
-    mailto: 'Preparacion para Due Diligence',
+    mailto: 'Preparación para Due Diligence',
   },
   {
     icon: Layers,
-    title: 'Diseno de Capital Stack y Fundraising',
+    title: 'Diseño de Capital Stack y Fundraising',
     description:
-      'Estrategia de blended finance: mapeo de grants, equity y deuda. Identificacion de inversores target, preparacion de pitch y acompanamiento en el proceso de fundraising.',
+      'Estrategia de blended finance: mapeo de grants, equity y deuda. Identificación de inversores target, preparación de pitch y acompañamiento en el proceso de fundraising.',
     includes: [
       'Mapeo de grants + equity + debt (blended finance)',
-      'Identificacion y targeting de inversores climaticos',
-      'Preparacion de pitch y materiales de fundraising',
-      'Acompanamiento en negociaciones y term sheets',
+      'Identificación y targeting de inversores climáticos',
+      'Preparación de pitch y materiales de fundraising',
+      'Acompañamiento en negociaciones y term sheets',
     ],
-    mailto: 'Diseno de Capital Stack y Fundraising',
+    mailto: 'Diseño de Capital Stack y Fundraising',
   },
 ]
 
@@ -154,7 +154,7 @@ export default function ServicesDetail() {
               marginBottom: '1rem',
             }}
           >
-            Todo lo que necesitas para levantar capital climatico
+            Todo lo que necesitas para levantar capital climático
           </h2>
 
           <p
@@ -165,8 +165,8 @@ export default function ServicesDetail() {
               color: 'var(--color-text-secondary)',
             }}
           >
-            Consultoria especializada para startups climate tech en Latam. Cada servicio esta
-            disenado para acelerar tu camino al siguiente hito de financiamiento.
+            Consultoría especializada para startups climate tech en Latam. Cada servicio está
+            diseñado para acelerar tu camino al siguiente hito de financiamiento.
           </p>
         </motion.div>
 
@@ -351,7 +351,7 @@ export default function ServicesDetail() {
               marginBottom: '1.25rem',
             }}
           >
-            No sabes por donde empezar? Agenda una llamada y disenamos un plan a tu medida.
+            ¿No sabes por dónde empezar? Agenda una llamada y diseñamos un plan a tu medida.
           </p>
 
           <a

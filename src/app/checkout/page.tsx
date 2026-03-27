@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
@@ -9,27 +9,11 @@ import {
   CreditCard,
   CheckCircle2,
   ArrowLeft,
+  CheckCircle,
+  Package,
+  Briefcase,
 } from 'lucide-react'
-
-/* ─── Options matching DiagnosticForm ─── */
-const verticalOptions = [
-  'Fintech',
-  'Healthtech',
-  'Edtech',
-  'Agritech',
-  'Cleantech / Climatech',
-  'Biotech',
-  'Deep Tech',
-  'Proptech',
-  'Legaltech',
-  'Insurtech',
-  'Mobility / Logistica',
-  'E-commerce / Marketplace',
-  'SaaS / Enterprise',
-  'Social Impact',
-  'Foodtech',
-  'Otro',
-]
+import { useAuth } from '@/context/AuthContext'
 
 const countryOptions = [
   'Argentina',
@@ -43,12 +27,12 @@ const countryOptions = [
   'El Salvador',
   'Guatemala',
   'Honduras',
-  'Mexico',
+  'México',
   'Nicaragua',
-  'Panama',
+  'Panamá',
   'Paraguay',
-  'Peru',
-  'Republica Dominicana',
+  'Perú',
+  'República Dominicana',
   'Uruguay',
   'Venezuela',
 ]
@@ -98,11 +82,22 @@ const sectionTitleStyle: React.CSSProperties = {
 
 function CheckoutContent() {
   const searchParams = useSearchParams()
+  const { user } = useAuth()
   const productName = searchParams.get('product') || 'Producto Digital'
   const productPrice = searchParams.get('price') || '99'
   const priceNum = parseInt(productPrice, 10) || 99
 
   const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [confirmed, setConfirmed] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '')
+      setEmail(user.email || '')
+    }
+  }, [user])
 
   const handleFocus = (field: string) => () => setFocusedField(field)
   const handleBlur = () => setFocusedField(null)
@@ -111,6 +106,98 @@ function CheckoutContent() {
     focusedField === field
       ? { borderColor: '#059669', boxShadow: '0 0 0 3px rgba(5,150,105,0.1)' }
       : {}
+
+  const handlePay = () => {
+    setConfirmed(true)
+  }
+
+  if (confirmed) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: '#F9FAFB',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          style={{
+            background: '#ffffff',
+            borderRadius: 20,
+            border: '1px solid #e5e7eb',
+            padding: '3rem 2.5rem',
+            maxWidth: 480,
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          }}
+        >
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: '50%',
+              background: 'rgba(5,150,105,0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.5rem',
+            }}
+          >
+            <CheckCircle size={40} color="#059669" />
+          </div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.75rem',
+              fontWeight: 800,
+              color: 'var(--color-text-primary, #111827)',
+              letterSpacing: '-0.02em',
+              marginBottom: '0.75rem',
+            }}
+          >
+            ¡Pago confirmado!
+          </h1>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '1rem',
+              lineHeight: 1.6,
+              color: 'var(--color-text-secondary, #6b7280)',
+              marginBottom: '2rem',
+            }}
+          >
+            Te enviaremos el recurso a tu correo electrónico en las próximas 24 horas.
+          </p>
+          <a
+            href="/tools"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.875rem 2rem',
+              borderRadius: 12,
+              background: '#059669',
+              color: 'white',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.9375rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              boxShadow: '0 4px 20px rgba(5,150,105,0.25)',
+              transition: 'all 0.2s',
+            }}
+          >
+            Regresar a la plataforma
+          </a>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -206,7 +293,7 @@ function CheckoutContent() {
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <h2 style={sectionTitleStyle}>Informacion de contacto</h2>
+            <h2 style={sectionTitleStyle}>Información de contacto</h2>
             <div
               style={{
                 display: 'flex',
@@ -219,6 +306,8 @@ function CheckoutContent() {
                 <input
                   type="text"
                   placeholder="Tu nombre"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   style={{ ...inputStyle, ...getFocusStyle('name') }}
                   onFocus={handleFocus('name')}
                   onBlur={handleBlur}
@@ -236,13 +325,25 @@ function CheckoutContent() {
                   <input
                     type="email"
                     placeholder="tu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     style={{ ...inputStyle, ...getFocusStyle('email') }}
                     onFocus={handleFocus('email')}
                     onBlur={handleBlur}
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Telefono</label>
+                  <label style={labelStyle}>
+                    Teléfono{' '}
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        color: 'var(--color-text-muted, #9ca3af)',
+                      }}
+                    >
+                      (opcional)
+                    </span>
+                  </label>
                   <input
                     type="tel"
                     placeholder="+51 999 999 999"
@@ -255,127 +356,49 @@ function CheckoutContent() {
             </div>
           </div>
 
-          {/* Startup info */}
+          {/* Location info */}
           <div
             style={{
               background: '#ffffff',
               borderRadius: 16,
               border: '1px solid #e5e7eb',
               padding: '1.75rem',
-              marginBottom: '1.25rem',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <h2 style={sectionTitleStyle}>Informacion de tu startup</h2>
+            <h2 style={sectionTitleStyle}>Ubicación</h2>
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '0.875rem',
               }}
             >
               <div>
-                <label style={labelStyle}>Nombre de la startup</label>
-                <input
-                  type="text"
-                  placeholder="Mi Startup"
-                  style={{ ...inputStyle, ...getFocusStyle('startup') }}
-                  onFocus={handleFocus('startup')}
-                  onBlur={handleBlur}
-                />
-              </div>
-              <div>
-                <label style={labelStyle}>Vertical</label>
+                <label style={labelStyle}>País</label>
                 <select
                   defaultValue=""
-                  style={{ ...selectStyle, ...getFocusStyle('vertical') }}
-                  onFocus={handleFocus('vertical')}
+                  style={{ ...selectStyle, ...getFocusStyle('country') }}
+                  onFocus={handleFocus('country')}
                   onBlur={handleBlur}
                 >
                   <option value="" disabled>
-                    Selecciona una vertical
+                    Selecciona un país
                   </option>
-                  {verticalOptions.map((v) => (
-                    <option key={v} value={v}>
-                      {v}
+                  {countryOptions.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
                     </option>
                   ))}
                 </select>
               </div>
-            </div>
-          </div>
-
-          {/* Billing info */}
-          <div
-            style={{
-              background: '#ffffff',
-              borderRadius: 16,
-              border: '1px solid #e5e7eb',
-              padding: '1.75rem',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-            }}
-          >
-            <h2 style={sectionTitleStyle}>Informacion de facturacion</h2>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.875rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: '0.875rem',
-                }}
-              >
-                <div>
-                  <label style={labelStyle}>Pais</label>
-                  <select
-                    defaultValue=""
-                    style={{ ...selectStyle, ...getFocusStyle('country') }}
-                    onFocus={handleFocus('country')}
-                    onBlur={handleBlur}
-                  >
-                    <option value="" disabled>
-                      Selecciona un pais
-                    </option>
-                    {countryOptions.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label style={labelStyle}>Ciudad</label>
-                  <input
-                    type="text"
-                    placeholder="Tu ciudad"
-                    style={{ ...inputStyle, ...getFocusStyle('city') }}
-                    onFocus={handleFocus('city')}
-                    onBlur={handleBlur}
-                  />
-                </div>
-              </div>
               <div>
-                <label style={labelStyle}>
-                  Direccion{' '}
-                  <span
-                    style={{
-                      fontWeight: 400,
-                      color: 'var(--color-text-muted, #9ca3af)',
-                    }}
-                  >
-                    (opcional)
-                  </span>
-                </label>
+                <label style={labelStyle}>Ciudad</label>
                 <input
                   type="text"
-                  placeholder="Calle y numero"
-                  style={{ ...inputStyle, ...getFocusStyle('address') }}
-                  onFocus={handleFocus('address')}
+                  placeholder="Tu ciudad"
+                  style={{ ...inputStyle, ...getFocusStyle('city') }}
+                  onFocus={handleFocus('city')}
                   onBlur={handleBlur}
                 />
               </div>
@@ -539,7 +562,7 @@ function CheckoutContent() {
             {/* CTA */}
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
               <button
-                disabled
+                onClick={handlePay}
                 style={{
                   width: '100%',
                   padding: '0.9375rem 1.5rem',
@@ -550,8 +573,7 @@ function CheckoutContent() {
                   fontSize: '0.9375rem',
                   fontWeight: 700,
                   border: 'none',
-                  cursor: 'not-allowed',
-                  opacity: 0.85,
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -563,18 +585,6 @@ function CheckoutContent() {
                 <CreditCard size={18} strokeWidth={2} />
                 Pagar con Stripe
               </button>
-              <p
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.6875rem',
-                  color: 'var(--color-text-muted, #9ca3af)',
-                  textAlign: 'center',
-                  marginTop: '0.5rem',
-                  fontWeight: 600,
-                }}
-              >
-                Proximamente
-              </p>
             </div>
 
             {/* Trust badges */}
@@ -620,9 +630,95 @@ function CheckoutContent() {
                     color: 'var(--color-text-secondary, #6b7280)',
                   }}
                 >
-                  Garantia de satisfaccion
+                  Garantía de satisfacción
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* Products & Services links */}
+          <div
+            style={{
+              marginTop: '1rem',
+              background: '#ffffff',
+              borderRadius: 12,
+              border: '1px solid #e5e7eb',
+              padding: '1rem 1.25rem',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.625rem',
+              }}
+            >
+              <Package size={13} color="#059669" />
+              <span
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.8125rem',
+                  fontWeight: 600,
+                  color: 'var(--color-text-primary, #111827)',
+                }}
+              >
+                Otros productos
+              </span>
+            </div>
+            <a
+              href="/tools/productos"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                color: '#059669',
+                textDecoration: 'none',
+                fontWeight: 500,
+              }}
+            >
+              Ver todos los productos disponibles &rarr;
+            </a>
+
+            <div
+              style={{
+                borderTop: '1px solid #f3f4f6',
+                marginTop: '0.75rem',
+                paddingTop: '0.75rem',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.625rem',
+                }}
+              >
+                <Briefcase size={13} color="#059669" />
+                <span
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary, #111827)',
+                  }}
+                >
+                  Servicios profesionales
+                </span>
+              </div>
+              <a
+                href="/tools/servicios"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.75rem',
+                  color: '#059669',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                Conoce nuestros servicios &rarr;
+              </a>
             </div>
           </div>
 
@@ -653,7 +749,7 @@ function CheckoutContent() {
                 margin: 0,
               }}
             >
-              Los pagos seran procesados de forma segura a traves de Stripe.
+              Los pagos serán procesados de forma segura a través de Stripe.
             </p>
           </div>
         </motion.div>

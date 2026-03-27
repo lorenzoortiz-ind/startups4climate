@@ -4,8 +4,8 @@ import { motion } from 'framer-motion'
 import { Clock, BarChart2, ArrowRight } from 'lucide-react'
 
 const features = [
-  { icon: Clock, title: 'Evaluacion rapida', desc: 'Disenado para founders ocupados. En menos de 5 minutos sabras exactamente en que etapa esta tu startup y que necesitas priorizar.' },
-  { icon: BarChart2, title: 'Analisis integral', desc: 'Calificamos tu idea, mercado, equipo y modelo de negocio con un scoring preciso que te ubica en una de las 4 etapas del desarrollo.' },
+  { icon: Clock, title: 'Evaluación rápida', desc: 'Diseñado para founders ocupados. En menos de 5 minutos sabrás exactamente en qué etapa está tu startup y qué necesitas priorizar.' },
+  { icon: BarChart2, title: 'Análisis integral', desc: 'Calificamos tu idea, mercado, equipo y modelo de negocio con un scoring preciso que te ubica en una de las 4 etapas del desarrollo.' },
   { icon: ArrowRight, title: 'Ruta de herramientas personalizada', desc: 'Al finalizar, desbloqueas acceso directo a las herramientas que corresponden a tu etapa exacta. Sin adivinar, sin perder tiempo.' },
 ]
 
@@ -36,7 +36,7 @@ export default function DiagnosticFeature() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            Diagnostico Gratuito
+            Diagnóstico Gratuito
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -47,7 +47,7 @@ export default function DiagnosticFeature() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Diagnostico de Startup Readiness
+            Diagnóstico de Startup Readiness
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -57,7 +57,7 @@ export default function DiagnosticFeature() {
             maxWidth: 600,
             margin: '0 auto 2.5rem',
           }}>
-            10 preguntas que evaluan tu idea, mercado, equipo y modelo de negocio.
+            10 preguntas que evalúan tu idea, mercado, equipo y modelo de negocio.
             Descubre tu etapa real y accede a las herramientas que necesitas hoy.
           </p>
         </motion.div>

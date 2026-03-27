@@ -27,21 +27,21 @@ interface Product {
 const products: Product[] = [
   {
     icon: Search,
-    name: 'Investigacion de Mercado Profunda',
+    name: 'Investigación de Mercado Profunda',
     description:
-      'Analisis completo de tu mercado objetivo, competencia y oportunidades con recomendaciones accionables.',
+      'Análisis completo de tu mercado objetivo, competencia y oportunidades con recomendaciones accionables.',
     price: 299,
-    stage: 'Pre-incubacion',
+    stage: 'Pre-incubación',
     stageColor: '#7C3AED',
     stageBg: 'rgba(124,58,237,0.08)',
   },
   {
     icon: Layers,
-    name: 'Diseno de Producto MVP',
+    name: 'Diseño de Producto MVP',
     description:
-      'Prototipo funcional de tu producto minimo viable con wireframes, user flows y especificacion tecnica.',
+      'Prototipo funcional de tu producto mínimo viable con wireframes, user flows y especificación técnica.',
     price: 499,
-    stage: 'Incubacion',
+    stage: 'Incubación',
     stageColor: '#059669',
     stageBg: 'rgba(5,150,105,0.08)',
   },
@@ -49,9 +49,9 @@ const products: Product[] = [
     icon: LineChart,
     name: 'Modelamiento Financiero Profesional',
     description:
-      'Proyecciones financieras a 3 anos, unit economics detallado y modelo listo para inversores.',
+      'Proyecciones financieras a 3 años, unit economics detallado y modelo listo para inversores.',
     price: 399,
-    stage: 'Incubacion',
+    stage: 'Incubación',
     stageColor: '#059669',
     stageBg: 'rgba(5,150,105,0.08)',
   },
@@ -59,9 +59,9 @@ const products: Product[] = [
     icon: BarChart3,
     name: 'Dashboard Financiero para Inversores',
     description:
-      'Dashboard interactivo con metricas clave de tu negocio, listo para presentar a inversores.',
+      'Dashboard interactivo con métricas clave de tu negocio, listo para presentar a inversores.',
     price: 349,
-    stage: 'Aceleracion',
+    stage: 'Aceleración',
     stageColor: '#D97706',
     stageBg: 'rgba(217,119,6,0.08)',
   },
@@ -69,9 +69,9 @@ const products: Product[] = [
     icon: Presentation,
     name: 'Pitch Deck Profesional',
     description:
-      'Pitch deck de 12 slides disenado profesionalmente con tu narrativa de inversion.',
+      'Pitch deck de 12 slides diseñado profesionalmente con tu narrativa de inversión.',
     price: 249,
-    stage: 'Aceleracion',
+    stage: 'Aceleración',
     stageColor: '#D97706',
     stageBg: 'rgba(217,119,6,0.08)',
   },
@@ -81,7 +81,7 @@ const products: Product[] = [
     description:
       'Logo, paleta de colores, tipografia y brand guidelines completos para tu startup.',
     price: 599,
-    stage: 'Pre-incubacion',
+    stage: 'Pre-incubación',
     stageColor: '#7C3AED',
     stageBg: 'rgba(124,58,237,0.08)',
   },
@@ -264,7 +264,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 
 export default function ProductosToolsPage() {
   return (
-    <div style={{ padding: '2.5rem 2rem', maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ padding: '2rem 2rem', maxWidth: 1100, margin: '0 auto' }}>
       {/* Back link */}
       <motion.div
         initial={{ opacity: 0, x: -12 }}
@@ -339,7 +339,7 @@ export default function ProductosToolsPage() {
           }}
         >
           Entregables profesionales alineados con cada etapa de desarrollo de tu startup.
-          Desde la investigacion de mercado hasta el pitch deck listo para inversores.
+          Desde la investigación de mercado hasta el pitch deck listo para inversores.
         </p>
       </motion.div>
 
@@ -382,7 +382,7 @@ export default function ProductosToolsPage() {
             marginBottom: '0.75rem',
           }}
         >
-          Necesitas algo mas personalizado?
+          ¿Necesitas algo más personalizado?
         </h2>
         <p
           style={{
@@ -395,7 +395,7 @@ export default function ProductosToolsPage() {
             margin: '0 auto 1.5rem',
           }}
         >
-          Conoce nuestros servicios de consultoria y acompanamiento para founders e inversores.
+          Conoce nuestros servicios de consultoría y acompañamiento para founders e inversores.
         </p>
         <Link
           href="/tools/servicios"

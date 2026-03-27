@@ -7,7 +7,7 @@ import { getToolData, saveToolData, syncToolDataToSupabase } from './progress'
  * Hook that loads tool data from localStorage on mount and auto-saves on change with debounce.
  * Replaces the manual useState + useEffect(saveToolData) pattern in every tool component.
  */
-export function useToolState<T extends Record<string, unknown>>(
+export function useToolState<T extends object>(
   userId: string,
   toolId: string,
   defaultValue: T

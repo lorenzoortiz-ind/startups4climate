@@ -125,7 +125,7 @@ export default function CTAFinal() {
                     transition: 'all 0.2s',
                   }}
                 >
-                  Diagnostico Rapido
+                  Diagnóstico Rápido
                 </a>
               </>
             )}

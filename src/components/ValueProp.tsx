@@ -8,15 +8,15 @@ const pillars = [
     icon: Zap,
     title: 'Herramientas paso a paso',
     subtitle: 'A tu ritmo, sin rigidez',
-    description: 'A tu ritmo, sin programas rigidos de 12 semanas. 24 herramientas que siguen una metodologia probada basada en los 24 pasos del MIT Disciplined Entrepreneurship.',
+    description: 'A tu ritmo, sin programas rígidos de 12 semanas. 24 herramientas que siguen una metodología probada basada en los 24 pasos del MIT Disciplined Entrepreneurship.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
   },
   {
     icon: Target,
-    title: 'Diagnostico personalizado',
+    title: 'Diagnóstico personalizado',
     subtitle: 'Tu punto de partida exacto',
-    description: 'Evaluamos en que etapa estas y te mostramos exactamente que herramientas necesitas ahora. Sin perder tiempo en lo que no corresponde a tu momento.',
+    description: 'Evaluamos en qué etapa estás y te mostramos exactamente qué herramientas necesitas ahora. Sin perder tiempo en lo que no corresponde a tu momento.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
@@ -24,15 +24,15 @@ const pillars = [
     icon: BookOpen,
     title: 'Marco conceptual incluido',
     subtitle: 'No asumimos que ya sabes todo',
-    description: 'Cada herramienta viene con una explicacion de por que la necesitas y las bases teoricas detras. Aprendes mientras construyes — no necesitas un MBA para empezar.',
+    description: 'Cada herramienta viene con una explicación de por qué la necesitas y las bases teóricas detrás. Aprendes mientras construyes — no necesitas un MBA para empezar.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
   {
     icon: Globe,
     title: 'Acceso desde cualquier lugar',
-    subtitle: 'Democratizacion real',
-    description: 'Cualquier founder en Latinoamerica con internet puede acceder. Sin filtros, sin aplicaciones, sin esperar turno. La plataforma esta disponible para ti hoy.',
+    subtitle: 'Democratización real',
+    description: 'Cualquier founder en Latinoamérica con internet puede acceder. Sin filtros, sin aplicaciones, sin esperar turno. La plataforma está disponible para ti hoy.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
   },
@@ -82,8 +82,8 @@ export default function ValueProp() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            La plataforma que democratiza el desarrollo de startups de impacto en Latinoamerica.
-            Herramientas estructuradas, metodologia probada y acceso libre para cualquier founder.
+            La plataforma que democratiza el desarrollo de startups de impacto en Latinoamérica.
+            Herramientas estructuradas, metodología probada y acceso libre para cualquier founder.
           </p>
         </motion.div>
 

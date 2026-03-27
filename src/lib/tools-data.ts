@@ -121,16 +121,16 @@ export const TOOLS: ToolDef[] = [
   },
   {
     id: 'beachhead-market',
-    name: 'Selección del Beachhead Market',
-    shortName: 'Beachhead Market',
+    name: 'Selección del mercado inicial',
+    shortName: 'Mercado inicial',
     description:
       'Elige tu primer mercado de entrada — el nicho donde ganarás tu primera batalla antes de expandirte.',
     preambulo:
-      'Tu Beachhead Market es el primer mercado pequeño y específico donde vas a dominar. No es tu mercado final, es tu playa de desembarco. Los emprendedores que intentan atacar varios mercados a la vez dispersan recursos y terminan sin ganar en ninguno. Enfócate en un solo segmento donde puedas generar referencias boca a boca, aprender rápido y construir una posición dominante antes de expandirte.',
+      'Tu mercado inicial es el primer mercado pequeño y específico donde vas a dominar. No es tu mercado final, es tu playa de desembarco. Los emprendedores que intentan atacar varios mercados a la vez dispersan recursos y terminan sin ganar en ninguno. Enfócate en un solo segmento donde puedas generar referencias boca a boca, aprender rápido y construir una posición dominante antes de expandirte.',
     ...stageProps(1),
     category: 'Mercado',
     estimatedTime: '20 min',
-    outputs: ['Beachhead Market seleccionado', 'Justificación con criterios ponderados', 'Mapa de expansión futura'],
+    outputs: ['Mercado inicial seleccionado', 'Justificación con criterios ponderados', 'Mapa de expansión futura'],
     stepNumber: 2,
   },
   {
@@ -138,7 +138,7 @@ export const TOOLS: ToolDef[] = [
     name: 'Perfil del Usuario Final',
     shortName: 'Usuario Final',
     description:
-      'Construye un perfil detallado de quién es el usuario final de tu producto en el Beachhead Market.',
+      'Construye un perfil detallado de quién es el usuario final de tu producto en el mercado inicial.',
     preambulo:
       'Tu usuario final es la persona real que va a usar tu producto. No es lo mismo que tu cliente (quien paga). Necesitas entender profundamente quién es, qué hace, qué le frustra, cuáles son sus prioridades y cómo toma decisiones. Sin un perfil claro, terminarás diseñando un producto para todos y para nadie. Este paso se basa en investigación real, no en suposiciones.',
     ...stageProps(1),
@@ -153,13 +153,13 @@ export const TOOLS: ToolDef[] = [
     name: 'Cálculo del TAM (Mercado Total Direccionable)',
     shortName: 'Cálculo del TAM',
     description:
-      'Calcula el tamaño de tu mercado en tu Beachhead Market usando análisis bottom-up.',
+      'Calcula el tamaño de tu mercado en tu mercado inicial usando análisis bottom-up.',
     preambulo:
-      'El TAM (Total Addressable Market) responde a la pregunta: ¿cuánto dinero podrías generar si capturaras el 100% de tu Beachhead Market? Este número es fundamental para saber si vale la pena perseguir este mercado. Lo importante es hacerlo con un análisis bottom-up (contando clientes reales × precio), no top-down (tomando porcentajes de mercados globales). Los inversores ven esto inmediatamente y un TAM inflado destruye tu credibilidad.',
+      'El TAM (Total Addressable Market) responde a la pregunta: ¿cuánto dinero podrías generar si capturaras el 100% de tu mercado inicial? Este número es fundamental para saber si vale la pena perseguir este mercado. Lo importante es hacerlo con un análisis bottom-up (contando clientes reales × precio), no top-down (tomando porcentajes de mercados globales). Los inversores ven esto inmediatamente y un TAM inflado destruye tu credibilidad.',
     ...stageProps(1),
     category: 'Finanzas',
     estimatedTime: '20 min',
-    outputs: ['TAM del Beachhead Market (USD)', 'Metodología bottom-up documentada', 'Número estimado de clientes potenciales'],
+    outputs: ['TAM del Mercado Inicial (USD)', 'Metodología bottom-up documentada', 'Número estimado de clientes potenciales'],
     stepNumber: 4,
   },
   {
@@ -167,7 +167,7 @@ export const TOOLS: ToolDef[] = [
     name: 'Perfil de la Persona',
     shortName: 'Persona',
     description:
-      'Crea una persona concreta y representativa de tu Beachhead Market con nombre, foto y contexto.',
+      'Crea una persona concreta y representativa de tu mercado inicial con nombre, foto y contexto.',
     preambulo:
       'Una Persona es diferente de un perfil de usuario. Es UNA persona real (o muy realista) que representa a tu cliente ideal. Debe tener nombre, edad, cargo, frustraciones específicas y motivaciones. Cuando tu equipo tome decisiones de producto, diseño o marketing, deben preguntarse: ¿esto le serviría a [Nombre de tu Persona]? Es una herramienta de alineación interna poderosa.',
     ...stageProps(1),
@@ -226,9 +226,9 @@ export const TOOLS: ToolDef[] = [
     name: 'Mapa de los Primeros 10 Clientes',
     shortName: 'Primeros 10 Clientes',
     description:
-      'Identifica con nombre y apellido a tus primeros 10 clientes potenciales en el Beachhead Market.',
+      'Identifica con nombre y apellido a tus primeros 10 clientes potenciales en el mercado inicial.',
     preambulo:
-      'Si no puedes listar 10 clientes potenciales reales con nombre y datos de contacto, probablemente no conoces bien tu mercado. Este ejercicio te obliga a pasar de lo abstracto a lo concreto. Estos 10 clientes son tu grupo de prueba, tus primeros evangelistas y la fuente de tus primeros ingresos. Si tu Beachhead Market es correcto, encontrar 10 debería ser posible.',
+      'Si no puedes listar 10 clientes potenciales reales con nombre y datos de contacto, probablemente no conoces bien tu mercado. Este ejercicio te obliga a pasar de lo abstracto a lo concreto. Estos 10 clientes son tu grupo de prueba, tus primeros evangelistas y la fuente de tus primeros ingresos. Si tu mercado inicial es correcto, encontrar 10 debería ser posible.',
     ...stageProps(2),
     category: 'Ventas',
     estimatedTime: '20 min',
@@ -406,7 +406,7 @@ export const TOOLS: ToolDef[] = [
     description:
       'Desarrolla tu roadmap de producto y mapea los mercados adyacentes para tu expansión futura.',
     preambulo:
-      'Ahora que dominaste tu Beachhead Market, es momento de planificar tu expansión. El Product Plan define las próximas versiones de tu producto y las features que necesitarás. Los Mercados Adyacentes (Follow-on Markets) son los segmentos donde puedes expandirte aprovechando tu Core y la credibilidad ganada. La expansión debe ser estratégica: cada nuevo mercado debe ser más fácil de ganar que el anterior.',
+      'Ahora que dominaste tu mercado inicial, es momento de planificar tu expansión. El Product Plan define las próximas versiones de tu producto y las features que necesitarás. Los Mercados Adyacentes (Follow-on Markets) son los segmentos donde puedes expandirte aprovechando tu Core y la credibilidad ganada. La expansión debe ser estratégica: cada nuevo mercado debe ser más fácil de ganar que el anterior.',
     ...stageProps(4),
     category: 'Producto',
     estimatedTime: '25 min',

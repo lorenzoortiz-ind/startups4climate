@@ -31,8 +31,8 @@ interface Stage {
 const stages: Stage[] = [
   {
     id: 1,
-    label: 'Pre-incubacion',
-    sublabel: 'Ideacion y validacion inicial',
+    label: 'Pre-incubación',
+    sublabel: 'Ideación y validación inicial',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
     border: 'rgba(124,58,237,0.15)',
@@ -41,38 +41,38 @@ const stages: Stage[] = [
       {
         name: 'Google Workspace',
         description:
-          'Documentos, hojas de calculo y presentaciones colaborativas. Gratis.',
+          'Documentos, hojas de cálculo y presentaciones colaborativas. Gratis.',
         tag: 'Gratis',
       },
       {
         name: 'Notion',
         description:
-          'Base de conocimiento y gestion de proyectos. Gratis para equipos pequenos.',
+          'Base de conocimiento y gestión de proyectos. Gratis para equipos pequeños.',
         tag: 'Gratis',
       },
       {
         name: 'Claude',
         description:
-          'Analisis profundo, investigacion y estrategia con IA. Free tier disponible.',
+          'Análisis profundo, investigación y estrategia con IA. Free tier disponible.',
         tag: 'Free tier',
       },
       {
         name: 'Canva',
         description:
-          'Diseno de presentaciones, logos y materiales visuales. Gratis.',
+          'Diseño de presentaciones, logos y materiales visuales. Gratis.',
         tag: 'Gratis',
       },
       {
         name: 'WhatsApp Business',
-        description: 'Comunicacion con potenciales clientes. Gratis.',
+        description: 'Comunicación con potenciales clientes. Gratis.',
         tag: 'Gratis',
       },
     ],
   },
   {
     id: 2,
-    label: 'Incubacion',
-    sublabel: 'Validacion de mercado y prototipo',
+    label: 'Incubación',
+    sublabel: 'Validación de mercado y prototipo',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
     border: 'rgba(5,150,105,0.15)',
@@ -81,36 +81,36 @@ const stages: Stage[] = [
       {
         name: 'Figma',
         description:
-          'Prototipado y diseno de interfaces. Gratis para hasta 3 proyectos.',
+          'Prototipado y diseño de interfaces. Gratis para hasta 3 proyectos.',
         tag: 'Gratis',
       },
       {
         name: 'Typeform / Google Forms',
         description:
-          'Encuestas y formularios de validacion. Gratis.',
+          'Encuestas y formularios de validación. Gratis.',
         tag: 'Gratis',
       },
       {
         name: 'Mailchimp / Brevo',
         description:
-          'Email marketing para nutrir leads. Gratis hasta 300 envios/dia.',
+          'Email marketing para nutrir leads. Gratis hasta 300 envíos/día.',
         tag: 'Gratis',
       },
       {
         name: 'Trello / Linear',
-        description: 'Gestion de tareas y sprints. Gratis.',
+        description: 'Gestión de tareas y sprints. Gratis.',
         tag: 'Gratis',
       },
       {
         name: 'Calendly',
-        description: 'Agenda reuniones automaticamente. Gratis.',
+        description: 'Agenda reuniones automáticamente. Gratis.',
         tag: 'Gratis',
       },
     ],
   },
   {
     id: 3,
-    label: 'Aceleracion',
+    label: 'Aceleración',
     sublabel: 'Producto en mercado y primeros clientes',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
@@ -136,12 +136,12 @@ const stages: Stage[] = [
       {
         name: 'HubSpot CRM',
         description:
-          'Gestion de clientes y pipeline de ventas. Gratis.',
+          'Gestión de clientes y pipeline de ventas. Gratis.',
         tag: 'Gratis',
       },
       {
         name: 'Google Analytics',
-        description: 'Analitica web y de producto. Gratis.',
+        description: 'Analítica web y de producto. Gratis.',
         tag: 'Gratis',
       },
     ],
@@ -149,7 +149,7 @@ const stages: Stage[] = [
   {
     id: 4,
     label: 'Escalamiento',
-    sublabel: 'Crecimiento y expansion',
+    sublabel: 'Crecimiento y expansión',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
     border: 'rgba(8,145,178,0.15)',
@@ -158,12 +158,12 @@ const stages: Stage[] = [
       {
         name: 'AWS / GCP',
         description:
-          'Infraestructura cloud escalable. Creditos para startups.',
+          'Infraestructura cloud escalable. Créditos para startups.',
         tag: 'Free tier',
       },
       {
         name: 'Mixpanel / Amplitude',
-        description: 'Analitica de producto avanzada. Free tier.',
+        description: 'Analítica de producto avanzada. Free tier.',
         tag: 'Free tier',
       },
       {
@@ -327,7 +327,7 @@ export default function RecursosPage() {
             marginBottom: '0.75rem',
           }}
         >
-          Stack Tecnologico Recomendado
+          Stack Tecnológico Recomendado
         </h1>
         <p
           style={{
@@ -339,7 +339,7 @@ export default function RecursosPage() {
             margin: '0 auto',
           }}
         >
-          Las herramientas que necesitas en cada etapa para avanzar sin gastar de mas.
+          Las herramientas que necesitas en cada etapa para avanzar sin gastar de más.
           Todas son gratuitas o tienen planes accesibles para startups.
         </p>
       </motion.div>
@@ -479,10 +479,10 @@ export default function RecursosPage() {
             margin: 0,
           }}
         >
-          Este stack se actualiza regularmente. Si conoces una herramienta que deberia
-          estar aqui, escribenos a{' '}
+          Este stack se actualiza regularmente. Si conoces una herramienta que debería
+          estar aquí, escríbenos a{' '}
           <a
-            href="https://wa.me/51989338401?text=Hola, tengo una sugerencia de herramienta para el stack tecnologico"
+            href="https://wa.me/51989338401?text=Hola, tengo una sugerencia de herramienta para el stack tecnológico"
             target="_blank"
             rel="noopener noreferrer"
             style={{

@@ -22,10 +22,30 @@ import ServiceBanner from './ServiceBanner'
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
 // Note: New tools will show "en construcción" until their components are created
 const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> = {
+  'passion-purpose': dynamic(() => import('./PassionPurpose')),
+  'market-segmentation': dynamic(() => import('./MarketSegmentation')),
+  'beachhead-market': dynamic(() => import('./BeachheadMarket')),
+  'end-user-profile': dynamic(() => import('./EndUserProfile')),
+  'tam-calculator': dynamic(() => import('./TAMCalculator')),
+  'persona-profile': dynamic(() => import('./PersonaProfile')),
+  'full-lifecycle-usecase': dynamic(() => import('./FullLifecycleUseCase')),
+  'product-specification': dynamic(() => import('./ProductSpecification')),
+  'quantified-value-prop': dynamic(() => import('./QuantifiedValueProp')),
+  'first-10-customers': dynamic(() => import('./FirstTenCustomers')),
+  'core-competitive-position': dynamic(() => import('./CoreCompetitivePosition')),
   'lean-canvas': dynamic(() => import('./LeanCanvas')),
-  'cap-table-fundraising': dynamic(() => import('./CapTable')),
-  'pitch-deck-builder': dynamic(() => import('./PitchDeck')),
+  'decision-making-unit': dynamic(() => import('./DecisionMakingUnit')),
+  'customer-acquisition-process': dynamic(() => import('./CustomerAcquisitionProcess')),
+  'business-model-design': dynamic(() => import('./BusinessModelDesign')),
+  'pricing-framework': dynamic(() => import('./PricingFramework')),
   'ltv-unit-economics': dynamic(() => import('./UnitEconomics')),
+  'sales-process-map': dynamic(() => import('./SalesProcessMap')),
+  'key-assumptions': dynamic(() => import('./KeyAssumptions')),
+  'mvbp-definition': dynamic(() => import('./MVBPDefinition')),
+  'traction-validation': dynamic(() => import('./TractionValidation')),
+  'product-plan-scaling': dynamic(() => import('./ProductPlanScaling')),
+  'pitch-deck-builder': dynamic(() => import('./PitchDeck')),
+  'cap-table-fundraising': dynamic(() => import('./CapTable')),
 }
 
 export interface ToolComponentProps {
@@ -37,7 +57,7 @@ export interface ToolComponentProps {
 export default function ToolPage({ toolId }: { toolId: string }) {
   const { user } = useAuth()
   const tool = getToolById(toolId)
-  const [preambOpen, setPreambOpen] = useState(false)
+  const [preambOpen, setPreambOpen] = useState(true)
   const [completed, setCompleted] = useState(() => {
     if (!user) return false
     const p = getProgress(user.id)
@@ -342,7 +362,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                 }}
               >
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.125rem', color: tool.stageColor, fontWeight: 700 }}>
-                  {tool.stage.toString().padStart(2, '0')}
+                  {(tool.stepNumber + 1).toString().padStart(2, '0')}
                 </span>
               </div>
               <div style={{ flex: 1 }}>

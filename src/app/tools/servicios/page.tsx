@@ -28,24 +28,24 @@ interface Service {
 const founderServices: Service[] = [
   {
     icon: MessageCircle,
-    name: 'Sesion Estrategica 1:1',
-    description: '60 minutos de mentoria personalizada para resolver tu desafio mas urgente.',
-    price: '$99 USD/sesion',
-    mailto: 'Sesion Estrategica 1:1',
+    name: 'Sesión Estratégica 1:1',
+    description: '60 minutos de mentoría personalizada para resolver tu desafío más urgente.',
+    price: '$99 USD/sesión',
+    mailto: 'Sesión Estratégica 1:1',
   },
   {
     icon: Users,
     name: 'Workshop de Customer Discovery',
-    description: 'Taller practico para validar tu mercado con entrevistas a clientes reales.',
+    description: 'Taller práctico para validar tu mercado con entrevistas a clientes reales.',
     price: '$199 USD',
     mailto: 'Workshop de Customer Discovery',
   },
   {
     icon: Handshake,
-    name: 'Acompanamiento de Ventas B2B',
+    name: 'Acompañamiento de Ventas B2B',
     description: 'Coaching semanal para cerrar tus primeras ventas corporativas.',
     price: '$299 USD/mes',
-    mailto: 'Acompanamiento de Ventas B2B',
+    mailto: 'Acompañamiento de Ventas B2B',
   },
   {
     icon: Megaphone,
@@ -56,17 +56,17 @@ const founderServices: Service[] = [
   },
   {
     icon: FileCheck,
-    name: 'Revision y Coaching de Pitch Deck',
-    description: 'Revision detallada de tu pitch deck con feedback accionable y sesion de coaching.',
+    name: 'Revisión y Coaching de Pitch Deck',
+    description: 'Revisión detallada de tu pitch deck con feedback accionable y sesión de coaching.',
     price: '$149 USD',
-    mailto: 'Revision y Coaching de Pitch Deck',
+    mailto: 'Revisión y Coaching de Pitch Deck',
   },
   {
     icon: Briefcase,
-    name: 'Asesoria de Fundraising',
-    description: 'Plan completo de levantamiento de capital: estrategia, contactos y preparacion de Data Room.',
+    name: 'Asesoría de Fundraising',
+    description: 'Plan completo de levantamiento de capital: estrategia, contactos y preparación de Data Room.',
     price: '$499 USD',
-    mailto: 'Asesoria de Fundraising',
+    mailto: 'Asesoría de Fundraising',
   },
 ]
 
@@ -74,7 +74,7 @@ const investorServices: Service[] = [
   {
     icon: ShieldCheck,
     name: 'Due Diligence de Startups',
-    description: 'Evaluacion integral de startups para decisiones de inversion informadas.',
+    description: 'Evaluación integral de startups para decisiones de inversión informadas.',
     price: '$799 USD',
     mailto: 'Due Diligence de Startups',
   },
@@ -204,7 +204,7 @@ function ServiceCard({
 
 export default function ServiciosToolsPage() {
   return (
-    <div style={{ padding: '2.5rem 2rem', maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ padding: '2rem 2rem', maxWidth: 1100, margin: '0 auto' }}>
       {/* Back link */}
       <motion.div
         initial={{ opacity: 0, x: -12 }}
@@ -278,8 +278,8 @@ export default function ServiciosToolsPage() {
             color: 'var(--color-text-secondary, #6b7280)',
           }}
         >
-          Mentoria, workshops y acompanamiento estrategico para founders e inversores.
-          Cada servicio esta disenado para resolver desafios concretos de tu etapa.
+          Mentoría, workshops y acompañamiento estratégico para founders e inversores.
+          Cada servicio está diseñado para resolver desafíos concretos de tu etapa.
         </p>
       </motion.div>
 
@@ -319,7 +319,7 @@ export default function ServiciosToolsPage() {
             color: 'var(--color-text-primary, #111827)',
           }}
         >
-          Mentoria y acompanamiento para founders
+          Mentoría y acompañamiento para founders
         </h2>
       </motion.div>
 
@@ -414,7 +414,7 @@ export default function ServiciosToolsPage() {
             marginBottom: '0.75rem',
           }}
         >
-          No sabes por donde empezar?
+          ¿No sabes por dónde empezar?
         </h2>
         <p
           style={{
@@ -427,7 +427,7 @@ export default function ServiciosToolsPage() {
             margin: '0 auto 1.5rem',
           }}
         >
-          Agenda una llamada y disenamos un plan a tu medida.
+          Agenda una llamada y diseñamos un plan a tu medida.
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.875rem' }}>
           <a

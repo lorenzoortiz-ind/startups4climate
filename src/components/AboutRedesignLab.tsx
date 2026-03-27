@@ -8,21 +8,23 @@ const founders = [
     photo: '/eddie.png',
     name: 'Eddie Ajalcrina',
     role: 'Co-Founder & CEO',
-    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovacion y conexion con capital.',
+    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovación y conexión con capital.',
     tags: ['Impact Strategy', 'Business Dev', 'LATAM Ecosystems'],
   },
   {
     photo: '/lorenzo.png',
     name: 'Lorenzo Ortiz',
     role: 'Co-Founder & CTO',
-    bio: 'Tecnologia, producto y diseno de plataformas. Background en ingenieria de software y construccion de herramientas para founders.',
-    tags: ['Product & Tech', 'Software Engineering', 'Startup Tools'],
+    bio: 'Tecnología, producto y diseño de nuevos negocios. Background en finanzas avanzadas, desarrollo tech y escalamiento de startups.',
+    tags: ['Product Dev', 'Ops & Tech', 'Startup Tools'],
   },
 ]
 
+const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Unión Europea', 'NESsT', 'CATAL1.5T', 'Stanford University']
+
 export default function AboutRedesignLab() {
   return (
-    <section style={{ padding: '6rem 0', background: 'white' }}>
+    <section style={{ padding: '6rem 0', background: 'white', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 1.5rem' }}>
         <div
           style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3.5rem', alignItems: 'center' }}
@@ -49,7 +51,7 @@ export default function AboutRedesignLab() {
               textTransform: 'uppercase',
               marginBottom: '1.25rem',
             }}>
-              Quienes Somos
+              Quiénes somos
             </span>
 
             <h2 style={{
@@ -79,32 +81,9 @@ export default function AboutRedesignLab() {
               color: 'var(--color-text-secondary)',
               marginBottom: '1.5rem',
             }}>
-              Estamos democratizando el desarrollo de startups de impacto en Latinoamerica.
               Construimos la infraestructura operativa que los founders necesitan para dejar de
-              improvisar y enfocarse en lo que importa: crear soluciones que transformen la region.
+              improvisar y enfocarse en lo que importa: crear soluciones que transformen la región.
             </p>
-
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-            }}>
-              {['Startups de Impacto', 'LATAM', 'Metodologia MIT', 'Acceso Democratico', 'All-in-One'].map(tag => (
-                <span key={tag} style={{
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: 9999,
-                  background: 'rgba(26,26,26,0.06)',
-                  border: '1px solid rgba(26,26,26,0.1)',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.6875rem',
-                  fontWeight: 600,
-                  color: '#1A1A1A',
-                  letterSpacing: '0.02em',
-                }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
           </motion.div>
 
           {/* Right — founder cards */}
@@ -192,7 +171,79 @@ export default function AboutRedesignLab() {
             ))}
           </div>
         </div>
+
+        {/* Partner logos marquee */}
+        <div style={{
+          marginTop: '4rem',
+          paddingTop: '2.5rem',
+          borderTop: '1px solid var(--color-border)',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.75rem',
+            fontWeight: 500,
+            color: 'var(--color-text-muted)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            textAlign: 'center',
+            marginBottom: '1.5rem',
+          }}>
+            Alianzas y colaboraciones
+          </p>
+
+          <div style={{
+            position: 'relative',
+            overflow: 'hidden',
+            maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          }}>
+            <div
+              className="partner-marquee"
+              style={{
+                display: 'flex',
+                gap: '3rem',
+                width: 'max-content',
+                animation: 'marquee-scroll 30s linear infinite',
+              }}
+            >
+              {/* Duplicate the list for seamless loop */}
+              {[...partners, ...partners].map((name, i) => (
+                <span
+                  key={`${name}-${i}`}
+                  className="partner-logo-item"
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    opacity: 0.35,
+                    whiteSpace: 'nowrap',
+                    cursor: 'default',
+                    transition: 'opacity 0.3s ease',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes marquee-scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .partner-logo-item:hover {
+          opacity: 0.85 !important;
+        }
+      `}</style>
     </section>
   )
 }

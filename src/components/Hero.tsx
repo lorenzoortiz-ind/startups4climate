@@ -90,7 +90,7 @@ export default function Hero() {
                 }}
               >
                 <Zap size={14} strokeWidth={2} />
-                La plataforma all-in-one para startups de impacto en LATAM
+                Plataforma para startups de impacto en LATAM
               </span>
             </motion.div>
 
@@ -108,11 +108,10 @@ export default function Hero() {
                 marginBottom: '1.5rem',
               }}
             >
-              De la idea al negocio validado:{' '}
+              Lanza tu startup de impacto{' '}
               <span className="gradient-text">
-                24 herramientas para transformar
-              </span>{' '}
-              tu startup de impacto
+                con las herramientas correctas
+              </span>
             </motion.h1>
 
             <motion.p
@@ -128,9 +127,9 @@ export default function Hero() {
                 marginBottom: '2rem',
               }}
             >
-              24 herramientas organizadas en 4 etapas, basadas en las mejores
-              metodologías del mundo. Desde la ideación hasta el fundraising,
-              con acceso libre para cualquier founder en Latinoamérica.
+              +20 herramientas desde la idea hasta el negocio validado,
+              organizadas en 4 etapas. Con acceso libre para cualquier
+              founder en Latinoamérica.
             </motion.p>
 
             <motion.div
@@ -158,7 +157,7 @@ export default function Hero() {
                   boxShadow: '0 4px 16px rgba(5,150,105,0.3)',
                 }}
               >
-                {user ? 'Ir a mi Plataforma' : 'Acceder a la Plataforma'}
+                {user ? 'Ir a mi plataforma' : 'Acceder a la plataforma'}
                 <ArrowRight size={18} />
               </button>
               <a
@@ -179,7 +178,7 @@ export default function Hero() {
                   transition: 'all 0.2s ease',
                 }}
               >
-                Diagnostico Rapido
+                Diagnóstico rápido
               </a>
             </motion.div>
 
@@ -197,7 +196,7 @@ export default function Hero() {
               }}
             >
               {[
-                { value: '24', label: 'Herramientas' },
+                { value: '+20', label: 'Herramientas' },
                 { value: '4', label: 'Etapas' },
                 { value: '100%', label: 'Gratuito' },
               ].map((stat) => (
@@ -276,17 +275,17 @@ export default function Hero() {
                   fontWeight: 600,
                   color: '#059669',
                 }}>
-                  ETAPA 2: INCUBACION
+                  ETAPA 2: INCUBACIÓN
                 </div>
               </div>
 
               {/* Dimension bars */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {[
-                  { label: 'Validacion de Mercado', value: 75, color: '#059669' },
-                  { label: 'Propuesta de Valor', value: 60, color: '#7C3AED' },
-                  { label: 'Traccion Comercial', value: 45, color: '#D97706' },
-                  { label: 'Estructura de Negocio', value: 55, color: '#0891B2' },
+                  { label: 'Validación de mercado', value: 75, color: '#059669' },
+                  { label: 'Propuesta de valor', value: 60, color: '#7C3AED' },
+                  { label: 'Tracción comercial', value: 45, color: '#D97706' },
+                  { label: 'Estructura de negocio', value: 55, color: '#0891B2' },
                 ].map((dim) => (
                   <div key={dim.label}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
@@ -318,7 +317,7 @@ export default function Hero() {
                 border: '1px solid rgba(5,150,105,0.1)',
               }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>
-                  Herramientas Recomendadas
+                  Herramientas recomendadas
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                   {['Lean Canvas de Impacto', 'Propuesta de Valor', 'Perfil del Usuario'].map(tool => (

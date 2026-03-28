@@ -293,15 +293,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Sign-in succeeded — try to load profile but never fail the login
         if (data.user && data.session) {
+          // First, get the role with a direct fetch (bypasses any client caching issues)
+          let userRole: string = 'founder'
+          try {
+            const roleRes = await fetch(
+              `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
+              {
+                headers: {
+                  'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                  'Authorization': `Bearer ${data.session.access_token}`,
+                },
+              }
+            )
+            if (roleRes.ok) {
+              const roleData = await roleRes.json()
+              if (roleData?.[0]?.role) userRole = roleData[0].role
+            }
+          } catch {
+            console.warn('[Auth] Direct role fetch failed, defaulting to founder')
+          }
+
           try {
             const profile = await loadProfile(data.user.id)
             const resolved = profile ?? await fallbackAppUser(data.session)
+            // Use the role from direct fetch if profile load gave fallback
+            if (resolved.role === 'founder' && userRole !== 'founder') {
+              resolved.role = userRole as typeof resolved.role
+            }
             setAppUser(resolved)
             return { role: resolved.role }
           } catch (profileErr) {
-            // Profile load failed — use fallback so user is not stuck
             console.warn('[Auth] Profile load failed after successful sign-in, using fallback:', profileErr)
             const fallback = await fallbackAppUser(data.session)
+            fallback.role = userRole as typeof fallback.role
             setAppUser(fallback)
             return { role: fallback.role }
           }

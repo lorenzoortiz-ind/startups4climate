@@ -1,13 +1,16 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Zap } from 'lucide-react'
+import AnimatedCounter from './AnimatedCounter'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 
 export default function Hero() {
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
+  const prefersReducedMotion = useReducedMotion()
+  const noMotion = prefersReducedMotion ? false : undefined
   return (
     <section
       style={{
@@ -196,13 +199,13 @@ export default function Hero() {
               }}
             >
               {[
-                { value: '+20', label: 'Herramientas' },
-                { value: '4', label: 'Etapas' },
-                { value: '100%', label: 'Gratuito' },
+                { value: 20, prefix: '+', suffix: '', label: 'Herramientas' },
+                { value: 4, prefix: '', suffix: '', label: 'Etapas' },
+                { value: 100, prefix: '', suffix: '%', label: 'Gratuito' },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: '#059669' }}>
-                    {stat.value}
+                    <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} duration={1.5} />
                   </div>
                   <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                     {stat.label}

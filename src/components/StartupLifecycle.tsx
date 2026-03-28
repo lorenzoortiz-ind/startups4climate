@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { FlaskConical, Rocket, Building2, TrendingUp, ChevronRight } from 'lucide-react'
 
 const stages = [
@@ -98,6 +98,20 @@ const categoryColors: Record<string, string> = {
 export default function StartupLifecycle() {
   const [activeStage, setActiveStage] = useState(0)
   const stage = stages[activeStage]
+  const prefersReducedMotion = useReducedMotion()
+
+  const staggerContainer = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: prefersReducedMotion ? 0 : 0.15,
+      },
+    },
+  }
+  const staggerItem = {
+    hidden: prefersReducedMotion ? {} : { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
+  }
 
   return (
     <section id="ciclo-de-vida" style={{ padding: '6rem 0', background: 'var(--color-bg-primary)' }}>
@@ -149,15 +163,22 @@ export default function StartupLifecycle() {
         </motion.div>
 
         {/* Stage selector tabs */}
-        <div style={{
-          display: 'flex',
-          gap: '0.75rem',
-          marginBottom: '2rem',
-          overflowX: 'auto',
-          paddingBottom: '0.5rem',
-        }}>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+          style={{
+            display: 'flex',
+            gap: '0.75rem',
+            marginBottom: '2rem',
+            overflowX: 'auto',
+            paddingBottom: '0.5rem',
+          }}
+        >
           {stages.map((s, i) => (
-            <button
+            <motion.button
+              variants={staggerItem}
               key={s.id}
               onClick={() => setActiveStage(i)}
               style={{
@@ -211,9 +232,9 @@ export default function StartupLifecycle() {
               }}>
                 6 herramientas
               </p>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Stage content */}
         <AnimatePresence mode="wait">

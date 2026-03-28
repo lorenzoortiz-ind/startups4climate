@@ -129,8 +129,8 @@ export default function Hero() {
                 marginBottom: '2rem',
               }}
             >
-              Herramientas interactivas, mentores AI por vertical, oportunidades
-              personalizadas y radar del ecosistema. Todo en un solo lugar,
+              Herramientas interactivas, mentores AI personalizados, oportunidades
+              personalizadas y más. Todo en un solo lugar,
               diseñado para founders en Latinoamérica.
             </motion.p>
 

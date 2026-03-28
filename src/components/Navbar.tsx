@@ -11,8 +11,8 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
   { label: 'Plataforma', href: '/#plataforma' },
   { label: 'Diagnóstico', href: '/#diagnostico' },
   { label: 'Quiénes somos', href: '/#about' },
-  { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
   { label: 'Workbook', href: '/workbook', isPage: true },
+  { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
 ]
 
 export default function Navbar() {

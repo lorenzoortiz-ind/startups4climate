@@ -71,8 +71,8 @@ export default function ProblemSection() {
               margin: '0 auto',
             }}
           >
-            El talento emprendedor está distribuido por toda Latinoamérica.
-            La infraestructura para desarrollarlo, no.
+            El talento está distribuido por toda Latinoamérica.
+            El ecosistema para desarrollarlo, no.
           </p>
         </motion.div>
 
@@ -180,7 +180,7 @@ export default function ProblemSection() {
             color: 'var(--color-text-secondary)',
           }}
         >
-          Una plataforma que atiende los tres lados:{' '}
+          Startups4climate es una plataforma all-in-one que atiende estos tres frentes:{' '}
           <span style={{ fontWeight: 700, color: '#059669' }}>
             herramientas para founders, tecnología para organizaciones y datos
             para políticas de innovación

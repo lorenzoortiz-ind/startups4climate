@@ -26,6 +26,22 @@ export default function DiagnosticFeature() {
             display: 'inline-block',
             padding: '0.3rem 0.875rem',
             borderRadius: 9999,
+            background: '#059669',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.6875rem',
+            fontWeight: 700,
+            color: '#FFFFFF',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            marginBottom: '0.625rem',
+          }}>
+            EMPIEZA AQUÍ
+          </span>
+          <br />
+          <span style={{
+            display: 'inline-block',
+            padding: '0.3rem 0.875rem',
+            borderRadius: 9999,
             background: 'rgba(5,150,105,0.06)',
             border: '1px solid rgba(5,150,105,0.12)',
             fontFamily: 'var(--font-body)',

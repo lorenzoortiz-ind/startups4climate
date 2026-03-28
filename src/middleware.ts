@@ -31,9 +31,15 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh session — important for keeping tokens valid
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    // If getUser fails (e.g. network/DB error), allow the request through
+    // and let client-side auth handle it
+    return supabaseResponse
+  }
 
   const pathname = request.nextUrl.pathname
 
@@ -55,13 +61,20 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check role from profiles table
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
 
-    if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
+      if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        return NextResponse.redirect(redirectUrl)
+      }
+    } catch {
+      // If profile query fails (e.g. schema cache issue), deny admin access
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/'
       return NextResponse.redirect(redirectUrl)

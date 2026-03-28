@@ -44,7 +44,7 @@ export default function Footer() {
                 Startups<span style={{ color: '#059669' }}>4</span>Climate
               </span>
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: '#6B7280', maxWidth: 280 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: '#D1D5DB', maxWidth: 280 }}>
               Democratizando el desarrollo de startups de impacto en Latinoamérica.
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function Footer() {
                         href={link.href}
                         style={{
                           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                          color: '#6B7280', textDecoration: 'none', transition: 'color 0.2s',
+                          color: '#9CA3AF', textDecoration: 'none', transition: 'color 0.2s',
                         }}
                       >{link.label}</Link>
                     ) : (
@@ -74,10 +74,10 @@ export default function Footer() {
                         rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         style={{
                           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                          color: '#6B7280', textDecoration: 'none', transition: 'color 0.2s',
+                          color: '#9CA3AF', textDecoration: 'none', transition: 'color 0.2s',
                         }}
                         onMouseEnter={e => (e.currentTarget.style.color = '#D1D5DB')}
-                        onMouseLeave={e => (e.currentTarget.style.color = '#6B7280')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}
                       >{link.label}</a>
                     )}
                   </li>
@@ -92,17 +92,17 @@ export default function Footer() {
           borderTop: '1px solid #1F2937', paddingTop: '1.5rem',
           display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem',
         }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#4B5563' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#9CA3AF' }}>
             &copy; {new Date().getFullYear()} Startups4Climate by Redesign Lab. Todos los derechos reservados.
           </p>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
             {['Privacidad', 'Términos'].map(item => (
               <a key={item} href="#" style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#4B5563',
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#9CA3AF',
                 textDecoration: 'none', transition: 'color 0.2s',
               }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#9CA3AF')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#4B5563')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#D1D5DB')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}
               >{item}</a>
             ))}
           </div>

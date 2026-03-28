@@ -21,14 +21,14 @@ const features = [
   {
     icon: Bot,
     title: 'Mentores AI',
-    description: 'Retroalimentación contextual sobre tu modelo de negocio, mercado y estrategia, adaptada a tu vertical.',
+    description: 'Retroalimentación contextual sobre tu modelo de negocio, mercado y estrategia, adaptada a tu startup y vertical.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
   {
     icon: Radar,
     title: 'RADAR del ecosistema',
-    description: 'Noticias, cambios regulatorios y tendencias de inversión en LATAM, curados para ti.',
+    description: 'Noticias, cambios regulatorios y tendencias de mercado en LATAM, todo para estar al día en tu industria.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },

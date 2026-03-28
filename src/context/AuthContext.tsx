@@ -92,11 +92,19 @@ function fallbackAppUser(session: Session): AppUser {
 
 async function loadProfile(userId: string): Promise<AppUser | null> {
   try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    // Race the profile query against a timeout so we never hang
+    const result = await Promise.race([
+      supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single(),
+      new Promise<{ data: null; error: { message: string } }>((resolve) =>
+        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 5000)
+      ),
+    ])
+
+    const { data, error } = result
 
     if (error || !data) return null
 
@@ -126,28 +134,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = appUser ? appUserToUser(appUser) : null
 
   useEffect(() => {
+    let cancelled = false
+
     // Get initial session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (cancelled) return
       if (session?.user) {
-        const profile = await loadProfile(session.user.id)
-        setAppUser(profile ?? fallbackAppUser(session))
+        // Set fallback immediately so the UI is never stuck loading
+        setAppUser(fallbackAppUser(session))
+        setLoading(false)
+        // Then try to enrich with profile data in background
+        try {
+          const profile = await loadProfile(session.user.id)
+          if (!cancelled && profile) {
+            setAppUser(profile)
+          }
+        } catch {
+          // Fallback already set — ignore
+        }
+      } else {
+        setLoading(false)
       }
-      setLoading(false)
     })
 
     // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (cancelled) return
       if (session?.user) {
-        const profile = await loadProfile(session.user.id)
-        setAppUser(profile ?? fallbackAppUser(session))
+        // Set fallback immediately, then enrich
+        setAppUser(fallbackAppUser(session))
+        try {
+          const profile = await loadProfile(session.user.id)
+          if (!cancelled && profile) {
+            setAppUser(profile)
+          }
+        } catch {
+          // Fallback already set — ignore
+        }
       } else {
         setAppUser(null)
       }
     })
 
     return () => {
+      cancelled = true
       subscription.unsubscribe()
     }
   }, [])
@@ -221,25 +253,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const login = useCallback(async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.toLowerCase(),
-      password,
-    })
+    let lastError: string | undefined
 
-    if (error) {
-      return { error: mapSupabaseError(error.message) }
-    }
+    // Retry up to 2 times for transient "Database error" issues
+    // (e.g. PostgREST schema cache not yet refreshed after migration)
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.toLowerCase(),
+        password,
+      })
 
-    if (data.user) {
-      const profile = await loadProfile(data.user.id)
-      if (data.session) {
-        setAppUser(profile ?? fallbackAppUser(data.session))
-      } else if (profile) {
-        setAppUser(profile)
+      if (error) {
+        // Only retry on transient database errors
+        if (error.message.includes('Database error') && attempt < 1) {
+          lastError = error.message
+          await new Promise((r) => setTimeout(r, 1500))
+          continue
+        }
+        return { error: mapSupabaseError(error.message) }
       }
+
+      // Sign-in succeeded — try to load profile but never fail the login
+      if (data.user && data.session) {
+        try {
+          const profile = await loadProfile(data.user.id)
+          setAppUser(profile ?? fallbackAppUser(data.session))
+        } catch {
+          // Profile load failed — use fallback so user is not stuck
+          setAppUser(fallbackAppUser(data.session))
+        }
+      }
+
+      return {}
     }
 
-    return {}
+    // All retries exhausted
+    return { error: mapSupabaseError(lastError ?? 'Database error') }
   }, [])
 
   const logout = useCallback(async () => {

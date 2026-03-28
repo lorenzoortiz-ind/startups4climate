@@ -45,10 +45,10 @@ const VERTICAL_OPTIONS = [
 ]
 
 const TOC_ITEMS = [
-  { chapter: '01', title: 'Encuentra tu propósito como founder', stage: 'Pre-incubación', color: '#7C3AED' },
+  { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#7C3AED' },
   { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#7C3AED' },
   { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#7C3AED' },
-  { chapter: '04', title: 'Construye tu MVP y primeras métricas', stage: 'Incubación', color: '#059669' },
+  { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#059669' },
   { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#059669' },
   { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
   { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },

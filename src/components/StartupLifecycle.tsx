@@ -19,9 +19,9 @@ const stages = [
       { name: 'Propósito & Equipo', category: 'Equipo', desc: 'Define la misión de tu startup y evalúa las capacidades y brechas de tu equipo fundador.' },
       { name: 'Segmentación de Mercado', category: 'Mercado', desc: 'Identifica y mapea los segmentos de mercado donde tu solución puede generar mayor impacto.' },
       { name: 'Mercado inicial', category: 'Estrategia', desc: 'Selecciona tu primer mercado de entrada usando criterios de accesibilidad, tamaño y tracción.' },
-      { name: 'Perfil del Usuario Final', category: 'Cliente', desc: 'Construye un perfil detallado de tu usuario final: comportamientos, necesidades y contexto.' },
+      { name: 'Perfil de Usuario', category: 'Cliente', desc: 'Construye un perfil detallado de tu usuario final: comportamientos, necesidades y contexto.' },
       { name: 'Cálculo del TAM', category: 'Mercado', desc: 'Estima el tamaño total de tu mercado direccionable con metodologías bottom-up y top-down.' },
-      { name: 'Perfil de la Persona', category: 'Cliente', desc: 'Crea un arquetipo detallado de tu cliente ideal con datos demográficos, motivaciones y puntos de dolor.' },
+      { name: 'Buyer Persona', category: 'Cliente', desc: 'Crea un arquetipo detallado de tu cliente ideal con datos demográficos, motivaciones y puntos de dolor.' },
     ],
   },
   {
@@ -35,9 +35,9 @@ const stages = [
     bg: 'rgba(5,150,105,0.06)',
     borderColor: 'rgba(5,150,105,0.15)',
     tools: [
-      { name: 'Caso de Uso del Ciclo Completo', category: 'Producto', desc: 'Mapea el recorrido completo de tu usuario desde el descubrimiento hasta la retención y referencia.' },
+      { name: 'User Journey', category: 'Producto', desc: 'Mapea el recorrido completo de tu usuario desde el descubrimiento hasta la retención y referencia.' },
       { name: 'Especificación de Producto', category: 'Producto', desc: 'Define las funcionalidades clave, la arquitectura y los requerimientos técnicos de tu producto.' },
-      { name: 'Propuesta de Valor Cuantificada', category: 'Estrategia', desc: 'Cuantifica el valor que entregas a tu cliente en términos medibles: ahorro, eficiencia o impacto.' },
+      { name: 'Propuesta de Valor', category: 'Estrategia', desc: 'Cuantifica el valor que entregas a tu cliente en términos medibles: ahorro, eficiencia o impacto.' },
       { name: 'Primeros 10 Clientes', category: 'Ventas', desc: 'Estrategia para identificar, contactar y convertir tus primeros 10 clientes pagadores o usuarios.' },
       { name: 'Core y Posicionamiento', category: 'Marketing', desc: 'Define tu ventaja competitiva sostenible y cómo te posicionas frente a alternativas en el mercado.' },
       { name: 'Lean Canvas de Impacto', category: 'Modelo de Negocio', desc: 'Modelo de negocio en una página adaptado para startups de impacto con métricas sociales y ambientales.' },
@@ -54,7 +54,7 @@ const stages = [
     bg: 'rgba(217,119,6,0.06)',
     borderColor: 'rgba(217,119,6,0.15)',
     tools: [
-      { name: 'DMU (Unidad de Decisión)', category: 'Ventas', desc: 'Identifica a todas las personas involucradas en la decisión de compra y sus motivaciones.' },
+      { name: 'Decisiones de Compra', category: 'Ventas', desc: 'Identifica a todas las personas involucradas en la decisión de compra y sus motivaciones.' },
       { name: 'Proceso de Adquisición', category: 'Marketing', desc: 'Diseña el embudo completo de adquisición de clientes: desde awareness hasta conversión.' },
       { name: 'Modelo de Negocio', category: 'Modelo de Negocio', desc: 'Estructura tu modelo de ingresos, canales de distribución y relación con el cliente.' },
       { name: 'Framework de Pricing', category: 'Finanzas', desc: 'Define tu estrategia de precios basada en valor percibido, costos y dinámica competitiva.' },
@@ -74,9 +74,9 @@ const stages = [
     borderColor: 'rgba(8,145,178,0.15)',
     tools: [
       { name: 'Supuestos Clave', category: 'Estrategia', desc: 'Identifica y prioriza los supuestos críticos que deben validarse antes de escalar tu negocio.' },
-      { name: 'MVBP (Producto Mínimo Viable)', category: 'Producto', desc: 'Define y construye la versión mínima de tu producto que prueba tu propuesta de valor central.' },
+      { name: 'Producto Mínimo Viable', category: 'Producto', desc: 'Define y construye la versión mínima de tu producto que prueba tu propuesta de valor central.' },
       { name: 'Validación de Tracción', category: 'Mercado', desc: 'Mide y documenta las métricas de tracción que demuestran product-market fit a inversores.' },
-      { name: 'Plan de Producto y Expansión', category: 'Estrategia', desc: 'Diseña la hoja de ruta de producto y la estrategia de expansión a nuevos mercados y segmentos.' },
+      { name: 'Producto y Expansión', category: 'Estrategia', desc: 'Diseña la hoja de ruta de producto y la estrategia de expansión a nuevos mercados y segmentos.' },
       { name: 'Pitch Deck', category: 'Finanzas', desc: 'Crea una presentación de inversión profesional con narrativa, métricas y ask claros.' },
       { name: 'Cap Table y Fundraising', category: 'Finanzas', desc: 'Estructura tu tabla de capitalización y prepara tu estrategia de levantamiento de capital.' },
     ],
@@ -91,7 +91,7 @@ const categoryColors: Record<string, string> = {
   'Producto': '#2563EB',
   'Ventas': '#DC2626',
   'Marketing': '#DB2777',
-  'Modelo de Negocio': '#059669',
+  'Modelo': '#059669',
   'Finanzas': '#D97706',
 }
 
@@ -149,7 +149,7 @@ export default function StartupLifecycle() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            El ecosistema de herramientas exacto para tu etapa actual
+            El Toolkit que necesitas para crecer y escalar
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -157,8 +157,7 @@ export default function StartupLifecycle() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            +30 herramientas operativas organizadas en 4 etapas de desarrollo. Basadas en la
-            metodología Disciplined Entrepreneurship del MIT. Descubre tu arsenal.
+            +30 herramientas organizadas en las 4 etapas clave del desarrollo de tu startup.
           </p>
         </motion.div>
 

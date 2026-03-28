@@ -71,25 +71,49 @@ function appUserToUser(appUser: AppUser): User {
   }
 }
 
-async function loadProfile(userId: string): Promise<AppUser | null> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
-
-  if (error || !data) return null
-
+/**
+ * Build a minimal AppUser from the Supabase auth session.
+ * Used as a fallback when the profiles table query fails so the user
+ * is not stuck on a loading spinner forever.
+ */
+function fallbackAppUser(session: Session): AppUser {
   return {
-    id: data.id,
-    email: data.email,
-    role: data.role || 'founder',
-    org_id: data.org_id || null,
-    full_name: data.full_name || '',
-    startup_name: data.startup_name || null,
-    stage: data.stage || null,
-    diagnosticScore: data.diagnostic_score ?? null,
-    created_at: data.created_at || new Date().toISOString(),
+    id: session.user.id,
+    email: session.user.email ?? '',
+    role: 'founder',
+    org_id: null,
+    full_name: session.user.user_metadata?.full_name ?? session.user.email ?? '',
+    startup_name: session.user.user_metadata?.startup_name ?? null,
+    stage: null,
+    diagnosticScore: null,
+    created_at: session.user.created_at ?? new Date().toISOString(),
+  }
+}
+
+async function loadProfile(userId: string): Promise<AppUser | null> {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    if (error || !data) return null
+
+    return {
+      id: data.id,
+      email: data.email,
+      role: data.role || 'founder',
+      org_id: data.org_id || null,
+      full_name: data.full_name || '',
+      startup_name: data.startup_name || null,
+      stage: data.stage || null,
+      diagnosticScore: data.diagnostic_score ?? null,
+      created_at: data.created_at || new Date().toISOString(),
+    }
+  } catch {
+    // Network or unexpected errors — caller should use fallback
+    return null
   }
 }
 
@@ -106,9 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
         const profile = await loadProfile(session.user.id)
-        if (profile) {
-          setAppUser(profile)
-        }
+        setAppUser(profile ?? fallbackAppUser(session))
       }
       setLoading(false)
     })
@@ -119,9 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         const profile = await loadProfile(session.user.id)
-        if (profile) {
-          setAppUser(profile)
-        }
+        setAppUser(profile ?? fallbackAppUser(session))
       } else {
         setAppUser(null)
       }
@@ -186,8 +206,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           })
           profile = await loadProfile(activeUser.id)
         }
+        // Use the active session for fallback if profile query keeps failing
+        const { data: { session: activeSession } } = await supabase.auth.getSession()
         if (profile) {
           setAppUser(profile)
+        } else if (activeSession) {
+          setAppUser(fallbackAppUser(activeSession))
         }
       }
 
@@ -206,11 +230,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: mapSupabaseError(error.message) }
     }
 
-    if (data.user) {
+    if (data.user && data.session) {
       const profile = await loadProfile(data.user.id)
-      if (profile) {
-        setAppUser(profile)
-      }
+      setAppUser(profile ?? fallbackAppUser(data.session))
     }
 
     return {}
@@ -320,6 +342,9 @@ function mapSupabaseError(message: string): string {
   }
   if (message.includes('signups') && message.includes('disabled')) {
     return 'El registro no está disponible en este momento. Contacta al administrador.'
+  }
+  if (message.includes('Database error')) {
+    return 'Error temporal del servidor. Intenta de nuevo en unos segundos.'
   }
   return message
 }

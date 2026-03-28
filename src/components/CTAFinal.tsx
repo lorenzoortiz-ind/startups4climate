@@ -58,8 +58,8 @@ export default function CTAFinal() {
             margin: '0 auto 2rem',
           }}>
             La Plataforma <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> te
-            da +30 herramientas gratuitas, mentores AI por vertical y oportunidades
-            personalizadas. De la idea al negocio validado, desde cualquier lugar
+            da +30 herramientas gratuitas, mentores AI especializados, oportunidades y más
+            . De la idea al escalamiento, desde cualquier lugar
             de Latinoamérica.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>

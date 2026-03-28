@@ -26,6 +26,7 @@ export interface ToolDef {
   relatedService?: string
   relatedProduct?: string
   stepNumber: number
+  transversal?: boolean
 }
 
 export const STAGE_META = {
@@ -263,6 +264,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '30 min',
     outputs: ['Canvas completo en 1 página', 'Hipótesis clave identificadas', 'Métricas de validación'],
     stepNumber: 11,
+    transversal: true,
   },
   {
     id: 'competitor-analysis',
@@ -483,6 +485,7 @@ export const TOOLS: ToolDef[] = [
     outputs: ['12 slides estructurados', 'Narrative arc validado', 'Talking points por slide'],
     relatedService: 'Revisión y coaching de Pitch Deck',
     stepNumber: 26,
+    transversal: true,
   },
   {
     id: 'cap-table-fundraising',
@@ -537,6 +540,8 @@ export const TOOLS_BY_STAGE: Record<1 | 2 | 3 | 4, ToolDef[]> = {
   3: TOOLS.filter((t) => t.stage === 3),
   4: TOOLS.filter((t) => t.stage === 4),
 }
+
+export const TRANSVERSAL_TOOLS: ToolDef[] = TOOLS.filter((t) => t.transversal)
 
 export function getToolById(id: string): ToolDef | undefined {
   return TOOLS.find((t) => t.id === id)

@@ -24,7 +24,7 @@ const VERTICAL_OPTIONS = [
   { value: 'agritech_foodtech', label: 'Agritech / Foodtech' },
   { value: 'cleantech_climatech', label: 'Cleantech / Climatech' },
   { value: 'biotech_deeptech', label: 'Biotech / Deeptech' },
-  { value: 'logistics_mobility', label: 'Log\u00edstica / Movilidad' },
+  { value: 'logistics_mobility', label: 'Logística / Movilidad' },
   { value: 'saas_enterprise', label: 'SaaS / Enterprise' },
   { value: 'social_impact', label: 'Impacto Social' },
   { value: 'other', label: 'Otro' },
@@ -42,21 +42,21 @@ const LATAM_COUNTRIES = [
   'El Salvador',
   'Guatemala',
   'Honduras',
-  'M\u00e9xico',
+  'México',
   'Nicaragua',
-  'Panam\u00e1',
+  'Panamá',
   'Paraguay',
-  'Per\u00fa',
+  'Perú',
   'Puerto Rico',
-  'Rep\u00fablica Dominicana',
+  'República Dominicana',
   'Uruguay',
   'Venezuela',
 ]
 
 const STAGE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  '1': { label: 'Pre-incubaci\u00f3n', color: STAGE_META[1].color, bg: STAGE_META[1].bg },
-  '2': { label: 'Incubaci\u00f3n', color: STAGE_META[2].color, bg: STAGE_META[2].bg },
-  '3': { label: 'Aceleraci\u00f3n', color: STAGE_META[3].color, bg: STAGE_META[3].bg },
+  '1': { label: 'Pre-incubación', color: STAGE_META[1].color, bg: STAGE_META[1].bg },
+  '2': { label: 'Incubación', color: STAGE_META[2].color, bg: STAGE_META[2].bg },
+  '3': { label: 'Aceleración', color: STAGE_META[3].color, bg: STAGE_META[3].bg },
   '4': { label: 'Escalamiento', color: STAGE_META[4].color, bg: STAGE_META[4].bg },
 }
 

@@ -7,20 +7,20 @@ const features = [
   {
     icon: LayoutDashboard,
     title: 'Panel de portafolio',
-    description: 'Dashboard centralizado con m\u00e9tricas en tiempo real de todas las startups de tu programa.',
+    description: 'Dashboard centralizado con métricas en tiempo real de todas las startups de tu programa.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
   {
     icon: Users,
-    title: 'Gesti\u00f3n de cohortes',
-    description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de c\u00e1lculo ni cadenas de correos.',
+    title: 'Gestión de cohortes',
+    description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de cálculo ni cadenas de correos.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
   },
   {
     icon: FileText,
-    title: 'Reportes autom\u00e1ticos',
+    title: 'Reportes automáticos',
     description: 'Genera reportes PDF de progreso por cohorte o por startup. Listos para compartir con stakeholders.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
@@ -28,7 +28,7 @@ const features = [
   {
     icon: TrendingUp,
     title: 'Benchmarking regional',
-    description: 'Compara el desempe\u00f1o de tus startups contra promedios por vertical, pa\u00eds y etapa.',
+    description: 'Compara el desempeño de tus startups contra promedios por vertical, país y etapa.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
   },
@@ -71,7 +71,7 @@ export default function ForOrganizations() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            La tecnolog\u00eda que tu programa de innovaci\u00f3n necesita
+            La tecnología que tu programa de innovación necesita
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -164,7 +164,7 @@ export default function ForOrganizations() {
             color: 'var(--color-text-primary)',
             marginBottom: '0.75rem',
           }}>
-            {'\u00BF'}Gestionas un programa de incubaci\u00f3n o aceleraci\u00f3n?
+            {'¿'}Gestionas un programa de incubación o aceleración?
           </h3>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -174,7 +174,7 @@ export default function ForOrganizations() {
             maxWidth: 520,
             margin: '0 auto 1.5rem',
           }}>
-            Agenda una llamada y te mostramos c\u00f3mo la plataforma puede integrarse a tu operaci\u00f3n.
+            Agenda una llamada y te mostramos cómo la plataforma puede integrarse a tu operación.
           </p>
           <a
             href="https://calendly.com/redesignlab"

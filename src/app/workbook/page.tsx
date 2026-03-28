@@ -18,25 +18,25 @@ const LATAM_COUNTRIES = [
   'El Salvador',
   'Guatemala',
   'Honduras',
-  'M\u00e9xico',
+  'México',
   'Nicaragua',
-  'Panam\u00e1',
+  'Panamá',
   'Paraguay',
-  'Per\u00fa',
+  'Perú',
   'Puerto Rico',
-  'Rep\u00fablica Dominicana',
+  'República Dominicana',
   'Uruguay',
   'Venezuela',
 ]
 
 const TOC_ITEMS = [
-  { chapter: '01', title: 'Encuentra tu prop\u00f3sito como founder', stage: 'Pre-incubaci\u00f3n', color: '#7C3AED' },
-  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubaci\u00f3n', color: '#7C3AED' },
-  { chapter: '03', title: 'Dise\u00f1a tu propuesta de valor', stage: 'Pre-incubaci\u00f3n', color: '#7C3AED' },
-  { chapter: '04', title: 'Construye tu MVP y primeras m\u00e9tricas', stage: 'Incubaci\u00f3n', color: '#059669' },
-  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubaci\u00f3n', color: '#059669' },
-  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleraci\u00f3n', color: '#D97706' },
-  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleraci\u00f3n', color: '#D97706' },
+  { chapter: '01', title: 'Encuentra tu propósito como founder', stage: 'Pre-incubación', color: '#7C3AED' },
+  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#7C3AED' },
+  { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#7C3AED' },
+  { chapter: '04', title: 'Construye tu MVP y primeras métricas', stage: 'Incubación', color: '#059669' },
+  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#059669' },
+  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
+  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },
   { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0891B2' },
 ]
 
@@ -345,7 +345,7 @@ export default function WorkbookPage() {
                 Ya tienes sesi&oacute;n iniciada como {user.name}. Descarga tu copia gratuita.
               </p>
               <button
-                onClick={() => alert('La descarga del workbook estar\u00e1 disponible pr\u00f3ximamente.')}
+                onClick={() => alert('La descarga del workbook estará disponible próximamente.')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

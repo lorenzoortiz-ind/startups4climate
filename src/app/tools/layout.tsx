@@ -24,13 +24,15 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
 import DarkModeToggle from '@/components/tools/DarkModeToggle'
-import { TOOLS_BY_STAGE, type ToolDef } from '@/lib/tools-data'
+import MentorWidget from '@/components/ai/MentorWidget'
+import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-data'
 import { getProgress } from '@/lib/progress'
 
 const STAGE_CONFIG = {
   1: { label: 'Pre-incubación', color: '#7C3AED', bg: 'rgba(124,58,237,0.07)' },
   2: { label: 'Incubación', color: '#059669', bg: 'rgba(5,150,105,0.07)' },
   3: { label: 'Aceleración', color: '#D97706', bg: 'rgba(217,119,6,0.07)' },
+  4: { label: 'Escalamiento', color: '#0891B2', bg: 'rgba(8,145,178,0.07)' },
 } as const
 
 function StageSidebarSection({
@@ -39,13 +41,13 @@ function StageSidebarSection({
   completedIds,
   currentPath,
 }: {
-  stageNum: 1 | 2 | 3
+  stageNum: 1 | 2 | 3 | 4
   tools: ToolDef[]
   completedIds: Set<string>
   currentPath: string
 }) {
   const cfg = STAGE_CONFIG[stageNum]
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const completedCount = tools.filter((t) => completedIds.has(t.id)).length
 
   return (
@@ -158,9 +160,91 @@ function StageSidebarSection({
                           : 'var(--color-text-secondary)',
                         lineHeight: 1.3,
                         flex: 1,
+                        minWidth: 0,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {tool.shortName}
+                    </span>
+                  </Link>
+                )
+              })}
+              {/* Transversal tools from other stages */}
+              {TRANSVERSAL_TOOLS.filter((t) => t.stage !== stageNum).map((tool) => {
+                const active = currentPath === `/tools/${tool.id}`
+                const done = completedIds.has(tool.id)
+                return (
+                  <Link
+                    key={`transversal-${tool.id}`}
+                    href={`/tools/${tool.id}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.4375rem 0.625rem',
+                      borderRadius: 8,
+                      background: active ? cfg.bg : 'transparent',
+                      border: active
+                        ? `1px solid ${cfg.color}22`
+                        : '1px solid transparent',
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) e.currentTarget.style.background = 'transparent'
+                    }}
+                  >
+                    {done ? (
+                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                    ) : (
+                      <Circle
+                        size={13}
+                        color={active ? cfg.color : '#D1D5DB'}
+                        style={{ flexShrink: 0 }}
+                      />
+                    )}
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        fontWeight: active ? 600 : 400,
+                        color: active
+                          ? cfg.color
+                          : done
+                          ? 'var(--color-text-secondary)'
+                          : 'var(--color-text-secondary)',
+                        lineHeight: 1.3,
+                        flex: 1,
+                        minWidth: 0,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {tool.shortName}
+                    </span>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '1px 5px',
+                        borderRadius: 9999,
+                        background: 'rgba(107,114,128,0.1)',
+                        color: 'var(--color-text-muted)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.5rem',
+                        fontWeight: 600,
+                        lineHeight: 1.6,
+                        flexShrink: 0,
+                        letterSpacing: '0.02em',
+                      }}
+                    >
+                      Transversal
                     </span>
                   </Link>
                 )
@@ -460,7 +544,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       />
 
       {/* Tools by stage */}
-      {([1, 2, 3] as const).map((stage) => (
+      {([1, 2, 3, 4] as const).map((stage) => (
         <StageSidebarSection
           key={stage}
           stageNum={stage}
@@ -703,11 +787,16 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
           marginLeft: 0,
           paddingTop: 0,
           minHeight: '100vh',
+          minWidth: 0,
+          overflowX: 'hidden',
         }}
         className="lg:ml-[240px] pt-14 lg:pt-0"
       >
         {children}
       </main>
+
+      {/* Floating Mentor AI Widget */}
+      <MentorWidget />
     </div>
   )
 }

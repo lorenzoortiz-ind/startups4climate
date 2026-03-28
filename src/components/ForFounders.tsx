@@ -25,14 +25,14 @@ const row2 = [
   {
     icon: Bot,
     title: 'Mentores AI',
-    description: 'Retroalimentaci\u00f3n contextual sobre tu modelo de negocio, mercado y estrategia, adaptada a tu vertical.',
+    description: 'Retroalimentación contextual sobre tu modelo de negocio, mercado y estrategia, adaptada a tu vertical.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
   {
     icon: Radar,
     title: 'RADAR del ecosistema',
-    description: 'Noticias, cambios regulatorios y tendencias de inversi\u00f3n en LATAM, curados para ti.',
+    description: 'Noticias, cambios regulatorios y tendencias de inversión en LATAM, curados para ti.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
@@ -49,14 +49,14 @@ const row3 = [
   {
     icon: Stamp,
     title: 'Startup Passport',
-    description: 'Un perfil verificable de tu startup con m\u00e9tricas y nivel de madurez. Compartible con inversores y programas.',
+    description: 'Un perfil verificable de tu startup con métricas y nivel de madurez. Compartible con inversores y programas.',
     color: '#DC2626',
     bg: 'rgba(220,38,38,0.06)',
   },
   {
     icon: UserCircle,
     title: 'Perfil progresivo',
-    description: 'Empieza con lo b\u00e1sico y la plataforma se adapta. Herramientas y recomendaciones se desbloquean a medida que avanzas.',
+    description: 'Empieza con lo básico y la plataforma se adapta. Herramientas y recomendaciones se desbloquean a medida que avanzas.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },

@@ -1936,6 +1936,64 @@ npm install --save-dev @playwright/test  # e2e
 
 ---
 
+---
+
+## PARTE XI: CAMBIOS IMPLEMENTADOS (v2.0 — actualización 28 de marzo 2026)
+
+---
+
+### 24. Login de organizaciones (Org Login)
+
+- El modal de autenticación (`AuthModal`) incluye un botón "Acceder como organización" que activa un modo dedicado con header y subtítulo diferenciados para usuarios B2B.
+- Las organizaciones no se registran por autoservicio: reciben credenciales tras un acuerdo B2B firmado.
+- Los usuarios de organización tienen rol `admin_org` vinculado a un `org_id` en la tabla `profiles`.
+
+### 25. Suscripción a newsletters
+
+- La página de perfil (`/tools/perfil`) incluye toggles para las newsletters RADAR y Oportunidades.
+- Las preferencias se almacenan en `localStorage` como parte del objeto `s4c_profile_extra`.
+
+### 26. Flujo de completar perfil (Profile Completion)
+
+- Tras el registro, los nuevos usuarios son redirigidos a `/tools/completar-perfil`.
+- El componente `CompletarPerfilPage` presenta un stepper de 2 pasos:
+  - **Paso 1**: vertical, país, rol, experiencia, LinkedIn.
+  - **Paso 2**: descripción, tamaño de equipo, sitio web.
+- Existe la opción "Saltar por ahora" para omitir la completación.
+- Si el perfil está incompleto, se muestra un banner ámbar recordatorio en la sidebar de herramientas.
+
+### 27. Etiquetas de escala en herramientas
+
+- Herramientas con escalas 1-5 muestran: `1 = Muy bajo | 3 = Medio | 5 = Muy alto`.
+- Herramientas con escalas 1-10 muestran: `1 = Mínimo | 5 = Moderado | 10 = Máximo`.
+- Aplica a: MarketSegmentation, BeachheadMarket, DecisionMakingUnit, CoreCompetitivePosition.
+
+### 28. CTA "EMPIEZA AQUÍ"
+
+- Badge verde sobre la sección del Diagnóstico en la landing page, para guiar al usuario hacia el primer paso.
+
+### 29. Categorías de herramientas actualizadas
+
+Las categorías han sido renombradas para mayor claridad:
+- "Cliente" → **"Mercado"**
+- "Modelo de Negocio" → **"Estrategia"**
+
+Categorías vigentes: **Estrategia, Mercado, Producto, Finanzas, Ventas, Marketing, Equipo**.
+
+### 30. Optimizaciones SEO
+
+- Título (`<title>`) optimizado a menos de 60 caracteres.
+- Meta description ajustada a menos de 160 caracteres.
+- Tags OpenGraph y Twitter Card agregados.
+- URL canónica establecida: `https://startups4climate.vercel.app`.
+
+### 31. Ortografía y puntuación
+
+- Todas las tildes en español han sido corregidas en la interfaz (á, é, í, ó, ú, ñ).
+- Signos de apertura agregados donde corresponde (¿?, ¡!).
+
+---
+
 > Este PRD contiene toda la información técnica necesaria para implementar Startups4Climate v2.0.
 > Cada componente, ruta, tabla, API route y tipo TypeScript está especificado para que el desarrollo
 > se ejecute con la menor ambigüedad posible.

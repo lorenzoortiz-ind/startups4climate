@@ -89,7 +89,7 @@ src/
 │
 ├── components/                   # Componentes de la landing
 │   ├── Hero.tsx                  # Sección hero con stats y card de preview
-│   ├── SocialProof.tsx           # Línea de confianza
+│   ├── SocialProof.tsx           # ELIMINADO (era "Construida para el ecosistema...")
 │   ├── ProblemSection.tsx        # Los dos problemas (capital + conocimiento)
 │   ├── ValueProp.tsx             # 4 pilares de la plataforma
 │   ├── StartupLifecycle.tsx      # 4 etapas con herramientas por etapa
@@ -101,7 +101,7 @@ src/
 │   ├── Footer.tsx                # Footer
 │   ├── AuthModal.tsx             # Modal de login/registro
 │   ├── S4CLogo.tsx               # Logotipo SVG
-│   ├── FadeUp.tsx                # Componente reutilizable de animación
+│   ├── FadeUp.tsx                # ELIMINADO (wrapper de animación sin uso)
 │   ├── AnimatedCounter.tsx       # Contadores animados (stats del hero)
 │   ├── Services.tsx              # Servicios (landing, legacy)
 │   ├── ServicesDetail.tsx        # Detalle de servicios (landing, legacy)
@@ -169,6 +169,7 @@ src/
 | `/tools` | Estática | Dashboard de herramientas (requiere auth) |
 | `/tools/[id]` | Dinámica | Vista individual de cada herramienta |
 | `/tools/perfil` | Estática | Edición de perfil del usuario |
+| `/tools/completar-perfil` | Estática | Onboarding de perfil para nuevos usuarios (stepper de 2 pasos) |
 | `/tools/productos` | Estática | Productos dentro de la plataforma |
 | `/tools/recursos` | Estática | Stack tech recomendado |
 | `/tools/servicios` | Estática | Servicios dentro de la plataforma |
@@ -213,15 +214,13 @@ Incubación:      #059669  (emerald)
 Aceleración:     #D97706  (amber)
 Escalamiento:    #0891B2  (cyan)
 
-/* Colores por categoría de herramienta */
-Estrategia:       #6366F1  (indigo)
-Mercado:          #0891B2  (cyan)
-Cliente:          #D946EF  (fuchsia)
+/* Colores por categoría de herramienta (actualizado) */
+Estrategia:       #6366F1  (indigo)    /* antes "Modelo de Negocio" */
+Mercado:          #0891B2  (cyan)      /* antes "Cliente" */
 Producto:         #059669  (emerald)
 Finanzas:         #D97706  (amber)
 Ventas:           #DC2626  (red)
 Marketing:        #7C3AED  (violet)
-Modelo de Negocio:#0D9488  (teal)
 Equipo:           #EA580C  (orange)
 ```
 
@@ -365,7 +364,7 @@ interface User {
 
 | Animación | Componente | Trigger | Descripción |
 |---|---|---|---|
-| Fade-up en scroll | `FadeUp.tsx` | `whileInView` | `translateY(24px→0)`, `opacity(0→1)`, `once: true` |
+| Fade-up en scroll | _(eliminado `FadeUp.tsx`)_ | `whileInView` | `translateY(24px→0)`, `opacity(0→1)`, `once: true` — ahora inline en cada componente |
 | Contadores animados | `AnimatedCounter.tsx` | `useInView` | Cuenta de 0 a N con `easeOut` en 1.5s |
 | Stagger en tabs | `StartupLifecycle.tsx` | `whileInView` | `staggerChildren: 0.15s` en las 4 etapas |
 | Barras de progreso | `Hero.tsx` | `animate` | `width: 0 → N%` con `duration: 1.2s` |
@@ -451,18 +450,23 @@ syncToolDataToSupabase()          ← persistencia durable
 ## 9. SEO y metadata
 
 ```tsx
-// layout.tsx
+// layout.tsx (actualizado)
 metadata: {
-  title: 'Startups4Climate | El Sistema Operativo para Escalar Soluciones Climáticas en Latam',
-  description: 'Plataforma de herramientas operativas para fundadores...',
-  keywords: ['startups climáticas', 'climate tech', 'investor readiness', 'Latam', ...],
-  openGraph: { ... },
-  twitter: { card: 'summary_large_image', ... },
-  metadataBase: new URL('https://startups4climate.org'),
+  title: 'S4C — Herramientas para Startups de Impacto',  // < 60 chars
+  description: 'Plataforma gratuita con herramientas, mentores AI y oportunidades para startups de impacto en LATAM.',  // < 160 chars
+  keywords: ['startups LATAM', 'herramientas startups', 'climate tech', ...],
+  openGraph: {
+    title: 'S4C — Herramientas para Startups de Impacto',
+    description: 'Plataforma gratuita con herramientas, mentores AI y oportunidades para startups de impacto en LATAM.',
+    url: 'https://startups4climate.vercel.app',
+    siteName: 'Startups4Climate',
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image' },
+  alternates: { canonical: 'https://startups4climate.vercel.app' },
+  metadataBase: new URL('https://startups4climate.vercel.app'),
 }
 ```
-
-> **Nota**: Los metadatos aún reflejan la orientación anterior (climate tech). Pendiente de actualizar para reflejar la nueva propuesta de valor ("startups de impacto" en general).
 
 ---
 
@@ -494,12 +498,42 @@ Todos los componentes son `'use client'` porque:
 
 ---
 
-## 11. Deuda técnica conocida
+## 11. Cambios recientes (28 de marzo 2026)
+
+### Nuevos componentes
+
+| Componente | Ruta | Descripción |
+|---|---|---|
+| `CompletarPerfilPage` | `app/tools/completar-perfil/page.tsx` | Onboarding de perfil con stepper de 2 pasos (vertical/país/rol/experiencia/LinkedIn y descripción/equipo/website). Incluye opción "Saltar por ahora". |
+
+### Componentes eliminados
+
+| Componente | Motivo |
+|---|---|
+| `SocialProof.tsx` | Eliminado — sección "Construida para el ecosistema..." ya no se usa en la landing. |
+| `FadeUp.tsx` | Eliminado — wrapper de animación sin uso; las animaciones se hacen inline en cada componente. |
+
+### Flujo de autenticación actualizado
+
+- **Org login**: `AuthModal` soporta un modo "Acceder como organización" con header/subtítulo diferenciados. Las organizaciones reciben credenciales tras acuerdo B2B (sin autoregistro).
+- **Redirección post-registro**: los nuevos usuarios son redirigidos a `/tools/completar-perfil` tras crear su cuenta.
+- **Fallback de usuario**: cuando la carga del perfil falla, se usa un mecanismo de usuario fallback para no bloquear la sesión.
+- **Timeout de carga**: la carga del perfil tiene un timeout de 5 segundos.
+- **Retry en errores transitorios**: lógica de reintentos para errores transitorios de la base de datos al cargar el perfil.
+
+### Contexto AI actualizado
+
+- El context builder (`lib/ai/context-builder.ts`) incluye un fallback de datos de perfil: si la tabla `startups` no devuelve datos, intenta leer de la tabla `profiles`.
+- Se leen datos de ambas tablas (`startups` y `profiles`) para construir el contexto más completo posible.
+
+---
+
+## 12. Deuda técnica conocida (legacy)
 
 | Item | Severidad | Descripción |
 |---|---|---|
 | Auth con localStorage | Alta | Passwords almacenados sin hashing robusto. Migrar a Supabase Auth. |
-| Metadata desactualizada | Media | Title y description aún mencionan "climate tech". Actualizar. |
+| ~~Metadata desactualizada~~ | ~~Media~~ | ~~Title y description aún mencionan "climate tech".~~ Resuelto: title < 60 chars, description < 160 chars, OG/Twitter cards, canonical URL actualizada. |
 | Stripe pendiente | Media | Checkout tiene UI completa pero falta configurar Stripe real. |
 | Sync bidireccional | Baja | Los datos solo van localStorage → Supabase. No hay pull de Supabase → localStorage. |
 | Componentes legacy | Baja | 11 componentes de herramientas antiguas (`TRLCalculator`, `Bankability`, etc.) no se usan pero siguen en el repo. |
@@ -508,7 +542,7 @@ Todos los componentes son `'use client'` porque:
 
 ---
 
-## 12. Métricas del codebase
+## 13. Métricas del codebase
 
 | Métrica | Valor |
 |---|---|

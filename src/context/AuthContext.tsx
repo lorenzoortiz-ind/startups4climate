@@ -41,7 +41,7 @@ interface AuthContextType {
   user: User | null
   appUser: AppUser | null
   loading: boolean
-  login: (email: string, password: string) => Promise<{ error?: string }>
+  login: (email: string, password: string) => Promise<{ error?: string; role?: string }>
   register: (
     email: string,
     password: string,
@@ -280,11 +280,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (data.user && data.session) {
           try {
             const profile = await loadProfile(data.user.id)
-            setAppUser(profile ?? fallbackAppUser(data.session))
+            const resolved = profile ?? fallbackAppUser(data.session)
+            setAppUser(resolved)
+            return { role: resolved.role }
           } catch (profileErr) {
             // Profile load failed — use fallback so user is not stuck
             console.warn('[Auth] Profile load failed after successful sign-in, using fallback:', profileErr)
-            setAppUser(fallbackAppUser(data.session))
+            const fallback = fallbackAppUser(data.session)
+            setAppUser(fallback)
+            return { role: fallback.role }
           }
         }
 

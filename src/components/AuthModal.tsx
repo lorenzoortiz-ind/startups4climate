@@ -43,7 +43,7 @@ export default function AuthModal() {
     }
 
     setLoading(true)
-    let result: { error?: string }
+    let result: { error?: string; role?: string }
     try {
       result =
         mode === 'login'
@@ -60,6 +60,8 @@ export default function AuthModal() {
       setError(result.error)
     } else {
       setSuccess(true)
+      // Check if user is org admin - redirect to admin dashboard
+      const isOrgAdmin = result.role === 'admin_org' || result.role === 'superadmin'
       // Wait for auth state to fully propagate before redirecting
       setTimeout(() => {
         closeAuthModal()
@@ -67,7 +69,9 @@ export default function AuthModal() {
         // Use full page navigation so the browser sends updated auth cookies
         // to the server middleware. router.push() does a client-side navigation
         // that skips cookie propagation, causing the middleware to reject the request.
-        window.location.href = mode === 'register' ? '/tools/completar-perfil' : '/tools'
+        window.location.href = mode === 'register'
+          ? '/tools/completar-perfil'
+          : isOrgAdmin ? '/admin' : '/tools'
       }, 1800)
     }
   }

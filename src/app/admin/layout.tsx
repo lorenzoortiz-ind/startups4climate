@@ -14,6 +14,9 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Radar,
+  Lightbulb,
+  BookOpen,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
@@ -22,6 +25,9 @@ const NAV_ITEMS = [
   { href: '/admin/cohortes', label: 'Cohortes', icon: Users },
   { href: '/admin/reportes', label: 'Reportes', icon: FileBarChart },
   { href: '/admin/benchmarking', label: 'Benchmarking', icon: BarChart3 },
+  { href: '/tools/radar', label: 'RADAR', icon: Radar },
+  { href: '/tools/oportunidades', label: 'Oportunidades', icon: Lightbulb },
+  { href: '/tools/recursos', label: 'Recursos', icon: BookOpen },
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ] as const
 

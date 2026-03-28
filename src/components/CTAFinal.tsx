@@ -47,7 +47,7 @@ export default function CTAFinal() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Tu idea puede cambiar Latinoamérica. Te damos el ecosistema all-in-one para lograrlo.
+            Tu idea puede cambiar Latinoamérica. Te damos el ecosistema para lograrlo.
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',

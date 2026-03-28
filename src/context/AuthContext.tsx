@@ -47,7 +47,7 @@ interface AuthContextType {
     password: string,
     name: string,
     startup: string
-  ) => Promise<{ error?: string; needsConfirmation?: boolean }>
+  ) => Promise<{ error?: string }>
   logout: () => Promise<void>
   updateProfile: (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => Promise<{ error?: string }>
   openAuthModal: (mode?: 'login' | 'register') => void
@@ -142,7 +142,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             full_name: name,
             startup_name: startup,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
@@ -150,14 +149,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: mapSupabaseError(error.message) }
       }
 
-      // If email confirmation is required, session will be null
-      if (!data.session) {
-        return { needsConfirmation: true }
+      // If email confirmation is enabled in Supabase, session will be null.
+      // In that case, sign in immediately with password to get a session.
+      let activeUser = data.user
+      if (!data.session && data.user) {
+        const { data: signInData, error: signInError } =
+          await supabase.auth.signInWithPassword({
+            email: email.toLowerCase(),
+            password,
+          })
+        if (signInError) {
+          return { error: mapSupabaseError(signInError.message) }
+        }
+        activeUser = signInData.user
       }
 
-      // If email confirmation is disabled, user is immediately available
-      if (data.user) {
-        const profile = await loadProfile(data.user.id)
+      // Ensure profile exists (the DB trigger may not have fired yet)
+      if (activeUser) {
+        // Try to load existing profile first
+        let profile = await loadProfile(activeUser.id)
+        if (!profile) {
+          // Create profile directly if it doesn't exist yet
+          const now = new Date().toISOString()
+          await supabase.from('profiles').upsert({
+            id: activeUser.id,
+            email: activeUser.email,
+            full_name: name,
+            startup_name: startup,
+            role: 'founder',
+            created_at: now,
+          })
+          profile = await loadProfile(activeUser.id)
+        }
         if (profile) {
           setAppUser(profile)
         }

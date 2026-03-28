@@ -87,7 +87,7 @@ export default function AboutRedesignLab() {
           </motion.div>
 
           {/* Right — founder cards */}
-          <div style={{
+          <div className="about-founder-cards" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             gap: '1.25rem',
@@ -242,6 +242,11 @@ export default function AboutRedesignLab() {
         }
         .partner-logo-item:hover {
           opacity: 0.85 !important;
+        }
+        @media (max-width: 640px) {
+          .about-founder-cards {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </section>

@@ -1,8 +1,26 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Lightbulb, FlaskConical, Rocket, TrendingUp, ChevronRight } from 'lucide-react'
+import {
+  Lightbulb,
+  FlaskConical,
+  Rocket,
+  TrendingUp,
+  ChevronRight,
+  Wrench,
+  Bot,
+  Radar,
+  Gift,
+  Stamp,
+  UserCircle,
+} from 'lucide-react'
 import { STAGE_ILLUSTRATIONS } from './illustrations/StageIllustrations'
+import {
+  PreIncubationIllustration,
+  IncubationIllustration,
+  AccelerationIllustration,
+  ScalingIllustration,
+} from './illustrations/StageIllustrations'
 
 const stages = [
   {
@@ -38,6 +56,116 @@ const stages = [
     bg: 'rgba(217,119,6,0.08)',
   },
 ]
+
+const features = [
+  {
+    icon: Wrench,
+    title: '30 herramientas interactivas',
+    description: 'Desde la idea hasta el modelo validado. Cada herramienta incluye marco conceptual, formularios guiados y outputs descargables.',
+    color: '#059669',
+    bg: 'rgba(5,150,105,0.06)',
+  },
+  {
+    icon: Bot,
+    title: 'Mentores AI',
+    description: 'Retroalimentación contextual sobre tu modelo de negocio, mercado y estrategia, adaptada a tu vertical.',
+    color: '#0891B2',
+    bg: 'rgba(8,145,178,0.06)',
+  },
+  {
+    icon: Radar,
+    title: 'RADAR del ecosistema',
+    description: 'Noticias, cambios regulatorios y tendencias de inversión en LATAM, curados para ti.',
+    color: '#7C3AED',
+    bg: 'rgba(124,58,237,0.06)',
+  },
+  {
+    icon: Gift,
+    title: 'Oportunidades',
+    description: 'Grants, competencias y fondos que coinciden con tu perfil, etapa y vertical. Actualizados semanalmente.',
+    color: '#D97706',
+    bg: 'rgba(217,119,6,0.06)',
+  },
+  {
+    icon: Stamp,
+    title: 'Startup Passport',
+    description: 'Un perfil verificable de tu startup con métricas y nivel de madurez. Compartible con inversores y programas.',
+    color: '#DC2626',
+    bg: 'rgba(220,38,38,0.06)',
+  },
+  {
+    icon: UserCircle,
+    title: 'Perfil progresivo',
+    description: 'Empieza con lo básico y la plataforma se adapta. Herramientas y recomendaciones se desbloquean a medida que avanzas.',
+    color: '#0891B2',
+    bg: 'rgba(8,145,178,0.06)',
+  },
+]
+
+const FEATURE_ILLUSTRATION_MAP: Record<string, React.ComponentType<{ width?: number | string; height?: number | string; className?: string }>> = {
+  '30 herramientas interactivas': PreIncubationIllustration,
+  'Mentores AI': IncubationIllustration,
+  'RADAR del ecosistema': AccelerationIllustration,
+  'Oportunidades': ScalingIllustration,
+  'Startup Passport': AccelerationIllustration,
+  'Perfil progresivo': IncubationIllustration,
+}
+
+function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: number }) {
+  const DecoIllustration = FEATURE_ILLUSTRATION_MAP[feature.title]
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-30px' }}
+      transition={{ duration: 0.4, delay }}
+      whileHover={{ y: -3, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
+      style={{
+        background: 'white',
+        borderRadius: 16,
+        border: '1px solid var(--color-border)',
+        padding: '1.75rem',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {DecoIllustration && (
+        <div style={{ position: 'absolute', right: -8, bottom: -8, pointerEvents: 'none' }}>
+          <DecoIllustration width={72} height={72} />
+        </div>
+      )}
+      <div style={{
+        width: 44,
+        height: 44,
+        borderRadius: 12,
+        background: feature.bg,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: '1rem',
+      }}>
+        <feature.icon size={22} strokeWidth={1.5} color={feature.color} />
+      </div>
+      <h3 style={{
+        fontFamily: 'var(--font-heading)',
+        fontSize: '1rem',
+        fontWeight: 700,
+        color: 'var(--color-text-primary)',
+        marginBottom: '0.5rem',
+      }}>
+        {feature.title}
+      </h3>
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: '0.875rem',
+        lineHeight: 1.65,
+        color: 'var(--color-text-secondary)',
+      }}>
+        {feature.description}
+      </p>
+    </motion.div>
+  )
+}
 
 export default function ValueProp() {
   return (
@@ -90,8 +218,8 @@ export default function ValueProp() {
               color: 'var(--color-text-secondary)',
             }}
           >
-            La infraestructura que conecta herramientas, conocimiento,
-            inteligencia artificial y oportunidades reales en un solo lugar.
+            Sin costo, sin aplicaciones, sin esperas. Crea tu cuenta y accede a la infraestructura
+            completa para desarrollar tu startup de impacto.
           </p>
         </motion.div>
 
@@ -128,6 +256,7 @@ export default function ValueProp() {
 
           {/* Stages row */}
           <div
+            className="valueprop-stages"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -231,6 +360,7 @@ export default function ValueProp() {
                 {/* Arrow connector (not after last) */}
                 {i < stages.length - 1 && (
                   <div
+                    className="valueprop-connector"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -257,7 +387,30 @@ export default function ValueProp() {
             ))}
           </div>
         </motion.div>
+
+        {/* Feature cards grid */}
+        <div
+          className="valueprop-features-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1.25rem',
+            marginTop: '3rem',
+          }}
+        >
+          {features.map((feature, i) => (
+            <FeatureCard key={feature.title} feature={feature} delay={i * 0.08} />
+          ))}
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .valueprop-features-grid { grid-template-columns: 1fr !important; }
+          .valueprop-stages { flex-direction: column !important; gap: 0.5rem !important; }
+          .valueprop-connector { display: none !important; }
+        }
+      `}</style>
     </section>
   )
 }

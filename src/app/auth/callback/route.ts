@@ -8,19 +8,15 @@ export async function GET(request: Request) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type')
   const next = searchParams.get('next') ?? '/tools'
-  const error = searchParams.get('error')
-  const error_description = searchParams.get('error_description')
 
   // Use env-based site URL for redirects (handles Vercel preview vs production).
   // Falls back to the request origin (works for localhost too).
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
 
-  // Handle error responses from Supabase (e.g. expired link, invalid token)
-  if (error) {
-    const message = error_description || error
-    return NextResponse.redirect(
-      `${siteUrl}/?error=${encodeURIComponent(message)}`
-    )
+  // Handle error responses from Supabase (e.g. expired link, invalid token).
+  // Since email confirmation is no longer required, redirect to /tools gracefully.
+  if (searchParams.get('error')) {
+    return NextResponse.redirect(`${siteUrl}/tools`)
   }
 
   const cookieStore = await cookies()
@@ -48,9 +44,8 @@ export async function GET(request: Request) {
     if (!exchangeError) {
       return NextResponse.redirect(`${siteUrl}${next}`)
     }
-    return NextResponse.redirect(
-      `${siteUrl}/?error=${encodeURIComponent('No se pudo verificar la sesión.')}`
-    )
+    // If exchange fails (e.g. expired code), redirect to /tools gracefully
+    return NextResponse.redirect(`${siteUrl}/tools`)
   }
 
   // Email confirmation flow — verify OTP token hash
@@ -62,11 +57,10 @@ export async function GET(request: Request) {
     if (!verifyError) {
       return NextResponse.redirect(`${siteUrl}${next}`)
     }
-    return NextResponse.redirect(
-      `${siteUrl}/?error=${encodeURIComponent('El enlace de confirmación es inválido o ha expirado.')}`
-    )
+    // If verification fails (e.g. otp_expired), redirect to /tools gracefully
+    return NextResponse.redirect(`${siteUrl}/tools`)
   }
 
-  // No recognized params — redirect home with generic error
-  return NextResponse.redirect(`${siteUrl}/?error=auth_error`)
+  // No recognized params — redirect to /tools
+  return NextResponse.redirect(`${siteUrl}/tools`)
 }

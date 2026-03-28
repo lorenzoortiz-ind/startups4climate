@@ -15,7 +15,7 @@ const contactSchema = z.object({
   startup_name: z.string().min(2, 'Nombre de startup requerido'),
   startup_description: z.string().min(10, 'Mínimo 10 caracteres'),
   vertical: z.string().min(1, 'Selecciona una vertical'),
-  country: z.string().min(1, 'Selecciona un país'),
+  country: z.string().optional(),
   phone: z.string().optional(),
   website: z.string().optional(),
 })
@@ -42,27 +42,24 @@ const verticalOptions = [
   'Otro',
 ]
 
-const countryOptions = [
-  'Argentina',
-  'Bolivia',
-  'Brasil',
-  'Chile',
-  'Colombia',
-  'Costa Rica',
-  'Cuba',
-  'Ecuador',
-  'El Salvador',
-  'Guatemala',
-  'Honduras',
-  'México',
-  'Nicaragua',
-  'Panamá',
-  'Paraguay',
-  'Perú',
-  'República Dominicana',
-  'Uruguay',
-  'Venezuela',
-  'Otro',
+const phoneCountryOptions = [
+  { name: 'Argentina', flag: '\u{1F1E6}\u{1F1F7}', code: '+54' },
+  { name: 'Bolivia', flag: '\u{1F1E7}\u{1F1F4}', code: '+591' },
+  { name: 'Brasil', flag: '\u{1F1E7}\u{1F1F7}', code: '+55' },
+  { name: 'Chile', flag: '\u{1F1E8}\u{1F1F1}', code: '+56' },
+  { name: 'Colombia', flag: '\u{1F1E8}\u{1F1F4}', code: '+57' },
+  { name: 'Costa Rica', flag: '\u{1F1E8}\u{1F1F7}', code: '+506' },
+  { name: 'Ecuador', flag: '\u{1F1EA}\u{1F1E8}', code: '+593' },
+  { name: 'El Salvador', flag: '\u{1F1F8}\u{1F1FB}', code: '+503' },
+  { name: 'Guatemala', flag: '\u{1F1EC}\u{1F1F9}', code: '+502' },
+  { name: 'Honduras', flag: '\u{1F1ED}\u{1F1F3}', code: '+504' },
+  { name: 'México', flag: '\u{1F1F2}\u{1F1FD}', code: '+52' },
+  { name: 'Nicaragua', flag: '\u{1F1F3}\u{1F1EE}', code: '+505' },
+  { name: 'Panamá', flag: '\u{1F1F5}\u{1F1E6}', code: '+507' },
+  { name: 'Paraguay', flag: '\u{1F1F5}\u{1F1FE}', code: '+595' },
+  { name: 'Perú', flag: '\u{1F1F5}\u{1F1EA}', code: '+51' },
+  { name: 'República Dominicana', flag: '\u{1F1E9}\u{1F1F4}', code: '+1' },
+  { name: 'Uruguay', flag: '\u{1F1FA}\u{1F1FE}', code: '+598' },
 ]
 
 /* ─── Questions ─── */
@@ -236,7 +233,7 @@ const profiles = [
 /* ─── Shared Styles ─── */
 const inputStyle = {
   width: '100%',
-  padding: '0.75rem 1rem',
+  padding: '0.625rem 0.875rem',
   borderRadius: 10,
   border: '1px solid var(--color-border)',
   fontFamily: 'var(--font-body)',
@@ -253,10 +250,23 @@ const labelStyle = {
   fontSize: '0.8125rem',
   fontWeight: 600,
   color: 'var(--color-text-primary)',
-  marginBottom: '0.375rem',
+  marginBottom: '0.25rem',
 } as const
 
+/* ─── Responsive row helper ─── */
+const rowStyle = {
+  display: 'flex',
+  gap: '0.75rem',
+  flexWrap: 'wrap' as const,
+}
+
+const halfColStyle = {
+  flex: '1 1 220px',
+  minWidth: 0,
+}
+
 /* ─── Component ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_STEPS = 12 // 0: contact, 1-10: questions, 11: loading, 12: results
 
 export default function DiagnosticForm() {
@@ -267,6 +277,7 @@ export default function DiagnosticForm() {
   const [profile, setProfile] = useState(profiles[0])
   const [submitted, setSubmitted] = useState(false)
   const [countUp, setCountUp] = useState(0)
+  const [phoneCountryCode, setPhoneCountryCode] = useState('+52')
 
   const { register, handleSubmit, formState: { errors } } = useForm<ContactData>({
     resolver: zodResolver(contactSchema),
@@ -285,7 +296,9 @@ export default function DiagnosticForm() {
   }, [scores])
 
   const handleContactSubmit = (data: ContactData) => {
-    setAnswers(prev => ({ ...prev, ...data }))
+    const phone = data.phone ? `${phoneCountryCode} ${data.phone}` : undefined
+    const selectedCountry = phoneCountryOptions.find(c => c.code === phoneCountryCode)
+    setAnswers(prev => ({ ...prev, ...data, phone: phone || '', country: selectedCountry?.name || '' }))
     setStep(1)
   }
 
@@ -304,12 +317,11 @@ export default function DiagnosticForm() {
     }, 400)
   }
 
-  // Loading → Results
+  // Loading -> Results
   useEffect(() => {
     if (step === 11 && !submitted) {
       const { total, matched } = calculateResults()
 
-      // Supabase inserts
       const insertLead = async () => {
         try {
           await supabase.from('diagnostic_leads').insert({
@@ -336,7 +348,6 @@ export default function DiagnosticForm() {
         }
       }
 
-      // Save to diagnostics table with dimension scores
       const insertDiagnostic = async () => {
         try {
           const dimensionScores = {
@@ -348,7 +359,6 @@ export default function DiagnosticForm() {
             data_room: scores.P10 || 0,
           }
 
-          // Look up user by email to get their UUID
           const { data: userData } = await supabase
             .from('users')
             .select('id')
@@ -433,7 +443,7 @@ export default function DiagnosticForm() {
             </div>
           )}
 
-          <div style={{ padding: '2rem' }}>
+          <div style={{ padding: '1.5rem 2rem 2rem' }}>
             <AnimatePresence mode="wait">
               {/* Step 0: Contact form */}
               {step === 0 && (
@@ -444,177 +454,166 @@ export default function DiagnosticForm() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.375rem', color: 'var(--color-text-primary)' }}>
                     Comienza tu diagnóstico
                   </h3>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1.25rem' }}>
                     Ingresa tus datos para recibir tu reporte personalizado.
                   </p>
-                  <form onSubmit={handleSubmit(handleContactSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {/* Nombre */}
-                    <div>
-                      <label style={labelStyle}>Tu nombre</label>
-                      <input
-                        {...register('nombre')}
-                        placeholder="María García"
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.nombre ? '#DC2626' : 'var(--color-border)',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('nombre')}
-                      />
-                      {errors.nombre && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.nombre.message}
-                        </p>
-                      )}
+                  <form onSubmit={handleSubmit(handleContactSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+                    {/* Row: Nombre + Email */}
+                    <div style={rowStyle}>
+                      <div style={halfColStyle}>
+                        <label style={labelStyle}>Tu nombre</label>
+                        <input
+                          {...register('nombre')}
+                          placeholder="María García"
+                          style={{
+                            ...inputStyle,
+                            borderColor: errors.nombre ? '#DC2626' : 'var(--color-border)',
+                          }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur('nombre')}
+                        />
+                        {errors.nombre && (
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                            {errors.nombre.message}
+                          </p>
+                        )}
+                      </div>
+                      <div style={halfColStyle}>
+                        <label style={labelStyle}>Email</label>
+                        <input
+                          {...register('email')}
+                          placeholder="maria@startup.com"
+                          style={{
+                            ...inputStyle,
+                            borderColor: errors.email ? '#DC2626' : 'var(--color-border)',
+                          }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur('email')}
+                        />
+                        {errors.email && (
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                            {errors.email.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Email */}
-                    <div>
-                      <label style={labelStyle}>Email</label>
-                      <input
-                        {...register('email')}
-                        placeholder="maria@startup.com"
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.email ? '#DC2626' : 'var(--color-border)',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('email')}
-                      />
-                      {errors.email && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.email.message}
-                        </p>
-                      )}
+                    {/* Row: Startup Name + Vertical */}
+                    <div style={rowStyle}>
+                      <div style={halfColStyle}>
+                        <label style={labelStyle}>Nombre de tu startup</label>
+                        <input
+                          {...register('startup_name')}
+                          placeholder="Mi Startup"
+                          style={{
+                            ...inputStyle,
+                            borderColor: errors.startup_name ? '#DC2626' : 'var(--color-border)',
+                          }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur('startup_name')}
+                        />
+                        {errors.startup_name && (
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                            {errors.startup_name.message}
+                          </p>
+                        )}
+                      </div>
+                      <div style={halfColStyle}>
+                        <label style={labelStyle}>Vertical</label>
+                        <select
+                          {...register('vertical')}
+                          defaultValue=""
+                          style={{
+                            ...inputStyle,
+                            borderColor: errors.vertical ? '#DC2626' : 'var(--color-border)',
+                            appearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 1rem center',
+                            paddingRight: '2.5rem',
+                          }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur('vertical')}
+                        >
+                          <option value="" disabled>Selecciona una vertical</option>
+                          {verticalOptions.map(v => (
+                            <option key={v} value={v}>{v}</option>
+                          ))}
+                        </select>
+                        {errors.vertical && (
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                            {errors.vertical.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Startup Name */}
+                    {/* Startup Description (full width) */}
                     <div>
-                      <label style={labelStyle}>Nombre de tu startup</label>
-                      <input
-                        {...register('startup_name')}
-                        placeholder="Mi Startup"
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.startup_name ? '#DC2626' : 'var(--color-border)',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('startup_name')}
-                      />
-                      {errors.startup_name && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.startup_name.message}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Startup Description (textarea) */}
-                    <div>
-                      <label style={labelStyle}>Describe brevemente tu startup</label>
+                      <label style={labelStyle}>Describe brevemente tu idea</label>
                       <textarea
                         {...register('startup_description')}
                         placeholder="¿Qué problema resuelve tu startup y para quién?"
-                        rows={3}
+                        rows={2}
                         style={{
                           ...inputStyle,
                           resize: 'vertical' as const,
-                          minHeight: 80,
+                          minHeight: 64,
                           borderColor: errors.startup_description ? '#DC2626' : 'var(--color-border)',
                         }}
                         onFocus={handleFocus}
                         onBlur={handleBlur('startup_description')}
                       />
                       {errors.startup_description && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
                           {errors.startup_description.message}
                         </p>
                       )}
                     </div>
 
-                    {/* Vertical (dropdown) */}
-                    <div>
-                      <label style={labelStyle}>Vertical de tu startup</label>
-                      <select
-                        {...register('vertical')}
-                        defaultValue=""
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.vertical ? '#DC2626' : 'var(--color-border)',
-                          appearance: 'none',
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'right 1rem center',
-                          paddingRight: '2.5rem',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('vertical')}
-                      >
-                        <option value="" disabled>Selecciona una vertical</option>
-                        {verticalOptions.map(v => (
-                          <option key={v} value={v}>{v}</option>
-                        ))}
-                      </select>
-                      {errors.vertical && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.vertical.message}
-                        </p>
-                      )}
+                    {/* Row: Country phone code + Phone */}
+                    <div style={rowStyle}>
+                      <div style={{ flex: '0 0 auto', minWidth: 130 }}>
+                        <label style={labelStyle}>País</label>
+                        <select
+                          value={phoneCountryCode}
+                          onChange={(e) => setPhoneCountryCode(e.target.value)}
+                          style={{
+                            ...inputStyle,
+                            appearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 0.5rem center',
+                            paddingRight: '1.75rem',
+                          }}
+                          onFocus={handleFocus}
+                        >
+                          {phoneCountryOptions.map(c => (
+                            <option key={c.code + c.name} value={c.code}>
+                              {c.flag} {c.code}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div style={{ flex: '1 1 160px', minWidth: 0 }}>
+                        <label style={labelStyle}>Teléfono (WhatsApp)</label>
+                        <input
+                          {...register('phone')}
+                          placeholder="55 1234 5678"
+                          style={{
+                            ...inputStyle,
+                            borderColor: errors.phone ? '#DC2626' : 'var(--color-border)',
+                          }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur('phone')}
+                        />
+                      </div>
                     </div>
 
-                    {/* Country (dropdown) */}
-                    <div>
-                      <label style={labelStyle}>País</label>
-                      <select
-                        {...register('country')}
-                        defaultValue=""
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.country ? '#DC2626' : 'var(--color-border)',
-                          appearance: 'none',
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'right 1rem center',
-                          paddingRight: '2.5rem',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('country')}
-                      >
-                        <option value="" disabled>Selecciona un país</option>
-                        {countryOptions.map(c => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                      {errors.country && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.country.message}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Phone (optional) */}
-                    <div>
-                      <label style={labelStyle}>Teléfono (WhatsApp)</label>
-                      <input
-                        {...register('phone')}
-                        placeholder="+52 55 1234 5678"
-                        style={{
-                          ...inputStyle,
-                          borderColor: errors.phone ? '#DC2626' : 'var(--color-border)',
-                        }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur('phone')}
-                      />
-                      {errors.phone && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Website (optional) */}
+                    {/* Website (optional, full width) */}
                     <div>
                       <label style={labelStyle}>Sitio web (opcional)</label>
                       <input
@@ -627,11 +626,6 @@ export default function DiagnosticForm() {
                         onFocus={handleFocus}
                         onBlur={handleBlur('website')}
                       />
-                      {errors.website && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.25rem' }}>
-                          {errors.website.message}
-                        </p>
-                      )}
                     </div>
 
                     <button
@@ -642,7 +636,7 @@ export default function DiagnosticForm() {
                         justifyContent: 'center',
                         gap: '0.5rem',
                         width: '100%',
-                        padding: '0.875rem',
+                        padding: '0.75rem',
                         borderRadius: 12,
                         background: '#059669',
                         color: 'white',
@@ -652,7 +646,7 @@ export default function DiagnosticForm() {
                         border: 'none',
                         cursor: 'pointer',
                         transition: 'background 0.2s',
-                        marginTop: '0.5rem',
+                        marginTop: '0.25rem',
                       }}
                     >
                       Comenzar Diagnóstico <ArrowRight size={18} />

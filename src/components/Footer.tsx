@@ -10,7 +10,7 @@ const footerLinks = {
     { label: 'Acceder a la plataforma', href: '/tools', isPage: true },
   ],
   organizaciones: [
-    { label: 'Para organizaciones', href: '#organizaciones' },
+    { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
     { label: 'Solicitar demo', href: 'mailto:hello@redesignlab.org' },
     { label: 'Metodología', href: '#' },
   ],

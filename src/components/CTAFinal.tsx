@@ -65,7 +65,7 @@ export default function CTAFinal() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
             {user ? (
               <button
-                onClick={() => router.push('/tools')}
+                onClick={() => { window.location.href = '/tools' }}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

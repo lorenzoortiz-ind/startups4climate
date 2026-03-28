@@ -141,7 +141,7 @@ export default function Hero() {
               style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}
             >
               <button
-                onClick={() => user ? router.push('/tools') : openAuthModal('register')}
+                onClick={() => user ? (window.location.href = '/tools') : openAuthModal('register')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

@@ -195,7 +195,7 @@ export default function Navbar() {
               )}
               {user ? (
                 <button
-                  onClick={() => router.push('/tools')}
+                  onClick={() => { window.location.href = '/tools' }}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -397,7 +397,7 @@ export default function Navbar() {
                 )}
                 {user ? (
                   <button
-                    onClick={() => { setMobileOpen(false); router.push('/tools') }}
+                    onClick={() => { setMobileOpen(false); window.location.href = '/tools' }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)' }}
                   >
                     <LayoutDashboard size={16} /> Mi Plataforma

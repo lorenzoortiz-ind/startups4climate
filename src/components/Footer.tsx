@@ -16,7 +16,7 @@ const footerLinks = {
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },
-    { label: 'WhatsApp', href: 'https://wa.me/51989338401' },
+    { label: 'WhatsApp', href: 'https://wa.me/51989338401?text=Hola%2C%20vengo%20de%20Startups4climate%20y%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20la%20plataforma.' },
     { label: 'Sobre Redesign Lab', href: '#about' },
   ],
 }

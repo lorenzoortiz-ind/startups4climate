@@ -403,7 +403,7 @@ export default function AuthModal() {
                         textUnderlineOffset: 2,
                       }}
                     >
-                      Volver al login normal
+                      Volver al login como founder
                     </button>
                   ) : (
                     <>

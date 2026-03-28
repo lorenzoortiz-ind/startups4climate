@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score')
       .eq('id', user.id)
       .single()
 

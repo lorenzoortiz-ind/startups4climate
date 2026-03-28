@@ -96,7 +96,7 @@ async function loadProfile(userId: string): Promise<AppUser | null> {
     const result = await Promise.race([
       supabase
         .from('profiles')
-        .select('*')
+        .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score, created_at')
         .eq('id', userId)
         .single(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>
@@ -255,9 +255,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     let lastError: string | undefined
 
-    // Retry up to 2 times for transient "Database error" issues
+    // Retry up to 3 times for transient "Database error" issues
     // (e.g. PostgREST schema cache not yet refreshed after migration)
-    for (let attempt = 0; attempt < 2; attempt++) {
+    const MAX_ATTEMPTS = 3
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email.toLowerCase(),
@@ -265,11 +266,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
 
         if (error) {
-          console.warn(`[Auth] signInWithPassword failed (attempt ${attempt + 1}):`, error.message)
+          console.warn(`[Auth] signInWithPassword failed (attempt ${attempt + 1}/${MAX_ATTEMPTS}):`, error.message)
           // Only retry on transient database errors
-          if (error.message.includes('Database error') && attempt < 1) {
+          if (error.message.includes('Database error') && attempt < MAX_ATTEMPTS - 1) {
             lastError = error.message
-            await new Promise((r) => setTimeout(r, 1500))
+            await new Promise((r) => setTimeout(r, 2000))
             continue
           }
           return { error: mapSupabaseError(error.message) }
@@ -290,10 +291,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return {}
       } catch (networkErr) {
         // Catch network-level errors (fetch failed, timeout, etc.)
-        console.warn(`[Auth] Network error during sign-in (attempt ${attempt + 1}):`, networkErr)
-        if (attempt < 1) {
+        console.warn(`[Auth] Network error during sign-in (attempt ${attempt + 1}/${MAX_ATTEMPTS}):`, networkErr)
+        if (attempt < MAX_ATTEMPTS - 1) {
           lastError = 'Network error'
-          await new Promise((r) => setTimeout(r, 1500))
+          await new Promise((r) => setTimeout(r, 2000))
           continue
         }
         return { error: 'Error de conexión. Verifica tu conexión a internet e intenta de nuevo.' }

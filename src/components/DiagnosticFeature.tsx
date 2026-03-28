@@ -35,24 +35,7 @@ export default function DiagnosticFeature() {
             textTransform: 'uppercase',
             marginBottom: '0.625rem',
           }}>
-            EMPIEZA AQUÍ
-          </span>
-          <br />
-          <span style={{
-            display: 'inline-block',
-            padding: '0.3rem 0.875rem',
-            borderRadius: 9999,
-            background: 'rgba(5,150,105,0.06)',
-            border: '1px solid rgba(5,150,105,0.12)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            color: '#059669',
-            letterSpacing: '0.03em',
-            textTransform: 'uppercase',
-            marginBottom: '1rem',
-          }}>
-            Diagnóstico Gratuito
+            EMPIEZA AQUÍ CON TU DIAGNÓSTICO GRATUITO
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -63,7 +46,7 @@ export default function DiagnosticFeature() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Diagnóstico de Startup Readiness
+            Evalúa tu <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Startup Readiness</span>
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',

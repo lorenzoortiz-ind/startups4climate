@@ -71,8 +71,8 @@ export default function ProblemSection() {
               margin: '0 auto',
             }}
           >
-            El talento está distribuido por toda Latinoamérica.
-            El ecosistema para desarrollarlo, no.
+            Miles de founders en Latinoamérica tienen ideas brillantes.
+            Lo que les falta es un ecosistema que los acompañe desde el día uno.
           </p>
         </motion.div>
 

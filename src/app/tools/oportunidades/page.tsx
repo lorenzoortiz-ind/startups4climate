@@ -18,6 +18,7 @@ import {
 
 /* ─── Types ─── */
 type OpportunityType = 'Grant' | 'Aceleradora' | 'Competencia' | 'Fondo' | 'Capacitación' | 'Programa'
+type TimeFilter = 'Todas' | 'Vigentes' | 'Por vencer' | 'Cerradas'
 type FilterCategory = 'Todas' | OpportunityType
 
 interface Opportunity {
@@ -171,6 +172,35 @@ const OPPORTUNITIES: Opportunity[] = [
     region: 'Regional',
   },
 ]
+
+/* ─── Date helpers ─── */
+const MONTH_MAP: Record<string, number> = {
+  Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+  Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11,
+}
+
+function parseDeadline(deadline: string): Date | null {
+  // Format: "30 Abr 2026"
+  const parts = deadline.split(' ')
+  if (parts.length !== 3) return null
+  const day = parseInt(parts[0], 10)
+  const month = MONTH_MAP[parts[1]]
+  const year = parseInt(parts[2], 10)
+  if (isNaN(day) || month === undefined || isNaN(year)) return null
+  return new Date(year, month, day, 23, 59, 59)
+}
+
+function getTimeStatus(deadline: string): 'vigente' | 'por_vencer' | 'cerrada' {
+  const date = parseDeadline(deadline)
+  if (!date) return 'vigente'
+  const now = new Date()
+  if (date < now) return 'cerrada'
+  const diffDays = (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  if (diffDays <= 14) return 'por_vencer'
+  return 'vigente'
+}
+
+const TIME_FILTERS: TimeFilter[] = ['Todas', 'Vigentes', 'Por vencer', 'Cerradas']
 
 /* ─── Match score helpers ─── */
 function getMatchColor(score: number): { color: string; bg: string; border: string } {
@@ -378,11 +408,18 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
 /* ─── Main page ─── */
 export default function OportunidadesPage() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('Todas')
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('Todas')
 
-  const filtered =
-    activeFilter === 'Todas'
-      ? OPPORTUNITIES
-      : OPPORTUNITIES.filter((o) => o.type === activeFilter)
+  const filtered = OPPORTUNITIES
+    .filter((o) => activeFilter === 'Todas' || o.type === activeFilter)
+    .filter((o) => {
+      if (timeFilter === 'Todas') return true
+      const status = getTimeStatus(o.deadline)
+      if (timeFilter === 'Vigentes') return status === 'vigente'
+      if (timeFilter === 'Por vencer') return status === 'por_vencer'
+      if (timeFilter === 'Cerradas') return status === 'cerrada'
+      return true
+    })
 
   // Sort by match score descending
   const sorted = [...filtered].sort((a, b) => b.matchScore - a.matchScore)
@@ -500,6 +537,52 @@ export default function OportunidadesPage() {
                 }}
               >
                 {cat}
+              </button>
+            )
+          })}
+        </motion.div>
+
+        {/* Time filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginBottom: '1.5rem',
+            overflowX: 'auto',
+            paddingBottom: '0.25rem',
+          }}
+        >
+          <Clock size={14} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
+          {TIME_FILTERS.map((tf) => {
+            const isActive = timeFilter === tf
+            return (
+              <button
+                key={tf}
+                onClick={() => setTimeFilter(tf)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: 9999,
+                  border: isActive
+                    ? '1px solid rgba(8,145,178,0.4)'
+                    : '1px solid var(--color-border)',
+                  background: isActive ? 'rgba(8,145,178,0.1)' : 'var(--color-bg-card)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.75rem',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? '#0891B2' : 'var(--color-text-secondary)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {tf}
               </button>
             )
           })}

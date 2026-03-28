@@ -199,15 +199,15 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Baseline</label>
-                  <input type="number" value={m.baseline} onChange={e => updateMetric(i, 'baseline', Number(e.target.value))} style={inputStyle} />
+                  <input type="number" value={m.baseline || ''} onChange={e => updateMetric(i, 'baseline', Number(e.target.value))} placeholder="0" style={inputStyle} />
                 </div>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Meta</label>
-                  <input type="number" value={m.target} onChange={e => updateMetric(i, 'target', Number(e.target.value))} style={inputStyle} />
+                  <input type="number" value={m.target || ''} onChange={e => updateMetric(i, 'target', Number(e.target.value))} placeholder="0" style={inputStyle} />
                 </div>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Actual</label>
-                  <input type="number" value={m.current} onChange={e => updateMetric(i, 'current', Number(e.target.value))} style={inputStyle} />
+                  <input type="number" value={m.current || ''} onChange={e => updateMetric(i, 'current', Number(e.target.value))} placeholder="0" style={inputStyle} />
                 </div>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Unidad</label>

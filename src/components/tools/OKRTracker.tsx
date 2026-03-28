@@ -141,7 +141,7 @@ ${obj.key_results.map((kr, j) => `  KR ${j + 1}: ${kr.description || '(Sin descr
             {['Q1', 'Q2', 'Q3', 'Q4'].map(q => <option key={q} value={q}>{q}</option>)}
           </select>
           <label style={labelStyle}>Año</label>
-          <input type="number" value={data.year} onChange={e => setData(p => ({ ...p, year: Number(e.target.value) }))} style={{ ...inputStyle, width: 100 }} />
+          <input type="number" value={data.year || ''} onChange={e => setData(p => ({ ...p, year: Number(e.target.value) }))} placeholder="2026" style={{ ...inputStyle, width: 100 }} />
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={labelStyle}>Score general:</span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: progressColor(overallScore) }}>{overallScore}%</span>
@@ -185,11 +185,11 @@ ${obj.key_results.map((kr, j) => `  KR ${j + 1}: ${kr.description || '(Sin descr
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <div>
                       <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Meta</label>
-                      <input type="number" value={kr.target} onChange={e => updateKR(objIdx, krIdx, 'target', Number(e.target.value))} style={inputStyle} />
+                      <input type="number" value={kr.target || ''} onChange={e => updateKR(objIdx, krIdx, 'target', Number(e.target.value))} placeholder="0" style={inputStyle} />
                     </div>
                     <div>
                       <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Actual</label>
-                      <input type="number" value={kr.current} onChange={e => updateKR(objIdx, krIdx, 'current', Number(e.target.value))} style={inputStyle} />
+                      <input type="number" value={kr.current || ''} onChange={e => updateKR(objIdx, krIdx, 'current', Number(e.target.value))} placeholder="0" style={inputStyle} />
                     </div>
                     <div>
                       <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Unidad</label>

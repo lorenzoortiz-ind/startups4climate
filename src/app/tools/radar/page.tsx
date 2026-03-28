@@ -6,9 +6,7 @@ import {
   Radio,
   Newspaper,
   Target,
-  Megaphone,
   Clock,
-  ExternalLink,
   TrendingUp,
   Scale,
   Lightbulb,
@@ -17,7 +15,7 @@ import {
 
 /* ─── Types ─── */
 type Category = 'Inversión' | 'Regulación' | 'Tendencia' | 'Programa'
-type Tab = 'noticias' | 'vertical' | 'convocatorias'
+type Tab = 'noticias' | 'vertical'
 
 interface NewsItem {
   title: string
@@ -33,13 +31,6 @@ interface VerticalItem {
   date: string
 }
 
-interface Convocatoria {
-  name: string
-  organization: string
-  deadline: string
-  eligibility: string
-  link: string
-}
 
 /* ─── Category styling ─── */
 const CATEGORY_COLORS: Record<Category, { color: string; bg: string; border: string }> = {
@@ -139,41 +130,10 @@ const VERTICAL_ITEMS: VerticalItem[] = [
   },
 ]
 
-const CONVOCATORIAS: Convocatoria[] = [
-  {
-    name: 'Climate Tech Challenge 2026',
-    organization: 'BID Lab',
-    deadline: '15 Abr 2026',
-    eligibility: 'Startups de climatech con operaciones en LATAM, pre-seed a Serie A',
-    link: '#',
-  },
-  {
-    name: 'Fondo Verde de Innovación',
-    organization: 'CAF — Banco de Desarrollo',
-    deadline: '30 Abr 2026',
-    eligibility: 'Startups con soluciones de mitigación o adaptación climática, hasta $100K',
-    link: '#',
-  },
-  {
-    name: 'Startup Chile Next Gen S26',
-    organization: 'CORFO / Startup Chile',
-    deadline: '1 May 2026',
-    eligibility: 'Startups de cualquier vertical con disposición a operar desde Chile',
-    link: '#',
-  },
-  {
-    name: 'Premios Latinoamérica Verde 2026',
-    organization: 'Fundación Latinoamérica Verde',
-    deadline: '20 May 2026',
-    eligibility: 'Proyectos y startups de impacto ambiental y social en la región',
-    link: '#',
-  },
-]
 
 const TABS: { id: Tab; label: string; icon: typeof Newspaper }[] = [
   { id: 'noticias', label: 'Noticias del ecosistema', icon: Newspaper },
   { id: 'vertical', label: 'Relevante para tu startup', icon: Target },
-  { id: 'convocatorias', label: 'Convocatorias abiertas', icon: Megaphone },
 ]
 
 /* ─── Components ─── */
@@ -351,107 +311,6 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
       >
         Fuente: {item.source}
       </span>
-    </motion.div>
-  )
-}
-
-function ConvocatoriaCard({ item, index }: { item: Convocatoria; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: 0.05 + index * 0.06, ease: 'easeOut' }}
-      style={{
-        padding: '1.25rem 1.5rem',
-        borderRadius: 14,
-        background: 'var(--color-bg-card)',
-        border: '1px solid var(--color-border)',
-        boxShadow: 'var(--shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-        cursor: 'default',
-        transition: 'all 0.2s ease',
-        overflowWrap: 'break-word',
-        wordBreak: 'break-word',
-      }}
-      whileHover={{
-        boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-        y: -2,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <h3
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '0.9375rem',
-            fontWeight: 700,
-            color: 'var(--color-text-primary)',
-            lineHeight: 1.35,
-            margin: 0,
-          }}
-        >
-          {item.name}
-        </h3>
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-            padding: '0.125rem 0.5rem',
-            borderRadius: 9999,
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.2)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.625rem',
-            fontWeight: 600,
-            color: '#EF4444',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Clock size={10} />
-          {item.deadline}
-        </span>
-      </div>
-      <p
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
-          color: 'var(--color-text-secondary)',
-          lineHeight: 1.5,
-          margin: 0,
-        }}
-      >
-        <strong style={{ color: 'var(--color-text-primary)' }}>{item.organization}</strong>
-      </p>
-      <p
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
-          color: 'var(--color-text-secondary)',
-          lineHeight: 1.5,
-          margin: 0,
-        }}
-      >
-        {item.eligibility}
-      </p>
-      <a
-        href={item.link}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.25rem',
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
-          fontWeight: 600,
-          color: '#059669',
-          textDecoration: 'none',
-          marginTop: '0.25rem',
-        }}
-      >
-        Ver convocatoria
-        <ExternalLink size={12} />
-      </a>
     </motion.div>
   )
 }
@@ -659,13 +518,6 @@ export default function RadarPage() {
           </div>
         )}
 
-        {activeTab === 'convocatorias' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {CONVOCATORIAS.map((item, i) => (
-              <ConvocatoriaCard key={item.name} item={item} index={i} />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

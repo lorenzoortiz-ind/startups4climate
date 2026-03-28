@@ -508,7 +508,7 @@ export default function RecursosPage() {
           Este stack se actualiza regularmente. Si conoces una herramienta que debería
           estar aquí, escríbenos a{' '}
           <a
-            href="https://wa.me/51989338401?text=Hola, tengo una sugerencia de herramienta para el stack tecnológico"
+            href="https://wa.me/51989338401?text=Hola%2C%20vengo%20de%20Startups4climate%20y%20tengo%20una%20sugerencia%20de%20herramienta%20para%20el%20stack%20tecnol%C3%B3gico."
             target="_blank"
             rel="noopener noreferrer"
             style={{

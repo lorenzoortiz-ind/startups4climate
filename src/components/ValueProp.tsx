@@ -13,7 +13,7 @@ import {
 const features = [
   {
     icon: Wrench,
-    title: '30 herramientas interactivas',
+    title: '+30 herramientas interactivas',
     description: 'Desde la idea hasta el modelo validado. Cada herramienta incluye marco conceptual, formularios guiados y outputs descargables.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',

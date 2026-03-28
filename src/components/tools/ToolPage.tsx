@@ -328,18 +328,6 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 >
                   {tool.shortName}
                 </h1>
-                {tool.name !== tool.shortName && (
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      color: 'var(--color-text-muted)',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {tool.name}
-                  </p>
-                )}
                 {tool.guidingQuestion && (
                   <p
                     style={{
@@ -354,17 +342,6 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                     {tool.guidingQuestion}
                   </p>
                 )}
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.9375rem',
-                    lineHeight: 1.6,
-                    color: 'var(--color-text-secondary)',
-                    marginBottom: '0.875rem',
-                  }}
-                >
-                  {tool.description}
-                </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                   {tool.outputs.map((out) => (
                     <span

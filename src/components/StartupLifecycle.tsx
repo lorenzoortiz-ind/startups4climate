@@ -137,7 +137,7 @@ export default function StartupLifecycle() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            24 Herramientas en 4 Etapas
+            +30 Herramientas en 4 Etapas
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -148,16 +148,8 @@ export default function StartupLifecycle() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            El Toolkit que necesitas para crecer y escalar
+            El Toolkit que necesita todo founder para crecer y escalar
           </h2>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '1.0625rem',
-            lineHeight: 1.7,
-            color: 'var(--color-text-secondary)',
-          }}>
-            +30 herramientas organizadas en las 4 etapas clave del desarrollo de tu startup.
-          </p>
         </motion.div>
 
         {/* Stage selector tabs */}

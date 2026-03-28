@@ -163,7 +163,7 @@ export default function Hero() {
                 <ArrowRight size={18} />
               </button>
               <a
-                href="#organizaciones"
+                href="/organizaciones"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

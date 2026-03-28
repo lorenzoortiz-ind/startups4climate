@@ -8,9 +8,9 @@ import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const navLinks: { label: string; href: string; isPage?: boolean }[] = [
-  { label: 'Plataforma', href: '#plataforma' },
-  { label: 'Diagnóstico', href: '#diagnostico' },
-  { label: 'Quiénes somos', href: '#about' },
+  { label: 'Plataforma', href: '/#plataforma' },
+  { label: 'Diagnóstico', href: '/#diagnostico' },
+  { label: 'Quiénes somos', href: '/#about' },
   { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
   { label: 'Workbook', href: '/workbook', isPage: true },
 ]
@@ -20,6 +20,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,9 +32,17 @@ export default function Navbar() {
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false)
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    // href is like "/#plataforma" — extract the hash part
+    const hash = href.startsWith('/') ? href.slice(1) : href
+    if (pathname === '/') {
+      // Already on landing page, just scroll
+      const el = document.querySelector(hash)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      // Navigate to landing page with hash
+      router.push(href)
     }
   }
 
@@ -64,10 +73,14 @@ export default function Navbar() {
           >
             {/* Logo */}
             <a
-              href="#"
+              href="/"
               onClick={(e) => {
                 e.preventDefault()
-                window.scrollTo({ top: 0, behavior: 'smooth' })
+                if (pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                } else {
+                  router.push('/')
+                }
               }}
               style={{
                 display: 'flex',

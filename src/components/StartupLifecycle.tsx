@@ -157,7 +157,7 @@ export default function StartupLifecycle() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            24 herramientas operativas organizadas en 4 etapas de desarrollo. Basadas en la
+            +30 herramientas operativas organizadas en 4 etapas de desarrollo. Basadas en la
             metodología Disciplined Entrepreneurship del MIT. Descubre tu arsenal.
           </p>
         </motion.div>

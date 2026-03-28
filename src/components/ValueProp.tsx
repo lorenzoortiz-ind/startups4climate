@@ -196,8 +196,9 @@ export default function ValueProp() {
               color: 'var(--color-text-secondary)',
             }}
           >
-            Sin costo, sin aplicaciones, sin esperas. Crea tu cuenta y accede a la infraestructura
-            completa para desarrollar tu startup de impacto.
+            Sin costo, sin aplicaciones, sin esperas. Crea tu cuenta y accede a la Plataforma{' '}
+            <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span>
+            {' '}para desarrollar tu startup de impacto.
           </p>
         </motion.div>
 

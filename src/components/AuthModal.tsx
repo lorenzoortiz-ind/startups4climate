@@ -240,8 +240,8 @@ export default function AuthModal() {
                     }}
                   >
                     {mode === 'login'
-                      ? '15 herramientas operativas para climate tech, listas para usar.'
-                      : 'Accede a tu toolkit completo de climate tech sin costo.'}
+                      ? <>+30 herramientas operativas para climate tech, listas para usar.</>
+                      : <>Accede a la Plataforma <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> de climate tech sin costo.</>}
                   </p>
                 </div>
 

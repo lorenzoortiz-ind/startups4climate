@@ -318,5 +318,8 @@ function mapSupabaseError(message: string): string {
   if (message.includes('Email rate limit exceeded')) {
     return 'Demasiados intentos. Intenta de nuevo en unos minutos.'
   }
+  if (message.includes('signups') && message.includes('disabled')) {
+    return 'El registro no está disponible en este momento. Contacta al administrador.'
+  }
   return message
 }

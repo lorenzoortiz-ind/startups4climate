@@ -76,12 +76,27 @@ function appUserToUser(appUser: AppUser): User {
  * Used as a fallback when the profiles table query fails so the user
  * is not stuck on a loading spinner forever.
  */
-function fallbackAppUser(session: Session): AppUser {
+async function fallbackAppUser(session: Session): Promise<AppUser> {
+  // Try a minimal query to at least get the role (critical for redirect)
+  let role: 'founder' | 'admin_org' | 'superadmin' = 'founder'
+  let org_id: string | null = null
+  try {
+    const { data } = await supabase
+      .from('profiles')
+      .select('role, org_id')
+      .eq('id', session.user.id)
+      .single()
+    if (data?.role) role = data.role as typeof role
+    if (data?.org_id) org_id = data.org_id
+  } catch {
+    // If even this fails, default to founder
+  }
+
   return {
     id: session.user.id,
     email: session.user.email ?? '',
-    role: 'founder',
-    org_id: null,
+    role,
+    org_id,
     full_name: session.user.user_metadata?.full_name ?? session.user.email ?? '',
     startup_name: session.user.user_metadata?.startup_name ?? null,
     stage: null,
@@ -141,7 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (cancelled) return
       if (session?.user) {
         // Set fallback immediately so the UI is never stuck loading
-        setAppUser(fallbackAppUser(session))
+        setAppUser(await fallbackAppUser(session))
         setLoading(false)
         // Then try to enrich with profile data in background
         try {
@@ -164,7 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (cancelled) return
       if (session?.user) {
         // Set fallback immediately, then enrich
-        setAppUser(fallbackAppUser(session))
+        setAppUser(await fallbackAppUser(session))
         try {
           const profile = await loadProfile(session.user.id)
           if (!cancelled && profile) {
@@ -243,7 +258,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (profile) {
           setAppUser(profile)
         } else if (activeSession) {
-          setAppUser(fallbackAppUser(activeSession))
+          setAppUser(await fallbackAppUser(activeSession))
         }
       }
 
@@ -280,13 +295,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (data.user && data.session) {
           try {
             const profile = await loadProfile(data.user.id)
-            const resolved = profile ?? fallbackAppUser(data.session)
+            const resolved = profile ?? await fallbackAppUser(data.session)
             setAppUser(resolved)
             return { role: resolved.role }
           } catch (profileErr) {
             // Profile load failed — use fallback so user is not stuck
             console.warn('[Auth] Profile load failed after successful sign-in, using fallback:', profileErr)
-            const fallback = fallbackAppUser(data.session)
+            const fallback = await fallbackAppUser(data.session)
             setAppUser(fallback)
             return { role: fallback.role }
           }

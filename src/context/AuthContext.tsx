@@ -268,84 +268,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const login = useCallback(async (email: string, password: string) => {
-    let lastError: string | undefined
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.toLowerCase(),
+        password,
+      })
 
-    // Retry up to 3 times for transient "Database error" issues
-    // (e.g. PostgREST schema cache not yet refreshed after migration)
-    const MAX_ATTEMPTS = 3
-    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email.toLowerCase(),
-          password,
-        })
-
-        if (error) {
-          console.warn(`[Auth] signInWithPassword failed (attempt ${attempt + 1}/${MAX_ATTEMPTS}):`, error.message)
-          // Only retry on transient database errors
-          if (error.message.includes('Database error') && attempt < MAX_ATTEMPTS - 1) {
-            lastError = error.message
-            await new Promise((r) => setTimeout(r, 2000))
-            continue
-          }
-          return { error: mapSupabaseError(error.message) }
-        }
-
-        // Sign-in succeeded — try to load profile but never fail the login
-        if (data.user && data.session) {
-          // First, get the role with a direct fetch (bypasses any client caching issues)
-          let userRole: string = 'founder'
-          try {
-            const roleRes = await fetch(
-              `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
-              {
-                headers: {
-                  'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-                  'Authorization': `Bearer ${data.session.access_token}`,
-                },
-              }
-            )
-            if (roleRes.ok) {
-              const roleData = await roleRes.json()
-              if (roleData?.[0]?.role) userRole = roleData[0].role
-            }
-          } catch {
-            console.warn('[Auth] Direct role fetch failed, defaulting to founder')
-          }
-
-          try {
-            const profile = await loadProfile(data.user.id)
-            const resolved = profile ?? await fallbackAppUser(data.session)
-            // Use the role from direct fetch if profile load gave fallback
-            if (resolved.role === 'founder' && userRole !== 'founder') {
-              resolved.role = userRole as typeof resolved.role
-            }
-            setAppUser(resolved)
-            return { role: resolved.role }
-          } catch (profileErr) {
-            console.warn('[Auth] Profile load failed after successful sign-in, using fallback:', profileErr)
-            const fallback = await fallbackAppUser(data.session)
-            fallback.role = userRole as typeof fallback.role
-            setAppUser(fallback)
-            return { role: fallback.role }
-          }
-        }
-
-        return {}
-      } catch (networkErr) {
-        // Catch network-level errors (fetch failed, timeout, etc.)
-        console.warn(`[Auth] Network error during sign-in (attempt ${attempt + 1}/${MAX_ATTEMPTS}):`, networkErr)
-        if (attempt < MAX_ATTEMPTS - 1) {
-          lastError = 'Network error'
-          await new Promise((r) => setTimeout(r, 2000))
-          continue
-        }
-        return { error: 'Error de conexión. Verifica tu conexión a internet e intenta de nuevo.' }
+      if (error) {
+        return { error: mapSupabaseError(error.message) }
       }
-    }
 
-    // All retries exhausted
-    return { error: mapSupabaseError(lastError ?? 'Database error') }
+      if (!data.user || !data.session) {
+        return { error: 'No se pudo iniciar sesión.' }
+      }
+
+      // Get role via direct REST fetch (fast, bypasses PostgREST client cache)
+      let role: string = 'founder'
+      let orgId: string | null = null
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
+          {
+            headers: {
+              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+              'Authorization': `Bearer ${data.session.access_token}`,
+            },
+          }
+        )
+        if (res.ok) {
+          const rows = await res.json()
+          if (rows?.[0]?.role) role = rows[0].role
+          if (rows?.[0]?.org_id) orgId = rows[0].org_id
+        }
+      } catch {
+        // Silently fall back to founder role
+      }
+
+      // Set a minimal user immediately so the UI is not blocked
+      const appUserData: AppUser = {
+        id: data.user.id,
+        email: data.user.email ?? '',
+        role: role as AppUser['role'],
+        org_id: orgId,
+        full_name: data.user.user_metadata?.full_name ?? data.user.email ?? '',
+        startup_name: data.user.user_metadata?.startup_name ?? null,
+        stage: null,
+        diagnosticScore: null,
+        created_at: data.user.created_at ?? new Date().toISOString(),
+      }
+      setAppUser(appUserData)
+
+      // Enrich with full profile in background (don't block login)
+      loadProfile(data.user.id).then((profile) => {
+        if (profile) {
+          // Preserve the role from direct fetch
+          profile.role = role as AppUser['role']
+          profile.org_id = orgId
+          setAppUser(profile)
+        }
+      }).catch(() => {})
+
+      return { role }
+    } catch {
+      return { error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' }
+    }
   }, [])
 
   const logout = useCallback(async () => {

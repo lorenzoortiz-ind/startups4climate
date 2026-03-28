@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bot, X, Minus } from 'lucide-react'
 import ChatInterface from './ChatInterface'
@@ -13,6 +13,29 @@ export default function MentorWidget() {
 
   // Determine agent type based on user's startup vertical/stage
   const agentType = user?.stage ? `mentor-${user.stage}` : 'mentor'
+
+  // Build user context from auth + localStorage profile data
+  const userContext = useMemo(() => {
+    const ctx: Record<string, unknown> = {}
+    if (user) {
+      ctx.name = user.name
+      ctx.email = user.email
+      ctx.startup = user.startup
+      ctx.stage = user.stage
+    }
+    if (typeof window !== 'undefined') {
+      try {
+        const extra = localStorage.getItem('s4c_profile_extra')
+        if (extra) {
+          const parsed = JSON.parse(extra)
+          Object.assign(ctx, parsed)
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+    return ctx
+  }, [user])
 
   // Close on Escape key
   useEffect(() => {
@@ -168,6 +191,7 @@ export default function MentorWidget() {
                 agentType={agentType}
                 placeholder="Pregunta sobre estrategia, mercado, producto..."
                 welcomeMessage="Soy tu mentor AI. Puedo ayudarte con estrategia, mercado, producto, finanzas y más. ¿En qué estás trabajando?"
+                userContext={userContext}
               />
             </div>
           </motion.div>

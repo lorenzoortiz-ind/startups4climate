@@ -1,7 +1,8 @@
 export function buildStartupContext(
   startup: any,
   progress: any[] | null,
-  profile?: any
+  profile?: any,
+  userContext?: Record<string, unknown>
 ): string {
   const parts: string[] = []
 
@@ -44,6 +45,21 @@ export function buildStartupContext(
   if (completedTools.length > 0) {
     const toolNames = completedTools.map((t) => t.tool_id).join(', ')
     parts.push(`HERRAMIENTAS COMPLETADAS (detalle): ${toolNames}`)
+  }
+
+  // Merge client-side profile context (from localStorage / auth)
+  // This ensures the AI has profile data even if Supabase tables are empty
+  if (userContext && Object.keys(userContext).length > 0) {
+    if (userContext.vertical) parts.push(`VERTICAL (perfil): ${userContext.vertical}`)
+    if (userContext.country) parts.push(`PAIS (perfil): ${userContext.country}`)
+    if (userContext.role) parts.push(`ROL: ${userContext.role}`)
+    if (userContext.experience) parts.push(`EXPERIENCIA: ${userContext.experience}`)
+    if (userContext.descripcion || userContext.description) parts.push(`DESCRIPCION (perfil): ${userContext.descripcion || userContext.description}`)
+    if (userContext.teamSize) parts.push(`EQUIPO (perfil): ${userContext.teamSize} personas`)
+    if (userContext.website) parts.push(`WEBSITE (perfil): ${userContext.website}`)
+    if (userContext.linkedin) parts.push(`LINKEDIN: ${userContext.linkedin}`)
+    if (userContext.startup) parts.push(`STARTUP (nombre): ${userContext.startup}`)
+    if (userContext.name) parts.push(`FOUNDER (nombre): ${userContext.name}`)
   }
 
   return parts.join('\n')

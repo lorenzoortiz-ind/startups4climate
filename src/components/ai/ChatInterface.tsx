@@ -17,6 +17,7 @@ interface ChatInterfaceProps {
   agentType: string
   placeholder?: string
   welcomeMessage?: string
+  userContext?: Record<string, unknown>
 }
 
 function formatTime(): string {
@@ -30,6 +31,7 @@ export default function ChatInterface({
   agentType,
   placeholder,
   welcomeMessage,
+  userContext,
 }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
@@ -66,6 +68,7 @@ export default function ChatInterface({
             message: content,
             agentType,
             conversationId,
+            userContext: userContext || {},
           }),
         })
 
@@ -95,7 +98,7 @@ export default function ChatInterface({
         setLoading(false)
       }
     },
-    [agentType, conversationId]
+    [agentType, conversationId, userContext]
   )
 
   return (

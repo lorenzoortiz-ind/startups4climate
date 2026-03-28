@@ -25,10 +25,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { message, agentType, conversationId } = body as {
+    const { message, agentType, conversationId, userContext } = body as {
       message: string
       agentType: string
       conversationId?: string
+      userContext?: Record<string, unknown>
     }
 
     if (!message || !agentType) {
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('user_id', user.id)
 
-    const startupContext = buildStartupContext(startup, progress, profile)
+    const startupContext = buildStartupContext(startup, progress, profile, userContext)
 
     // Load conversation history if conversationId provided
     let history: Array<{ role: string; content: string }> = []

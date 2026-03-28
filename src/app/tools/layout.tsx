@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -40,15 +40,24 @@ function StageSidebarSection({
   tools,
   completedIds,
   currentPath,
+  currentSearchStage,
 }: {
   stageNum: 1 | 2 | 3 | 4
   tools: ToolDef[]
   completedIds: Set<string>
   currentPath: string
+  currentSearchStage: number | null
 }) {
   const cfg = STAGE_CONFIG[stageNum]
   const [open, setOpen] = useState(false)
-  const completedCount = tools.filter((t) => completedIds.has(t.id)).length
+  // Non-transversal tools in this stage
+  const nonTransversalTools = tools.filter((t) => !t.transversal)
+  // Transversal tools (from all stages) shown in this section
+  const transversalInStage = TRANSVERSAL_TOOLS
+  const totalToolCount = nonTransversalTools.length + transversalInStage.length
+  const completedCount =
+    nonTransversalTools.filter((t) => completedIds.has(t.id)).length +
+    transversalInStage.filter((t) => completedIds.has(`${t.id}__stage${stageNum}`)).length
 
   return (
     <div style={{ marginBottom: '0.25rem' }}>
@@ -98,7 +107,7 @@ function StageSidebarSection({
               color: 'var(--color-text-muted)',
             }}
           >
-            {completedCount}/{tools.length}
+            {completedCount}/{totalToolCount}
           </span>
           {open ? <ChevronDown size={12} color="#9CA3AF" /> : <ChevronRight size={12} color="#9CA3AF" />}
         </div>
@@ -114,7 +123,7 @@ function StageSidebarSection({
             style={{ overflow: 'hidden' }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2, paddingLeft: '0.375rem' }}>
-              {tools.map((tool) => {
+              {nonTransversalTools.map((tool) => {
                 const active = currentPath === `/tools/${tool.id}`
                 const done = completedIds.has(tool.id)
                 return (
@@ -149,6 +158,7 @@ function StageSidebarSection({
                       />
                     )}
                     <span
+                      title={tool.shortName}
                       style={{
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
@@ -171,14 +181,16 @@ function StageSidebarSection({
                   </Link>
                 )
               })}
-              {/* Transversal tools from other stages */}
-              {TRANSVERSAL_TOOLS.filter((t) => t.stage !== stageNum).map((tool) => {
-                const active = currentPath === `/tools/${tool.id}`
-                const done = completedIds.has(tool.id)
+              {/* Transversal tools — shown in every stage with stage-specific link */}
+              {TRANSVERSAL_TOOLS.map((tool) => {
+                const href = `/tools/${tool.id}?stage=${stageNum}`
+                const active = currentPath === `/tools/${tool.id}` && currentSearchStage === stageNum
+                const storageKey = `${tool.id}__stage${stageNum}`
+                const done = completedIds.has(storageKey)
                 return (
                   <Link
-                    key={`transversal-${tool.id}`}
-                    href={`/tools/${tool.id}`}
+                    key={`transversal-${tool.id}-s${stageNum}`}
+                    href={href}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -209,6 +221,7 @@ function StageSidebarSection({
                       />
                     )}
                     <span
+                      title={tool.shortName}
                       style={{
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
@@ -257,10 +270,13 @@ function StageSidebarSection({
   )
 }
 
-export default function ToolsLayout({ children }: { children: React.ReactNode }) {
+function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const stageParam = searchParams.get('stage')
+  const currentSearchStage = stageParam ? parseInt(stageParam, 10) : null
   const [mobileOpen, setMobileOpen] = useState(false)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
 
@@ -314,7 +330,9 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  const totalTools = Object.values(TOOLS_BY_STAGE).flat().length
+  // Non-transversal tools + transversal tools * 4 stages
+  const nonTransversalCount = Object.values(TOOLS_BY_STAGE).flat().filter((t) => !t.transversal).length
+  const totalTools = nonTransversalCount + TRANSVERSAL_TOOLS.length * 4
   const completedCount = completedIds.size
 
   const sidebarContent = (
@@ -551,6 +569,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
           tools={TOOLS_BY_STAGE[stage]}
           completedIds={completedIds}
           currentPath={pathname}
+          currentSearchStage={currentSearchStage}
         />
       ))}
 
@@ -789,6 +808,8 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
           minHeight: '100vh',
           minWidth: 0,
           overflowX: 'hidden',
+          overflowWrap: 'break-word' as const,
+          wordBreak: 'break-word' as const,
         }}
         className="lg:ml-[240px] pt-14 lg:pt-0"
       >
@@ -798,5 +819,13 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       {/* Floating Mentor AI Widget */}
       <MentorWidget />
     </div>
+  )
+}
+
+export default function ToolsLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense>
+      <ToolsLayoutInner>{children}</ToolsLayoutInner>
+    </Suspense>
   )
 }

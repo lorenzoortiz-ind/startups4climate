@@ -221,6 +221,8 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         gap: '0.5rem',
         cursor: 'default',
         transition: 'all 0.2s ease',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
       }}
       whileHover={{
         boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -293,6 +295,8 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
         gap: '0.5rem',
         cursor: 'default',
         transition: 'all 0.2s ease',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
       }}
       whileHover={{
         boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -369,6 +373,8 @@ function ConvocatoriaCard({ item, index }: { item: Convocatoria; index: number }
         gap: '0.5rem',
         cursor: 'default',
         transition: 'all 0.2s ease',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
       }}
       whileHover={{
         boxShadow: '0 4px 20px rgba(0,0,0,0.06)',

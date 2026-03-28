@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // If email confirmation is enabled in Supabase, session will be null.
-      // In that case, sign in immediately with password to get a session.
+      // In that case, try to sign in immediately with password to get a session.
       let activeUser = data.user
       if (!data.session && data.user) {
         const { data: signInData, error: signInError } =
@@ -159,6 +159,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             password,
           })
         if (signInError) {
+          // If the error is about email confirmation, tell the user to check their inbox
+          // instead of showing a generic error.
+          if (signInError.message.includes('Email not confirmed')) {
+            return { error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' }
+          }
           return { error: mapSupabaseError(signInError.message) }
         }
         activeUser = signInData.user

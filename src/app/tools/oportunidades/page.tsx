@@ -202,6 +202,8 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
         gap: '0.625rem',
         cursor: 'default',
         transition: 'all 0.2s ease',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
       }}
       whileHover={{
         boxShadow: '0 4px 20px rgba(0,0,0,0.06)',

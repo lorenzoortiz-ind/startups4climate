@@ -176,7 +176,7 @@ function MetricCard({
       >
         <Icon size={17} color={color} />
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ flex: 1, minWidth: 0, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
         <div
           style={{
             fontFamily: 'var(--font-mono)',
@@ -195,6 +195,7 @@ function MetricCard({
             fontSize: '0.9375rem',
             fontWeight: 700,
             color: 'var(--color-text-primary)',
+            overflowWrap: 'break-word',
           }}
         >
           {value || '—'}
@@ -533,7 +534,7 @@ export default function PassportPage() {
             <div
               style={{
                 background: `linear-gradient(135deg, ${stageMeta.color}, ${stageMeta.color}CC)`,
-                padding: '1.5rem 2rem',
+                padding: '1.5rem clamp(1.25rem, 3vw, 2rem)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -868,14 +869,14 @@ export default function PassportPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
                 gap: '0.75rem',
               }}
             >
               <MetricCard icon={Target} label="TAM" value={passportData?.tam || '—'} color="#6366F1" />
               <MetricCard icon={DollarSign} label="LTV" value={passportData?.ltv || '—'} color="#059669" />
               <MetricCard icon={DollarSign} label="CAC" value={passportData?.cac || '—'} color="#D97706" />
-              <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0891B2" />
+              <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0891B2"  />
               <MetricCard
                 icon={Users}
                 label="Equipo"
@@ -932,7 +933,7 @@ export default function PassportPage() {
             >
               Certificados de etapa
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(180px, 100%), 1fr))', gap: '0.75rem' }}>
               {([1, 2, 3, 4] as const).map((s) => {
                 const meta = STAGE_META[s]
                 const earned = stageCertificates.includes(s)

@@ -19,9 +19,9 @@ const BLOCKS = [
   { id: 'regulatory', label: 'Contexto Regulatorio', hint: 'Normativas aplicables, subsidios disponibles, barreras de certificación y plazos.', color: '#F97316', row: 2, col: 1, span: 1 },
 ]
 
-export default function LeanCanvas({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
+export default function LeanCanvas({ userId, onComplete, onGenerateReport, toolStorageId }: ToolComponentProps) {
   const defaultValues = Object.fromEntries(BLOCKS.map((b) => [b.id, ''])) as Record<string, string>
-  const [values, setValues] = useToolState(userId, 'lean-canvas', defaultValues)
+  const [values, setValues] = useToolState(userId, toolStorageId ?? 'lean-canvas', defaultValues)
   const [activeBlock, setActiveBlock] = useState<string | null>(null)
 
   const filled = BLOCKS.filter((b) => values[b.id]?.trim().length > 0).length

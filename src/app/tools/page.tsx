@@ -92,7 +92,7 @@ function ToolCard({
         textDecoration: 'none',
         transition: 'all 0.18s ease',
         position: 'relative' as const,
-        overflow: 'hidden',
+        overflow: 'visible',
         opacity: locked ? 0.5 : 1,
         filter: locked ? 'grayscale(0.7)' : 'none',
         cursor: locked ? 'not-allowed' : 'pointer',
@@ -150,9 +150,8 @@ function ToolCard({
             fontWeight: 600,
             color: locked ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
             marginBottom: '0.25rem',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
           }}
         >
           {tool.shortName}

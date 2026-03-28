@@ -15,9 +15,8 @@ import {
   Lightbulb,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { ToolIllustration } from '../illustrations/StageIllustrations'
 import { ToolCategoryIcon } from '../illustrations/ToolCategoryIcons'
-import { getToolById } from '@/lib/tools-data'
+import { getToolById, getTransversalPreambulo, STAGE_META } from '@/lib/tools-data'
 import { markToolCompleted, markReportGenerated, getProgress } from '@/lib/progress'
 import { generateToolReport } from '@/lib/pdf-generator'
 
@@ -60,37 +59,63 @@ export interface ToolComponentProps {
   userId: string
   onComplete: () => void
   onGenerateReport: (content: string) => void
+  /** Storage key — differs from toolId for transversal tools viewed in a specific stage */
+  toolStorageId?: string
 }
 
-export default function ToolPage({ toolId }: { toolId: string }) {
+export default function ToolPage({ toolId, transversalStage }: { toolId: string; transversalStage?: 1 | 2 | 3 | 4 }) {
   const { user } = useAuth()
   const tool = getToolById(toolId)
+
+  // For transversal tools viewed in a specific stage, use a stage-qualified storage key
+  const isTransversalView = !!tool?.transversal && !!transversalStage
+  const storageId = isTransversalView ? `${toolId}__stage${transversalStage}` : toolId
+
+  // Override preambulo with stage-specific text for transversal tools
+  const preambulo = isTransversalView
+    ? (getTransversalPreambulo(toolId, transversalStage) ?? tool?.preambulo)
+    : tool?.preambulo
+
+  // Override stage display for transversal tools viewed in another stage
+  const displayStageName = isTransversalView
+    ? STAGE_META[transversalStage].name
+    : tool?.stageName
+  const displayStageColor = isTransversalView
+    ? STAGE_META[transversalStage].color
+    : tool?.stageColor
+  const displayStageBg = isTransversalView
+    ? STAGE_META[transversalStage].bg
+    : tool?.stageBg
+  const displayStageBorder = isTransversalView
+    ? STAGE_META[transversalStage].border
+    : tool?.stageBorder
+
   const [preambOpen, setPreambOpen] = useState(true)
   const [completed, setCompleted] = useState(() => {
     if (!user) return false
     const p = getProgress(user.id)
-    return p[toolId]?.completed ?? false
+    return p[storageId]?.completed ?? false
   })
   const [reportGenerated, setReportGenerated] = useState(() => {
     if (!user) return false
     const p = getProgress(user.id)
-    return p[toolId]?.reportGenerated ?? false
+    return p[storageId]?.reportGenerated ?? false
   })
 
   const handleComplete = useCallback(() => {
     if (!user) return
-    markToolCompleted(user.id, toolId)
+    markToolCompleted(user.id, storageId)
     setCompleted(true)
-  }, [user, toolId])
+  }, [user, storageId])
 
   const handleGenerateReport = useCallback(
     (content: string) => {
       if (!user || !tool) return
-      markReportGenerated(user.id, toolId)
+      markReportGenerated(user.id, storageId)
       setReportGenerated(true)
-      generateToolReport(tool, user, toolId, content)
+      generateToolReport(tool, user, storageId, content)
     },
-    [user, toolId, tool]
+    [user, storageId, tool]
   )
 
   if (!tool || !user) return null
@@ -104,7 +129,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
         style={{
           background: 'var(--color-bg-card)',
           borderBottom: '1px solid var(--color-border)',
-          padding: '0 2rem',
+          padding: '0 1.5rem',
           height: 56,
           display: 'flex',
           alignItems: 'center',
@@ -112,6 +137,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
           position: 'sticky',
           top: 0,
           zIndex: 20,
+          gap: '0.5rem',
         }}
         className="lg:top-0 top-14"
       >
@@ -171,12 +197,12 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                 gap: '0.375rem',
                 padding: '0.3rem 0.75rem',
                 borderRadius: 9999,
-                background: `${tool.stageColor}10`,
-                border: `1px solid ${tool.stageColor}22`,
+                background: `${displayStageColor}10`,
+                border: `1px solid ${displayStageColor}22`,
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.625rem',
                 fontWeight: 600,
-                color: tool.stageColor,
+                color: displayStageColor,
                 textTransform: 'uppercase',
               }}
             >
@@ -203,7 +229,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
               padding: '1.75rem',
               boxShadow: 'var(--shadow-card)',
               position: 'relative',
-              overflow: 'hidden',
+              overflow: 'visible',
             }}
           >
             <div
@@ -213,21 +239,10 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                 left: 0,
                 right: 0,
                 height: 4,
-                background: `linear-gradient(90deg, ${tool.stageColor}, ${tool.stageColor}88)`,
-              }}
-            />
-            {/* Subtle decorative illustration */}
-            <div
-              style={{
-                position: 'absolute',
-                right: 12,
-                top: '50%',
-                transform: 'translateY(-50%)',
+                background: `linear-gradient(90deg, ${displayStageColor}, ${displayStageColor}88)`,
                 pointerEvents: 'none',
               }}
-            >
-              <ToolIllustration width={120} height={120} />
-            </div>
+            />
             <div
               style={{
                 display: 'flex',
@@ -241,15 +256,15 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                   width: 52,
                   height: 52,
                   borderRadius: 14,
-                  background: tool.stageBg,
-                  border: `1px solid ${tool.stageBorder}`,
+                  background: displayStageBg,
+                  border: `1px solid ${displayStageBorder}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.125rem', color: tool.stageColor, fontWeight: 700 }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.125rem', color: displayStageColor, fontWeight: 700 }}>
                   {(tool.stepNumber + 1).toString().padStart(2, '0')}
                 </span>
               </div>
@@ -259,16 +274,16 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                     style={{
                       padding: '0.2rem 0.625rem',
                       borderRadius: 9999,
-                      background: tool.stageBg,
-                      border: `1px solid ${tool.stageBorder}`,
+                      background: displayStageBg,
+                      border: `1px solid ${displayStageBorder}`,
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.625rem',
                       fontWeight: 700,
-                      color: tool.stageColor,
+                      color: displayStageColor,
                       textTransform: 'uppercase',
                     }}
                   >
-                    {tool.stageName}
+                    {displayStageName}{isTransversalView && ' · Transversal'}
                   </span>
                   <span
                     style={{
@@ -340,7 +355,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                         color: 'var(--color-text-secondary)',
                       }}
                     >
-                      <CheckCircle2 size={11} color={tool.stageColor} />
+                      <CheckCircle2 size={11} color={displayStageColor} />
                       {out}
                     </span>
                   ))}
@@ -351,7 +366,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
         </motion.div>
 
         {/* Preámbulo — Why you need this tool */}
-        {tool.preambulo && (
+        {preambulo && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -378,13 +393,13 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                background: `${tool.stageColor}10`,
+                background: `${displayStageColor}10`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}>
-                <BookOpen size={18} color={tool.stageColor} />
+                <BookOpen size={18} color={displayStageColor} />
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <span style={{
@@ -428,7 +443,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                   lineHeight: 1.8,
                   color: 'var(--color-text-secondary)',
                 }}>
-                  {tool.preambulo}
+                  {preambulo}
                 </p>
               </div>
             )}
@@ -446,6 +461,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
               userId={user.id}
               onComplete={handleComplete}
               onGenerateReport={handleGenerateReport}
+              toolStorageId={storageId}
             />
           ) : (
             <div
@@ -468,11 +484,11 @@ export default function ToolPage({ toolId }: { toolId: string }) {
               marginTop: '1.5rem',
               padding: '1.25rem 1.5rem',
               borderRadius: 14,
-              background: `${tool.stageColor}08`,
-              border: `1px solid ${tool.stageColor}18`,
+              background: `${displayStageColor}08`,
+              border: `1px solid ${displayStageColor}18`,
             }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <Lightbulb size={20} color={tool.stageColor} style={{ marginTop: 2, flexShrink: 0 }} />
+                <Lightbulb size={20} color={displayStageColor} style={{ marginTop: 2, flexShrink: 0 }} />
                 <div>
                   <h4 style={{
                     fontFamily: 'var(--font-heading)',

@@ -20,8 +20,8 @@ const SLIDES = [
   { id: 's12', title: '12. Visión y Ask', color: '#059669', guide: 'Termina con la visión grande y el ask concreto. ¿Qué pides al inversionista más allá del capital? ¿Conexiones en la industria? ¿Co-liderazgo de ronda?', fields: [{ id: 'vision', label: 'Visión a 10 años', ph: 'En 2035, nuestras plantas producen el 5% del hidrógeno verde global, evitando 50M tCO2eq/año' }, { id: 'ask', label: 'El Ask específico', ph: 'Buscamos $3M en Q1 2025. Lead investor preferiblemente con portfolio en energía industrial y Latam.' }] },
 ]
 
-export default function PitchDeck({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
-  const [values, setValues] = useToolState(userId, 'pitch-deck', {} as Record<string, string>)
+export default function PitchDeck({ userId, onComplete, onGenerateReport, toolStorageId }: ToolComponentProps) {
+  const [values, setValues] = useToolState(userId, toolStorageId ?? 'pitch-deck', {} as Record<string, string>)
   const [openSlides, setOpenSlides] = useState(new Set(['s1', 's2']))
 
   const allFields = SLIDES.flatMap((s) => s.fields)

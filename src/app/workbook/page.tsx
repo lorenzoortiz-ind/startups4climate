@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BookOpen, Download, CheckCircle2, ArrowRight, ChevronRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import WorkbookMockup from '@/components/illustrations/WorkbookMockup'
 
 const LATAM_COUNTRIES = [
   'Argentina',
@@ -125,74 +126,98 @@ export default function WorkbookPage() {
         </Link>
       </nav>
 
-      {/* Hero */}
+      {/* Hero — two-column: text left, mockup right */}
       <section
         style={{
           padding: '4rem 2rem 3rem',
-          maxWidth: 900,
+          maxWidth: 1060,
           margin: '0 auto',
-          textAlign: 'center',
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3rem',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
         >
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 1rem',
-              borderRadius: 9999,
-              background: 'rgba(5,150,105,0.08)',
-              border: '1px solid rgba(5,150,105,0.15)',
-              marginBottom: '1.5rem',
-            }}
+          {/* Left column — text */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ flex: '1 1 340px', maxWidth: 560 }}
           >
-            <BookOpen size={16} color="#059669" />
-            <span
+            <div
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#059669',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 1rem',
+                borderRadius: 9999,
+                background: 'rgba(5,150,105,0.08)',
+                border: '1px solid rgba(5,150,105,0.15)',
+                marginBottom: '1.5rem',
               }}
             >
-              Recurso gratuito
-            </span>
-          </div>
+              <BookOpen size={16} color="#059669" />
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: '#059669',
+                }}
+              >
+                Recurso gratuito
+              </span>
+            </div>
 
-          <h1
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(2rem, 5vw, 3rem)',
+                fontWeight: 800,
+                color: 'var(--color-text-primary, #111827)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                marginBottom: '1rem',
+              }}
+            >
+              Gu&iacute;a completa para{' '}
+              <span style={{ color: '#059669' }}>founders de impacto</span>
+            </h1>
+
+            <p
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '1.125rem',
+                color: 'var(--color-text-secondary, #6B7280)',
+                maxWidth: 600,
+                lineHeight: 1.7,
+              }}
+            >
+              Todo lo que necesitas saber para lanzar, validar y escalar tu startup de impacto
+              en Am&eacute;rica Latina. Desde la ideaci&oacute;n hasta el fundraising, paso a paso.
+            </p>
+          </motion.div>
+
+          {/* Right column — workbook mockup */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
-              fontWeight: 800,
-              color: 'var(--color-text-primary, #111827)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.15,
-              marginBottom: '1rem',
+              flex: '0 1 320px',
+              display: 'flex',
+              justifyContent: 'center',
             }}
           >
-            Gu&iacute;a completa para{' '}
-            <span style={{ color: '#059669' }}>founders de impacto</span>
-          </h1>
-
-          <p
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '1.125rem',
-              color: 'var(--color-text-secondary, #6B7280)',
-              maxWidth: 600,
-              margin: '0 auto',
-              lineHeight: 1.7,
-            }}
-          >
-            Todo lo que necesitas saber para lanzar, validar y escalar tu startup de impacto
-            en Am&eacute;rica Latina. Desde la ideaci&oacute;n hasta el fundraising, paso a paso.
-          </p>
-        </motion.div>
+            <WorkbookMockup width={300} />
+          </motion.div>
+        </div>
       </section>
 
       {/* Table of Contents */}

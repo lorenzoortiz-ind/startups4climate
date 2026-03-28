@@ -543,6 +543,40 @@ export const TOOLS_BY_STAGE: Record<1 | 2 | 3 | 4, ToolDef[]> = {
 
 export const TRANSVERSAL_TOOLS: ToolDef[] = TOOLS.filter((t) => t.transversal)
 
+/**
+ * Phase-specific preambulos for transversal tools.
+ * Each transversal tool appears in every stage with context tailored to that phase.
+ */
+export const TRANSVERSAL_PREAMBULOS: Record<string, Record<1 | 2 | 3 | 4, string>> = {
+  'lean-canvas': {
+    1: 'En la etapa de Pre-incubación, tu Lean Canvas es un borrador de hipótesis. Enfócate en definir claramente el problema que quieres resolver, los segmentos de clientes que has identificado y tu propuesta de valor única. No te preocupes por tener todas las respuestas — lo importante es documentar tus supuestos iniciales para poder validarlos en campo. Este canvas será tu punto de partida para las entrevistas de descubrimiento.',
+    2: 'En Incubación ya tienes datos reales de tu mercado y tu Persona definida. Es momento de actualizar tu Lean Canvas con información validada: tu propuesta de valor cuantificada, los canales que realmente funcionan, las métricas clave que estás midiendo y tu estructura de costos real. El canvas debe reflejar lo que has aprendido, no lo que asumías al inicio.',
+    3: 'En Aceleración, tu Lean Canvas debe reflejar un modelo de negocio en funcionamiento. Actualiza tu estructura de ingresos con datos reales de pricing y LTV, refina tus canales basándote en el COCA real, y documenta tu ventaja competitiva (Core) validada. Este canvas es tu mapa ejecutivo para escalar — cada bloque debe tener métricas reales detrás.',
+    4: 'En Escalamiento, tu Lean Canvas se convierte en tu herramienta de planificación estratégica. Actualiza los bloques con tus métricas de tracción demostradas, incluye los mercados adyacentes que planeas atacar, y asegura que tu estructura de costos refleje la realidad de escalar. Este canvas debe ser lo suficientemente sólido para compartir con inversores como resumen ejecutivo de tu negocio.',
+  },
+  'pitch-deck-builder': {
+    1: 'En Pre-incubación, tu Pitch Deck es un ejercicio de claridad narrativa. No necesitas métricas de tracción todavía — enfócate en articular el problema que resuelves, el tamaño de la oportunidad y por qué tu equipo es el indicado. Este deck es útil para aplicar a programas de incubación, concursos de ideas y para alinear a tu equipo cofundador sobre la visión.',
+    2: 'En Incubación, tu Pitch Deck debe incorporar los datos que has generado: tu TAM calculado, tu propuesta de valor cuantificada, tu Persona y tus primeros aprendizajes de mercado. Es ideal para aplicar a aceleradoras, competencias de startups y primeras conversaciones con mentores e inversores ángel.',
+    3: 'En Aceleración, tu Pitch Deck debe demostrar tracción y un modelo de negocio validado. Incluye métricas reales: clientes pagando, LTV/COCA, MRR, tasas de retención y tu proceso de ventas documentado. Este es el deck que usarás para levantar tu primera ronda de inversión o para cerrar alianzas estratégicas clave.',
+    4: 'En Escalamiento, tu Pitch Deck es tu arma para levantar capital de crecimiento. Debe contar una historia convincente con métricas sólidas de tracción, unit economics saludables, un plan de expansión claro y proyecciones financieras respaldadas por datos reales. Cada slide debe demostrar que invertir en tu startup es una oportunidad de alto retorno.',
+  },
+}
+
+/**
+ * Returns the transversal tools adapted for a specific stage.
+ * Each gets a stage-specific preambulo and a shortName with stage label.
+ */
+export function getTransversalToolsForStage(stageNum: 1 | 2 | 3 | 4): (ToolDef & { transversalStage: number })[] {
+  return TRANSVERSAL_TOOLS.map((tool) => ({
+    ...tool,
+    transversalStage: stageNum,
+  }))
+}
+
+export function getTransversalPreambulo(toolId: string, stage: 1 | 2 | 3 | 4): string | undefined {
+  return TRANSVERSAL_PREAMBULOS[toolId]?.[stage]
+}
+
 export function getToolById(id: string): ToolDef | undefined {
   return TOOLS.find((t) => t.id === id)
 }

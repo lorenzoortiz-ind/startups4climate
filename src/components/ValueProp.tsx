@@ -14,13 +14,6 @@ import {
   Stamp,
   UserCircle,
 } from 'lucide-react'
-import { STAGE_ILLUSTRATIONS } from './illustrations/StageIllustrations'
-import {
-  PreIncubationIllustration,
-  IncubationIllustration,
-  AccelerationIllustration,
-  ScalingIllustration,
-} from './illustrations/StageIllustrations'
 
 const stages = [
   {
@@ -102,17 +95,7 @@ const features = [
   },
 ]
 
-const FEATURE_ILLUSTRATION_MAP: Record<string, React.ComponentType<{ width?: number | string; height?: number | string; className?: string }>> = {
-  '30 herramientas interactivas': PreIncubationIllustration,
-  'Mentores AI': IncubationIllustration,
-  'RADAR del ecosistema': AccelerationIllustration,
-  'Oportunidades': ScalingIllustration,
-  'Startup Passport': AccelerationIllustration,
-  'Perfil progresivo': IncubationIllustration,
-}
-
 function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: number }) {
-  const DecoIllustration = FEATURE_ILLUSTRATION_MAP[feature.title]
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -129,11 +112,6 @@ function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: n
         overflow: 'hidden',
       }}
     >
-      {DecoIllustration && (
-        <div style={{ position: 'absolute', right: -8, bottom: -8, pointerEvents: 'none' }}>
-          <DecoIllustration width={72} height={72} />
-        </div>
-      )}
       <div style={{
         width: 44,
         height: 44,
@@ -287,12 +265,6 @@ export default function ValueProp() {
                     minWidth: 130,
                   }}
                 >
-                  {/* Stage illustration */}
-                  {(() => {
-                    const StageIllust = STAGE_ILLUSTRATIONS[stage.number as 1 | 2 | 3 | 4]
-                    return StageIllust ? <StageIllust width={48} height={48} /> : null
-                  })()}
-
                   {/* Number + icon circle */}
                   <div
                     style={{

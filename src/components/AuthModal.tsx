@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRight, Eye, EyeOff, Loader2, CheckCircle2, Lock, User, Building2, Mail } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { useRouter } from 'next/navigation'
 
 export default function AuthModal() {
   const { authModalOpen, authModalMode, closeAuthModal, login, register } = useAuth()
@@ -13,7 +12,6 @@ export default function AuthModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const router = useRouter()
 
   const [form, setForm] = useState({ email: '', password: '', name: '', startup: '' })
 
@@ -56,7 +54,10 @@ export default function AuthModal() {
       setTimeout(() => {
         closeAuthModal()
         setSuccess(false)
-        router.push('/tools')
+        // Use full page navigation so the browser sends updated auth cookies
+        // to the server middleware. router.push() does a client-side navigation
+        // that skips cookie propagation, causing the middleware to reject the request.
+        window.location.href = '/tools'
       }, 1200)
     }
   }

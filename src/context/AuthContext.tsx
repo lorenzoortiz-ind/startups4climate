@@ -282,24 +282,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: 'No se pudo iniciar sesión.' }
       }
 
-      // Get role via direct REST fetch (fast, bypasses PostgREST client cache)
+      // Get role via real supabase client
       let role: string = 'founder'
       let orgId: string | null = null
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
-          {
-            headers: {
-              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-              'Authorization': `Bearer ${data.session.access_token}`,
-            },
-          }
-        )
-        if (res.ok) {
-          const rows = await res.json()
-          if (rows?.[0]?.role) role = rows[0].role
-          if (rows?.[0]?.org_id) orgId = rows[0].org_id
-        }
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, org_id')
+          .eq('id', data.user.id)
+          .single()
+        
+        if (profile?.role) role = profile.role
+        if (profile?.org_id) orgId = profile.org_id
       } catch {
         // Silently fall back to founder role
       }

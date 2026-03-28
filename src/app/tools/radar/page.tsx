@@ -497,6 +497,8 @@ export default function RadarPage() {
               alignItems: 'center',
               gap: '0.75rem',
               marginBottom: '0.75rem',
+              flexWrap: 'wrap' as const,
+              minHeight: 'auto',
             }}
           >
             <div
@@ -515,7 +517,7 @@ export default function RadarPage() {
             >
               <Radio size={20} color="#6366F1" />
             </div>
-            <div style={{ overflow: 'visible' }}>
+            <div style={{ overflow: 'visible', minHeight: 'auto', flex: 1, minWidth: 0 }}>
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
@@ -524,6 +526,8 @@ export default function RadarPage() {
                   color: 'var(--color-text-primary)',
                   lineHeight: 1.3,
                   overflow: 'visible',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}
               >
                 RADAR del ecosistema

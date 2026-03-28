@@ -258,33 +258,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Retry up to 2 times for transient "Database error" issues
     // (e.g. PostgREST schema cache not yet refreshed after migration)
     for (let attempt = 0; attempt < 2; attempt++) {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.toLowerCase(),
-        password,
-      })
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.toLowerCase(),
+          password,
+        })
 
-      if (error) {
-        // Only retry on transient database errors
-        if (error.message.includes('Database error') && attempt < 1) {
-          lastError = error.message
+        if (error) {
+          console.warn(`[Auth] signInWithPassword failed (attempt ${attempt + 1}):`, error.message)
+          // Only retry on transient database errors
+          if (error.message.includes('Database error') && attempt < 1) {
+            lastError = error.message
+            await new Promise((r) => setTimeout(r, 1500))
+            continue
+          }
+          return { error: mapSupabaseError(error.message) }
+        }
+
+        // Sign-in succeeded — try to load profile but never fail the login
+        if (data.user && data.session) {
+          try {
+            const profile = await loadProfile(data.user.id)
+            setAppUser(profile ?? fallbackAppUser(data.session))
+          } catch (profileErr) {
+            // Profile load failed — use fallback so user is not stuck
+            console.warn('[Auth] Profile load failed after successful sign-in, using fallback:', profileErr)
+            setAppUser(fallbackAppUser(data.session))
+          }
+        }
+
+        return {}
+      } catch (networkErr) {
+        // Catch network-level errors (fetch failed, timeout, etc.)
+        console.warn(`[Auth] Network error during sign-in (attempt ${attempt + 1}):`, networkErr)
+        if (attempt < 1) {
+          lastError = 'Network error'
           await new Promise((r) => setTimeout(r, 1500))
           continue
         }
-        return { error: mapSupabaseError(error.message) }
+        return { error: 'Error de conexión. Verifica tu conexión a internet e intenta de nuevo.' }
       }
-
-      // Sign-in succeeded — try to load profile but never fail the login
-      if (data.user && data.session) {
-        try {
-          const profile = await loadProfile(data.user.id)
-          setAppUser(profile ?? fallbackAppUser(data.session))
-        } catch {
-          // Profile load failed — use fallback so user is not stuck
-          setAppUser(fallbackAppUser(data.session))
-        }
-      }
-
-      return {}
     }
 
     // All retries exhausted

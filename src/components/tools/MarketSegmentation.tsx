@@ -81,6 +81,9 @@ ${data.topOportunidades || '(No completado)'}
                 <div>
                   <label style={labelStyle}>Accesibilidad: {s.accessibility}/5</label>
                   <input type="range" min={1} max={5} step={1} value={s.accessibility} onChange={e => updateSegment(i, 'accessibility', parseInt(e.target.value))} style={{ width: '100%' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                    <span>1 = Muy bajo</span><span>3 = Medio</span><span>5 = Muy alto</span>
+                  </div>
                 </div>
               </div>
             </div>

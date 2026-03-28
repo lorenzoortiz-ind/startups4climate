@@ -427,7 +427,7 @@ export const TOOLS: ToolDef[] = [
   {
     id: 'mvbp-definition',
     name: 'Definición del MVBP (Producto Mínimo Viable)',
-    shortName: 'MVBP',
+    shortName: 'Producto Mín. Viable',
     description:
       'Define la versión más pequeña de tu producto que entrega valor suficiente para que el cliente pague.',
     preambulo:

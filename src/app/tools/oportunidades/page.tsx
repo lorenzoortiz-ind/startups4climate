@@ -409,6 +409,8 @@ export default function OportunidadesPage() {
               alignItems: 'center',
               gap: '0.75rem',
               marginBottom: '0.75rem',
+              flexWrap: 'wrap' as const,
+              minHeight: 'auto',
             }}
           >
             <div
@@ -427,7 +429,7 @@ export default function OportunidadesPage() {
             >
               <Sparkles size={20} color="#D97706" />
             </div>
-            <div style={{ overflow: 'visible' }}>
+            <div style={{ overflow: 'visible', minHeight: 'auto', flex: 1, minWidth: 0 }}>
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
@@ -436,6 +438,8 @@ export default function OportunidadesPage() {
                   color: 'var(--color-text-primary)',
                   lineHeight: 1.3,
                   overflow: 'visible',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}
               >
                 Oportunidades para tu startup

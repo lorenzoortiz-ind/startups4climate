@@ -81,6 +81,9 @@ ${data.stakeholders.map((s, i) => `STAKEHOLDER ${i + 1}:
               <div style={{ marginBottom: '0.625rem' }}>
                 <label style={labelStyle}>Nivel de influencia: {s.influencia}/5</label>
                 <input type="range" min={1} max={5} step={1} value={s.influencia} onChange={e => updateStakeholder(i, 'influencia', parseInt(e.target.value))} style={{ width: '100%' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                  <span>1 = Muy bajo</span><span>3 = Medio</span><span>5 = Muy alto</span>
+                </div>
               </div>
               {/* Collapsible text sections within each stakeholder */}
               <button onClick={() => toggle(`estrategia-${i}`)} style={{ ...sectionBtnSmall, marginBottom: openSections[`estrategia-${i}`] ? '0.5rem' : 0 }}>

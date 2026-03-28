@@ -87,10 +87,16 @@ MAPA DE POSICIONAMIENTO:
               <div>
                 <label style={labelStyle}>{data.ejeXLabel || 'Eje X'}: {data.tuX}</label>
                 <input type="range" min={1} max={10} value={Number(data.tuX)} onChange={e => setData(p => ({ ...p, tuX: parseInt(e.target.value) }))} style={{ width: '100%' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                  <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
+                </div>
               </div>
               <div>
                 <label style={labelStyle}>{data.ejeYLabel || 'Eje Y'}: {data.tuY}</label>
                 <input type="range" min={1} max={10} value={Number(data.tuY)} onChange={e => setData(p => ({ ...p, tuY: parseInt(e.target.value) }))} style={{ width: '100%' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                  <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
+                </div>
               </div>
             </div>
           </div>
@@ -106,10 +112,16 @@ MAPA DE POSICIONAMIENTO:
                 <div>
                   <label style={labelStyle}>{data.ejeXLabel || 'Eje X'}: {data[comp.xKey] as number}</label>
                   <input type="range" min={1} max={10} value={Number(data[comp.xKey])} onChange={e => setData(p => ({ ...p, [comp.xKey]: parseInt(e.target.value) }))} style={{ width: '100%' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                    <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
+                  </div>
                 </div>
                 <div>
                   <label style={labelStyle}>{data.ejeYLabel || 'Eje Y'}: {data[comp.yKey] as number}</label>
                   <input type="range" min={1} max={10} value={Number(data[comp.yKey])} onChange={e => setData(p => ({ ...p, [comp.yKey]: parseInt(e.target.value) }))} style={{ width: '100%' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                    <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
+                  </div>
                 </div>
               </div>
             </div>

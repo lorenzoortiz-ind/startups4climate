@@ -5,12 +5,18 @@ export function buildStartupContext(
 ): string {
   const parts: string[] = []
 
+  // Always include founder info from profile first
+  if (profile) {
+    if (profile.full_name) parts.push(`FOUNDER: ${profile.full_name}`)
+    if (profile.role) parts.push(`ROL DEL FOUNDER: ${profile.role}`)
+  }
+
   if (startup) {
     parts.push(`STARTUP: ${startup.name || 'Sin nombre'}`)
     parts.push(`VERTICAL: ${startup.vertical || 'No definida'}`)
     parts.push(`PAIS: ${startup.country || 'No definido'}`)
-    parts.push(`ETAPA: ${startup.stage || 'No definida'}`)
-    parts.push(`SCORE DIAGNOSTICO: ${startup.diagnostic_score || 'No completado'}/100`)
+    parts.push(`ETAPA: ${startup.stage || profile?.stage || 'No definida'}`)
+    parts.push(`SCORE DIAGNOSTICO: ${startup.diagnostic_score || profile?.diagnostic_score || 'No completado'}/100`)
     parts.push(`EQUIPO: ${startup.team_size || 'No definido'} personas`)
     parts.push(`MODELO DE INGRESOS: ${startup.revenue_model || 'No definido'}`)
     parts.push(`INGRESOS MENSUALES: ${startup.monthly_revenue ? '$' + startup.monthly_revenue + ' USD' : 'No reportados'}`)
@@ -18,13 +24,18 @@ export function buildStartupContext(
     parts.push(`CLIENTES PAGANDO: ${startup.has_paying_customers ? 'Si (' + startup.paying_customers_count + ')' : 'No'}`)
     if (startup.description) parts.push(`DESCRIPCION: ${startup.description}`)
     if (startup.website) parts.push(`WEBSITE: ${startup.website}`)
+  } else if (profile) {
+    // Fallback: use profile data when startups table has no row
+    if (profile.startup_name) {
+      parts.push(`STARTUP: ${profile.startup_name}`)
+    } else {
+      parts.push('STARTUP: Sin nombre')
+    }
+    if (profile.stage) parts.push(`ETAPA: ${profile.stage}`)
+    if (profile.diagnostic_score) parts.push(`SCORE DIAGNOSTICO: ${profile.diagnostic_score}/100`)
+    parts.push('(Datos detallados de la startup aun no registrados. Pide al founder que complete su perfil para darte mas contexto.)')
   } else {
-    parts.push('No hay datos de la startup registrados aun.')
-  }
-
-  if (profile) {
-    if (profile.full_name) parts.push(`FOUNDER: ${profile.full_name}`)
-    if (profile.role) parts.push(`ROL DEL FOUNDER: ${profile.role}`)
+    parts.push('No hay datos de la startup ni del founder registrados aun.')
   }
 
   const completedTools = progress?.filter((p) => p.completed) || []

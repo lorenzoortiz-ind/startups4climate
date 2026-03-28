@@ -122,25 +122,67 @@ export default function PerfilPage() {
       setNombre(user.name || '')
       setStartupName(user.startup || '')
     }
-    // Load extra profile fields from localStorage
-    if (typeof window !== 'undefined') {
+
+    // Try to load startup data from Supabase first, then fall back to localStorage
+    async function loadStartupData() {
+      if (!appUser) return
+
       try {
-        const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
-        if (extra.role) setRole(extra.role)
-        if (extra.linkedin) setLinkedin(extra.linkedin)
-        if (extra.descripcion) setDescripcion(extra.descripcion)
-        if (extra.vertical) setVertical(extra.vertical)
-        if (extra.country) setCountry(extra.country)
-        if (extra.phone) setPhone(extra.phone)
-        if (extra.website) setWebsite(extra.website)
-        if (extra.teamSize) setTeamSize(String(extra.teamSize))
-        if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
-        if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
+        const { data: startup } = await supabase
+          .from('startups')
+          .select('*')
+          .eq('founder_id', appUser.id)
+          .single()
+
+        if (startup) {
+          // Populate fields from Supabase startups table (authoritative source)
+          if (startup.name) setStartupName(startup.name)
+          if (startup.description) setDescripcion(startup.description)
+          if (startup.vertical) setVertical(startup.vertical)
+          if (startup.country) setCountry(startup.country)
+          if (startup.website) setWebsite(startup.website)
+          if (startup.team_size) setTeamSize(String(startup.team_size))
+          // Load remaining fields from localStorage (not stored in startups table)
+          if (typeof window !== 'undefined') {
+            try {
+              const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
+              if (extra.role) setRole(extra.role)
+              if (extra.linkedin) setLinkedin(extra.linkedin)
+              if (extra.phone) setPhone(extra.phone)
+              if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
+              if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
+            } catch {
+              // ignore
+            }
+          }
+          return
+        }
       } catch {
-        // ignore
+        // Supabase query failed — fall through to localStorage
+      }
+
+      // Fallback: load all fields from localStorage
+      if (typeof window !== 'undefined') {
+        try {
+          const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
+          if (extra.role) setRole(extra.role)
+          if (extra.linkedin) setLinkedin(extra.linkedin)
+          if (extra.descripcion) setDescripcion(extra.descripcion)
+          if (extra.vertical) setVertical(extra.vertical)
+          if (extra.country) setCountry(extra.country)
+          if (extra.phone) setPhone(extra.phone)
+          if (extra.website) setWebsite(extra.website)
+          if (extra.teamSize) setTeamSize(String(extra.teamSize))
+          if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
+          if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
+        } catch {
+          // ignore
+        }
       }
     }
-  }, [user])
+
+    loadStartupData()
+  }, [user, appUser])
 
   const handleSave = async () => {
     if (!user) return
@@ -159,7 +201,7 @@ export default function PerfilPage() {
     // Also try to update startups table in Supabase (best effort)
     if (appUser) {
       try {
-        await supabase.from('startups').upsert(
+        const { error: startupError } = await supabase.from('startups').upsert(
           {
             founder_id: appUser.id,
             name: startupName,
@@ -171,8 +213,11 @@ export default function PerfilPage() {
           },
           { onConflict: 'founder_id' }
         )
-      } catch {
-        // Best effort - table may not exist yet
+        if (startupError) {
+          console.warn('Failed to upsert startups table:', startupError.message)
+        }
+      } catch (err) {
+        console.warn('Error upserting startups table:', err)
       }
     }
 

@@ -353,7 +353,7 @@ export default function RecursosPage() {
             marginBottom: '0.75rem',
           }}
         >
-          Stack Tecnológico Recomendado
+          Herramientas y Recursos Esenciales
         </h1>
         <p
           style={{

@@ -251,7 +251,7 @@ export default function Navbar() {
                     e.currentTarget.style.transform = 'scale(1)'
                   }}
                 >
-                  Acceder al Toolkit
+                  Acceder a la Plataforma
                 </button>
               )}
             </div>
@@ -407,7 +407,7 @@ export default function Navbar() {
                     onClick={() => { setMobileOpen(false); openAuthModal('login') }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)' }}
                   >
-                    Acceder al Toolkit
+                    Acceder a la Plataforma
                   </button>
                 )}
               </div>

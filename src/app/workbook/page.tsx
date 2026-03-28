@@ -31,6 +31,19 @@ const COUNTRY_OPTIONS = [
   { name: 'Venezuela', flag: '\u{1F1FB}\u{1F1EA}', code: '+58' },
 ]
 
+const VERTICAL_OPTIONS = [
+  'Fintech',
+  'Healthtech',
+  'Edtech',
+  'Agritech',
+  'Cleantech / Energía',
+  'Logística / Movilidad',
+  'Proptech',
+  'Biotech',
+  'Deep Tech',
+  'Otra',
+]
+
 const TOC_ITEMS = [
   { chapter: '01', title: 'Encuentra tu propósito como founder', stage: 'Pre-incubación', color: '#7C3AED' },
   { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#7C3AED' },
@@ -92,7 +105,9 @@ const fadeUp = {
 export default function WorkbookPage() {
   const { user } = useAuth()
   const [nombre, setNombre] = useState('')
+  const [startupName, setStartupName] = useState('')
   const [email, setEmail] = useState('')
+  const [vertical, setVertical] = useState('')
   const [pais, setPais] = useState('')
   const [phoneCountryCode, setPhoneCountryCode] = useState('+52')
   const [telefono, setTelefono] = useState('')
@@ -518,6 +533,33 @@ export default function WorkbookPage() {
                       required
                       style={inputStyle}
                     />
+                  </div>
+
+                  {/* Nombre de tu startup */}
+                  <div>
+                    <label style={labelStyle}>Nombre de tu startup</label>
+                    <input
+                      type="text"
+                      value={startupName}
+                      onChange={(e) => setStartupName(e.target.value)}
+                      placeholder="Nombre de tu startup"
+                      style={inputStyle}
+                    />
+                  </div>
+
+                  {/* Vertical */}
+                  <div>
+                    <label style={labelStyle}>Vertical</label>
+                    <select
+                      value={vertical}
+                      onChange={(e) => setVertical(e.target.value)}
+                      style={selectStyle}
+                    >
+                      <option value="">Selecciona una vertical</option>
+                      {VERTICAL_OPTIONS.map((v) => (
+                        <option key={v} value={v}>{v}</option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* Email */}

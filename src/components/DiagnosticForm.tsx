@@ -24,22 +24,16 @@ type ContactData = z.infer<typeof contactSchema>
 
 /* ─── Dropdown Options ─── */
 const verticalOptions = [
-  'Agritech',
-  'Biotech',
-  'Cleantech / Climatech',
-  'Deep Tech',
-  'E-commerce / Marketplace',
-  'Edtech',
   'Fintech',
-  'Foodtech',
   'Healthtech',
-  'Insurtech',
-  'Legaltech',
-  'Mobility / Logística',
+  'Edtech',
+  'Agritech',
+  'Cleantech / Energía',
+  'Logística / Movilidad',
   'Proptech',
-  'SaaS / Enterprise',
-  'Social Impact',
-  'Otro',
+  'Biotech',
+  'Deep Tech',
+  'Otra',
 ]
 
 const phoneCountryOptions = [

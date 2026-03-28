@@ -381,7 +381,7 @@ export default function ToolsDashboard() {
                 color: 'var(--color-text-secondary)',
               }}
             >
-              {user.startup} · Roadmap de Climate Tech
+              {user.startup} · Roadmap de impacto
             </p>
           </div>
 

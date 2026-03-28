@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Lightbulb, FlaskConical, Rocket, TrendingUp, ChevronRight } from 'lucide-react'
+import { STAGE_ILLUSTRATIONS } from './illustrations/StageIllustrations'
 
 const stages = [
   {
@@ -157,6 +158,12 @@ export default function ValueProp() {
                     minWidth: 130,
                   }}
                 >
+                  {/* Stage illustration */}
+                  {(() => {
+                    const StageIllust = STAGE_ILLUSTRATIONS[stage.number as 1 | 2 | 3 | 4]
+                    return StageIllust ? <StageIllust width={48} height={48} /> : null
+                  })()}
+
                   {/* Number + icon circle */}
                   <div
                     style={{

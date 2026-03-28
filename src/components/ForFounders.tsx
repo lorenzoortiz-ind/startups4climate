@@ -12,6 +12,12 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import {
+  PreIncubationIllustration,
+  IncubationIllustration,
+  AccelerationIllustration,
+  ScalingIllustration,
+} from './illustrations/StageIllustrations'
 
 const featured = {
   icon: Wrench,
@@ -62,7 +68,18 @@ const row3 = [
   },
 ]
 
+/** Map feature titles to subtle decorative illustrations */
+const FEATURE_ILLUSTRATION_MAP: Record<string, React.ComponentType<{ width?: number | string; height?: number | string; className?: string }>> = {
+  '30 herramientas interactivas': PreIncubationIllustration,
+  'Mentores AI': IncubationIllustration,
+  'RADAR del ecosistema': AccelerationIllustration,
+  'Oportunidades': ScalingIllustration,
+  'Startup Passport': AccelerationIllustration,
+  'Perfil progresivo': IncubationIllustration,
+}
+
 function FeatureCard({ feature, delay, style }: { feature: typeof row2[0]; delay: number; style?: React.CSSProperties }) {
+  const DecoIllustration = FEATURE_ILLUSTRATION_MAP[feature.title]
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -75,9 +92,16 @@ function FeatureCard({ feature, delay, style }: { feature: typeof row2[0]; delay
         borderRadius: 16,
         border: '1px solid var(--color-border)',
         padding: '1.75rem',
+        position: 'relative',
+        overflow: 'hidden',
         ...style,
       }}
     >
+      {DecoIllustration && (
+        <div style={{ position: 'absolute', right: -8, bottom: -8, pointerEvents: 'none' }}>
+          <DecoIllustration width={72} height={72} />
+        </div>
+      )}
       <div style={{
         width: 44,
         height: 44,
@@ -181,8 +205,14 @@ export default function ForFounders() {
             alignItems: 'center',
             gap: '2rem',
             flexWrap: 'wrap',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          {/* Decorative background illustration */}
+          <div style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+            <PreIncubationIllustration width={100} height={100} />
+          </div>
           <div style={{
             width: 56,
             height: 56,

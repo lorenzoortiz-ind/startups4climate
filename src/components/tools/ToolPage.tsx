@@ -15,6 +15,8 @@ import {
   Lightbulb,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { ToolIllustration } from '../illustrations/StageIllustrations'
+import { ToolCategoryIcon } from '../illustrations/ToolCategoryIcons'
 import { getToolById } from '@/lib/tools-data'
 import { markToolCompleted, markReportGenerated, getProgress } from '@/lib/progress'
 import { generateToolReport } from '@/lib/pdf-generator'
@@ -214,6 +216,18 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                 background: `linear-gradient(90deg, ${tool.stageColor}, ${tool.stageColor}88)`,
               }}
             />
+            {/* Subtle decorative illustration */}
+            <div
+              style={{
+                position: 'absolute',
+                right: 12,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+              }}
+            >
+              <ToolIllustration width={120} height={120} />
+            </div>
             <div
               style={{
                 display: 'flex',
@@ -258,6 +272,9 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                   </span>
                   <span
                     style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
                       padding: '0.2rem 0.625rem',
                       borderRadius: 9999,
                       background: 'var(--color-bg-muted)',
@@ -267,6 +284,7 @@ export default function ToolPage({ toolId }: { toolId: string }) {
                       textTransform: 'uppercase',
                     }}
                   >
+                    <ToolCategoryIcon category={tool.category} width={11} height={11} color="var(--color-text-muted)" />
                     {tool.category}
                   </span>
                   <span

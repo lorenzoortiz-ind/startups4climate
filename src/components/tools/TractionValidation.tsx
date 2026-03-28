@@ -56,19 +56,25 @@ ${data.metricasClave || '(No completado)'}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             <div>
               <label style={labelStyle}>Número de clientes actuales</label>
-              <input type="number" value={data.clientes} onChange={e => setData(p => ({ ...p, clientes: e.target.value }))} placeholder="0" style={inputStyle} />
+              <input type="number" value={data.clientes} onChange={e => setData(p => ({ ...p, clientes: e.target.value }))} placeholder="Ej: 25" step="1" style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>MRR - Ingresos mensuales recurrentes ($)</label>
-              <input type="number" value={data.mrr} onChange={e => setData(p => ({ ...p, mrr: e.target.value }))} placeholder="0" style={inputStyle} />
+              <label style={labelStyle}>MRR - Ingresos mensuales recurrentes</label>
+              <div style={{ position: 'relative' }}>
+                <span style={prefixStyle}>$</span>
+                <input type="number" value={data.mrr} onChange={e => setData(p => ({ ...p, mrr: e.target.value }))} placeholder="Ej: 5000" step="100" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
+              </div>
             </div>
             <div>
-              <label style={labelStyle}>Tasa de retención mensual (%)</label>
-              <input type="number" value={data.retencion} onChange={e => setData(p => ({ ...p, retencion: e.target.value }))} placeholder="0" style={inputStyle} />
+              <label style={labelStyle}>Tasa de retención mensual</label>
+              <div style={{ position: 'relative' }}>
+                <input type="number" value={data.retencion} onChange={e => setData(p => ({ ...p, retencion: e.target.value }))} placeholder="Ej: 95" step="0.1" min="0" max="100" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
+                <span style={suffixStyle}>%</span>
+              </div>
             </div>
             <div>
               <label style={labelStyle}>NPS o satisfacción</label>
-              <input type="number" value={data.nps} onChange={e => setData(p => ({ ...p, nps: e.target.value }))} placeholder="0" style={inputStyle} />
+              <input type="number" value={data.nps} onChange={e => setData(p => ({ ...p, nps: e.target.value }))} placeholder="Ej: 72" step="1" min="-100" max="100" style={inputStyle} />
             </div>
           </div>
 
@@ -127,3 +133,5 @@ const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSi
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#059669', border: '1.5px solid #05966940', cursor: 'pointer' }
 const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#059669', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)' }
 const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }
+const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }

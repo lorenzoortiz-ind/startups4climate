@@ -12,6 +12,7 @@ export interface ToolDef {
   name: string
   shortName: string
   description: string
+  guidingQuestion: string
   preambulo: string
   stage: 1 | 2 | 3 | 4
   stageName: string
@@ -92,8 +93,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Propósito & Equipo',
     description:
       'Define por qué existes como startup, cuál es tu misión, tus valores y evalúa las brechas de tu equipo fundador.',
+    guidingQuestion: '¿Por qué existe tu startup y quién la impulsa?',
     preambulo:
-      'Antes de buscar clientes o construir un producto, necesitas responder una pregunta fundamental: ¿por qué tú y por qué ahora? Los equipos fundadores más exitosos tienen una misión clara que los une, valores compartidos y habilidades complementarias. Esta herramienta te ayuda a articular tu razón de ser y a identificar las brechas en tu equipo que necesitas cerrar antes de avanzar.',
+      'Las startups más exitosas nacen de founders que conectan su pasión personal con un problema real del mercado. Esta herramienta te ayuda a articular por qué tú y tu equipo son las personas indicadas para resolver este problema. Define tu norte antes de construir cualquier cosa.',
     ...stageProps(1),
     category: 'Equipo',
     estimatedTime: '20 min',
@@ -107,8 +109,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Segmentación',
     description:
       'Explora y lista todos los posibles segmentos de mercado donde tu idea podría crear valor.',
+    guidingQuestion: '¿Quiénes son tus potenciales clientes y cómo los agrupas?',
     preambulo:
-      'Uno de los errores más comunes de los founders es enamorarse de una sola idea de mercado sin explorar alternativas. La segmentación de mercado te obliga a pensar ampliamente antes de enfocarte. No estás eligiendo un mercado todavía — estás mapeando todas las oportunidades posibles para luego tomar una decisión informada. Este paso reduce enormemente el riesgo de construir algo para el mercado equivocado.',
+      'No puedes venderle a todo el mundo al mismo tiempo. Segmentar tu mercado te permite identificar los grupos de clientes con mayor potencial y enfocar tus recursos donde más impacto tendrán. Prioriza con datos, no con intuición.',
     ...stageProps(1),
     category: 'Mercado',
     estimatedTime: '25 min',
@@ -122,8 +125,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Mercado inicial',
     description:
       'Elige tu primer mercado de entrada — el nicho donde ganarás tu primera batalla antes de expandirte.',
+    guidingQuestion: '¿Cuál es el primer mercado que vas a conquistar?',
     preambulo:
-      'Tu mercado inicial es el primer mercado pequeño y específico donde vas a dominar. No es tu mercado final, es tu playa de desembarco. Los emprendedores que intentan atacar varios mercados a la vez dispersan recursos y terminan sin ganar en ninguno. Enfócate en un solo segmento donde puedas generar referencias boca a boca, aprender rápido y construir una posición dominante antes de expandirte.',
+      'Tu mercado inicial es el primer segmento donde vas a dominar antes de expandirte. Elegir bien este mercado es la diferencia entre crecer rápido y quedarse estancado. Selecciona un nicho lo suficientemente pequeño para ganar, pero con potencial para escalar.',
     ...stageProps(1),
     category: 'Mercado',
     estimatedTime: '20 min',
@@ -136,8 +140,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Usuario Final',
     description:
       'Construye un perfil detallado de quién es el usuario final de tu producto en el mercado inicial.',
+    guidingQuestion: '¿Quién usa tu producto en el día a día?',
     preambulo:
-      'Tu usuario final es la persona real que va a usar tu producto. No es lo mismo que tu cliente (quien paga). Necesitas entender profundamente quién es, qué hace, qué le frustra, cuáles son sus prioridades y cómo toma decisiones. Sin un perfil claro, terminarás diseñando un producto para todos y para nadie. Este paso se basa en investigación real, no en suposiciones.',
+      'Conocer a tu usuario final va más allá de la demografía. Necesitas entender sus frustraciones diarias, sus aspiraciones y cómo toman decisiones. Construye un perfil detallado que guíe cada decisión de producto.',
     ...stageProps(1),
     category: 'Mercado',
     estimatedTime: '25 min',
@@ -151,8 +156,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Cálculo del TAM',
     description:
       'Calcula el tamaño de tu mercado en tu mercado inicial usando análisis bottom-up.',
+    guidingQuestion: '¿Cuánto vale la oportunidad de mercado total?',
     preambulo:
-      'El TAM (Total Addressable Market) responde a la pregunta: ¿cuánto dinero podrías generar si capturaras el 100% de tu mercado inicial? Este número es fundamental para saber si vale la pena perseguir este mercado. Lo importante es hacerlo con un análisis bottom-up (contando clientes reales × precio), no top-down (tomando porcentajes de mercados globales). Los inversores ven esto inmediatamente y un TAM inflado destruye tu credibilidad.',
+      'El Mercado Total Direccionable es el ingreso máximo que podrías generar si capturaras el 100% de tu mercado objetivo. Los inversores lo usan para evaluar si tu oportunidad es lo suficientemente grande. Calcula tu TAM con un enfoque bottom-up para tener cifras creíbles.',
     ...stageProps(1),
     category: 'Finanzas',
     estimatedTime: '20 min',
@@ -165,8 +171,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Persona',
     description:
       'Crea una persona concreta y representativa de tu mercado inicial con nombre, foto y contexto.',
+    guidingQuestion: '¿Quién es tu cliente ideal y qué lo motiva?',
     preambulo:
-      'Una Persona es diferente de un perfil de usuario. Es UNA persona real (o muy realista) que representa a tu cliente ideal. Debe tener nombre, edad, cargo, frustraciones específicas y motivaciones. Cuando tu equipo tome decisiones de producto, diseño o marketing, deben preguntarse: ¿esto le serviría a [Nombre de tu Persona]? Es una herramienta de alineación interna poderosa.',
+      'Una persona es la representación semificticia de tu cliente ideal basada en investigación real. Te permite tomar decisiones de producto, marketing y ventas centradas en las necesidades reales de quien va a pagar. Construye tu persona con datos, no suposiciones.',
     ...stageProps(1),
     category: 'Mercado',
     estimatedTime: '15 min',
@@ -181,8 +188,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Ciclo de Uso',
     description:
       'Mapea cómo tu Persona descubre, adquiere, usa y recomienda tu producto en un escenario de la vida real.',
+    guidingQuestion: '¿Cómo es la experiencia completa de tu usuario con tu producto?',
     preambulo:
-      'El Caso de Uso del Ciclo Completo (Full Life Cycle Use Case) describe la experiencia completa de tu usuario con tu producto, desde antes de conocerlo hasta que lo recomienda (o lo abandona). Este ejercicio expone las fricciones ocultas en tu propuesta: ¿cómo se entera? ¿Qué tan fácil es probarlo? ¿Qué pasa después de la primera compra? Es una prueba de estrés de tu modelo antes de invertir en desarrollo.',
+      'Mapear el ciclo completo de uso te muestra exactamente cómo tu cliente descubre, adopta y obtiene valor de tu producto. Este ejercicio revela puntos de fricción y oportunidades de mejora que no son visibles desde dentro. Diseña la experiencia que tus usuarios merecen.',
     ...stageProps(2),
     category: 'Producto',
     estimatedTime: '25 min',
@@ -195,8 +203,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Especificación',
     description:
       'Define qué hace tu producto (y qué NO hace) con una brochure visual que alinee a todo el equipo.',
+    guidingQuestion: '¿Qué debe hacer tu producto y qué no?',
     preambulo:
-      'Antes de escribir una línea de código o diseñar un prototipo, necesitas una especificación de alto nivel que deje claro: ¿qué hace el producto? ¿Qué NO hace? ¿Cuáles son sus features principales? Piénsalo como un brochure de producto: lo suficientemente claro para que un cliente lo entienda, pero sin entrar en detalles técnicos de implementación. Esto alinea al equipo y evita el scope creep.',
+      'Antes de escribir una línea de código, define qué debe hacer tu producto y qué queda fuera del alcance. Una especificación clara alinea a tu equipo, reduce el desperdicio y acelera el desarrollo. Documenta las funcionalidades esenciales para tu primera versión.',
     ...stageProps(2),
     category: 'Producto',
     estimatedTime: '20 min',
@@ -210,8 +219,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Propuesta de Valor',
     description:
       'Cuantifica en números concretos el valor que tu producto entrega al cliente vs. la alternativa actual.',
+    guidingQuestion: '¿Cuánto valor concreto generas para tu cliente?',
     preambulo:
-      'Decir "nuestro producto es mejor" no es suficiente. Necesitas cuantificar exactamente cuánto valor entregas: ¿cuánto dinero le ahorras a tu cliente? ¿Cuánto tiempo? ¿Cuánto riesgo reduces? Y lo más importante: ¿cómo se compara esto con lo que usan hoy (su status quo)? Un valor cuantificado te da poder en negociaciones de precio, en tu pitch a inversores y en tu copy de marketing.',
+      'Tu propuesta de valor cuantificada traduce los beneficios de tu producto en números concretos para tu cliente. En lugar de decir que tu solución es mejor, demuestras cuánto tiempo, dinero o esfuerzo ahorra. Los clientes compran resultados, no características.',
     ...stageProps(2),
     category: 'Estrategia',
     estimatedTime: '20 min',
@@ -224,8 +234,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Primeros 10 Clientes',
     description:
       'Identifica con nombre y apellido a tus primeros 10 clientes potenciales en el mercado inicial.',
+    guidingQuestion: '¿Quiénes serán tus primeros clientes reales?',
     preambulo:
-      'Si no puedes listar 10 clientes potenciales reales con nombre y datos de contacto, probablemente no conoces bien tu mercado. Este ejercicio te obliga a pasar de lo abstracto a lo concreto. Estos 10 clientes son tu grupo de prueba, tus primeros evangelistas y la fuente de tus primeros ingresos. Si tu mercado inicial es correcto, encontrar 10 debería ser posible.',
+      'Tus primeros 10 clientes definen el ADN comercial de tu startup. Cada uno te enseña algo nuevo sobre cómo vender, qué funciona y qué necesitas ajustar. Planifica cómo los vas a encontrar, convencer y retener.',
     ...stageProps(2),
     category: 'Ventas',
     estimatedTime: '20 min',
@@ -239,8 +250,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Core & Competencia',
     description:
       'Define tu ventaja competitiva sostenible (Core) y mapea tu posición vs. la competencia.',
+    guidingQuestion: '¿Qué te hace diferente y difícil de copiar?',
     preambulo:
-      'Tu Core es aquello que haces significativamente mejor que cualquier competidor y que es muy difícil de replicar. No es una feature del producto — es algo más profundo: puede ser tu red de distribución, tu know-how técnico, tu data, o tu equipo. Sin un Core claro, cualquier competidor con más dinero te puede copiar. El posicionamiento competitivo, por otro lado, te ayuda a comunicar en qué ejes eres superior.',
+      'Tu ventaja competitiva es aquello que haces mejor que cualquier alternativa en el mercado y que es difícil de replicar. Sin una posición competitiva clara, compites solo por precio. Identifica tu fortaleza central y construye tu estrategia alrededor de ella.',
     ...stageProps(2),
     category: 'Estrategia',
     estimatedTime: '20 min',
@@ -253,8 +265,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Lean Canvas',
     description:
       'Modelo de negocio en una página que sintetiza tu problema, solución, métricas, canales y ventaja injusta.',
+    guidingQuestion: '¿Cómo se ve tu modelo de negocio en una sola página?',
     preambulo:
-      'El Lean Canvas es una herramienta de síntesis. Después de haber investigado tu mercado, definido tu Persona y cuantificado tu valor, es momento de ponerlo todo junto en una sola página. Este canvas adaptado incluye un bloque de impacto social/ambiental para startups que apuestan por generar un cambio positivo. Es tu GPS de negocio: debería evolucionar cada semana.',
+      'El Lean Canvas condensa tu modelo de negocio en una sola página. Es la herramienta más usada por aceleradoras como Y Combinator y Techstars para evaluar startups rápidamente. Complétalo en 20 minutos y revísalo cada vez que pivotees.',
     ...stageProps(2),
     category: 'Estrategia',
     estimatedTime: '30 min',
@@ -268,8 +281,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Competidores',
     description:
       'Mapea y analiza a tus competidores directos e indirectos para encontrar tu espacio único en el mercado.',
+    guidingQuestion: '¿Quiénes compiten contigo y cómo te diferencias?',
     preambulo:
-      'Conocer a tu competencia no es opcional — es una ventaja estratégica. El análisis competitivo te ayuda a entender quién más está resolviendo el mismo problema (o uno similar), qué están haciendo bien, dónde fallan y dónde hay espacios sin cubrir. No se trata de copiar: se trata de diferenciarte con inteligencia. En LATAM, muchos mercados tienen competidores globales que no entienden las dinámicas locales — esa puede ser tu oportunidad.',
+      'Conocer a tus competidores no se trata de copiarlos, sino de encontrar espacios donde puedes ser mejor. Analiza sus fortalezas, debilidades y estrategias para posicionarte de forma diferenciada. El mercado ya está educando a tus clientes.',
     ...stageProps(2),
     category: 'Estrategia',
     estimatedTime: '25 min',
@@ -282,8 +296,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Impacto',
     description:
       'Define y cuantifica el impacto social y ambiental de tu startup alineado a los Objetivos de Desarrollo Sostenible (ODS).',
+    guidingQuestion: '¿Qué impacto social o ambiental genera tu startup?',
     preambulo:
-      'Medir el impacto no es un lujo — es una necesidad para startups que quieren atraer inversores de impacto, fondos climáticos y clientes conscientes. Las métricas de impacto te permiten demostrar con datos que tu startup genera un cambio positivo real. Alinearte a los ODS (Objetivos de Desarrollo Sostenible) de la ONU te da un framework reconocido internacionalmente para comunicar tu impacto. Los inversores cada vez más exigen métricas ESG y de impacto como parte de su due diligence.',
+      'Medir tu impacto social o ambiental con métricas concretas te diferencia ante inversores de impacto y organismos internacionales. Los fondos como BID Lab o Acumen exigen evidencia medible. Define tus indicadores de impacto desde el primer día.',
     ...stageProps(2),
     category: 'Estrategia',
     estimatedTime: '25 min',
@@ -298,8 +313,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'DMU',
     description:
       'Identifica todas las personas que influyen en la decisión de compra de tu producto.',
+    guidingQuestion: '¿Quién decide la compra y quién influye en esa decisión?',
     preambulo:
-      'Rara vez una sola persona decide comprar tu producto, especialmente en B2B. La DMU (Decision-Making Unit) incluye al champion (quien te apoya), al comprador económico (quien paga), al usuario final, a los influenciadores técnicos y a los posibles saboteadores. Si no mapeas este proceso, podrías convencer al usuario pero nunca cerrar la venta porque no hablaste con quien firma el cheque.',
+      'En ventas B2B, rara vez una sola persona toma la decisión de compra. La Unidad de Toma de Decisiones incluye a quien aprueba el presupuesto, quien influye técnicamente y quien usa el producto. Mapea a cada actor para diseñar tu estrategia de venta.',
     ...stageProps(3),
     category: 'Ventas',
     estimatedTime: '20 min',
@@ -313,8 +329,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Adquisición',
     description:
       'Mapea paso a paso cómo un cliente pasa de no conocerte a hacer su primera compra.',
+    guidingQuestion: '¿Cómo vas a conseguir clientes de forma repetible?',
     preambulo:
-      'El proceso de adquisición de clientes es el camino que recorre tu Persona desde que se entera de tu existencia hasta que se convierte en cliente pagando. Incluye todas las etapas: awareness, interés, evaluación, compra y onboarding. Mapear esto te permite identificar dónde pierdes clientes potenciales y dónde invertir tus esfuerzos de marketing y ventas.',
+      'Un proceso de adquisición bien diseñado te permite conseguir clientes de forma predecible y escalable. Define cada paso desde que un prospecto te conoce hasta que se convierte en cliente que paga. La repetibilidad es lo que separa una startup de un proyecto.',
     ...stageProps(3),
     category: 'Marketing',
     estimatedTime: '20 min',
@@ -327,8 +344,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Modelo de Negocio',
     description:
       'Elige y estructura cómo tu startup genera, entrega y captura valor económico.',
+    guidingQuestion: '¿Cómo genera dinero tu startup?',
     preambulo:
-      'Tu modelo de negocio no es tu producto. Es la lógica económica detrás de tu empresa: ¿cómo generas ingresos? ¿Cobras suscripción, por uso, por licencia, por transacción? ¿Quién paga: el usuario final o un tercero? Elegir el modelo equivocado puede matar una buena idea. Este paso te ayuda a evaluar opciones (SaaS, marketplace, freemium, hardware-as-a-service, etc.) y elegir la que maximice valor para tu cliente y tu empresa.',
+      'Tu modelo de negocio explica cómo tu startup crea, entrega y captura valor económico. Es el motor que convierte tu solución en un negocio sostenible. Diseña un modelo que sea simple, escalable y alineado con cómo pagan tus clientes.',
     ...stageProps(3),
     category: 'Estrategia',
     estimatedTime: '25 min',
@@ -342,8 +360,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Pricing',
     description:
       'Define tu estructura de precios basándote en el valor que entregas, no solo en tus costos.',
+    guidingQuestion: '¿Cuánto deberías cobrar y por qué?',
     preambulo:
-      'El precio no es un número que inventas. Es una decisión estratégica que comunica el valor de tu producto. Cobrar muy poco destruye márgenes y credibilidad. Cobrar demasiado sin justificación mata conversiones. Este framework te guía a fijar precios basados en el valor que entregas al cliente (value-based pricing), que es la estrategia más sostenible para startups de impacto.',
+      'El precio correcto maximiza tus ingresos sin perder clientes. Un framework de pricing te ayuda a encontrar el punto donde tus clientes perciben que el valor supera el costo. Experimenta con diferentes modelos hasta encontrar el que acelere tu crecimiento.',
     ...stageProps(3),
     category: 'Finanzas',
     estimatedTime: '20 min',
@@ -356,8 +375,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'LTV & Economics',
     description:
       'Calcula el Lifetime Value de tus clientes, COCA y las métricas financieras clave de tu negocio.',
+    guidingQuestion: '¿Cuánto vale cada cliente a lo largo del tiempo?',
     preambulo:
-      'El LTV (Lifetime Value) es cuánto dinero genera un cliente durante toda su relación contigo. El COCA (Cost of Customer Acquisition) es cuánto te cuesta conseguir un cliente nuevo. La relación LTV/COCA debe ser mayor a 3x para que tu negocio sea sostenible. Esta herramienta te ayuda a calcular ambos y a entender si tu modelo económico funciona antes de escalar.',
+      'El Valor de Vida del Cliente mide cuánto ingreso genera cada cliente durante toda su relación con tu startup. Junto con el Costo de Adquisición, estos indicadores te dicen si tu negocio es viable a largo plazo. Si el valor de vida es al menos 3 veces mayor que el costo de adquisición, vas por buen camino.',
     ...stageProps(3),
     category: 'Finanzas',
     estimatedTime: '25 min',
@@ -371,8 +391,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Proceso de Ventas',
     description:
       'Diseña y documenta tu proceso de ventas de principio a fin para que sea repetible y escalable.',
+    guidingQuestion: '¿Cuáles son los pasos para cerrar una venta?',
     preambulo:
-      'Una startup no puede depender de un vendedor estrella. Necesitas un proceso de ventas documentado, repetible y medible. Este mapa te lleva desde la prospección hasta el cierre, pasando por la calificación de leads, las demos, las propuestas y la negociación. Un buen proceso de ventas permite que cualquier persona nueva en tu equipo pueda empezar a vender rápidamente.',
+      'Un proceso de ventas documentado convierte el arte de vender en un sistema replicable. Cada etapa tiene actividades específicas, herramientas y métricas de conversión. Construye tu pipeline y mide qué funciona en cada paso.',
     ...stageProps(3),
     category: 'Ventas',
     estimatedTime: '20 min',
@@ -386,8 +407,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'OKRs',
     description:
       'Define y da seguimiento a tus Objetivos y Resultados Clave (OKRs) para mantener foco y alineación en tu equipo.',
+    guidingQuestion: '¿Cuáles son tus objetivos clave y cómo los mides?',
     preambulo:
-      'Los OKRs (Objectives and Key Results) son el sistema de gestión que usan las startups más exitosas del mundo para mantener al equipo alineado y enfocado. Un Objetivo es lo que quieres lograr (cualitativo y ambicioso). Los Key Results son cómo mides el progreso (cuantitativos y verificables). Sin OKRs claros, los equipos pierden foco, trabajan en prioridades desalineadas y no pueden medir si están avanzando o girando en círculos.',
+      'Los Objetivos y Resultados Clave son el sistema que usan empresas como Google e Intel para alinear a todos los equipos hacia las metas más importantes. Define pocos objetivos ambiciosos con resultados medibles para cada trimestre. Lo que no se mide, no se mejora.',
     ...stageProps(3),
     category: 'Estrategia',
     estimatedTime: '20 min',
@@ -400,8 +422,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Regulatorio',
     description:
       'Identifica las regulaciones clave que aplican a tu startup según tu vertical y país en LATAM.',
+    guidingQuestion: '¿Qué regulaciones afectan a tu startup?',
     preambulo:
-      'En Latinoamérica, el entorno regulatorio puede ser tu mayor aliado o tu peor enemigo. Dependiendo de tu vertical (fintech, healthtech, cleantech, agritech, etc.) y del país donde operes, existen regulaciones específicas que pueden bloquear tu lanzamiento o darte una ventaja competitiva si las entiendes antes que la competencia. Esta herramienta te ayuda a mapear el panorama regulatorio de tu industria, identificar licencias y permisos necesarios, y anticipar cambios regulatorios que podrían afectar tu negocio.',
+      'Ignorar el entorno regulatorio puede matar una startup con tracción. Identifica las regulaciones, licencias y normativas que aplican a tu industria y mercado antes de que se conviertan en un obstáculo. La prevención es más barata que la corrección.',
     ...stageProps(3),
     category: 'Estrategia',
     estimatedTime: '25 min',
@@ -416,8 +439,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Supuestos Clave',
     description:
       'Lista y prioriza los supuestos más riesgosos de tu negocio, y diseña experimentos rápidos para validarlos.',
+    guidingQuestion: '¿Cuáles son tus hipótesis más riesgosas?',
     preambulo:
-      'Todo plan de negocio está basado en supuestos: "los clientes pagarán X", "el costo de adquisición será Y", "la retención será Z". El problema es que la mayoría de estos supuestos no se validan hasta que ya es demasiado tarde. Esta herramienta te ayuda a identificar tus supuestos más riesgosos (aquellos que si están equivocados, destruyen tu negocio) y a diseñar experimentos simples y baratos para testearlos rápidamente.',
+      'Toda startup se construye sobre hipótesis que aún no han sido validadas. Identificar tus supuestos más riesgosos y diseñar experimentos para testearlos te ahorra meses de trabajo en la dirección equivocada. Valida antes de escalar.',
     ...stageProps(4),
     category: 'Estrategia',
     estimatedTime: '25 min',
@@ -430,8 +454,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Producto Mín. Viable',
     description:
       'Define la versión más pequeña de tu producto que entrega valor suficiente para que el cliente pague.',
+    guidingQuestion: '¿Cuál es la versión más simple que puedes lanzar?',
     preambulo:
-      'El MVBP (Minimum Viable Business Product) no es un prototipo roto. Es la versión más simple de tu producto que: (1) el cliente percibe como valiosa, (2) el cliente está dispuesto a pagar por ella, y (3) puedes entregar con tus recursos actuales. La clave está en "Business" — no basta con que funcione técnicamente, tiene que funcionar como negocio. Resiste la tentación de agregar más features.',
+      'Tu Producto Mínimo Viable es la versión más simple de tu solución que entrega valor real a tus primeros clientes. No se trata de lanzar algo incompleto, sino de enfocarte en las funcionalidades que resuelven el problema central. Construye solo lo necesario para aprender del mercado.',
     ...stageProps(4),
     category: 'Producto',
     estimatedTime: '25 min',
@@ -445,8 +470,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Validación',
     description:
       'Demuestra con evidencia real que los clientes quieren, usan y pagan por tu producto.',
+    guidingQuestion: '¿Están tus clientes dispuestos a pagar?',
     preambulo:
-      'Este es el momento de la verdad: ¿los clientes realmente pagan por tu producto? No LOIs, no "sí, me parece interesante", no promesas — dinero real cambiando de manos. La validación de tracción es la métrica más importante para cualquier startup en esta etapa. Si los clientes no pagan, algo en tu cadena (producto, precio, mercado, mensaje) necesita cambiar. Mejor descubrirlo ahora que después de levantar capital.',
+      'La validación definitiva de tu startup es que los clientes paguen por tu solución. Las métricas de tracción como ingresos recurrentes, tasa de retención y crecimiento orgánico son la evidencia que los inversores necesitan ver. Demuestra con datos que tu negocio funciona.',
     ...stageProps(4),
     category: 'Ventas',
     estimatedTime: '20 min',
@@ -459,8 +485,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Plan & Expansión',
     description:
       'Desarrolla tu roadmap de producto y mapea los mercados adyacentes para tu expansión futura.',
+    guidingQuestion: '¿Hacia dónde crece tu producto después del primer mercado?',
     preambulo:
-      'Ahora que dominaste tu mercado inicial, es momento de planificar tu expansión. El Product Plan define las próximas versiones de tu producto y las features que necesitarás. Los Mercados Adyacentes (Follow-on Markets) son los segmentos donde puedes expandirte aprovechando tu Core y la credibilidad ganada. La expansión debe ser estratégica: cada nuevo mercado debe ser más fácil de ganar que el anterior.',
+      'Después de dominar tu mercado inicial, necesitas un plan claro para expandirte a mercados adyacentes y nuevos segmentos. Esta hoja de ruta define las fases de crecimiento de tu producto y los recursos necesarios en cada etapa. Crece con estrategia, no con improvisación.',
     ...stageProps(4),
     category: 'Producto',
     estimatedTime: '25 min',
@@ -473,8 +500,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Pitch Deck',
     description:
       'Construye tu narrativa para inversores con los 12 slides esenciales que demuestran tracción y visión.',
+    guidingQuestion: '¿Cómo cuentas la historia de tu startup a inversores?',
     preambulo:
-      'Un pitch deck no es una presentación de producto. Es una narrativa que convence a un inversor de que tu startup tiene un mercado grande, un equipo capaz, una ventaja competitiva real y un plan creíble para crecer. Los mejores pitch decks cuentan una historia: hay un problema grave → existe una oportunidad → tu equipo tiene la solución → ya tienes tracción → con inversión, puedes escalar.',
+      'Tu pitch deck es la presentación que abre puertas con inversores, aceleradoras y socios estratégicos. Las mejores presentaciones cuentan una historia clara en 10 a 12 diapositivas siguiendo la estructura validada por fondos como Sequoia y Andreessen Horowitz. Cada slide debe responder una pregunta clave sobre tu startup.',
     ...stageProps(4),
     category: 'Marketing',
     estimatedTime: '45 min',
@@ -489,8 +517,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Cap Table',
     description:
       'Simula tu estructura accionaria en múltiples rondas y define tu estrategia de levantamiento de capital.',
+    guidingQuestion: '¿Cómo se distribuye la propiedad de tu empresa?',
     preambulo:
-      'El Cap Table (tabla de capitalización) muestra quién posee qué porcentaje de tu empresa. Antes de aceptar cualquier inversión, necesitas simular cómo se diluirá tu participación en cada ronda futura. Una mala estructura de cap table puede hacerte perder el control de tu empresa o desmotivar a cofounders clave. Esta herramienta te ayuda a planificar estratégicamente y a entender las implicaciones de cada decisión de financiamiento.',
+      'La tabla de capitalización muestra quién es dueño de qué porcentaje de tu empresa y cómo cambia con cada ronda de inversión. Una cap table bien estructurada desde el inicio evita conflictos futuros y facilita el fundraising. Planifica tu dilución antes de necesitar capital.',
     ...stageProps(4),
     category: 'Finanzas',
     estimatedTime: '30 min',
@@ -505,8 +534,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Data Room',
     description:
       'Organiza y prepara tu Data Room virtual con todos los documentos que un inversor necesita para hacer due diligence.',
+    guidingQuestion: '¿Tienes toda la documentación lista para inversores?',
     preambulo:
-      'El Data Room es la carpeta organizada con todos los documentos que un inversor revisa antes de decidir si invierte en tu startup. Incluye financieros, legales, métricas, contratos, cap table, proyecciones y más. Tener un Data Room listo y profesional antes de levantar capital te da una ventaja enorme: demuestra seriedad, acelera el proceso de due diligence y genera confianza. Los founders que improvisan su Data Room a última hora pierden semanas valiosas y proyectan desorganización.',
+      'El data room es el repositorio organizado de todos los documentos que un inversor necesita revisar antes de invertir. Tenerlo listo antes de empezar a levantar capital demuestra profesionalismo y acelera el proceso de due diligence. Prepara tu documentación como si mañana tuvieras una reunión con un fondo.',
     ...stageProps(4),
     category: 'Finanzas',
     estimatedTime: '30 min',
@@ -519,8 +549,9 @@ export const TOOLS: ToolDef[] = [
     shortName: 'Modelo Financiero',
     description:
       'Construye proyecciones financieras a 3-5 años con los supuestos clave que los inversores quieren ver.',
+    guidingQuestion: '¿Cuáles son tus proyecciones financieras a 3 años?',
     preambulo:
-      'Un modelo financiero no es un ejercicio de Excel — es la historia numérica de tu startup. Los inversores quieren ver que entiendes cómo tu negocio genera dinero, cuáles son tus drivers de crecimiento, cuándo alcanzarás breakeven y cuánto capital necesitas para llegar ahí. Un buen modelo financiero incluye proyecciones de ingresos, costos, flujo de caja y métricas clave (MRR, ARR, burn rate, runway). No necesita ser perfecto, pero sí coherente con tu tracción actual y tus supuestos de crecimiento.',
+      'Tu modelo financiero proyecta ingresos, costos y flujo de caja para los próximos 3 a 5 años. Es la herramienta que los inversores usan para evaluar la viabilidad económica de tu startup. Construye proyecciones realistas basadas en supuestos que puedas defender.',
     ...stageProps(4),
     category: 'Finanzas',
     estimatedTime: '35 min',

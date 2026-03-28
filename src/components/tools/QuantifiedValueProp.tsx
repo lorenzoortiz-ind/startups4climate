@@ -52,16 +52,25 @@ ${data.comparacion || '(No completado)'}
         <div style={{ padding: '0 1.25rem 1.25rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
             <div>
-              <label style={labelStyle}>Ahorro económico ($/año)</label>
-              <input type="number" value={data.ahorroEconomico} onChange={e => setData(p => ({ ...p, ahorroEconomico: e.target.value }))} placeholder="Ej: 50000" style={inputStyle} />
+              <label style={labelStyle}>Ahorro económico (anual)</label>
+              <div style={{ position: 'relative' }}>
+                <span style={prefixStyle}>$</span>
+                <input type="number" value={data.ahorroEconomico} onChange={e => setData(p => ({ ...p, ahorroEconomico: e.target.value }))} placeholder="Ej: 50000" step="1000" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
+              </div>
             </div>
             <div>
-              <label style={labelStyle}>Ahorro de tiempo (horas/mes)</label>
-              <input type="number" value={data.ahorroTiempo} onChange={e => setData(p => ({ ...p, ahorroTiempo: e.target.value }))} placeholder="Ej: 40" style={inputStyle} />
+              <label style={labelStyle}>Ahorro de tiempo (mensual)</label>
+              <div style={{ position: 'relative' }}>
+                <input type="number" value={data.ahorroTiempo} onChange={e => setData(p => ({ ...p, ahorroTiempo: e.target.value }))} placeholder="Ej: 40" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
+                <span style={suffixStyle}>hrs</span>
+              </div>
             </div>
             <div>
-              <label style={labelStyle}>ROI estimado (%)</label>
-              <input type="number" value={data.roi} onChange={e => setData(p => ({ ...p, roi: e.target.value }))} placeholder="Ej: 300" style={inputStyle} />
+              <label style={labelStyle}>ROI estimado</label>
+              <div style={{ position: 'relative' }}>
+                <input type="number" value={data.roi} onChange={e => setData(p => ({ ...p, roi: e.target.value }))} placeholder="Ej: 300" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
+                <span style={suffixStyle}>%</span>
+              </div>
             </div>
           </div>
         </div>
@@ -109,3 +118,5 @@ const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSi
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#059669', border: '1.5px solid #05966940', cursor: 'pointer' }
 const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#059669', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)' }
 const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }
+const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }

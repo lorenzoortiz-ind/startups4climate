@@ -61,7 +61,10 @@ ${data.planExpansion || '(No completado)'}
         </div>
         <div style={{ padding: '0 1.25rem 1.25rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.625rem', marginBottom: '1rem' }}>
-            <input type="number" value={data.tamano} onChange={e => setData(p => ({ ...p, tamano: e.target.value }))} placeholder="Tamaño del mercado" style={inputStyle} />
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
+              <input type="number" value={data.tamano} onChange={e => setData(p => ({ ...p, tamano: e.target.value }))} placeholder="Ej: 5000000" step="100000" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
+            </div>
             <select value={data.moneda} onChange={e => setData(p => ({ ...p, moneda: e.target.value }))} style={{ ...inputStyle, width: 'auto' }}>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>

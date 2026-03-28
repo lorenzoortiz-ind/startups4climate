@@ -51,11 +51,16 @@ ${data.fuentes || '(No completado)'}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
             <div>
               <label style={labelStyle}>Número de clientes potenciales</label>
-              <input type="number" value={data.clientes} onChange={e => setData(p => ({ ...p, clientes: e.target.value }))} placeholder="Ej: 10000" style={inputStyle} />
+              <div style={{ position: 'relative' }}>
+                <input type="number" value={data.clientes} onChange={e => setData(p => ({ ...p, clientes: e.target.value }))} placeholder="Ej: 10000" step="1" style={inputStyle} />
+              </div>
             </div>
             <div>
-              <label style={labelStyle}>Precio promedio anual ($)</label>
-              <input type="number" value={data.precioAnual} onChange={e => setData(p => ({ ...p, precioAnual: e.target.value }))} placeholder="Ej: 1200" style={inputStyle} />
+              <label style={labelStyle}>Precio promedio anual</label>
+              <div style={{ position: 'relative' }}>
+                <span style={prefixStyle}>$</span>
+                <input type="number" value={data.precioAnual} onChange={e => setData(p => ({ ...p, precioAnual: e.target.value }))} placeholder="Ej: 1200" step="1" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
+              </div>
             </div>
           </div>
 
@@ -116,3 +121,4 @@ const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSi
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#059669', border: '1.5px solid #05966940', cursor: 'pointer' }
 const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#059669', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)' }
 const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }
+const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }

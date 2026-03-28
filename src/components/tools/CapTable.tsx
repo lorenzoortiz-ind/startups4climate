@@ -150,10 +150,13 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
                 style={{ flex: 2, padding: '0.5rem 0.625rem', borderRadius: 8, border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none', background: 'var(--color-bg-primary)' }}
                 placeholder="Nombre"
               />
-              <input type="number" value={f.shares} onChange={(e) => setFounders((p) => p.map((x) => x.id === f.id ? { ...x, shares: e.target.value } : x))}
-                style={{ flex: 1, padding: '0.5rem 0.625rem', borderRadius: 8, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none', background: 'var(--color-bg-primary)' }}
-                placeholder="Acciones"
-              />
+              <div style={{ position: 'relative', flex: 1 }}>
+                <input type="number" value={f.shares} onChange={(e) => setFounders((p) => p.map((x) => x.id === f.id ? { ...x, shares: e.target.value } : x))}
+                  style={{ width: '100%', padding: '0.5rem 0.625rem', paddingRight: '3.5rem', borderRadius: 8, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none', background: 'var(--color-bg-primary)' }}
+                  placeholder="Ej: 500000" step="1000"
+                />
+                <span style={{ position: 'absolute', right: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>shares</span>
+              </div>
               {founders.length > 1 && (
                 <button onClick={() => setFounders((p) => p.filter((x) => x.id !== f.id))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#DC2626', display: 'flex' }}>
                   <Trash2 size={14} />
@@ -166,6 +169,7 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', borderRadius: 8, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
               <input type="number" value={optionPool} onChange={(e) => setOptionPool(e.target.value)}
                 style={{ flex: 1, padding: '0.5rem 0.625rem', border: 'none', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', background: 'var(--color-bg-primary)', outline: 'none' }}
+                step="0.5" min="0" max="30" placeholder="Ej: 10"
               />
               <span style={{ padding: '0 0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', borderLeft: '1px solid var(--color-border)', background: 'var(--color-bg-muted)' }}>%</span>
             </div>
@@ -206,15 +210,23 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                   <div style={{ flex: '1 1 120px' }}>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Pre-money (USD)</div>
-                    <input type="number" value={r.preMoneyValuation} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, preMoneyValuation: e.target.value } : x))}
-                      style={{ width: '100%', padding: '0.5rem 0.625rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
+                      <input type="number" value={r.preMoneyValuation} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, preMoneyValuation: e.target.value } : x))}
+                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
+                        placeholder="Ej: 5000000" step="100000"
+                      />
+                    </div>
                   </div>
                   <div style={{ flex: '1 1 120px' }}>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Monto a levantar (USD)</div>
-                    <input type="number" value={r.amountRaised} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, amountRaised: e.target.value } : x))}
-                      style={{ width: '100%', padding: '0.5rem 0.625rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
+                      <input type="number" value={r.amountRaised} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, amountRaised: e.target.value } : x))}
+                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
+                        placeholder="Ej: 1000000" step="50000"
+                      />
+                    </div>
                   </div>
                   <div style={{ flex: '1 1 120px' }}>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Inversor</div>

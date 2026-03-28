@@ -323,11 +323,37 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                     fontWeight: 800,
                     color: 'var(--color-text-primary)',
                     letterSpacing: '-0.02em',
-                    marginBottom: '0.5rem',
+                    marginBottom: '0.25rem',
                   }}
                 >
-                  {tool.name}
+                  {tool.shortName}
                 </h1>
+                {tool.name !== tool.shortName && (
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.8125rem',
+                      color: 'var(--color-text-muted)',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {tool.name}
+                  </p>
+                )}
+                {tool.guidingQuestion && (
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '1rem',
+                      fontStyle: 'italic',
+                      color: displayStageColor,
+                      marginBottom: '0.5rem',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {tool.guidingQuestion}
+                  </p>
+                )}
                 <p
                   style={{
                     fontFamily: 'var(--font-body)',

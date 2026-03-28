@@ -47,7 +47,7 @@ interface AuthContextType {
     password: string,
     name: string,
     startup: string
-  ) => Promise<{ error?: string }>
+  ) => Promise<{ error?: string; needsConfirmation?: boolean }>
   logout: () => Promise<void>
   updateProfile: (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => Promise<{ error?: string }>
   openAuthModal: (mode?: 'login' | 'register') => void
@@ -142,11 +142,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             full_name: name,
             startup_name: startup,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
       if (error) {
         return { error: mapSupabaseError(error.message) }
+      }
+
+      // If email confirmation is required, session will be null
+      if (!data.session) {
+        return { needsConfirmation: true }
       }
 
       // If email confirmation is disabled, user is immediately available

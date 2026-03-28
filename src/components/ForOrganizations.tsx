@@ -1,83 +1,36 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { LayoutDashboard, Users, FileText, TrendingUp, ArrowRight, Check } from 'lucide-react'
+import { LayoutDashboard, Users, FileText, TrendingUp, ArrowRight } from 'lucide-react'
 
 const features = [
   {
     icon: LayoutDashboard,
     title: 'Panel de portafolio',
-    description: 'Dashboard centralizado con métricas en tiempo real de todas las startups de tu programa. Progreso, etapa, herramientas completadas y alertas de inactividad.',
+    description: 'Dashboard centralizado con m\u00e9tricas en tiempo real de todas las startups de tu programa.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
   {
     icon: Users,
-    title: 'Gestión de cohortes',
-    description: 'Crea cohortes, asigna startups, define milestones y da seguimiento estructurado. Sin hojas de cálculo ni cadenas de correos interminables.',
+    title: 'Gesti\u00f3n de cohortes',
+    description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de c\u00e1lculo ni cadenas de correos.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
   },
   {
     icon: FileText,
-    title: 'Reportes automáticos',
-    description: 'Genera reportes PDF de progreso por cohorte, por startup o por programa completo. Listos para compartir con stakeholders y donantes.',
+    title: 'Reportes autom\u00e1ticos',
+    description: 'Genera reportes PDF de progreso por cohorte o por startup. Listos para compartir con stakeholders.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
   {
     icon: TrendingUp,
     title: 'Benchmarking regional',
-    description: 'Compara el desempeño de tus startups contra promedios de la plataforma por vertical, país y etapa. Identifica fortalezas y áreas de mejora con datos reales.',
+    description: 'Compara el desempe\u00f1o de tus startups contra promedios por vertical, pa\u00eds y etapa.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
-  },
-]
-
-const plans = [
-  {
-    name: 'Starter',
-    price: '$199',
-    period: '/mes',
-    description: 'Para programas pequeños y pilotos',
-    capacity: 'Hasta 25 startups',
-    features: [
-      'Panel de portafolio',
-      'Gestión de 1 cohorte',
-      'Reportes mensuales',
-      'Soporte por correo',
-    ],
-    highlighted: false,
-  },
-  {
-    name: 'Professional',
-    price: '$499',
-    period: '/mes',
-    description: 'Para incubadoras y aceleradoras activas',
-    capacity: 'Hasta 100 startups',
-    features: [
-      'Todo en Starter',
-      'Cohortes ilimitadas',
-      'Reportes en tiempo real',
-      'Benchmarking regional',
-      'Soporte prioritario',
-    ],
-    highlighted: true,
-  },
-  {
-    name: 'Enterprise',
-    price: 'A medida',
-    period: '',
-    description: 'Para gobiernos y redes de programas',
-    capacity: 'Startups ilimitadas',
-    features: [
-      'Todo en Professional',
-      'Multi-organización',
-      'API de integración',
-      'Reportes personalizados',
-      'Gerente de cuenta dedicado',
-    ],
-    highlighted: false,
   },
 ]
 
@@ -118,7 +71,7 @@ export default function ForOrganizations() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            La tecnología que tu programa de innovación necesita
+            La tecnolog\u00eda que tu programa de innovaci\u00f3n necesita
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -131,13 +84,15 @@ export default function ForOrganizations() {
           </p>
         </motion.div>
 
-        {/* Feature cards */}
+        {/* Feature cards — 2x2 grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '1.25rem',
-          marginBottom: '4rem',
-        }}>
+          marginBottom: '3.5rem',
+        }}
+          className="org-features-grid"
+        >
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
@@ -186,144 +141,45 @@ export default function ForOrganizations() {
           ))}
         </div>
 
-        {/* Pricing preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
-          style={{ textAlign: 'center', marginBottom: '2.5rem' }}
-        >
-          <h3 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
-            fontWeight: 700,
-            color: 'var(--color-text-primary)',
-            marginBottom: '0.5rem',
-          }}>
-            Planes para organizaciones
-          </h3>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.9375rem',
-            color: 'var(--color-text-secondary)',
-          }}>
-            Elige el plan que se ajuste al tamaño de tu programa
-          </p>
-        </motion.div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '1.5rem',
-          marginBottom: '3rem',
-        }}>
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              style={{
-                background: plan.highlighted ? 'linear-gradient(135deg, rgba(124,58,237,0.03) 0%, rgba(5,150,105,0.03) 100%)' : 'white',
-                borderRadius: 20,
-                border: plan.highlighted ? '2px solid #7C3AED' : '1px solid var(--color-border)',
-                padding: '2rem',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {plan.highlighted && (
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 4,
-                  background: 'linear-gradient(90deg, #7C3AED, #059669)',
-                }} />
-              )}
-              <div style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                color: plan.highlighted ? '#7C3AED' : 'var(--color-text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: '0.5rem',
-              }}>
-                {plan.name}
-              </div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: '0.25rem',
-                marginBottom: '0.5rem',
-              }}>
-                <span style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '2rem',
-                  fontWeight: 800,
-                  color: 'var(--color-text-primary)',
-                }}>
-                  {plan.price}
-                </span>
-                {plan.period && (
-                  <span style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.875rem',
-                    color: 'var(--color-text-muted)',
-                  }}>
-                    {plan.period}
-                  </span>
-                )}
-              </div>
-              <p style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.875rem',
-                color: 'var(--color-text-secondary)',
-                marginBottom: '0.25rem',
-              }}>
-                {plan.description}
-              </p>
-              <p style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#059669',
-                marginBottom: '1.25rem',
-              }}>
-                {plan.capacity}
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                {plan.features.map((feat) => (
-                  <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Check size={16} strokeWidth={2} color="#059669" />
-                    <span style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      color: 'var(--color-text-secondary)',
-                    }}>
-                      {feat}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CTA */}
+        {/* CTA section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
-          style={{ textAlign: 'center' }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(5,150,105,0.04) 100%)',
+            borderRadius: 20,
+            border: '1px solid rgba(124,58,237,0.12)',
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            maxWidth: 720,
+            margin: '0 auto',
+          }}
         >
+          <h3 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(1.125rem, 2.5vw, 1.5rem)',
+            fontWeight: 700,
+            color: 'var(--color-text-primary)',
+            marginBottom: '0.75rem',
+          }}>
+            {'\u00BF'}Gestionas un programa de incubaci\u00f3n o aceleraci\u00f3n?
+          </h3>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.9375rem',
+            lineHeight: 1.7,
+            color: 'var(--color-text-secondary)',
+            maxWidth: 520,
+            margin: '0 auto 1.5rem',
+          }}>
+            Agenda una llamada y te mostramos c\u00f3mo la plataforma puede integrarse a tu operaci\u00f3n.
+          </p>
           <a
-            href="mailto:hello@redesignlab.org?subject=Demo%20de%20la%20plataforma%20para%20organizaciones"
+            href="https://calendly.com/redesignlab"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -342,19 +198,17 @@ export default function ForOrganizations() {
               textDecoration: 'none',
             }}
           >
-            Solicitar demo
+            Agenda una llamada
             <ArrowRight size={18} />
           </a>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            color: 'var(--color-text-muted)',
-            marginTop: '0.75rem',
-          }}>
-            Te respondemos en menos de 24 horas
-          </p>
         </motion.div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .org-features-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   )
 }

@@ -13,6 +13,7 @@ export default function AuthModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [confirmationMessage, setConfirmationMessage] = useState('')
   const router = useRouter()
 
   const [form, setForm] = useState({ email: '', password: '', name: '', startup: '' })
@@ -22,6 +23,7 @@ export default function AuthModal() {
       setMode(authModalMode)
       setError('')
       setSuccess(false)
+      setConfirmationMessage('')
       setForm({ email: '', password: '', name: '', startup: '' })
     }
   }, [authModalOpen, authModalMode])
@@ -51,6 +53,10 @@ export default function AuthModal() {
 
     if (result.error) {
       setError(result.error)
+    } else if ('needsConfirmation' in result && result.needsConfirmation) {
+      setConfirmationMessage(
+        'Te hemos enviado un correo de confirmación. Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.'
+      )
     } else {
       setSuccess(true)
       setTimeout(() => {
@@ -150,7 +156,79 @@ export default function AuthModal() {
           </button>
 
           <AnimatePresence mode="wait">
-            {success ? (
+            {confirmationMessage ? (
+              <motion.div
+                key="confirmation"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35 }}
+                style={{ padding: '3rem 2rem', textAlign: 'center' }}
+              >
+                <div
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    background: 'rgba(5,150,105,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1rem',
+                  }}
+                >
+                  <Mail size={32} color="#059669" />
+                </div>
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '0.75rem',
+                  }}
+                >
+                  Confirma tu email
+                </h3>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.6,
+                    marginBottom: '1.5rem',
+                  }}
+                >
+                  {confirmationMessage}
+                </p>
+                <button
+                  onClick={closeAuthModal}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: 12,
+                    background: '#059669',
+                    color: 'white',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 4px 14px rgba(5,150,105,0.3)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#047857'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#059669'
+                  }}
+                >
+                  Entendido
+                </button>
+              </motion.div>
+            ) : success ? (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.9 }}

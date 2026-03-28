@@ -6,30 +6,30 @@ import { UserX, Laptop, BarChart3 } from 'lucide-react'
 const problems = [
   {
     icon: UserX,
+    number: '01',
     title: 'Founders sin infraestructura',
     description:
-      'En Latinoamérica hay talento sobrado para construir startups de impacto. Lo que falta son herramientas estructuradas, metodología accesible y acompañamiento que no dependa de vivir en la ciudad correcta o conocer a las personas indicadas.',
+      'Hay talento sobrado en LATAM para construir startups de impacto. Lo que falta son herramientas estructuradas y acompa\u00f1amiento accesible.',
     color: '#DC2626',
     bg: 'rgba(220,38,38,0.06)',
-    borderColor: '#DC2626',
   },
   {
     icon: Laptop,
-    title: 'Incubadoras sin tecnología',
+    number: '02',
+    title: 'Incubadoras sin tecnolog\u00eda',
     description:
-      'Las incubadoras y aceleradoras hacen un trabajo fundamental, pero muchas gestionan sus cohortes con hojas de cálculo y correos. Sin visibilidad real del progreso de cada startup, el acompañamiento pierde precisión y escala.',
+      'Muchas gestionan cohortes con hojas de c\u00e1lculo y correos. Sin visibilidad real del progreso, el acompa\u00f1amiento pierde precisi\u00f3n y escala.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
-    borderColor: '#D97706',
   },
   {
     icon: BarChart3,
+    number: '03',
     title: 'Gobiernos sin visibilidad',
     description:
-      'Los programas gubernamentales de innovación canalizan recursos importantes hacia el emprendimiento, pero carecen de herramientas para medir impacto real. Sin datos estructurados, es difícil justificar inversión y mejorar las políticas.',
+      'Los programas de innovaci\u00f3n canalizan recursos importantes, pero carecen de herramientas para medir impacto real y mejorar pol\u00edticas.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
-    borderColor: '#7C3AED',
   },
 ]
 
@@ -57,7 +57,7 @@ export default function ProblemSection() {
             letterSpacing: '-0.02em',
             color: 'var(--color-text-primary)',
           }}>
-            Tres brechas que frenan la innovación en la región
+            Tres brechas que frenan la innovaci\u00f3n en la regi\u00f3n
           </h2>
         </motion.div>
 
@@ -76,65 +76,92 @@ export default function ProblemSection() {
             color: 'var(--color-text-secondary)',
           }}
         >
-          El talento emprendedor está distribuido por toda Latinoamérica. La infraestructura para
+          El talento emprendedor est\u00e1 distribuido por toda Latinoam\u00e9rica. La infraestructura para
           desarrollarlo, no.
         </motion.p>
 
-        {/* Three problem cards */}
+        {/* Numbered vertical stack with alternating alignment */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '1.5rem',
-          marginBottom: '3rem',
+          maxWidth: 900,
+          margin: '0 auto 3rem',
         }}>
-          {problems.map((problem, i) => (
-            <motion.div
-              key={problem.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
-              style={{
-                background: 'white',
-                borderRadius: 20,
-                border: '1px solid var(--color-border)',
-                borderTop: `3px solid ${problem.borderColor}`,
-                padding: '2.5rem 2rem',
-              }}
-            >
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 12,
-                background: problem.bg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.25rem',
-              }}>
-                <problem.icon size={24} strokeWidth={1.5} color={problem.color} />
-              </div>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                lineHeight: 1.2,
-                letterSpacing: '-0.01em',
-                color: 'var(--color-text-primary)',
-                marginBottom: '1rem',
-              }}>
-                {problem.title}
-              </h3>
-              <p style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.9375rem',
-                lineHeight: 1.75,
-                color: 'var(--color-text-secondary)',
-              }}>
-                {problem.description}
-              </p>
-            </motion.div>
-          ))}
+          {problems.map((problem, i) => {
+            const isEven = i % 2 === 0
+            return (
+              <motion.div
+                key={problem.title}
+                initial={{ opacity: 0, x: isEven ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '1.5rem',
+                  background: 'white',
+                  borderRadius: 16,
+                  border: '1px solid var(--color-border)',
+                  padding: '2rem',
+                  alignSelf: isEven ? 'flex-start' : 'flex-end',
+                  maxWidth: 720,
+                  width: '100%',
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  flexShrink: 0,
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '1.5rem',
+                    fontWeight: 800,
+                    color: problem.color,
+                    lineHeight: 1,
+                  }}>
+                    {problem.number}
+                  </span>
+                  <div style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    background: problem.bg,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <problem.icon size={22} strokeWidth={1.5} color={problem.color} />
+                  </div>
+                </div>
+                <div>
+                  <h3 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.125rem',
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                    letterSpacing: '-0.01em',
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '0.5rem',
+                  }}>
+                    {problem.title}
+                  </h3>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.65,
+                    color: 'var(--color-text-secondary)',
+                  }}>
+                    {problem.description}
+                  </p>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
 
         {/* Bridge message */}
@@ -147,21 +174,21 @@ export default function ProblemSection() {
             background: 'linear-gradient(135deg, rgba(5,150,105,0.04) 0%, rgba(124,58,237,0.04) 100%)',
             borderRadius: 16,
             border: '1px solid rgba(5,150,105,0.12)',
-            padding: '2.5rem 2rem',
+            padding: '2rem',
             textAlign: 'center',
-            maxWidth: 840,
+            maxWidth: 720,
             margin: '0 auto',
           }}
         >
           <p style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '1.0625rem',
-            lineHeight: 1.75,
+            fontSize: '1rem',
+            lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            Construimos una plataforma que atiende los tres lados del problema:{' '}
+            Construimos una plataforma que atiende los tres lados:{' '}
             <span style={{ fontWeight: 700, color: '#059669' }}>
-              herramientas para founders, tecnología para organizaciones y datos para quienes diseñan políticas de innovación
+              herramientas para founders, tecnolog\u00eda para organizaciones y datos para pol\u00edticas de innovaci\u00f3n
             </span>.
           </p>
         </motion.div>

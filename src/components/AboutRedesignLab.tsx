@@ -24,7 +24,7 @@ const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'U
 
 export default function AboutRedesignLab() {
   return (
-    <section style={{ padding: '6rem 0', background: 'white', overflow: 'hidden' }}>
+    <section id="about" style={{ padding: '6rem 0', background: 'white', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 1.5rem' }}>
         <div
           style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3.5rem', alignItems: 'center' }}

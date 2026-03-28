@@ -19,9 +19,9 @@ const stages = [
       { name: 'Propósito & Equipo', category: 'Equipo', desc: 'Define la misión de tu startup y evalúa las capacidades y brechas de tu equipo fundador.' },
       { name: 'Segmentación de Mercado', category: 'Mercado', desc: 'Identifica y mapea los segmentos de mercado donde tu solución puede generar mayor impacto.' },
       { name: 'Mercado inicial', category: 'Estrategia', desc: 'Selecciona tu primer mercado de entrada usando criterios de accesibilidad, tamaño y tracción.' },
-      { name: 'Perfil de Usuario', category: 'Cliente', desc: 'Construye un perfil detallado de tu usuario final: comportamientos, necesidades y contexto.' },
+      { name: 'Perfil de Usuario', category: 'Mercado', desc: 'Construye un perfil detallado de tu usuario final: comportamientos, necesidades y contexto.' },
       { name: 'Cálculo del TAM', category: 'Mercado', desc: 'Estima el tamaño total de tu mercado direccionable con metodologías bottom-up y top-down.' },
-      { name: 'Buyer Persona', category: 'Cliente', desc: 'Crea un arquetipo detallado de tu cliente ideal con datos demográficos, motivaciones y puntos de dolor.' },
+      { name: 'Buyer Persona', category: 'Mercado', desc: 'Crea un arquetipo detallado de tu cliente ideal con datos demográficos, motivaciones y puntos de dolor.' },
     ],
   },
   {
@@ -40,7 +40,7 @@ const stages = [
       { name: 'Propuesta de Valor', category: 'Estrategia', desc: 'Cuantifica el valor que entregas a tu cliente en términos medibles: ahorro, eficiencia o impacto.' },
       { name: 'Primeros 10 Clientes', category: 'Ventas', desc: 'Estrategia para identificar, contactar y convertir tus primeros 10 clientes pagadores o usuarios.' },
       { name: 'Core y Posicionamiento', category: 'Marketing', desc: 'Define tu ventaja competitiva sostenible y cómo te posicionas frente a alternativas en el mercado.' },
-      { name: 'Lean Canvas de Impacto', category: 'Modelo de Negocio', desc: 'Modelo de negocio en una página adaptado para startups de impacto con métricas sociales y ambientales.' },
+      { name: 'Lean Canvas de Impacto', category: 'Estrategia', desc: 'Modelo de negocio en una página adaptado para startups de impacto con métricas sociales y ambientales.' },
     ],
   },
   {
@@ -56,7 +56,7 @@ const stages = [
     tools: [
       { name: 'Decisiones de Compra', category: 'Ventas', desc: 'Identifica a todas las personas involucradas en la decisión de compra y sus motivaciones.' },
       { name: 'Proceso de Adquisición', category: 'Marketing', desc: 'Diseña el embudo completo de adquisición de clientes: desde awareness hasta conversión.' },
-      { name: 'Modelo de Negocio', category: 'Modelo de Negocio', desc: 'Estructura tu modelo de ingresos, canales de distribución y relación con el cliente.' },
+      { name: 'Modelo de Negocio', category: 'Estrategia', desc: 'Estructura tu modelo de ingresos, canales de distribución y relación con el cliente.' },
       { name: 'Framework de Pricing', category: 'Finanzas', desc: 'Define tu estrategia de precios basada en valor percibido, costos y dinámica competitiva.' },
       { name: 'LTV y Unit Economics', category: 'Finanzas', desc: 'Calcula el valor de vida del cliente, costo de adquisición y la rentabilidad por unidad.' },
       { name: 'Proceso de Ventas', category: 'Ventas', desc: 'Diseña tu proceso de ventas repetible: desde la prospección hasta el cierre y seguimiento.' },
@@ -87,7 +87,6 @@ const categoryColors: Record<string, string> = {
   'Equipo': '#7C3AED',
   'Mercado': '#059669',
   'Estrategia': '#0891B2',
-  'Cliente': '#D97706',
   'Producto': '#2563EB',
   'Ventas': '#DC2626',
   'Marketing': '#DB2777',

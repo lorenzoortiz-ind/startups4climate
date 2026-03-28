@@ -8,7 +8,6 @@ import {
   Target,
   Megaphone,
   Clock,
-  Bot,
   ExternalLink,
   TrendingUp,
   Scale,
@@ -173,7 +172,7 @@ const CONVOCATORIAS: Convocatoria[] = [
 
 const TABS: { id: Tab; label: string; icon: typeof Newspaper }[] = [
   { id: 'noticias', label: 'Noticias del ecosistema', icon: Newspaper },
-  { id: 'vertical', label: 'Relevante para tu vertical', icon: Target },
+  { id: 'vertical', label: 'Relevante para tu startup', icon: Target },
   { id: 'convocatorias', label: 'Convocatorias abiertas', icon: Megaphone },
 ]
 
@@ -485,33 +484,6 @@ export default function RadarPage() {
     >
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
         {/* AI Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 1rem',
-            borderRadius: 10,
-            background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(236,72,153,0.06))',
-            border: '1px solid rgba(99,102,241,0.12)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Bot size={14} color="#6366F1" />
-          <span
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
-              color: 'var(--color-text-secondary)',
-            }}
-          >
-            <strong style={{ color: '#6366F1' }}>Próximamente:</strong> actualizaciones automáticas con AI
-          </span>
-        </motion.div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

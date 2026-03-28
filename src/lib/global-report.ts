@@ -95,7 +95,7 @@ export function generateGlobalReport(user: GlobalReportUser): void {
               ? formatToolData(tool.id, data)
               : completed
                 ? '<p style="color:#9CA3AF;font-style:italic;font-size:0.8125rem">Sin datos guardados</p>'
-                : '<p style="color:#D1D5DB;font-style:italic;font-size:0.8125rem">Herramienta aun no completada</p>'
+                : '<p style="color:#D1D5DB;font-style:italic;font-size:0.8125rem">Herramienta aún no completada</p>'
 
           return `
             <div style="margin-bottom:24px;background:white;border-radius:14px;border:1px solid #E5E7EB;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04);${!completed ? 'opacity:0.7' : ''}">

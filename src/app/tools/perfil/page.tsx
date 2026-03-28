@@ -114,6 +114,8 @@ export default function PerfilPage() {
   const [teamSize, setTeamSize] = useState('')
   const [saved, setSaved] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [radarNewsletter, setRadarNewsletter] = useState(false)
+  const [oppsNewsletter, setOppsNewsletter] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -132,6 +134,8 @@ export default function PerfilPage() {
         if (extra.phone) setPhone(extra.phone)
         if (extra.website) setWebsite(extra.website)
         if (extra.teamSize) setTeamSize(String(extra.teamSize))
+        if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
+        if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
       } catch {
         // ignore
       }
@@ -149,7 +153,7 @@ export default function PerfilPage() {
     })
 
     // Save extra profile fields to localStorage
-    const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize }
+    const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize, radarNewsletter, oppsNewsletter }
     localStorage.setItem('s4c_profile_extra', JSON.stringify(extraData))
 
     // Also try to update startups table in Supabase (best effort)
@@ -439,6 +443,64 @@ export default function PerfilPage() {
               placeholder="N&uacute;mero de personas en el equipo"
               style={inputStyle}
             />
+          </div>
+
+          {/* Newsletter subscriptions */}
+          <div style={{
+            padding: '1rem',
+            borderRadius: 12,
+            background: 'var(--color-bg-muted, #f9fafb)',
+            border: '1px solid var(--color-border, #e5e7eb)',
+          }}>
+            <label style={{ ...labelStyle, marginBottom: '0.75rem' }}>Suscripciones</label>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+              }}>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+                    Newsletter RADAR
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                    Recibe novedades del ecosistema de innovaci&oacute;n
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={radarNewsletter}
+                  onChange={(e) => setRadarNewsletter(e.target.checked)}
+                  style={{ width: 18, height: 18, accentColor: '#059669', cursor: 'pointer' }}
+                />
+              </label>
+
+              <div style={{ height: 1, background: 'var(--color-border, #e5e7eb)' }} />
+
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+              }}>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+                    Newsletter Oportunidades
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                    Recibe convocatorias y fondos para tu startup
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={oppsNewsletter}
+                  onChange={(e) => setOppsNewsletter(e.target.checked)}
+                  style={{ width: 18, height: 18, accentColor: '#059669', cursor: 'pointer' }}
+                />
+              </label>
+            </div>
           </div>
 
           {/* Stage (read-only) */}

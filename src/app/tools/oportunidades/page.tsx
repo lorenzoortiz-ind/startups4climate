@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Sparkles,
-  Bot,
   Filter,
   Trophy,
   Banknote,
@@ -397,34 +396,6 @@ export default function OportunidadesPage() {
       }}
     >
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        {/* AI Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 1rem',
-            borderRadius: 10,
-            background: 'linear-gradient(135deg, rgba(217,119,6,0.06), rgba(236,72,153,0.06))',
-            border: '1px solid rgba(217,119,6,0.12)',
-            marginBottom: '1.5rem',
-          }}
-        >
-          <Bot size={14} color="#D97706" />
-          <span
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
-              color: 'var(--color-text-secondary)',
-            }}
-          >
-            <strong style={{ color: '#D97706' }}>Próximamente:</strong> matching automático con AI según tu perfil
-          </span>
-        </motion.div>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

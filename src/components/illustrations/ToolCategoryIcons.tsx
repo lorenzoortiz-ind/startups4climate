@@ -215,12 +215,10 @@ function EquipoIcon({ width = 48, height = 48, className, color = DEFAULT_COLOR 
 export const CATEGORY_ICON_MAP: Record<ToolCategory, React.ComponentType<CategoryIconProps>> = {
   'Estrategia': EstrategiaIcon,
   'Mercado': MercadoIcon,
-  'Cliente': ClienteIcon,
   'Producto': ProductoIcon,
   'Finanzas': FinanzasIcon,
   'Ventas': VentasIcon,
   'Marketing': MarketingIcon,
-  'Modelo de Negocio': ModeloNegocioIcon,
   'Equipo': EquipoIcon,
 }
 

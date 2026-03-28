@@ -278,12 +278,45 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const currentSearchStage = stageParam ? parseInt(stageParam, 10) : null
   const [mobileOpen, setMobileOpen] = useState(false)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
+  const [profileIncomplete, setProfileIncomplete] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) {
       router.replace('/')
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    if (!loading && user && pathname === '/tools') {
+      const checked = sessionStorage.getItem('s4c_profile_checked')
+      if (checked) return
+      sessionStorage.setItem('s4c_profile_checked', '1')
+
+      try {
+        const extra = localStorage.getItem('s4c_profile_extra')
+        if (!extra || extra === '{}') {
+          router.replace('/tools/completar-perfil')
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [user, loading, pathname, router])
+
+  useEffect(() => {
+    try {
+      const extra = localStorage.getItem('s4c_profile_extra')
+      if (!extra || extra === '{}') {
+        setProfileIncomplete(true)
+      } else {
+        const parsed = JSON.parse(extra)
+        const missing = !parsed.vertical || !parsed.country || !parsed.role
+        setProfileIncomplete(missing)
+      }
+    } catch {
+      setProfileIncomplete(true)
+    }
+  }, [])
 
   // Apply dark mode on mount, clean up on unmount (so landing stays light)
   useEffect(() => {
@@ -442,6 +475,33 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
+      {profileIncomplete && (
+        <Link
+          href="/tools/perfil"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            background: 'rgba(217,119,6,0.08)',
+            border: '1px solid rgba(217,119,6,0.15)',
+            textDecoration: 'none',
+            marginBottom: '0.75rem',
+            transition: 'all 0.15s',
+          }}
+        >
+          <span style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.6875rem',
+            color: '#D97706',
+            lineHeight: 1.4,
+          }}>
+            Completa tu perfil para recomendaciones personalizadas
+          </span>
+        </Link>
+      )}
+
       {/* Dashboard link */}
       <Link
         href="/tools"
@@ -551,6 +611,36 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         )
       })}
 
+      {/* Recursos */}
+      <Link
+        href="/tools/recursos"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.5rem 0.75rem',
+          borderRadius: 8,
+          background: pathname === '/tools/recursos' ? 'rgba(5,150,105,0.07)' : 'transparent',
+          border: pathname === '/tools/recursos' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+          textDecoration: 'none',
+          color: pathname === '/tools/recursos' ? '#059669' : 'var(--color-text-muted)',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.8125rem',
+          fontWeight: pathname === '/tools/recursos' ? 600 : 400,
+          transition: 'all 0.15s',
+          marginBottom: '0.25rem',
+        }}
+        onMouseEnter={(e) => {
+          if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-primary)'
+        }}
+        onMouseLeave={(e) => {
+          if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-muted)'
+        }}
+      >
+        <BookOpen size={13} />
+        Recursos
+      </Link>
+
       <div
         style={{
           height: 1,
@@ -574,36 +664,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       {/* Bottom actions */}
       <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
         <div style={{ height: 1, background: 'var(--color-border)', margin: '0 0.375rem 1rem' }} />
-
-        {/* Recursos */}
-        <Link
-          href="/tools/recursos"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
-            borderRadius: 8,
-            background: pathname === '/tools/recursos' ? 'rgba(5,150,105,0.07)' : 'transparent',
-            border: pathname === '/tools/recursos' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
-            textDecoration: 'none',
-            color: pathname === '/tools/recursos' ? '#059669' : 'var(--color-text-muted)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            fontWeight: pathname === '/tools/recursos' ? 600 : 400,
-            transition: 'all 0.15s',
-            marginBottom: '0.25rem',
-          }}
-          onMouseEnter={(e) => {
-            if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-primary)'
-          }}
-          onMouseLeave={(e) => {
-            if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-muted)'
-          }}
-        >
-          <BookOpen size={13} />
-          Recursos
-        </Link>
 
         {/* Perfil */}
         <Link

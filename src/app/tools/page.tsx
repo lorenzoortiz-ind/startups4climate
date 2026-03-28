@@ -40,7 +40,6 @@ const STAGE_ICONS = {
 const NAV_TABS = [
   { label: 'Herramientas', href: '/tools', active: true },
   { label: 'Recursos', href: '/tools/recursos', active: false },
-  { label: 'Mentor AI', href: '/tools/mentor', active: false },
   { label: 'RADAR', href: '/tools/radar', active: false },
   { label: 'Oportunidades', href: '/tools/oportunidades', active: false },
 ]
@@ -49,12 +48,10 @@ const NAV_TABS = [
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
   Estrategia: { color: '#6366F1', bg: 'rgba(99,102,241,0.1)' },
   Mercado: { color: '#0891B2', bg: 'rgba(8,145,178,0.1)' },
-  Cliente: { color: '#D946EF', bg: 'rgba(217,70,239,0.1)' },
   Producto: { color: '#059669', bg: 'rgba(5,150,105,0.1)' },
   Finanzas: { color: '#D97706', bg: 'rgba(217,119,6,0.1)' },
   Ventas: { color: '#DC2626', bg: 'rgba(220,38,38,0.1)' },
   Marketing: { color: '#7C3AED', bg: 'rgba(124,58,237,0.1)' },
-  'Modelo de Negocio': { color: '#0D9488', bg: 'rgba(13,148,136,0.1)' },
   Equipo: { color: '#EA580C', bg: 'rgba(234,88,12,0.1)' },
 }
 
@@ -308,6 +305,10 @@ export default function ToolsDashboard() {
           padding: '0.75rem 1rem',
           overflowX: 'auto',
           flexWrap: 'nowrap',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          paddingBottom: '0.25rem',
         }}
       >
         {NAV_TABS.map((tab) => (

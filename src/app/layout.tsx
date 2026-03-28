@@ -25,8 +25,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Startups4Climate | Ecosistema all-in-one para startups de impacto en LATAM',
-  description: 'Plataforma gratuita con +30 herramientas, mentores AI por vertical, oportunidades personalizadas y tendencias del ecosistema. Para founders independientes y programas de incubación en Latinoamérica.',
+  title: 'S4C | Ecosistema para startups de impacto en LATAM',
+  description: 'Plataforma gratuita con +30 herramientas, mentores AI por vertical y oportunidades personalizadas para founders en Latinoamérica.',
   keywords: [
     'startups LATAM', 'herramientas para startups', 'incubadora virtual',
     'aceleradora startups', 'emprendimiento latinoamérica', 'startup tools',
@@ -36,13 +36,20 @@ export const metadata: Metadata = {
   authors: [{ name: 'Redesign Lab' }],
   openGraph: {
     type: 'website',
-    url: 'https://startups4climate.org',
-    title: 'Startups4Climate | Ecosistema para startups de impacto en LATAM',
+    url: 'https://startups4climate.vercel.app',
+    title: 'S4C | Ecosistema para startups de impacto en LATAM',
     description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
     siteName: 'Startups4Climate',
   },
-  twitter: { card: 'summary_large_image' },
-  metadataBase: new URL('https://startups4climate.org'),
+  twitter: {
+    card: 'summary_large_image',
+    title: 'S4C | Ecosistema para startups de impacto en LATAM',
+    description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
+  },
+  alternates: {
+    canonical: 'https://startups4climate.vercel.app',
+  },
+  metadataBase: new URL('https://startups4climate.vercel.app'),
 }
 
 export default function RootLayout({

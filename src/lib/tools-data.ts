@@ -1,12 +1,10 @@
 export type ToolCategory =
   | 'Estrategia'
   | 'Mercado'
-  | 'Cliente'
   | 'Producto'
   | 'Finanzas'
   | 'Ventas'
   | 'Marketing'
-  | 'Modelo de Negocio'
   | 'Equipo'
 
 export interface ToolDef {
@@ -71,12 +69,10 @@ export const STAGE_META = {
 export const CATEGORIES: ToolCategory[] = [
   'Estrategia',
   'Mercado',
-  'Cliente',
   'Producto',
   'Finanzas',
   'Ventas',
   'Marketing',
-  'Modelo de Negocio',
   'Equipo',
 ]
 
@@ -143,7 +139,7 @@ export const TOOLS: ToolDef[] = [
     preambulo:
       'Tu usuario final es la persona real que va a usar tu producto. No es lo mismo que tu cliente (quien paga). Necesitas entender profundamente quién es, qué hace, qué le frustra, cuáles son sus prioridades y cómo toma decisiones. Sin un perfil claro, terminarás diseñando un producto para todos y para nadie. Este paso se basa en investigación real, no en suposiciones.',
     ...stageProps(1),
-    category: 'Cliente',
+    category: 'Mercado',
     estimatedTime: '25 min',
     outputs: ['Perfil demográfico y psicográfico', 'Mapa de dolores y necesidades', 'Contexto de uso del producto'],
     relatedService: 'Workshop de Customer Discovery',
@@ -172,7 +168,7 @@ export const TOOLS: ToolDef[] = [
     preambulo:
       'Una Persona es diferente de un perfil de usuario. Es UNA persona real (o muy realista) que representa a tu cliente ideal. Debe tener nombre, edad, cargo, frustraciones específicas y motivaciones. Cuando tu equipo tome decisiones de producto, diseño o marketing, deben preguntarse: ¿esto le serviría a [Nombre de tu Persona]? Es una herramienta de alineación interna poderosa.',
     ...stageProps(1),
-    category: 'Cliente',
+    category: 'Mercado',
     estimatedTime: '15 min',
     outputs: ['Ficha de Persona completa', 'Día típico de la Persona', 'Criterios de decisión de compra'],
     stepNumber: 5,
@@ -260,7 +256,7 @@ export const TOOLS: ToolDef[] = [
     preambulo:
       'El Lean Canvas es una herramienta de síntesis. Después de haber investigado tu mercado, definido tu Persona y cuantificado tu valor, es momento de ponerlo todo junto en una sola página. Este canvas adaptado incluye un bloque de impacto social/ambiental para startups que apuestan por generar un cambio positivo. Es tu GPS de negocio: debería evolucionar cada semana.',
     ...stageProps(2),
-    category: 'Modelo de Negocio',
+    category: 'Estrategia',
     estimatedTime: '30 min',
     outputs: ['Canvas completo en 1 página', 'Hipótesis clave identificadas', 'Métricas de validación'],
     stepNumber: 11,
@@ -334,7 +330,7 @@ export const TOOLS: ToolDef[] = [
     preambulo:
       'Tu modelo de negocio no es tu producto. Es la lógica económica detrás de tu empresa: ¿cómo generas ingresos? ¿Cobras suscripción, por uso, por licencia, por transacción? ¿Quién paga: el usuario final o un tercero? Elegir el modelo equivocado puede matar una buena idea. Este paso te ayuda a evaluar opciones (SaaS, marketplace, freemium, hardware-as-a-service, etc.) y elegir la que maximice valor para tu cliente y tu empresa.',
     ...stageProps(3),
-    category: 'Modelo de Negocio',
+    category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['Modelo de negocio seleccionado', 'Flujos de ingresos mapeados', 'Estructura de costos estimada'],
     relatedProduct: 'Modelamiento financiero profesional',

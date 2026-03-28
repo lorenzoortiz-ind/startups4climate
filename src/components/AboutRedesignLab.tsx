@@ -20,7 +20,7 @@ const founders = [
   },
 ]
 
-const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Unión Europea', 'NESsT', 'CATAL1.5T', 'Stanford University']
+const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Unión Europea', 'NESsT', 'CATAL1.5°T', 'Stanford University']
 
 export default function AboutRedesignLab() {
   return (

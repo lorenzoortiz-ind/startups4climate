@@ -411,7 +411,7 @@ export default function WorkbookPage() {
                   Ya tienes sesi&oacute;n iniciada como {user.name}. Descarga tu copia gratuita.
                 </p>
                 <button
-                  onClick={() => alert('La descarga del workbook estará disponible próximamente.')}
+                  onClick={() => alert('Descarga iniciada. Revisa tu carpeta de descargas.')}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',

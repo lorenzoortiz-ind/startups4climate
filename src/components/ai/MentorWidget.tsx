@@ -167,7 +167,7 @@ export default function MentorWidget() {
               <ChatInterface
                 agentType={agentType}
                 placeholder="Pregunta sobre estrategia, mercado, producto..."
-                welcomeMessage="Soy tu mentor AI. Puedo ayudarte con estrategia, mercado, producto, finanzas y mas. ¿En que estas trabajando?"
+                welcomeMessage="Soy tu mentor AI. Puedo ayudarte con estrategia, mercado, producto, finanzas y más. ¿En qué estás trabajando?"
               />
             </div>
           </motion.div>

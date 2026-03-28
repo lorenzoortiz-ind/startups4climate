@@ -12,6 +12,7 @@ export default function AuthModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [orgMode, setOrgMode] = useState(false)
 
   const [form, setForm] = useState({ email: '', password: '', name: '', startup: '' })
 
@@ -21,6 +22,7 @@ export default function AuthModal() {
       setError('')
       setSuccess(false)
       setForm({ email: '', password: '', name: '', startup: '' })
+      setOrgMode(false)
     }
   }, [authModalOpen, authModalMode])
 
@@ -58,6 +60,7 @@ export default function AuthModal() {
       setError(result.error)
     } else {
       setSuccess(true)
+      // Wait for auth state to fully propagate before redirecting
       setTimeout(() => {
         closeAuthModal()
         setSuccess(false)
@@ -65,7 +68,7 @@ export default function AuthModal() {
         // to the server middleware. router.push() does a client-side navigation
         // that skips cookie propagation, causing the middleware to reject the request.
         window.location.href = mode === 'register' ? '/tools/completar-perfil' : '/tools'
-      }, 1200)
+      }, 1800)
     }
   }
 
@@ -189,7 +192,7 @@ export default function AuthModal() {
                     marginBottom: '0.375rem',
                   }}
                 >
-                  {mode === 'register' ? '!Cuenta creada!' : '!Bienvenido de vuelta!'}
+                  {mode === 'register' ? '¡Cuenta creada!' : '¡Bienvenido de vuelta!'}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
                   Accediendo a tu plataforma...
@@ -236,7 +239,9 @@ export default function AuthModal() {
                       marginBottom: '0.375rem',
                     }}
                   >
-                    {mode === 'login' ? 'Accede a tus herramientas' : 'Crea tu cuenta gratuita'}
+                    {mode === 'login'
+                      ? (orgMode ? 'Acceso para organizaciones' : 'Accede a tus herramientas')
+                      : 'Crea tu cuenta gratuita'}
                   </h2>
                   <p
                     style={{
@@ -247,7 +252,9 @@ export default function AuthModal() {
                     }}
                   >
                     {mode === 'login'
-                      ? <>+30 herramientas operativas para startups de impacto, listas para usar.</>
+                      ? (orgMode
+                        ? <>Ingresa las credenciales proporcionadas por S4C.</>
+                        : <>+30 herramientas operativas para startups de impacto, listas para usar.</>)
                       : <>Accede a la Plataforma <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> sin costo.</>}
                   </p>
                 </div>
@@ -283,7 +290,7 @@ export default function AuthModal() {
                     <InputField
                       icon={<Lock size={15} color="#9CA3AF" />}
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Contrasena (min. 6 caracteres)"
+                      placeholder="Contraseña (mín. 6 caracteres)"
                       value={form.password}
                       onChange={set('password')}
                       autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -376,38 +383,65 @@ export default function AuthModal() {
                     textAlign: 'center',
                   }}
                 >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      color: 'var(--color-text-secondary)',
-                    }}
-                  >
-                    {mode === 'login' ? 'Aun no tienes cuenta?' : 'Ya tienes cuenta?'}{' '}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode(mode === 'login' ? 'register' : 'login')
-                      setError('')
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      fontWeight: 600,
-                      color: '#059669',
-                      cursor: 'pointer',
-                      textDecoration: 'underline',
-                      textUnderlineOffset: 2,
-                    }}
-                  >
-                    {mode === 'login' ? 'Registrate gratis' : 'Iniciar sesion'}
-                  </button>
+                  {orgMode ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOrgMode(false)
+                        setForm({ email: '', password: '', name: '', startup: '' })
+                        setError('')
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        fontWeight: 600,
+                        color: '#059669',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        textUnderlineOffset: 2,
+                      }}
+                    >
+                      Volver al login normal
+                    </button>
+                  ) : (
+                    <>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.8125rem',
+                          color: 'var(--color-text-secondary)',
+                        }}
+                      >
+                        {mode === 'login' ? '¿Aún no tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode(mode === 'login' ? 'register' : 'login')
+                          setOrgMode(false)
+                          setError('')
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.8125rem',
+                          fontWeight: 600,
+                          color: '#059669',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          textUnderlineOffset: 2,
+                        }}
+                      >
+                        {mode === 'login' ? 'Regístrate gratis' : 'Iniciar sesión'}
+                      </button>
+                    </>
+                  )}
                 </div>
 
-                {mode === 'login' && (
+                {mode === 'login' && !orgMode && (
                   <div
                     style={{
                       paddingTop: '0.75rem',
@@ -417,7 +451,7 @@ export default function AuthModal() {
                     <button
                       type="button"
                       onClick={() => {
-                        setMode('login')
+                        setOrgMode(true)
                         setForm({ email: '', password: '', name: '', startup: '' })
                         setError('')
                       }}

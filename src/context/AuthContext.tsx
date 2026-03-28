@@ -230,9 +230,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: mapSupabaseError(error.message) }
     }
 
-    if (data.user && data.session) {
+    if (data.user) {
       const profile = await loadProfile(data.user.id)
-      setAppUser(profile ?? fallbackAppUser(data.session))
+      if (data.session) {
+        setAppUser(profile ?? fallbackAppUser(data.session))
+      } else if (profile) {
+        setAppUser(profile)
+      }
     }
 
     return {}

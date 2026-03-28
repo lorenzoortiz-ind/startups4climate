@@ -40,8 +40,9 @@ const STAGE_ICONS = {
 const NAV_TABS = [
   { label: 'Herramientas', href: '/tools', active: true },
   { label: 'Recursos', href: '/tools/recursos', active: false },
-  { label: 'Productos', href: '/tools/productos', active: false },
-  { label: 'Servicios', href: '/tools/servicios', active: false },
+  { label: 'Mentor AI', href: '/tools/mentor', active: false },
+  { label: 'RADAR', href: '/tools/radar', active: false },
+  { label: 'Oportunidades', href: '/tools/oportunidades', active: false },
 ]
 
 /* ─── Category color mapping ─── */

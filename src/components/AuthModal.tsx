@@ -181,7 +181,7 @@ export default function AuthModal() {
                     marginBottom: '0.375rem',
                   }}
                 >
-                  {mode === 'register' ? '¡Cuenta creada!' : '¡Bienvenido de vuelta!'}
+                  {mode === 'register' ? '!Cuenta creada!' : '!Bienvenido de vuelta!'}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
                   Accediendo a tu plataforma...
@@ -275,7 +275,7 @@ export default function AuthModal() {
                     <InputField
                       icon={<Lock size={15} color="#9CA3AF" />}
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Contraseña (mín. 6 caracteres)"
+                      placeholder="Contrasena (min. 6 caracteres)"
                       value={form.password}
                       onChange={set('password')}
                       autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -375,7 +375,7 @@ export default function AuthModal() {
                       color: 'var(--color-text-secondary)',
                     }}
                   >
-                    {mode === 'login' ? '¿Aún no tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
+                    {mode === 'login' ? 'Aun no tienes cuenta?' : 'Ya tienes cuenta?'}{' '}
                   </span>
                   <button
                     type="button"
@@ -395,7 +395,7 @@ export default function AuthModal() {
                       textUnderlineOffset: 2,
                     }}
                   >
-                    {mode === 'login' ? 'Regístrate gratis' : 'Iniciar sesión'}
+                    {mode === 'login' ? 'Registrate gratis' : 'Iniciar sesion'}
                   </button>
                 </div>
               </motion.div>

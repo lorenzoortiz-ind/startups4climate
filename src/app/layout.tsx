@@ -25,44 +25,23 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Startups4Climate | El Sistema Operativo para Escalar Soluciones Climáticas en Latam',
-  description:
-    'Plataforma de herramientas operativas para fundadores de climate tech en Latinoamérica. Diagnóstico inteligente, recursos especializados y rutas de capital adaptadas a tu etapa.',
+  title: 'Startups4Climate | Ecosistema all-in-one para startups de impacto en LATAM',
+  description: 'Plataforma gratuita con +30 herramientas, mentores AI por vertical, oportunidades personalizadas y tendencias del ecosistema. Para founders independientes y programas de incubación en Latinoamérica.',
   keywords: [
-    'startups climáticas',
-    'climate tech',
-    'investor readiness',
-    'Latam',
-    'blended finance',
-    'fondos climáticos',
-    'fundraising',
-    'FOAK',
-    'deep tech',
+    'startups LATAM', 'herramientas para startups', 'incubadora virtual',
+    'aceleradora startups', 'emprendimiento latinoamérica', 'startup tools',
+    'mentor AI startups', 'grants startups', 'lean canvas español',
+    'plataforma emprendimiento', 'startups de impacto'
   ],
   authors: [{ name: 'Redesign Lab' }],
   openGraph: {
     type: 'website',
     url: 'https://startups4climate.org',
-    title: 'Startups4Climate | El Sistema Operativo para Escalar Soluciones Climáticas',
-    description:
-      'Diagnostica tu Climate Readiness en 5 minutos. Herramientas operativas para fundadores de climate tech en Latinoamérica.',
+    title: 'Startups4Climate | Ecosistema para startups de impacto en LATAM',
+    description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
     siteName: 'Startups4Climate',
-    images: [
-      {
-        url: 'https://startups4climate.org/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Startups4Climate — Climate Tech Toolkit',
-      },
-    ],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Startups4Climate | Climate Readiness para Latam',
-    description:
-      'Diagnostica tu Climate Readiness en 5 minutos.',
-    images: ['https://startups4climate.org/og-image.png'],
-  },
+  twitter: { card: 'summary_large_image' },
   metadataBase: new URL('https://startups4climate.org'),
 }
 

@@ -35,6 +35,34 @@
   --color-warning:  #D97706;
   --color-error:    #DC2626;
 
+  /* Colores por vertical (NUEVO) */
+  --color-vertical-fintech:       #3B82F6;
+  --color-vertical-healthtech:    #EF4444;
+  --color-vertical-edtech:        #8B5CF6;
+  --color-vertical-agritech:      #22C55E;
+  --color-vertical-cleantech:     #059669;
+  --color-vertical-biotech:       #06B6D4;
+  --color-vertical-logistics:     #F97316;
+  --color-vertical-saas:          #6366F1;
+  --color-vertical-social:        #EC4899;
+  --color-vertical-other:         #6B7280;
+
+  /* Chat AI */
+  --color-chat-user-bg:           #F0FDF4;
+  --color-chat-assistant-bg:      #F8FAFC;
+  --color-chat-input-bg:          #FFFFFF;
+  --color-chat-input-border:      #E2E8F0;
+
+  /* Admin panel */
+  --color-admin-sidebar-bg:       #1E293B;
+  --color-admin-sidebar-text:     #CBD5E1;
+  --color-admin-sidebar-active:   #059669;
+
+  /* Match score */
+  --color-match-high:             #059669;
+  --color-match-medium:           #D97706;
+  --color-match-low:              #9CA3AF;
+
   /* Shadows */
   --shadow-sm:       0 1px 2px rgba(0,0,0,0.04);
   --shadow-card:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
@@ -79,6 +107,12 @@
 
   --gradient-hero: linear-gradient(135deg, #1a1520 0%, #181a22 30%, #161820 60%, #121a18 100%);
   --gradient-warm: linear-gradient(135deg, #1a1520 0%, #1a1818 50%, #121a18 100%);
+
+  --color-chat-user-bg:         #1A2E1A;
+  --color-chat-assistant-bg:    #1C1E28;
+  --color-chat-input-bg:        #23262F;
+  --color-chat-input-border:    #2A2D38;
+  --color-admin-sidebar-bg:     #0F172A;
 }
 
 @theme inline {

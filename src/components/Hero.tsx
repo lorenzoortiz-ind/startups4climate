@@ -10,7 +10,6 @@ export default function Hero() {
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
   const prefersReducedMotion = useReducedMotion()
-  const noMotion = prefersReducedMotion ? false : undefined
   return (
     <section
       style={{
@@ -93,7 +92,7 @@ export default function Hero() {
                 }}
               >
                 <Zap size={14} strokeWidth={2} />
-                Plataforma para startups de impacto en LATAM
+                Ecosistema all-in-one para startups de impacto
               </span>
             </motion.div>
 
@@ -111,9 +110,9 @@ export default function Hero() {
                 marginBottom: '1.5rem',
               }}
             >
-              Lanza tu startup de impacto{' '}
+              Tu startup de impacto merece{' '}
               <span className="gradient-text">
-                con las herramientas correctas
+                la misma infraestructura que las de Silicon Valley
               </span>
             </motion.h1>
 
@@ -130,9 +129,9 @@ export default function Hero() {
                 marginBottom: '2rem',
               }}
             >
-              +20 herramientas desde la idea hasta el negocio validado,
-              organizadas en 4 etapas. Con acceso libre para cualquier
-              founder en Latinoamérica.
+              Herramientas interactivas, mentores AI por vertical, oportunidades
+              personalizadas y radar del ecosistema. Todo en un solo lugar,
+              diseñado para founders en Latinoamérica.
             </motion.p>
 
             <motion.div
@@ -160,11 +159,11 @@ export default function Hero() {
                   boxShadow: '0 4px 16px rgba(5,150,105,0.3)',
                 }}
               >
-                {user ? 'Ir a mi plataforma' : 'Acceder a la plataforma'}
+                {user ? 'Ir a mi plataforma' : 'Acceder gratis'}
                 <ArrowRight size={18} />
               </button>
               <a
-                href="#diagnostico"
+                href="#organizaciones"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -181,7 +180,7 @@ export default function Hero() {
                   transition: 'all 0.2s ease',
                 }}
               >
-                Diagnóstico rápido
+                Para organizaciones
               </a>
             </motion.div>
 
@@ -199,13 +198,17 @@ export default function Hero() {
               }}
             >
               {[
-                { value: 20, prefix: '+', suffix: '', label: 'Herramientas' },
-                { value: 4, prefix: '', suffix: '', label: 'Etapas' },
-                { value: 100, prefix: '', suffix: '%', label: 'Gratuito' },
+                { value: 30, prefix: '+', suffix: '', label: 'Herramientas' },
+                { value: 0, prefix: '', suffix: '', label: 'AI personalizado', customDisplay: 'AI' },
+                { value: 100, prefix: '', suffix: '%', label: 'Gratuito para founders' },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: '#059669' }}>
-                    <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} duration={1.5} />
+                    {stat.customDisplay ? (
+                      <span>{stat.customDisplay}</span>
+                    ) : (
+                      <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} duration={1.5} />
+                    )}
                   </div>
                   <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                     {stat.label}

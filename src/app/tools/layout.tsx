@@ -14,6 +14,12 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronRight,
+  Bot,
+  Radio,
+  Target,
+  FileText,
+  BookOpen,
+  User,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -381,6 +387,78 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
         }}
       />
 
+      {/* Featured tools */}
+      {[
+        { label: 'Mentor AI', icon: Bot, href: '/tools/mentor', color: '#059669' },
+        { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#6366F1' },
+        { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#D97706' },
+        { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0891B2' },
+      ].map((item) => {
+        const active = pathname === item.href
+        const IconComp = item.icon
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 0.75rem',
+              borderRadius: 8,
+              background: active ? `${item.color}0D` : 'transparent',
+              border: active ? `1px solid ${item.color}25` : '1px solid transparent',
+              textDecoration: 'none',
+              marginBottom: '0.125rem',
+              transition: 'all 0.15s',
+            }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.background = 'transparent'
+            }}
+          >
+            <IconComp size={15} color={active ? item.color : '#9CA3AF'} />
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                fontWeight: active ? 600 : 400,
+                color: active ? item.color : 'var(--color-text-secondary)',
+                flex: 1,
+              }}
+            >
+              {item.label}
+            </span>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '1px 6px',
+                borderRadius: 9999,
+                background: '#059669',
+                color: 'white',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.5625rem',
+                fontWeight: 700,
+                lineHeight: 1.6,
+              }}
+            >
+              Nuevo
+            </span>
+          </Link>
+        )
+      })}
+
+      <div
+        style={{
+          height: 1,
+          background: 'var(--color-border)',
+          margin: '0.5rem 0.375rem 0.75rem',
+        }}
+      />
+
       {/* Tools by stage */}
       {([1, 2, 3] as const).map((stage) => (
         <StageSidebarSection
@@ -395,6 +473,66 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       {/* Bottom actions */}
       <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
         <div style={{ height: 1, background: 'var(--color-border)', margin: '0 0.375rem 1rem' }} />
+
+        {/* Recursos */}
+        <Link
+          href="/tools/recursos"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            background: pathname === '/tools/recursos' ? 'rgba(5,150,105,0.07)' : 'transparent',
+            border: pathname === '/tools/recursos' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+            textDecoration: 'none',
+            color: pathname === '/tools/recursos' ? '#059669' : 'var(--color-text-muted)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            fontWeight: pathname === '/tools/recursos' ? 600 : 400,
+            transition: 'all 0.15s',
+            marginBottom: '0.25rem',
+          }}
+          onMouseEnter={(e) => {
+            if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-primary)'
+          }}
+          onMouseLeave={(e) => {
+            if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-muted)'
+          }}
+        >
+          <BookOpen size={13} />
+          Recursos
+        </Link>
+
+        {/* Perfil */}
+        <Link
+          href="/tools/perfil"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            background: pathname === '/tools/perfil' ? 'rgba(5,150,105,0.07)' : 'transparent',
+            border: pathname === '/tools/perfil' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+            textDecoration: 'none',
+            color: pathname === '/tools/perfil' ? '#059669' : 'var(--color-text-muted)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            fontWeight: pathname === '/tools/perfil' ? 600 : 400,
+            transition: 'all 0.15s',
+            marginBottom: '0.75rem',
+          }}
+          onMouseEnter={(e) => {
+            if (pathname !== '/tools/perfil') e.currentTarget.style.color = 'var(--color-text-primary)'
+          }}
+          onMouseLeave={(e) => {
+            if (pathname !== '/tools/perfil') e.currentTarget.style.color = 'var(--color-text-muted)'
+          }}
+        >
+          <User size={13} />
+          Perfil
+        </Link>
         <DarkModeToggle />
         <Link
           href="/"

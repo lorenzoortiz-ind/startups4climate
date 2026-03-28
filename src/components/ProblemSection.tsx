@@ -1,6 +1,37 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { UserX, Laptop, BarChart3 } from 'lucide-react'
+
+const problems = [
+  {
+    icon: UserX,
+    title: 'Founders sin infraestructura',
+    description:
+      'En Latinoamérica hay talento sobrado para construir startups de impacto. Lo que falta son herramientas estructuradas, metodología accesible y acompañamiento que no dependa de vivir en la ciudad correcta o conocer a las personas indicadas.',
+    color: '#DC2626',
+    bg: 'rgba(220,38,38,0.06)',
+    borderColor: '#DC2626',
+  },
+  {
+    icon: Laptop,
+    title: 'Incubadoras sin tecnología',
+    description:
+      'Las incubadoras y aceleradoras hacen un trabajo fundamental, pero muchas gestionan sus cohortes con hojas de cálculo y correos. Sin visibilidad real del progreso de cada startup, el acompañamiento pierde precisión y escala.',
+    color: '#D97706',
+    bg: 'rgba(217,119,6,0.06)',
+    borderColor: '#D97706',
+  },
+  {
+    icon: BarChart3,
+    title: 'Gobiernos sin visibilidad',
+    description:
+      'Los programas gubernamentales de innovación canalizan recursos importantes hacia el emprendimiento, pero carecen de herramientas para medir impacto real. Sin datos estructurados, es difícil justificar inversión y mejorar las políticas.',
+    color: '#7C3AED',
+    bg: 'rgba(124,58,237,0.06)',
+    borderColor: '#7C3AED',
+  },
+]
 
 export default function ProblemSection() {
   return (
@@ -16,7 +47,7 @@ export default function ProblemSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.5 }}
-          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
+          style={{ textAlign: 'center', marginBottom: '1rem' }}
         >
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -26,92 +57,84 @@ export default function ProblemSection() {
             letterSpacing: '-0.02em',
             color: 'var(--color-text-primary)',
           }}>
-            El acceso define quién puede emprender
+            Tres brechas que frenan la innovación en la región
           </h2>
         </motion.div>
 
-        {/* Two problem cards */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{
+            textAlign: 'center',
+            maxWidth: 680,
+            margin: '0 auto 3.5rem',
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.7,
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          El talento emprendedor está distribuido por toda Latinoamérica. La infraestructura para
+          desarrollarlo, no.
+        </motion.p>
+
+        {/* Three problem cards */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '2rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '1.5rem',
           marginBottom: '3rem',
-        }} className="lg:!grid-cols-2">
-          {/* Card 1: El capital */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5 }}
-            style={{
-              background: 'white',
-              borderRadius: 20,
-              border: '1px solid var(--color-border)',
-              borderTop: '3px solid #DC2626',
-              padding: '2.5rem 2rem',
-            }}
-          >
-            <h3 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.5rem',
-              fontWeight: 700,
-              lineHeight: 1.2,
-              letterSpacing: '-0.01em',
-              color: 'var(--color-text-primary)',
-              marginBottom: '1.25rem',
-            }}>
-              El capital
-            </h3>
-            <p style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '1rem',
-              lineHeight: 1.75,
-              color: 'var(--color-text-secondary)',
-            }}>
-              La inversión de venture capital existe a escala global, pero apenas el 2% llega a
-              Latinoamérica. Los founders de la región enfrentan barreras estructurales para acceder
-              a financiamiento que sus contrapartes en Silicon Valley simplemente no tienen: falta de
-              redes, desconexión geográfica y ecosistemas de capital aún incipientes.
-            </p>
-          </motion.div>
-
-          {/* Card 2: El conocimiento */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            style={{
-              background: 'white',
-              borderRadius: 20,
-              border: '1px solid var(--color-border)',
-              borderTop: '3px solid #D97706',
-              padding: '2.5rem 2rem',
-            }}
-          >
-            <h3 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1.5rem',
-              fontWeight: 700,
-              lineHeight: 1.2,
-              letterSpacing: '-0.01em',
-              color: 'var(--color-text-primary)',
-              marginBottom: '1.25rem',
-            }}>
-              El conocimiento
-            </h3>
-            <p style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '1rem',
-              lineHeight: 1.75,
-              color: 'var(--color-text-secondary)',
-            }}>
-              Las mejores metodologías, frameworks y herramientas para construir startups existen,
-              pero están encerradas detrás de programas costosos, contenido exclusivamente en inglés
-              o redes que dependen de la geografía. El talento está distribuido; el acceso al
-              conocimiento, no.
-            </p>
-          </motion.div>
+        }}>
+          {problems.map((problem, i) => (
+            <motion.div
+              key={problem.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              style={{
+                background: 'white',
+                borderRadius: 20,
+                border: '1px solid var(--color-border)',
+                borderTop: `3px solid ${problem.borderColor}`,
+                padding: '2.5rem 2rem',
+              }}
+            >
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 12,
+                background: problem.bg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.25rem',
+              }}>
+                <problem.icon size={24} strokeWidth={1.5} color={problem.color} />
+              </div>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                lineHeight: 1.2,
+                letterSpacing: '-0.01em',
+                color: 'var(--color-text-primary)',
+                marginBottom: '1rem',
+              }}>
+                {problem.title}
+              </h3>
+              <p style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.9375rem',
+                lineHeight: 1.75,
+                color: 'var(--color-text-secondary)',
+              }}>
+                {problem.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
 
         {/* Bridge message */}
@@ -136,25 +159,13 @@ export default function ProblemSection() {
             lineHeight: 1.75,
             color: 'var(--color-text-secondary)',
           }}>
-            Las incubadoras y aceleradoras hacen un trabajo fundamental, pero su capacidad es
-            limitada. Millones de personas con ideas transformadoras quedan fuera. Esta plataforma
-            existe para que{' '}
+            Construimos una plataforma que atiende los tres lados del problema:{' '}
             <span style={{ fontWeight: 700, color: '#059669' }}>
-              cualquier founder en Latinoamérica, con acceso a internet
-            </span>
-            , pueda desarrollar su startup con herramientas de clase mundial.
+              herramientas para founders, tecnología para organizaciones y datos para quienes diseñan políticas de innovación
+            </span>.
           </p>
         </motion.div>
       </div>
-
-      {/* Responsive: stack columns on mobile */}
-      <style>{`
-        @media (max-width: 768px) {
-          #problema > div:first-child {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   )
 }

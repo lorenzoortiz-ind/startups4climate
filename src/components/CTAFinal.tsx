@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, LayoutDashboard } from 'lucide-react'
+import { ArrowRight, LayoutDashboard, Mail } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 
@@ -47,7 +47,7 @@ export default function CTAFinal() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Tu idea puede cambiar Latinoamerica. Nosotros te damos las herramientas para lograrlo.
+            Tu idea puede cambiar Latinoamérica. Te damos el ecosistema all-in-one para lograrlo.
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -57,9 +57,9 @@ export default function CTAFinal() {
             maxWidth: 520,
             margin: '0 auto 2rem',
           }}>
-            24 herramientas para llevarte de la idea al negocio validado. Desde la
-            segmentacion de mercado hasta el pitch deck y fundraising. Acceso gratuito,
-            sin filtros, desde cualquier lugar.
+            +30 herramientas gratuitas, mentores AI por vertical y oportunidades
+            personalizadas. De la idea al negocio validado, desde cualquier lugar
+            de Latinoamérica.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
             {user ? (
@@ -85,50 +85,48 @@ export default function CTAFinal() {
                 <LayoutDashboard size={20} /> Ir a mi Plataforma
               </button>
             ) : (
-              <>
-                <button
-                  onClick={() => openAuthModal()}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '1rem 2.5rem',
-                    borderRadius: 9999,
-                    background: '#059669',
-                    color: 'white',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 20px rgba(5,150,105,0.3)',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  Acceder a la Plataforma <ArrowRight size={20} />
-                </button>
-                <a
-                  href="#diagnostico"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '1rem 2rem',
-                    borderRadius: 9999,
-                    background: 'transparent',
-                    color: 'var(--color-text-secondary)',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    border: '1px solid var(--color-border)',
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  Diagnóstico Rápido
-                </a>
-              </>
+              <button
+                onClick={() => openAuthModal()}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '1rem 2.5rem',
+                  borderRadius: 9999,
+                  background: '#059669',
+                  color: 'white',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 20px rgba(5,150,105,0.3)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                Acceder gratis <ArrowRight size={20} />
+              </button>
             )}
+            <a
+              href="mailto:hello@redesignlab.org"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '1rem 2rem',
+                borderRadius: 9999,
+                background: 'transparent',
+                color: 'var(--color-text-secondary)',
+                fontFamily: 'var(--font-body)',
+                fontSize: '1rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+                border: '1px solid var(--color-border)',
+                transition: 'all 0.2s',
+              }}
+            >
+              <Mail size={18} /> Solicitar demo
+            </a>
           </div>
         </motion.div>
       </div>

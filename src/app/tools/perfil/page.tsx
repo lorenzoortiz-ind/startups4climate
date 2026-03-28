@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Save, User, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { STAGE_META } from '@/lib/tools-data'
+import { supabase } from '@/lib/supabase'
 
 const ROLE_OPTIONS = [
   'CEO / Founder',
@@ -16,10 +17,46 @@ const ROLE_OPTIONS = [
   'Otro',
 ]
 
+const VERTICAL_OPTIONS = [
+  { value: 'fintech', label: 'Fintech' },
+  { value: 'healthtech', label: 'Healthtech' },
+  { value: 'edtech', label: 'Edtech' },
+  { value: 'agritech_foodtech', label: 'Agritech / Foodtech' },
+  { value: 'cleantech_climatech', label: 'Cleantech / Climatech' },
+  { value: 'biotech_deeptech', label: 'Biotech / Deeptech' },
+  { value: 'logistics_mobility', label: 'Log\u00edstica / Movilidad' },
+  { value: 'saas_enterprise', label: 'SaaS / Enterprise' },
+  { value: 'social_impact', label: 'Impacto Social' },
+  { value: 'other', label: 'Otro' },
+]
+
+const LATAM_COUNTRIES = [
+  'Argentina',
+  'Bolivia',
+  'Brasil',
+  'Chile',
+  'Colombia',
+  'Costa Rica',
+  'Cuba',
+  'Ecuador',
+  'El Salvador',
+  'Guatemala',
+  'Honduras',
+  'M\u00e9xico',
+  'Nicaragua',
+  'Panam\u00e1',
+  'Paraguay',
+  'Per\u00fa',
+  'Puerto Rico',
+  'Rep\u00fablica Dominicana',
+  'Uruguay',
+  'Venezuela',
+]
+
 const STAGE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  '1': { label: 'Pre-incubación', color: STAGE_META[1].color, bg: STAGE_META[1].bg },
-  '2': { label: 'Incubación', color: STAGE_META[2].color, bg: STAGE_META[2].bg },
-  '3': { label: 'Aceleración', color: STAGE_META[3].color, bg: STAGE_META[3].bg },
+  '1': { label: 'Pre-incubaci\u00f3n', color: STAGE_META[1].color, bg: STAGE_META[1].bg },
+  '2': { label: 'Incubaci\u00f3n', color: STAGE_META[2].color, bg: STAGE_META[2].bg },
+  '3': { label: 'Aceleraci\u00f3n', color: STAGE_META[3].color, bg: STAGE_META[3].bg },
   '4': { label: 'Escalamiento', color: STAGE_META[4].color, bg: STAGE_META[4].bg },
 }
 
@@ -35,6 +72,13 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
   transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
   boxSizing: 'border-box' as const,
+}
+
+const readOnlyStyle: React.CSSProperties = {
+  ...inputStyle,
+  background: 'var(--color-bg-muted, #f3f4f6)',
+  color: 'var(--color-text-secondary, #6B7280)',
+  cursor: 'not-allowed',
 }
 
 const selectStyle: React.CSSProperties = {
@@ -56,14 +100,20 @@ const labelStyle: React.CSSProperties = {
 }
 
 export default function PerfilPage() {
-  const { user } = useAuth()
+  const { user, appUser, updateProfile } = useAuth()
 
   const [nombre, setNombre] = useState('')
   const [startupName, setStartupName] = useState('')
-  const [role, setRole] = useState('')
-  const [linkedin, setLinkedin] = useState('')
   const [descripcion, setDescripcion] = useState('')
+  const [vertical, setVertical] = useState('')
+  const [country, setCountry] = useState('')
+  const [phone, setPhone] = useState('')
+  const [linkedin, setLinkedin] = useState('')
+  const [website, setWebsite] = useState('')
+  const [role, setRole] = useState('')
+  const [teamSize, setTeamSize] = useState('')
   const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -77,38 +127,52 @@ export default function PerfilPage() {
         if (extra.role) setRole(extra.role)
         if (extra.linkedin) setLinkedin(extra.linkedin)
         if (extra.descripcion) setDescripcion(extra.descripcion)
+        if (extra.vertical) setVertical(extra.vertical)
+        if (extra.country) setCountry(extra.country)
+        if (extra.phone) setPhone(extra.phone)
+        if (extra.website) setWebsite(extra.website)
+        if (extra.teamSize) setTeamSize(String(extra.teamSize))
       } catch {
         // ignore
       }
     }
   }, [user])
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!user) return
+    setSaving(true)
 
-    // Update user data in s4c_session localStorage
-    try {
-      const usersRaw = localStorage.getItem('s4c_users')
-      if (usersRaw) {
-        const users = JSON.parse(usersRaw)
-        const record = users[user.email]
-        if (record) {
-          record.user.name = nombre
-          record.user.startup = startupName
-          users[user.email] = record
-          localStorage.setItem('s4c_users', JSON.stringify(users))
-        }
+    // Update profiles table via auth context
+    const result = await updateProfile({
+      full_name: nombre,
+      startup_name: startupName,
+    })
+
+    // Save extra profile fields to localStorage
+    const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize }
+    localStorage.setItem('s4c_profile_extra', JSON.stringify(extraData))
+
+    // Also try to update startups table in Supabase (best effort)
+    if (appUser) {
+      try {
+        await supabase.from('startups').upsert(
+          {
+            user_id: appUser.id,
+            name: startupName,
+            description: descripcion,
+            vertical,
+            country,
+            website,
+            team_size: teamSize ? Number(teamSize) : null,
+          },
+          { onConflict: 'user_id' }
+        )
+      } catch {
+        // Best effort - table may not exist yet
       }
-    } catch {
-      // ignore
     }
 
-    // Save extra profile fields
-    localStorage.setItem(
-      's4c_profile_extra',
-      JSON.stringify({ role, linkedin, descripcion })
-    )
-
+    setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }
@@ -177,7 +241,7 @@ export default function PerfilPage() {
               color: stageInfo.color,
             }}
           >
-            Tu startup está en la etapa de {stageInfo.label}
+            Tu startup est&aacute; en la etapa de {stageInfo.label}
           </div>
           <div
             style={{
@@ -219,6 +283,7 @@ export default function PerfilPage() {
         </h1>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Full name */}
           <div>
             <label style={labelStyle}>Nombre completo</label>
             <input
@@ -229,6 +294,18 @@ export default function PerfilPage() {
             />
           </div>
 
+          {/* Email (read-only) */}
+          <div>
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              value={user.email}
+              readOnly
+              style={readOnlyStyle}
+            />
+          </div>
+
+          {/* Startup name */}
           <div>
             <label style={labelStyle}>Nombre de la startup</label>
             <input
@@ -239,22 +316,95 @@ export default function PerfilPage() {
             />
           </div>
 
+          {/* Description */}
           <div>
-            <label style={labelStyle}>Rol en la startup</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              style={selectStyle}
-            >
-              <option value="">Selecciona tu rol</option>
-              {ROLE_OPTIONS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
+            <label style={labelStyle}>Descripci&oacute;n</label>
+            <textarea
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder="Cu&eacute;ntanos brevemente sobre tu startup y lo que est&aacute;s construyendo..."
+              rows={4}
+              style={{
+                ...inputStyle,
+                resize: 'vertical' as const,
+                minHeight: 100,
+              }}
+            />
           </div>
 
+          {/* Two-column grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '1.25rem',
+            }}
+          >
+            {/* Vertical */}
+            <div>
+              <label style={labelStyle}>Vertical</label>
+              <select
+                value={vertical}
+                onChange={(e) => setVertical(e.target.value)}
+                style={selectStyle}
+              >
+                <option value="">Selecciona tu vertical</option>
+                {VERTICAL_OPTIONS.map((v) => (
+                  <option key={v.value} value={v.value}>
+                    {v.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Country */}
+            <div>
+              <label style={labelStyle}>Pa&iacute;s</label>
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                style={selectStyle}
+              >
+                <option value="">Selecciona tu pa&iacute;s</option>
+                {LATAM_COUNTRIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label style={labelStyle}>Tel&eacute;fono</label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+52 55 1234 5678"
+                style={inputStyle}
+              />
+            </div>
+
+            {/* Role */}
+            <div>
+              <label style={labelStyle}>Rol en la startup</label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                style={selectStyle}
+              >
+                <option value="">Selecciona tu rol</option>
+                {ROLE_OPTIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* LinkedIn URL */}
           <div>
             <label style={labelStyle}>LinkedIn URL</label>
             <input
@@ -266,43 +416,84 @@ export default function PerfilPage() {
             />
           </div>
 
+          {/* Website */}
           <div>
-            <label style={labelStyle}>Descripción breve</label>
-            <textarea
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              placeholder="Cuéntanos brevemente sobre tu startup y lo que estás construyendo..."
-              rows={4}
-              style={{
-                ...inputStyle,
-                resize: 'vertical' as const,
-                minHeight: 100,
-              }}
+            <label style={labelStyle}>Sitio web</label>
+            <input
+              type="url"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://tustartup.com"
+              style={inputStyle}
             />
           </div>
 
+          {/* Team size */}
+          <div>
+            <label style={labelStyle}>Tama&ntilde;o del equipo</label>
+            <input
+              type="number"
+              min={1}
+              value={teamSize}
+              onChange={(e) => setTeamSize(e.target.value)}
+              placeholder="N&uacute;mero de personas en el equipo"
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Stage (read-only) */}
+          <div>
+            <label style={labelStyle}>Etapa (del diagn&oacute;stico)</label>
+            <div
+              style={{
+                ...readOnlyStyle,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}
+            >
+              <div
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: stageInfo.color,
+                  flexShrink: 0,
+                }}
+              />
+              {stageInfo.label}
+              {user.diagnosticScore != null && (
+                <span style={{ color: 'var(--color-text-muted)', marginLeft: 'auto', fontSize: '0.8125rem' }}>
+                  Puntaje: {user.diagnosticScore}/100
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Save button */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
             <button
               onClick={handleSave}
+              disabled={saving}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1.75rem',
                 borderRadius: 10,
-                background: '#059669',
+                background: saving ? '#6B7280' : '#059669',
                 color: 'white',
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 border: 'none',
-                cursor: 'pointer',
+                cursor: saving ? 'wait' : 'pointer',
                 boxShadow: '0 2px 10px rgba(5,150,105,0.25)',
                 transition: 'all 0.2s',
               }}
             >
               <Save size={16} />
-              Guardar cambios
+              {saving ? 'Guardando...' : 'Guardar cambios'}
             </button>
             {saved && (
               <motion.div

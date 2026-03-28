@@ -32,7 +32,7 @@ export const STAGE_META = {
   1: {
     name: 'Pre-incubación',
     subtitle: 'Ideación y Descubrimiento',
-    description: 'Encuentra tu idea, entiende tu mercado y define a tu cliente ideal. Aquí naces como startup.',
+    description: 'Encuentra tu idea, entiende tu mercado y define a tu cliente ideal. Aquí naces como startup. +30 herramientas te acompañan en cada paso.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.07)',
     border: 'rgba(124,58,237,0.18)',
@@ -41,7 +41,7 @@ export const STAGE_META = {
   2: {
     name: 'Incubación',
     subtitle: 'Validación y Producto',
-    description: 'Construye tu producto, cuantifica tu propuesta de valor y consigue tus primeros clientes reales.',
+    description: 'Construye tu producto, cuantifica tu propuesta de valor y consigue tus primeros clientes reales. +30 herramientas disponibles.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.07)',
     border: 'rgba(5,150,105,0.18)',
@@ -50,7 +50,7 @@ export const STAGE_META = {
   3: {
     name: 'Aceleración',
     subtitle: 'Modelo de Negocio y Crecimiento',
-    description: 'Diseña tu modelo de negocio, define tu pricing y estructura tu proceso de ventas para crecer.',
+    description: 'Diseña tu modelo de negocio, define tu pricing y estructura tu proceso de ventas para crecer. +30 herramientas disponibles.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.07)',
     border: 'rgba(217,119,6,0.18)',
@@ -59,7 +59,7 @@ export const STAGE_META = {
   4: {
     name: 'Escalamiento',
     subtitle: 'Producto, Plan y Fundraising',
-    description: 'Valida tus supuestos, define tu MVP, demuestra tracción y prepárate para escalar.',
+    description: 'Valida tus supuestos, define tu MVP, demuestra tracción y prepárate para escalar. +30 herramientas disponibles.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.07)',
     border: 'rgba(8,145,178,0.18)',
@@ -177,7 +177,7 @@ export const TOOLS: ToolDef[] = [
     stepNumber: 5,
   },
 
-  // ── Stage 2: Incubación (6 herramientas) ──────────────────────
+  // ── Stage 2: Incubación (8 herramientas) ──────────────────────
   {
     id: 'full-lifecycle-usecase',
     name: 'Caso de Uso del Ciclo Completo',
@@ -264,8 +264,36 @@ export const TOOLS: ToolDef[] = [
     outputs: ['Canvas completo en 1 página', 'Hipótesis clave identificadas', 'Métricas de validación'],
     stepNumber: 11,
   },
+  {
+    id: 'competitor-analysis',
+    name: 'Análisis de Competidores',
+    shortName: 'Competidores',
+    description:
+      'Mapea y analiza a tus competidores directos e indirectos para encontrar tu espacio único en el mercado.',
+    preambulo:
+      'Conocer a tu competencia no es opcional — es una ventaja estratégica. El análisis competitivo te ayuda a entender quién más está resolviendo el mismo problema (o uno similar), qué están haciendo bien, dónde fallan y dónde hay espacios sin cubrir. No se trata de copiar: se trata de diferenciarte con inteligencia. En LATAM, muchos mercados tienen competidores globales que no entienden las dinámicas locales — esa puede ser tu oportunidad.',
+    ...stageProps(2),
+    category: 'Estrategia',
+    estimatedTime: '25 min',
+    outputs: ['Mapa de competidores directos e indirectos', 'Matriz comparativa de features y precios', 'Espacios de oportunidad identificados'],
+    stepNumber: 12,
+  },
+  {
+    id: 'impact-metrics',
+    name: 'Métricas de Impacto',
+    shortName: 'Impacto',
+    description:
+      'Define y cuantifica el impacto social y ambiental de tu startup alineado a los Objetivos de Desarrollo Sostenible (ODS).',
+    preambulo:
+      'Medir el impacto no es un lujo — es una necesidad para startups que quieren atraer inversores de impacto, fondos climáticos y clientes conscientes. Las métricas de impacto te permiten demostrar con datos que tu startup genera un cambio positivo real. Alinearte a los ODS (Objetivos de Desarrollo Sostenible) de la ONU te da un framework reconocido internacionalmente para comunicar tu impacto. Los inversores cada vez más exigen métricas ESG y de impacto como parte de su due diligence.',
+    ...stageProps(2),
+    category: 'Estrategia',
+    estimatedTime: '25 min',
+    outputs: ['ODS alineados a tu startup', 'KPIs de impacto definidos', 'Framework de medición y reporte'],
+    stepNumber: 13,
+  },
 
-  // ── Stage 3: Aceleración (6 herramientas) ──────────────────────
+  // ── Stage 3: Aceleración (8 herramientas) ──────────────────────
   {
     id: 'decision-making-unit',
     name: 'Unidad de Decisión del Cliente (DMU)',
@@ -279,7 +307,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Mapa de la DMU con roles', 'Estrategia por stakeholder', 'Objeciones anticipadas por rol'],
     relatedService: 'Estrategia de ventas B2B',
-    stepNumber: 12,
+    stepNumber: 14,
   },
   {
     id: 'customer-acquisition-process',
@@ -293,7 +321,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Marketing',
     estimatedTime: '20 min',
     outputs: ['Funnel de adquisición completo', 'Tasas de conversión estimadas por etapa', 'Canales prioritarios identificados'],
-    stepNumber: 13,
+    stepNumber: 15,
   },
   {
     id: 'business-model-design',
@@ -308,7 +336,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Modelo de negocio seleccionado', 'Flujos de ingresos mapeados', 'Estructura de costos estimada'],
     relatedProduct: 'Modelamiento financiero profesional',
-    stepNumber: 15,
+    stepNumber: 16,
   },
   {
     id: 'pricing-framework',
@@ -322,7 +350,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Finanzas',
     estimatedTime: '20 min',
     outputs: ['Estructura de precios definida', 'Justificación basada en valor', 'Comparación con alternativas del mercado'],
-    stepNumber: 16,
+    stepNumber: 17,
   },
   {
     id: 'ltv-unit-economics',
@@ -337,7 +365,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['LTV calculado', 'COCA calculado', 'Ratio LTV/COCA', 'Payback period', 'Dashboard de unit economics'],
     relatedProduct: 'Dashboard financiero para inversores',
-    stepNumber: 17,
+    stepNumber: 18,
   },
   {
     id: 'sales-process-map',
@@ -352,10 +380,38 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Pipeline de ventas documentado', 'Scripts y templates por etapa', 'KPIs de ventas definidos'],
     relatedService: 'Workshop de ventas para founders',
-    stepNumber: 18,
+    stepNumber: 19,
+  },
+  {
+    id: 'okr-tracker',
+    name: 'OKR Tracker',
+    shortName: 'OKRs',
+    description:
+      'Define y da seguimiento a tus Objetivos y Resultados Clave (OKRs) para mantener foco y alineación en tu equipo.',
+    preambulo:
+      'Los OKRs (Objectives and Key Results) son el sistema de gestión que usan las startups más exitosas del mundo para mantener al equipo alineado y enfocado. Un Objetivo es lo que quieres lograr (cualitativo y ambicioso). Los Key Results son cómo mides el progreso (cuantitativos y verificables). Sin OKRs claros, los equipos pierden foco, trabajan en prioridades desalineadas y no pueden medir si están avanzando o girando en círculos.',
+    ...stageProps(3),
+    category: 'Estrategia',
+    estimatedTime: '20 min',
+    outputs: ['OKRs del trimestre definidos', 'Key Results con métricas medibles', 'Cadencia de seguimiento semanal'],
+    stepNumber: 20,
+  },
+  {
+    id: 'regulatory-compass',
+    name: 'Brújula Regulatoria',
+    shortName: 'Regulatorio',
+    description:
+      'Identifica las regulaciones clave que aplican a tu startup según tu vertical y país en LATAM.',
+    preambulo:
+      'En Latinoamérica, el entorno regulatorio puede ser tu mayor aliado o tu peor enemigo. Dependiendo de tu vertical (fintech, healthtech, cleantech, agritech, etc.) y del país donde operes, existen regulaciones específicas que pueden bloquear tu lanzamiento o darte una ventaja competitiva si las entiendes antes que la competencia. Esta herramienta te ayuda a mapear el panorama regulatorio de tu industria, identificar licencias y permisos necesarios, y anticipar cambios regulatorios que podrían afectar tu negocio.',
+    ...stageProps(3),
+    category: 'Estrategia',
+    estimatedTime: '25 min',
+    outputs: ['Mapa regulatorio por país y vertical', 'Licencias y permisos requeridos', 'Riesgos regulatorios y plan de mitigación'],
+    stepNumber: 21,
   },
 
-  // ── Stage 4: Escalamiento (6 herramientas) ─────────────────────
+  // ── Stage 4: Escalamiento (8 herramientas) ─────────────────────
   {
     id: 'key-assumptions',
     name: 'Identificación y Testeo de Supuestos',
@@ -368,7 +424,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['Lista priorizada de supuestos', 'Diseño de experimentos de validación', 'Criterios de éxito/fracaso por supuesto'],
-    stepNumber: 20,
+    stepNumber: 22,
   },
   {
     id: 'mvbp-definition',
@@ -383,7 +439,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Definición del MVBP', 'Features incluidas y excluidas', 'Roadmap de iteración post-lanzamiento'],
     relatedProduct: 'Desarrollo de MVP/prototipo',
-    stepNumber: 22,
+    stepNumber: 23,
   },
   {
     id: 'traction-validation',
@@ -397,7 +453,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Ventas',
     estimatedTime: '20 min',
     outputs: ['Evidencia de ventas reales', 'Métricas de retención y satisfacción', 'Testimoniales y casos de éxito'],
-    stepNumber: 23,
+    stepNumber: 24,
   },
   {
     id: 'product-plan-scaling',
@@ -411,7 +467,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Producto',
     estimatedTime: '25 min',
     outputs: ['Roadmap de producto a 12-18 meses', 'TAM de mercados adyacentes', 'Estrategia de bowling alley'],
-    stepNumber: 24,
+    stepNumber: 25,
   },
   {
     id: 'pitch-deck-builder',
@@ -426,7 +482,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '45 min',
     outputs: ['12 slides estructurados', 'Narrative arc validado', 'Talking points por slide'],
     relatedService: 'Revisión y coaching de Pitch Deck',
-    stepNumber: 25,
+    stepNumber: 26,
   },
   {
     id: 'cap-table-fundraising',
@@ -442,7 +498,36 @@ export const TOOLS: ToolDef[] = [
     outputs: ['Cap table multi-ronda', 'Dilución proyectada por ronda', 'Estrategia de fundraising documentada'],
     relatedProduct: 'Modelo financiero para inversores',
     relatedService: 'Asesoría de fundraising',
-    stepNumber: 26,
+    stepNumber: 27,
+  },
+  {
+    id: 'data-room-builder',
+    name: 'Data Room Builder',
+    shortName: 'Data Room',
+    description:
+      'Organiza y prepara tu Data Room virtual con todos los documentos que un inversor necesita para hacer due diligence.',
+    preambulo:
+      'El Data Room es la carpeta organizada con todos los documentos que un inversor revisa antes de decidir si invierte en tu startup. Incluye financieros, legales, métricas, contratos, cap table, proyecciones y más. Tener un Data Room listo y profesional antes de levantar capital te da una ventaja enorme: demuestra seriedad, acelera el proceso de due diligence y genera confianza. Los founders que improvisan su Data Room a última hora pierden semanas valiosas y proyectan desorganización.',
+    ...stageProps(4),
+    category: 'Finanzas',
+    estimatedTime: '30 min',
+    outputs: ['Checklist de documentos del Data Room', 'Estructura de carpetas organizada', 'Estado de completitud por documento'],
+    stepNumber: 28,
+  },
+  {
+    id: 'financial-model-builder',
+    name: 'Modelo Financiero',
+    shortName: 'Modelo Financiero',
+    description:
+      'Construye proyecciones financieras a 3-5 años con los supuestos clave que los inversores quieren ver.',
+    preambulo:
+      'Un modelo financiero no es un ejercicio de Excel — es la historia numérica de tu startup. Los inversores quieren ver que entiendes cómo tu negocio genera dinero, cuáles son tus drivers de crecimiento, cuándo alcanzarás breakeven y cuánto capital necesitas para llegar ahí. Un buen modelo financiero incluye proyecciones de ingresos, costos, flujo de caja y métricas clave (MRR, ARR, burn rate, runway). No necesita ser perfecto, pero sí coherente con tu tracción actual y tus supuestos de crecimiento.',
+    ...stageProps(4),
+    category: 'Finanzas',
+    estimatedTime: '35 min',
+    outputs: ['Proyecciones financieras a 3-5 años', 'Estado de resultados proyectado', 'Análisis de breakeven y runway'],
+    relatedProduct: 'Modelo financiero para inversores',
+    stepNumber: 29,
   },
 ]
 
@@ -455,4 +540,16 @@ export const TOOLS_BY_STAGE: Record<1 | 2 | 3 | 4, ToolDef[]> = {
 
 export function getToolById(id: string): ToolDef | undefined {
   return TOOLS.find((t) => t.id === id)
+}
+
+export const TOOL_TO_PROFILE_MAP: Record<string, (data: any) => Partial<any>> = {
+  'tam-calculator': (data) => ({ tam_usd: data.totalTAM }),
+  'ltv-unit-economics': (data) => ({ ltv: data.ltv, cac: data.cac }),
+  'pricing-framework': (data) => ({ revenue_model: data.selectedModel }),
+  'traction-validation': (data) => ({
+    has_paying_customers: (data.payingCustomers || 0) > 0,
+    paying_customers_count: data.payingCustomers || 0,
+    monthly_revenue: data.mrr || 0,
+  }),
+  'passion-purpose': (data) => ({ team_size: data.teamMembers?.length }),
 }

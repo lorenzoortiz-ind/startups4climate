@@ -5,13 +5,14 @@ import Link from 'next/link'
 const footerLinks = {
   plataforma: [
     { label: 'Diagnóstico gratuito', href: '#diagnostico' },
-    { label: 'Roadmap de herramientas', href: '#ciclo-de-vida' },
+    { label: 'Herramientas', href: '#plataforma' },
+    { label: 'Workbook', href: '/workbook', isPage: true },
     { label: 'Acceder a la plataforma', href: '/tools', isPage: true },
   ],
-  recursos: [
-    { label: 'Blog (coming soon)', href: '#' },
+  organizaciones: [
+    { label: 'Para organizaciones', href: '#organizaciones' },
+    { label: 'Solicitar demo', href: 'mailto:hello@redesignlab.org' },
     { label: 'Metodología', href: '#' },
-    { label: 'Stack Tecnológico', href: '/tools/recursos', isPage: true },
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },

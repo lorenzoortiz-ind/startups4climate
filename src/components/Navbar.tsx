@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LayoutDashboard } from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
+import { Menu, X, LayoutDashboard, ShieldCheck } from 'lucide-react'
+import { useAuth, type User } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 
-const navLinks = [
-  { label: 'Problema', href: '#problema' },
+const navLinks: { label: string; href: string; isPage?: boolean }[] = [
   { label: 'Plataforma', href: '#plataforma' },
-  { label: 'Ciclo de Vida', href: '#ciclo-de-vida' },
+  { label: 'Diagnóstico', href: '#diagnostico' },
+  { label: 'Quiénes somos', href: '#about' },
+  { label: 'Para organizaciones', href: '#organizaciones' },
+  { label: 'Workbook', href: '/workbook', isPage: true },
 ]
 
 export default function Navbar() {
@@ -158,25 +160,26 @@ export default function Navbar() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
-              <a
-                href="#diagnostico"
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleNavClick('#diagnostico')
-                }}
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  color: 'var(--color-text-secondary)',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-              >
-                Diagnóstico
-              </a>
+              {user && (user as User & { role?: string }).role === 'admin' && (
+                <Link
+                  href="/admin"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.375rem',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.8125rem',
+                    fontWeight: 500,
+                    color: 'var(--color-text-secondary)',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
+                >
+                  <ShieldCheck size={14} /> Panel admin
+                </Link>
+              )}
               {user ? (
                 <button
                   onClick={() => router.push('/tools')}
@@ -364,6 +367,21 @@ export default function Navbar() {
               </nav>
 
               <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {user && (user as User & { role?: string }).role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileOpen(false)}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                      width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999,
+                      backgroundColor: 'transparent', color: 'var(--color-text-secondary)',
+                      fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+                      border: '1px solid var(--color-border)', textDecoration: 'none',
+                    }}
+                  >
+                    <ShieldCheck size={16} /> Panel admin
+                  </Link>
+                )}
                 {user ? (
                   <button
                     onClick={() => { setMobileOpen(false); router.push('/tools') }}

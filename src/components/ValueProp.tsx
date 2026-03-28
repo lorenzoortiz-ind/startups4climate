@@ -1,38 +1,38 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Zap, Target, BookOpen, Globe } from 'lucide-react'
+import { Wrench, Bot, Radar, Gift } from 'lucide-react'
 
 const pillars = [
   {
-    icon: Zap,
-    title: 'Herramientas paso a paso',
-    subtitle: 'A tu ritmo, sin rigidez',
-    description: 'A tu ritmo, sin programas rígidos de 12 semanas. 24 herramientas que siguen una metodología probada basada en los 24 pasos del MIT Disciplined Entrepreneurship.',
+    icon: Wrench,
+    title: '+30 herramientas interactivas',
+    subtitle: 'Paso a paso, con marco conceptual',
+    description: 'Cada herramienta te guía desde la teoría hasta la ejecución. No necesitas un MBA: el marco conceptual viene incluido para que aprendas mientras construyes tu startup.',
     color: '#059669',
     bg: 'rgba(5,150,105,0.06)',
   },
   {
-    icon: Target,
-    title: 'Diagnóstico personalizado',
-    subtitle: 'Tu punto de partida exacto',
-    description: 'Evaluamos en qué etapa estás y te mostramos exactamente qué herramientas necesitas ahora. Sin perder tiempo en lo que no corresponde a tu momento.',
+    icon: Bot,
+    title: 'Mentores AI por vertical',
+    subtitle: 'Fintech, healthtech, climatetech y más',
+    description: 'Accede a mentores de inteligencia artificial especializados en tu industria. Recibe retroalimentación contextual sobre tu modelo de negocio, mercado y estrategia de crecimiento.',
     color: '#0891B2',
     bg: 'rgba(8,145,178,0.06)',
   },
   {
-    icon: BookOpen,
-    title: 'Marco conceptual incluido',
-    subtitle: 'No asumimos que ya sabes todo',
-    description: 'Cada herramienta viene con una explicación de por qué la necesitas y las bases teóricas detrás. Aprendes mientras construyes — no necesitas un MBA para empezar.',
+    icon: Radar,
+    title: 'RADAR del ecosistema',
+    subtitle: 'Noticias, regulaciones y tendencias',
+    description: 'Mantente al día con lo que está pasando en el ecosistema emprendedor de LATAM. Noticias relevantes, cambios regulatorios y tendencias de inversión, curados para ti.',
     color: '#7C3AED',
     bg: 'rgba(124,58,237,0.06)',
   },
   {
-    icon: Globe,
-    title: 'Acceso desde cualquier lugar',
-    subtitle: 'Democratización real',
-    description: 'Cualquier founder en Latinoamérica con internet puede acceder. Sin filtros, sin aplicaciones, sin esperar turno. La plataforma está disponible para ti hoy.',
+    icon: Gift,
+    title: 'Oportunidades personalizadas',
+    subtitle: 'Grants, competencias y fondos',
+    description: 'La plataforma identifica convocatorias, competencias, grants y fondos de inversión que coinciden con tu perfil, vertical y etapa. Deja de buscar oportunidades a ciegas.',
     color: '#D97706',
     bg: 'rgba(217,119,6,0.06)',
   },
@@ -63,7 +63,7 @@ export default function ValueProp() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            La Plataforma
+            La plataforma
           </span>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
@@ -74,7 +74,7 @@ export default function ValueProp() {
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}>
-            Todo lo que necesitas para construir tu startup de impacto
+            Un ecosistema completo para desarrollar tu startup
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -82,8 +82,8 @@ export default function ValueProp() {
             lineHeight: 1.7,
             color: 'var(--color-text-secondary)',
           }}>
-            La plataforma que democratiza el desarrollo de startups de impacto en Latinoamérica.
-            Herramientas estructuradas, metodología probada y acceso libre para cualquier founder.
+            No es solo un toolkit. Es la infraestructura que conecta herramientas, conocimiento,
+            inteligencia artificial y oportunidades reales en un solo lugar.
           </p>
         </motion.div>
 

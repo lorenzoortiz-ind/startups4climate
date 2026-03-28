@@ -14,7 +14,6 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronRight,
-  Bot,
   Radio,
   Target,
   FileText,
@@ -491,7 +490,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Featured tools */}
       {[
-        { label: 'Mentor AI', icon: Bot, href: '/tools/mentor', color: '#059669' },
         { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#6366F1' },
         { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#D97706' },
         { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0891B2' },

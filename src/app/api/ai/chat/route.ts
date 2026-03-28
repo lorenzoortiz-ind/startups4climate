@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Rate limit: max 30 messages per day
+    // Rate limit: max 30 conversations per day
     const today = new Date().toISOString().split('T')[0]
     const { count } = await supabase
       .from('ai_conversations')
@@ -56,35 +56,43 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Load startup context
+    // Load startup context (startups table uses founder_id, not user_id)
     const { data: startup } = await supabase
       .from('startups')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('founder_id', user.id)
+      .single()
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
       .single()
 
     const { data: progress } = await supabase
-      .from('tool_progress')
+      .from('tool_data')
       .select('*')
       .eq('user_id', user.id)
 
-    const startupContext = buildStartupContext(startup, progress)
+    const startupContext = buildStartupContext(startup, progress, profile)
 
     // Load conversation history if conversationId provided
     let history: Array<{ role: string; content: string }> = []
     if (conversationId) {
-      const { data: prevMessages } = await supabase
+      const { data: prevConv } = await supabase
         .from('ai_conversations')
-        .select('role, content')
-        .eq('conversation_id', conversationId)
-        .order('created_at', { ascending: true })
-        .limit(20)
+        .select('messages')
+        .eq('id', conversationId)
+        .single()
 
-      if (prevMessages) {
-        history = prevMessages.map((m) => ({
-          role: m.role,
-          content: m.content,
-        }))
+      if (prevConv?.messages && Array.isArray(prevConv.messages)) {
+        history = prevConv.messages
+          .filter((m: { role: string }) => m.role === 'user' || m.role === 'assistant')
+          .slice(-20)
+          .map((m: { role: string; content: string }) => ({
+            role: m.role,
+            content: m.content,
+          }))
       }
     }
 
@@ -114,26 +122,39 @@ export async function POST(request: NextRequest) {
         ? completion.choices[0]?.message?.content || 'Sin respuesta.'
         : 'Sin respuesta.'
 
-    // Generate conversation ID if not provided
-    const convId = conversationId || crypto.randomUUID()
+    // Save conversation - use the messages jsonb column
+    const newMessages = [
+      ...history,
+      { role: 'user', content: message, timestamp: new Date().toISOString() },
+      { role: 'assistant', content: aiResponse, timestamp: new Date().toISOString() },
+    ]
 
-    // Save user message
-    await supabase.from('ai_conversations').insert({
-      user_id: user.id,
-      conversation_id: convId,
-      agent_type: agentType,
-      role: 'user',
-      content: message,
-    })
+    let convId = conversationId
 
-    // Save assistant message
-    await supabase.from('ai_conversations').insert({
-      user_id: user.id,
-      conversation_id: convId,
-      agent_type: agentType,
-      role: 'assistant',
-      content: aiResponse,
-    })
+    if (conversationId) {
+      // Update existing conversation
+      await supabase
+        .from('ai_conversations')
+        .update({
+          messages: newMessages,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', conversationId)
+    } else {
+      // Create new conversation
+      const { data: newConv } = await supabase
+        .from('ai_conversations')
+        .insert({
+          user_id: user.id,
+          agent_type: agentType,
+          title: message.slice(0, 100),
+          messages: newMessages,
+        })
+        .select('id')
+        .single()
+
+      convId = newConv?.id || crypto.randomUUID()
+    }
 
     return Response.json({
       response: aiResponse,

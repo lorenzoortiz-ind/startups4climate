@@ -41,10 +41,17 @@ export default function AuthModal() {
     }
 
     setLoading(true)
-    const result =
-      mode === 'login'
-        ? await login(form.email, form.password)
-        : await register(form.email, form.password, form.name, form.startup)
+    let result: { error?: string }
+    try {
+      result =
+        mode === 'login'
+          ? await login(form.email, form.password)
+          : await register(form.email, form.password, form.name, form.startup)
+    } catch {
+      setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+      setLoading(false)
+      return
+    }
     setLoading(false)
 
     if (result.error) {
@@ -57,7 +64,7 @@ export default function AuthModal() {
         // Use full page navigation so the browser sends updated auth cookies
         // to the server middleware. router.push() does a client-side navigation
         // that skips cookie propagation, causing the middleware to reject the request.
-        window.location.href = '/tools'
+        window.location.href = mode === 'register' ? '/tools/completar-perfil' : '/tools'
       }, 1200)
     }
   }
@@ -399,6 +406,50 @@ export default function AuthModal() {
                     {mode === 'login' ? 'Registrate gratis' : 'Iniciar sesion'}
                   </button>
                 </div>
+
+                {mode === 'login' && (
+                  <div
+                    style={{
+                      paddingTop: '0.75rem',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('login')
+                        setForm({ email: '', password: '', name: '', startup: '' })
+                        setError('')
+                      }}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.375rem',
+                        background: 'none',
+                        border: '1px solid var(--color-border)',
+                        borderRadius: 8,
+                        padding: '0.5rem 1rem',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
+                        color: 'var(--color-text-secondary)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = '#059669'
+                        e.currentTarget.style.color = '#059669'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)'
+                        e.currentTarget.style.color = 'var(--color-text-secondary)'
+                      }}
+                    >
+                      <Building2 size={13} />
+                      Acceder como organización
+                    </button>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

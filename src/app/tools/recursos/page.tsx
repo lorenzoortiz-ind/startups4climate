@@ -15,6 +15,7 @@ interface Tool {
   name: string
   description: string
   tag: string
+  url: string
 }
 
 interface Stage {
@@ -43,29 +44,34 @@ const stages: Stage[] = [
         description:
           'Documentos, hojas de cálculo y presentaciones colaborativas. Gratis.',
         tag: 'Gratis',
+        url: 'https://workspace.google.com/',
       },
       {
         name: 'Notion',
         description:
           'Base de conocimiento y gestión de proyectos. Gratis para equipos pequeños.',
         tag: 'Gratis',
+        url: 'https://www.notion.so/',
       },
       {
         name: 'Claude',
         description:
           'Análisis profundo, investigación y estrategia con IA. Free tier disponible.',
         tag: 'Free tier',
+        url: 'https://claude.ai/',
       },
       {
         name: 'Canva',
         description:
           'Diseño de presentaciones, logos y materiales visuales. Gratis.',
         tag: 'Gratis',
+        url: 'https://www.canva.com/',
       },
       {
         name: 'WhatsApp Business',
         description: 'Comunicación con potenciales clientes. Gratis.',
         tag: 'Gratis',
+        url: 'https://business.whatsapp.com/',
       },
     ],
   },
@@ -83,28 +89,33 @@ const stages: Stage[] = [
         description:
           'Prototipado y diseño de interfaces. Gratis para hasta 3 proyectos.',
         tag: 'Gratis',
+        url: 'https://www.figma.com/',
       },
       {
         name: 'Typeform / Google Forms',
         description:
           'Encuestas y formularios de validación. Gratis.',
         tag: 'Gratis',
+        url: 'https://www.typeform.com/',
       },
       {
         name: 'Mailchimp / Brevo',
         description:
           'Email marketing para nutrir leads. Gratis hasta 300 envíos/día.',
         tag: 'Gratis',
+        url: 'https://mailchimp.com/',
       },
       {
         name: 'Trello / Linear',
         description: 'Gestión de tareas y sprints. Gratis.',
         tag: 'Gratis',
+        url: 'https://trello.com/',
       },
       {
         name: 'Calendly',
         description: 'Agenda reuniones automáticamente. Gratis.',
         tag: 'Gratis',
+        url: 'https://calendly.com/',
       },
     ],
   },
@@ -122,27 +133,32 @@ const stages: Stage[] = [
         description:
           'Base de datos, auth y storage para tu producto. Gratis.',
         tag: 'Gratis',
+        url: 'https://supabase.com/',
       },
       {
         name: 'Vercel / Netlify',
         description: 'Despliegue de aplicaciones web. Gratis.',
         tag: 'Gratis',
+        url: 'https://vercel.com/',
       },
       {
         name: 'Stripe',
         description: 'Procesamiento de pagos. Paga por uso.',
         tag: 'Paga por uso',
+        url: 'https://stripe.com/',
       },
       {
         name: 'HubSpot CRM',
         description:
           'Gestión de clientes y pipeline de ventas. Gratis.',
         tag: 'Gratis',
+        url: 'https://www.hubspot.com/products/crm',
       },
       {
         name: 'Google Analytics',
         description: 'Analítica web y de producto. Gratis.',
         tag: 'Gratis',
+        url: 'https://analytics.google.com/',
       },
     ],
   },
@@ -160,26 +176,31 @@ const stages: Stage[] = [
         description:
           'Infraestructura cloud escalable. Créditos para startups.',
         tag: 'Free tier',
+        url: 'https://aws.amazon.com/startups/',
       },
       {
         name: 'Mixpanel / Amplitude',
         description: 'Analítica de producto avanzada. Free tier.',
         tag: 'Free tier',
+        url: 'https://mixpanel.com/',
       },
       {
         name: 'Notion + Pitch',
         description: 'Data Room y pitch deck profesional.',
         tag: 'Gratis',
+        url: 'https://pitch.com/',
       },
       {
         name: 'QuickBooks / Xero',
         description: 'Contabilidad y finanzas. Prueba gratis.',
         tag: 'Prueba gratis',
+        url: 'https://quickbooks.intuit.com/',
       },
       {
         name: 'Loom',
         description: 'Videos de demo y onboarding. Gratis.',
         tag: 'Gratis',
+        url: 'https://www.loom.com/',
       },
     ],
   },
@@ -199,7 +220,10 @@ function ToolCard({
   index: number
 }) {
   return (
-    <motion.div
+    <motion.a
+      href={tool.url}
+      target="_blank"
+      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-20px' }}
@@ -213,7 +237,8 @@ function ToolCard({
         alignItems: 'flex-start',
         gap: '0.875rem',
         transition: 'all 0.2s ease',
-        cursor: 'default',
+        cursor: 'pointer',
+        textDecoration: 'none',
       }}
       whileHover={{
         boxShadow: `0 4px 24px ${stageColor}15`,
@@ -281,7 +306,8 @@ function ToolCard({
           {tool.description}
         </p>
       </div>
-    </motion.div>
+      <ExternalLink size={14} color={stageColor} style={{ flexShrink: 0, marginTop: 5, opacity: 0.6 }} />
+    </motion.a>
   )
 }
 

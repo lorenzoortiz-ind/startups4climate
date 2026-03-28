@@ -252,7 +252,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
           </div>
           <div>
             <label style={labelStyle}>Capital inicial ({data.currency})</label>
-            <input type="number" value={data.initial_capital} onChange={e => setData(p => ({ ...p, initial_capital: Number(e.target.value) }))} style={inputStyle} />
+            <input type="number" value={data.initial_capital || ''} onChange={e => setData(p => ({ ...p, initial_capital: Number(e.target.value) || 0 }))} placeholder="0" style={inputStyle} />
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
               <div>
                 <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Precio unitario ({data.currency})</label>
-                <input type="number" value={rs.unit_price} onChange={e => updateRevenue(i, 'unit_price', Number(e.target.value))} style={inputStyle} />
+                <input type="number" value={rs.unit_price || ''} onChange={e => updateRevenue(i, 'unit_price', Number(e.target.value) || 0)} placeholder="0" style={inputStyle} />
               </div>
               <div>
                 <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Unidades iniciales</label>
@@ -297,7 +297,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
         {data.fixed_costs.map((fc, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={fc.name} onChange={e => updateFixed(i, 'name', e.target.value)} placeholder="Nombre del costo" style={{ ...inputStyle, flex: 2 }} />
-            <input type="number" value={fc.monthly_amount} onChange={e => updateFixed(i, 'monthly_amount', Number(e.target.value))} placeholder="Monto mensual" style={{ ...inputStyle, flex: 1 }} />
+            <input type="number" value={fc.monthly_amount || ''} onChange={e => updateFixed(i, 'monthly_amount', Number(e.target.value) || 0)} placeholder="Monto mensual" style={{ ...inputStyle, flex: 1 }} />
             {data.fixed_costs.length > 1 && (
               <button onClick={() => removeFixed(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.3rem 0.5rem' }}><Trash2 size={11} /></button>
             )}
@@ -311,7 +311,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
         {data.variable_costs.map((vc, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={vc.name} onChange={e => updateVariable(i, 'name', e.target.value)} placeholder="Nombre del costo" style={{ ...inputStyle, flex: 2 }} />
-            <input type="number" value={vc.per_unit_cost} onChange={e => updateVariable(i, 'per_unit_cost', Number(e.target.value))} placeholder="Costo por unidad" style={{ ...inputStyle, flex: 1 }} />
+            <input type="number" value={vc.per_unit_cost || ''} onChange={e => updateVariable(i, 'per_unit_cost', Number(e.target.value) || 0)} placeholder="Costo por unidad" style={{ ...inputStyle, flex: 1 }} />
             {data.variable_costs.length > 1 && (
               <button onClick={() => removeVariable(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.3rem 0.5rem' }}><Trash2 size={11} /></button>
             )}
@@ -326,7 +326,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={tm.role} onChange={e => updateTeam(i, 'role', e.target.value)} placeholder="Rol" style={{ ...inputStyle, flex: 2 }} />
             <div style={{ flex: 1 }}>
-              <input type="number" value={tm.salary} onChange={e => updateTeam(i, 'salary', Number(e.target.value))} placeholder="Salario mensual" style={inputStyle} />
+              <input type="number" value={tm.salary || ''} onChange={e => updateTeam(i, 'salary', Number(e.target.value) || 0)} placeholder="Salario mensual" style={inputStyle} />
             </div>
             <div style={{ flex: 0.7 }}>
               <input type="number" value={tm.start_month} onChange={e => updateTeam(i, 'start_month', Number(e.target.value))} placeholder="Mes inicio" min={1} style={inputStyle} />
@@ -344,7 +344,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
         {data.planned_rounds.map((r, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <input value={r.name} onChange={e => updateRound(i, 'name', e.target.value)} placeholder="Nombre (Pre-seed, Seed...)" style={{ ...inputStyle, flex: 2, minWidth: 140 }} />
-            <input type="number" value={r.amount} onChange={e => updateRound(i, 'amount', Number(e.target.value))} placeholder="Monto" style={{ ...inputStyle, flex: 1, minWidth: 100 }} />
+            <input type="number" value={r.amount || ''} onChange={e => updateRound(i, 'amount', Number(e.target.value) || 0)} placeholder="Monto" style={{ ...inputStyle, flex: 1, minWidth: 100 }} />
             <input type="number" value={r.month} onChange={e => updateRound(i, 'month', Number(e.target.value))} placeholder="Mes" min={1} style={{ ...inputStyle, flex: 0.5, minWidth: 70 }} />
             <input type="number" value={r.dilution} onChange={e => updateRound(i, 'dilution', Number(e.target.value))} placeholder="% dilución" style={{ ...inputStyle, flex: 0.5, minWidth: 70 }} />
             <button onClick={() => removeRound(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.3rem 0.5rem' }}><Trash2 size={11} /></button>

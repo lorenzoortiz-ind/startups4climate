@@ -157,7 +157,7 @@ export default function PerfilPage() {
       try {
         await supabase.from('startups').upsert(
           {
-            user_id: appUser.id,
+            founder_id: appUser.id,
             name: startupName,
             description: descripcion,
             vertical,
@@ -165,7 +165,7 @@ export default function PerfilPage() {
             website,
             team_size: teamSize ? Number(teamSize) : null,
           },
-          { onConflict: 'user_id' }
+          { onConflict: 'founder_id' }
         )
       } catch {
         // Best effort - table may not exist yet

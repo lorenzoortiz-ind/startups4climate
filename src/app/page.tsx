@@ -1,6 +1,5 @@
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import SocialProof from '@/components/SocialProof'
 import ProblemSection from '@/components/ProblemSection'
 import ValueProp from '@/components/ValueProp'
 import StartupLifecycle from '@/components/StartupLifecycle'
@@ -18,7 +17,6 @@ export default function Home() {
       <AuthModal />
       <main>
         <Hero />
-        <SocialProof />
         <ProblemSection />
         <DiagnosticFeature />
         <DiagnosticForm />

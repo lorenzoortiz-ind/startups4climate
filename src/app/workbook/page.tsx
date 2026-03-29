@@ -346,7 +346,7 @@ export default function WorkbookPage() {
             style={{
               flex: '0 1 320px',
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'flex-end',
             }}
           >
             <Image
@@ -430,10 +430,10 @@ export default function WorkbookPage() {
                   <span
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-heading-lg)',
+                      fontSize: 'var(--text-heading-md)',
                       fontWeight: 700,
                       color: `${item.color}30`,
-                      width: 56,
+                      width: 44,
                       flexShrink: 0,
                       lineHeight: 1,
                       letterSpacing: '-0.04em',
@@ -445,11 +445,12 @@ export default function WorkbookPage() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: 'var(--text-heading-md)',
+                        fontSize: 'clamp(0.875rem, 1.5vw, 1.1rem)',
                         fontWeight: 700,
                         color: 'var(--color-ink)',
                         letterSpacing: '-0.02em',
                         marginBottom: '0.125rem',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {item.title}

@@ -501,7 +501,7 @@ export default function AuthModal() {
                           cursor: 'pointer',
                         }}
                       >
-                        Volver al login como founder
+                        Acceder como founder
                       </button>
                     ) : (
                       <span

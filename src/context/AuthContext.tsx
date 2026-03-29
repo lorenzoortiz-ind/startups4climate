@@ -208,75 +208,93 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(
     async (email: string, password: string, name: string, startup: string) => {
       loginInProgressRef.current = true
-      const { data, error } = await supabase.auth.signUp({
-        email: email.toLowerCase(),
-        password,
-        options: {
-          data: {
-            full_name: name,
-            startup_name: startup,
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: email.toLowerCase(),
+          password,
+          options: {
+            data: {
+              full_name: name,
+              startup_name: startup,
+            },
           },
-        },
-      })
+        })
 
-      if (error) {
-        loginInProgressRef.current = false
-        return { error: mapSupabaseError(error.message) }
-      }
-
-      // If email confirmation is enabled in Supabase, session will be null.
-      // In that case, try to sign in immediately with password to get a session.
-      let activeUser = data.user
-      if (!data.session && data.user) {
-        const { data: signInData, error: signInError } =
-          await supabase.auth.signInWithPassword({
-            email: email.toLowerCase(),
-            password,
-          })
-        if (signInError) {
+        if (error) {
           loginInProgressRef.current = false
-          // If the error is about email confirmation, tell the user to check their inbox
-          // instead of showing a generic error.
-          if (signInError.message.includes('Email not confirmed')) {
-            return { error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' }
-          }
-          return { error: mapSupabaseError(signInError.message) }
+          return { error: mapSupabaseError(error.message) }
         }
-        activeUser = signInData.user
-      }
 
-      // Ensure profile exists (the DB trigger may not have fired yet)
-      let role: string = 'founder'
-      if (activeUser) {
-        // Try to load existing profile first
-        let profile = await loadProfile(activeUser.id)
-        if (!profile) {
-          // Create profile directly if it doesn't exist yet
-          const now = new Date().toISOString()
-          await supabase.from('profiles').upsert({
+        // If email confirmation is enabled in Supabase, session will be null.
+        // In that case, try to sign in immediately with password to get a session.
+        let activeUser = data.user
+        if (!data.session && data.user) {
+          const { data: signInData, error: signInError } =
+            await supabase.auth.signInWithPassword({
+              email: email.toLowerCase(),
+              password,
+            })
+          if (signInError) {
+            loginInProgressRef.current = false
+            if (signInError.message.includes('Email not confirmed')) {
+              return { error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' }
+            }
+            return { error: mapSupabaseError(signInError.message) }
+          }
+          activeUser = signInData.user
+        }
+
+        // Set a minimal user IMMEDIATELY so the UI is never blocked
+        // regardless of what happens with profile loading below
+        const role: string = 'founder'
+        if (activeUser) {
+          const minimalUser: AppUser = {
             id: activeUser.id,
-            email: activeUser.email,
+            email: activeUser.email ?? email,
+            role: 'founder',
+            org_id: null,
             full_name: name,
             startup_name: startup,
-            role: 'founder',
-            created_at: now,
-          })
-          profile = await loadProfile(activeUser.id)
-        }
-        // Use the active session for fallback if profile query keeps failing
-        const { data: { session: activeSession } } = await supabase.auth.getSession()
-        if (profile) {
-          role = profile.role
-          setAppUser(profile)
-        } else if (activeSession) {
-          const fb = await fallbackAppUser(activeSession)
-          role = fb.role
-          setAppUser(fb)
-        }
-      }
+            stage: null,
+            diagnosticScore: null,
+            created_at: activeUser.created_at ?? new Date().toISOString(),
+          }
+          setAppUser(minimalUser)
 
-      loginInProgressRef.current = false
-      return { role }
+          // Try to ensure profile exists in background — don't block the return
+          ;(async () => {
+            try {
+              let profile = await loadProfile(activeUser!.id)
+              if (!profile) {
+                await supabase.from('profiles').upsert({
+                  id: activeUser!.id,
+                  email: activeUser!.email,
+                  full_name: name,
+                  startup_name: startup,
+                  role: 'founder',
+                  created_at: new Date().toISOString(),
+                })
+                profile = await loadProfile(activeUser!.id)
+              }
+              if (profile) {
+                setAppUser(profile)
+              }
+            } catch {
+              // Minimal user already set — ignore
+            } finally {
+              loginInProgressRef.current = false
+            }
+          })()
+
+          return { role }
+        }
+
+        loginInProgressRef.current = false
+        return { role }
+      } catch {
+        loginInProgressRef.current = false
+        return { error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' }
+      }
     },
     []
   )

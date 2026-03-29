@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ArrowRight, Eye, EyeOff, Loader2, CheckCircle2, Lock, User, Building2, Mail } from 'lucide-react'
+import { X, ArrowRight, Eye, EyeOff, Loader2, Lock, User, Building2, Mail } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
 export default function AuthModal() {
@@ -163,27 +163,81 @@ export default function AuthModal() {
             {success ? (
               <motion.div
                 key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
                 style={{ padding: '3.5rem', textAlign: 'center' }}
               >
-                <div
-                  style={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(13,148,136,0.08)',
-                    border: '1px solid rgba(13,148,136,0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 1.5rem',
-                  }}
-                >
-                  <CheckCircle2 size={36} color="#0D9488" />
+                {/* S4C Logo-inspired loading animation */}
+                <div style={{ margin: '0 auto 1.75rem', width: 80, height: 80, position: 'relative' }}>
+                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {/* Outer ring pulse */}
+                    <motion.circle
+                      cx="40" cy="40" r="36"
+                      stroke="var(--color-border)"
+                      strokeWidth="2"
+                      fill="none"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: [0, 0.5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    {/* S */}
+                    <motion.text
+                      x="14" y="52"
+                      fontFamily="var(--font-heading)"
+                      fontSize="28"
+                      fontWeight="700"
+                      fill="var(--color-ink)"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1, type: 'spring', damping: 20, stiffness: 100 }}
+                    >
+                      S
+                    </motion.text>
+                    {/* 4 in coral */}
+                    <motion.text
+                      x="30" y="52"
+                      fontFamily="var(--font-heading)"
+                      fontSize="28"
+                      fontWeight="700"
+                      fill="#FF6B4A"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.25, type: 'spring', damping: 20, stiffness: 100 }}
+                    >
+                      4
+                    </motion.text>
+                    {/* C */}
+                    <motion.text
+                      x="50" y="52"
+                      fontFamily="var(--font-heading)"
+                      fontSize="28"
+                      fontWeight="700"
+                      fill="var(--color-ink)"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4, type: 'spring', damping: 20, stiffness: 100 }}
+                    >
+                      C
+                    </motion.text>
+                    {/* Animated progress arc */}
+                    <motion.circle
+                      cx="40" cy="40" r="36"
+                      stroke="#FF6B4A"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      fill="none"
+                      strokeDasharray="226"
+                      initial={{ strokeDashoffset: 226 }}
+                      animate={{ strokeDashoffset: 0 }}
+                      transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+                    />
+                  </svg>
                 </div>
-                <h3
+                <motion.h3
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, type: 'spring', damping: 20 }}
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontSize: 'var(--text-heading-md)',
@@ -194,10 +248,15 @@ export default function AuthModal() {
                   }}
                 >
                   {mode === 'register' ? '¡Cuenta creada!' : '¡Bienvenido de vuelta!'}
-                </h3>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-body)', color: 'var(--color-text-secondary)' }}>
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.65 }}
+                  style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-body)', color: 'var(--color-text-secondary)' }}
+                >
                   Accediendo a tu plataforma...
-                </p>
+                </motion.p>
               </motion.div>
             ) : (
               <motion.div

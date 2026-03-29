@@ -66,11 +66,11 @@ const stages = [
     stageColor: '#3B82F6',
     tools: [
       { name: 'Supuestos Clave', category: 'Estrategia', desc: '¿Qué debe ser cierto para que tu negocio gane?' },
-      { name: 'Validación Lógica', category: 'Producto', desc: 'Comprueba el product-market fit.' },
+      { name: 'Product-Market Fit', category: 'Producto', desc: 'Valida que tu solución resuelve un problema real del mercado.' },
       { name: 'Tracción', category: 'Mercado', desc: 'Indicadores que piden los inversores.' },
-      { name: 'Roadmap de Expansión', category: 'Estrategia', desc: 'Hacia dónde ir sin perder foco.' },
-      { name: 'Pitch Deck', category: 'Finanzas', desc: 'Narrativa estructurada para fundraising.' },
-      { name: 'Cap Table', category: 'Finanzas', desc: 'Simula cómo distribuyes el equity.' },
+      { name: 'Roadmap de Expansión', category: 'Estrategia', desc: 'Define las fases de crecimiento sin perder foco en tu core.' },
+      { name: 'Pitch Deck', category: 'Finanzas', desc: 'Construye la narrativa que convence a inversores de apostar por tu startup.' },
+      { name: 'Cap Table', category: 'Finanzas', desc: 'Estructura y simula la distribución de equity entre founders e inversores.' },
     ],
   },
 ]

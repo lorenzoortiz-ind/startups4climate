@@ -97,8 +97,8 @@ const questions: Question[] = [
     subtitle: 'Validación Comercial',
     type: 'score',
     options: [
-      { label: 'Validando el problema mediante entrevistas (Customer Discovery)', value: 'discovery', score: 1 },
-      { label: 'Tenemos LOIs (Cartas de Intención) o pilotos no pagados', value: 'lois', score: 2 },
+      { label: 'Validando el problema mediante entrevistas', value: 'discovery', score: 1 },
+      { label: 'Tenemos cartas de intención o pilotos no pagados', value: 'lois', score: 2 },
       { label: 'Pilotos pagados o primeros ingresos iniciales', value: 'pilots', score: 3 },
       { label: 'Ingresos recurrentes demostrados o contratos firmados', value: 'revenue', score: 4 },
     ],
@@ -133,10 +133,10 @@ const questions: Question[] = [
     subtitle: 'Necesidad de Financiamiento',
     type: 'score',
     options: [
-      { label: 'Bootstrapping / Buscamos menos de $250k', value: 'bootstrap', score: 1 },
-      { label: 'Entre $250k y $1.5M (Pre-Seed / Seed)', value: 'seed', score: 2 },
-      { label: 'Entre $1.5M y $5M (Series A)', value: 'seriesA', score: 3 },
-      { label: 'Más de $5M (Series B o posterior)', value: 'seriesB', score: 4 },
+      { label: 'Bootstrapping o menos de $250k', value: 'bootstrap', score: 1 },
+      { label: 'Entre $250k y $1.5M', value: 'seed', score: 2 },
+      { label: 'Entre $1.5M y $5M', value: 'seriesA', score: 3 },
+      { label: 'Más de $5M', value: 'seriesB', score: 4 },
     ],
   },
   {
@@ -146,8 +146,8 @@ const questions: Question[] = [
     type: 'tag',
     options: [
       { label: 'Solo founder', value: 'solo' },
-      { label: '2 cofounders', value: 'duo' },
-      { label: '3+ cofounders', value: 'trio' },
+      { label: '2 co-founders', value: 'duo' },
+      { label: '3+ co-founders', value: 'trio' },
       { label: 'Equipo completo (>5)', value: 'full' },
     ],
   },
@@ -159,7 +159,7 @@ const questions: Question[] = [
     options: [
       { label: 'Perfil 100% técnico/científico', value: 'tech', score: 1 },
       { label: 'Principalmente negocio, buscando expertise técnico', value: 'biz', score: 2 },
-      { label: 'Balanceado (Técnico + Comercial) dedicado a tiempo completo', value: 'balanced', score: 3 },
+      { label: 'Equilibrado entre perfil técnico y de negocios', value: 'balanced', score: 3 },
     ],
   },
   {
@@ -182,7 +182,7 @@ const questions: Question[] = [
     options: [
       { label: 'No tenemos Data Room estructurado aún', value: 'none', score: 1 },
       { label: 'Tenemos Pitch Deck básico y proyecciones a 12 meses', value: 'basic', score: 2 },
-      { label: 'Financieros completos, Cap Table y documentos legales listos', value: 'ready', score: 3 },
+      { label: 'Modelo financiero y aspectos legales listos', value: 'ready', score: 3 },
       { label: 'Todo lo anterior + métricas de tracción y auditorías listas', value: 'full', score: 4 },
     ],
   },

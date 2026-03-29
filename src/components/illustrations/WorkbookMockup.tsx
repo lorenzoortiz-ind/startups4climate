@@ -68,7 +68,7 @@ export default function WorkbookMockup({
           opacity="0.7"
           letterSpacing="3.5"
         >
-          STARTUPS4CLIMATE
+          <tspan fill="#fff">STARTUPS</tspan><tspan fill="#FF6B4A">4</tspan><tspan fill="#fff">CLIMATE</tspan>
         </text>
 
         {/* Thin rule below brand */}

@@ -79,7 +79,7 @@ export default function Navbar() {
                   letterSpacing: '-0.03em',
                 }}
               >
-                Startups4Climate
+                Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
               </span>
             </a>
 

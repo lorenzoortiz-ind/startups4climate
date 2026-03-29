@@ -47,7 +47,7 @@ export default function Footer() {
                 color: 'var(--color-paper)',
                 letterSpacing: '-0.02em',
               }}>
-                Startups4Climate
+                Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
               </span>
             </div>
             <p style={{

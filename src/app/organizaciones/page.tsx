@@ -415,10 +415,8 @@ export default function OrganizacionesPage() {
 
           <div
             style={{
-              marginTop: '1.5rem',
-              paddingTop: '1.25rem',
-              borderTop: '1px solid rgba(255,255,255,0.1)',
-              display: 'inline-block',
+              marginTop: '1.75rem',
+              textAlign: 'center',
             }}
           >
             <button

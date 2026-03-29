@@ -15,13 +15,14 @@ export default function S4CLogo({ size = 32 }: { size?: number }) {
         y="54%"
         dominantBaseline="central"
         textAnchor="middle"
-        fill="white"
         fontFamily="var(--font-body), 'DM Sans', sans-serif"
         fontSize={fontSize}
         fontWeight="700"
         letterSpacing="0.5"
       >
-        S4C
+        <tspan fill="white">S</tspan>
+        <tspan fill="#FF6B4A">4</tspan>
+        <tspan fill="white">C</tspan>
       </text>
     </svg>
   )

@@ -42,9 +42,9 @@ const TOC_ITEMS = [
   { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#FF6B4A' },
   { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#0D9488' },
   { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#0D9488' },
-  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#A8A29E' },
-  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#A8A29E' },
-  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0D9488' },
+  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
+  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },
+  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#3B82F6' },
 ]
 
 const springReveal = {
@@ -224,48 +224,6 @@ export default function WorkbookPage() {
         background: 'var(--color-bg-primary)',
       }}
     >
-      {/* Navigation */}
-      <nav
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '1.25rem var(--container-px)',
-          maxWidth: 'var(--container-max)',
-          margin: '0 auto',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 700,
-            fontSize: '1rem',
-            color: 'var(--color-ink)',
-            textDecoration: 'none',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Startups<span style={{ color: 'var(--color-accent-primary)' }}>4</span>Climate
-        </Link>
-        <Link
-          href="/tools"
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.875rem',
-            color: 'var(--color-accent-secondary)',
-            textDecoration: 'none',
-            fontWeight: 600,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.375rem',
-          }}
-        >
-          Ir a la plataforma
-          <ArrowRight size={14} />
-        </Link>
-      </nav>
-
       {/* Hero section */}
       <section
         style={{
@@ -327,7 +285,7 @@ export default function WorkbookPage() {
               }}
             >
               Guía completa para{' '}
-              <span style={{ color: 'var(--color-accent-secondary)' }}>founders de impacto</span>
+              <span style={{ color: 'var(--color-accent-primary)' }}>founders de impacto</span>
             </h1>
 
             <p

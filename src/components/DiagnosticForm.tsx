@@ -212,7 +212,7 @@ const profiles = [
     tag: 'Crecimiento',
     description: 'Tu modelo de negocio está validado y es momento de escalar. Optimiza tus unit economics, profesionaliza tu proceso de ventas y afina tu estrategia de pricing.',
     tools: ['Unit Economics', 'Proceso de Ventas', 'Modelo de Negocio', 'Framework de Pricing'],
-    color: '#2A222B',
+    color: '#D97706',
   },
   {
     range: [22, 24] as [number, number],
@@ -220,31 +220,35 @@ const profiles = [
     tag: 'Escala',
     description: 'Estás listo para levantar capital significativo y ejecutar tu plan de producto a gran escala. Prepara tu pitch deck, estructura tu cap table y valida tu tracción para inversores.',
     tools: ['Pitch Deck', 'Cap Table', 'Plan de Producto', 'Validación de Tracción'],
-    color: '#0D9488',
+    color: '#3B82F6',
   },
 ]
 
 /* ─── Shared Styles ─── */
 const inputStyle = {
   width: '100%',
-  padding: '0.625rem 0.875rem',
-  borderRadius: 10,
-  border: '1px solid var(--color-border)',
+  padding: '0.5rem 0 0.875rem',
+  borderRadius: 0,
+  border: 'none',
+  borderBottom: '2px solid var(--color-border)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
-  color: 'var(--color-text-primary)',
+  fontSize: 'var(--text-heading-md)',
+  color: 'var(--color-ink)',
   outline: 'none',
   transition: 'border-color 0.2s',
-  background: 'var(--color-bg-primary)',
+  background: 'transparent',
+  letterSpacing: '-0.01em',
 } as const
 
 const labelStyle = {
   display: 'block',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.8125rem',
-  fontWeight: 600,
-  color: 'var(--color-text-primary)',
-  marginBottom: '0.25rem',
+  fontSize: '0.75rem',
+  fontWeight: 700,
+  color: 'var(--color-text-muted)',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.08em',
+  marginBottom: '0.125rem',
 } as const
 
 /* ─── Responsive row helper ─── */
@@ -401,7 +405,7 @@ export default function DiagnosticForm() {
   const progress = step <= 11 ? ((step) / 11) * 100 : 100
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    e.currentTarget.style.borderColor = '#0D9488'
+    e.currentTarget.style.borderColor = 'var(--color-ink)'
   }
 
   const handleBlur = (fieldName: keyof ContactData) => (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -409,20 +413,20 @@ export default function DiagnosticForm() {
   }
 
   return (
-    <section id="diagnostico" style={{ padding: '4rem 0 6rem', background: 'var(--color-bg-warm)' }}>
+    <section id="diagnostico" style={{ padding: '4rem 0 6rem', background: 'var(--color-bg-primary)' }}>
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 1.5rem' }}>
         <div style={{
-          background: 'white',
-          borderRadius: 12,
+          background: 'var(--color-paper)',
+          borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-elevated)',
+          boxShadow: 'var(--shadow-float)',
           overflow: 'hidden',
           position: 'relative',
         }}>
           {/* Top gradient accent */}
           <div style={{
             height: 4,
-            background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #2A222B, #0D9488)',
+            background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #D97706, #3B82F6)',
           }} />
 
           {/* Progress bar */}
@@ -432,15 +436,15 @@ export default function DiagnosticForm() {
                 <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
                   {step === 0 ? 'Datos de contacto' : step <= 10 ? `Pregunta ${step}/10` : 'Procesando...'}
                 </span>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: '#0D9488', fontWeight: 600 }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-accent-primary)', fontWeight: 600 }}>
                   {Math.round(progress)}%
                 </span>
               </div>
-              <div style={{ height: 4, borderRadius: 2, background: '#F3F4F6' }}>
+              <div style={{ height: 4, borderRadius: 2, background: 'var(--color-border)' }}>
                 <motion.div
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.3 }}
-                  style={{ height: '100%', borderRadius: 2, background: '#0D9488' }}
+                  style={{ height: '100%', borderRadius: 2, background: 'var(--color-accent-primary)' }}
                 />
               </div>
             </div>
@@ -457,7 +461,7 @@ export default function DiagnosticForm() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.375rem', color: 'var(--color-text-primary)' }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-heading-lg)', fontWeight: 700, marginBottom: '0.375rem', color: 'var(--color-ink)', letterSpacing: '-0.03em' }}>
                     Comienza tu diagnóstico
                   </h3>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1.25rem' }}>
@@ -639,18 +643,21 @@ export default function DiagnosticForm() {
                         justifyContent: 'center',
                         gap: '0.5rem',
                         width: '100%',
-                        padding: '0.75rem',
-                        borderRadius: 12,
-                        background: '#0D9488',
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'var(--color-ink)',
                         color: 'white',
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.9375rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         border: 'none',
                         cursor: 'pointer',
-                        transition: 'background 0.2s',
+                        transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
                         marginTop: '0.25rem',
+                        letterSpacing: '-0.01em',
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)' }}
                     >
                       Comenzar Diagnóstico <ArrowRight size={18} />
                     </button>
@@ -685,10 +692,10 @@ export default function DiagnosticForm() {
                   >
                     <ArrowLeft size={16} /> Anterior
                   </button>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 600, color: '#0D9488', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
                     {questions[step - 1].subtitle}
                   </p>
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '1.5rem', lineHeight: 1.3 }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '1.5rem', lineHeight: 1.3, letterSpacing: '-0.02em' }}>
                     {questions[step - 1].text}
                   </h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -703,25 +710,27 @@ export default function DiagnosticForm() {
                             alignItems: 'center',
                             gap: '0.75rem',
                             padding: '1rem 1.25rem',
-                            borderRadius: 12,
-                            border: selected ? '2px solid #0D9488' : '1px solid var(--color-border)',
-                            background: selected ? 'rgba(13,148,136,0.04)' : 'white',
+                            borderRadius: 'var(--radius-md)',
+                            border: selected ? '2px solid var(--color-ink)' : '1px solid var(--color-border)',
+                            background: selected ? 'rgba(25,25,25,0.03)' : 'var(--color-paper)',
                             cursor: 'pointer',
                             textAlign: 'left',
-                            transition: 'all 0.15s ease',
+                            transition: 'all 0.2s var(--ease-smooth)',
                             fontFamily: 'var(--font-body)',
                             fontSize: '0.875rem',
-                            color: 'var(--color-text-primary)',
+                            color: 'var(--color-ink)',
                             width: '100%',
                           }}
+                          onMouseEnter={(e) => { if (!selected) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-float)' } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
                         >
                           <div style={{
                             width: 20,
                             height: 20,
                             borderRadius: '50%',
-                            border: selected ? '6px solid #0D9488' : '2px solid var(--color-border-strong)',
+                            border: selected ? '6px solid var(--color-accent-primary)' : '2px solid var(--color-border)',
                             flexShrink: 0,
-                            transition: 'border 0.15s',
+                            transition: 'border 0.2s var(--ease-smooth)',
                           }} />
                           {opt.label}
                         </button>
@@ -740,9 +749,9 @@ export default function DiagnosticForm() {
                   exit={{ opacity: 0 }}
                   style={{ textAlign: 'center', padding: '3rem 0' }}
                 >
-                  <Loader2 size={40} color="#0D9488" style={{ animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
+                  <Loader2 size={40} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
                   <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
                     Analizando tu startup...
                   </h3>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
@@ -760,8 +769,8 @@ export default function DiagnosticForm() {
                   transition={{ duration: 0.5 }}
                 >
                   <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <CheckCircle2 size={32} color="#0D9488" style={{ margin: '0 auto 0.75rem' }} />
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 400, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
+                    <CheckCircle2 size={32} color={profile.color} style={{ margin: '0 auto 0.75rem' }} />
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.375rem', letterSpacing: '-0.03em' }}>
                       Tu Startup Readiness Score
                     </h3>
                     <div style={{
@@ -777,7 +786,7 @@ export default function DiagnosticForm() {
                     <span style={{
                       display: 'inline-block',
                       padding: '0.375rem 1rem',
-                      borderRadius: 8,
+                      borderRadius: 'var(--radius-full)',
                       background: `${profile.color}10`,
                       border: `1px solid ${profile.color}30`,
                       fontFamily: 'var(--font-body)',
@@ -791,7 +800,7 @@ export default function DiagnosticForm() {
 
                   {/* Score bar */}
                   <div style={{ margin: '0 0 1.5rem' }}>
-                    <div style={{ height: 8, borderRadius: 4, background: '#F3F4F6', position: 'relative' }}>
+                    <div style={{ height: 8, borderRadius: 4, background: 'var(--color-border)', position: 'relative' }}>
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${(totalScore / 24) * 100}%` }}
@@ -822,19 +831,19 @@ export default function DiagnosticForm() {
                   {/* Recommended tools */}
                   <div style={{
                     padding: '1.25rem',
-                    borderRadius: 14,
+                    borderRadius: 'var(--radius-lg)',
                     background: 'var(--color-bg-primary)',
                     border: '1px solid var(--color-border)',
                     marginBottom: '1.5rem',
                   }}>
-                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--color-text-primary)' }}>
+                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
                       Tu Caja de Herramientas
                     </h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                       {profile.tools.map(tool => (
                         <span key={tool} style={{
                           padding: '0.375rem 0.875rem',
-                          borderRadius: 8,
+                          borderRadius: 'var(--radius-full)',
                           background: `${profile.color}08`,
                           border: `1px solid ${profile.color}20`,
                           fontFamily: 'var(--font-body)',
@@ -858,15 +867,19 @@ export default function DiagnosticForm() {
                         justifyContent: 'center',
                         gap: '0.5rem',
                         width: '100%',
-                        padding: '0.875rem',
-                        borderRadius: 12,
-                        background: '#0D9488',
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'var(--color-ink)',
                         color: 'white',
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.9375rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         textDecoration: 'none',
+                        transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
+                        letterSpacing: '-0.01em',
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)' }}
                     >
                       Acceder a las Herramientas <ArrowRight size={18} />
                     </a>
@@ -879,16 +892,20 @@ export default function DiagnosticForm() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: '100%',
-                        padding: '0.875rem',
-                        borderRadius: 12,
-                        background: 'var(--color-bg-primary)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-text-primary)',
+                        padding: '1rem',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'transparent',
+                        border: '1.5px solid var(--color-ink)',
+                        color: 'var(--color-ink)',
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.9375rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         textDecoration: 'none',
+                        transition: 'all 0.2s var(--ease-smooth)',
+                        letterSpacing: '-0.01em',
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-ink)' }}
                     >
                       Agenda una Sesión Estratégica
                     </a>

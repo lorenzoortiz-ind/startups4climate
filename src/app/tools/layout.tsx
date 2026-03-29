@@ -30,8 +30,8 @@ import { getProgress } from '@/lib/progress'
 const STAGE_CONFIG = {
   1: { label: 'Pre-incubacion', color: '#FF6B4A' },
   2: { label: 'Incubacion', color: '#0D9488' },
-  3: { label: 'Aceleracion', color: '#A8A29E' },
-  4: { label: 'Escalamiento', color: '#0D9488' },
+  3: { label: 'Aceleracion', color: '#D97706' },
+  4: { label: 'Escalamiento', color: '#3B82F6' },
 } as const
 
 /* ─── Sidebar colors (dark bg) ─── */

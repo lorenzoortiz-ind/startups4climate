@@ -9,11 +9,11 @@ import Link from 'next/link'
 import S4CLogo from '@/components/S4CLogo'
 
 const navLinks: { label: string; href: string; isPage?: boolean }[] = [
-  { label: 'Platform', href: '/#plataforma' },
-  { label: 'Diagnostic', href: '/#diagnostico' },
-  { label: 'About', href: '/#about' },
+  { label: 'Plataforma', href: '/#plataforma' },
+  { label: 'Diagnóstico', href: '/#diagnostico' },
+  { label: 'Quiénes somos', href: '/#about' },
   { label: 'Workbook', href: '/workbook', isPage: true },
-  { label: 'Organizations', href: '/organizaciones', isPage: true },
+  { label: 'Organizaciones', href: '/organizaciones', isPage: true },
 ]
 
 export default function Navbar() {

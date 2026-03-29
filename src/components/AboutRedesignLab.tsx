@@ -34,7 +34,7 @@ export default function AboutRedesignLab() {
     <section
       id="about"
       style={{
-        padding: 'var(--section-py) 0',
+        padding: 'clamp(3rem, 6vw, 6rem) 0',
         background: 'var(--color-bg-primary)',
         overflow: 'hidden',
         borderTop: '1px solid var(--color-border)',
@@ -73,7 +73,7 @@ export default function AboutRedesignLab() {
                 color: 'var(--color-ink)',
                 marginBottom: '1.5rem',
               }}>
-                Creado por Redesign Lab
+                Creado por Re.design <span style={{ color: '#E63946' }}>Lab</span>
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)',

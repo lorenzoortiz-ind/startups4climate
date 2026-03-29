@@ -12,6 +12,7 @@ const stages = [
     title: 'Pre-incubación',
     subtitle: 'Ideación y Descubrimiento',
     focus: 'Define tu propósito, descubre tu mercado y entiende a tu usuario',
+    stageColor: '#FF6B4A',
     tools: [
       { name: 'Propósito & Equipo', category: 'Equipo', desc: 'Evalúa las capacidades y brechas de tu equipo fundador.' },
       { name: 'Segmentación de Mercado', category: 'Mercado', desc: 'Identifica los segmentos con mayor potencial de impacto.' },
@@ -28,6 +29,7 @@ const stages = [
     title: 'Incubación',
     subtitle: 'Validación y Producto',
     focus: 'Valida tu propuesta de valor y diseña tu producto mínimo viable',
+    stageColor: '#0D9488',
     tools: [
       { name: 'User Journey', category: 'Producto', desc: 'Mapea la interacción completa de tu usuario.' },
       { name: 'Especificación del MVP', category: 'Producto', desc: 'Estructura qué construirás para arrancar.' },
@@ -44,6 +46,7 @@ const stages = [
     title: 'Aceleración',
     subtitle: 'Modelo de Negocio y Crecimiento',
     focus: 'Estructura tu modelo de negocio, pricing y proceso de ventas',
+    stageColor: '#D97706',
     tools: [
       { name: 'Decisiones de Compra', category: 'Ventas', desc: '¿Quién decide realmente en tu industria?' },
       { name: 'Embudo de Adquisición', category: 'Marketing', desc: 'Mapea desde el discovery hasta el pago.' },
@@ -60,6 +63,7 @@ const stages = [
     title: 'Escalamiento',
     subtitle: 'Producto, Plan y Fundraising',
     focus: 'Valida tu tracción, construye tu producto y prepara tu ronda de inversión',
+    stageColor: '#3B82F6',
     tools: [
       { name: 'Supuestos Clave', category: 'Estrategia', desc: '¿Qué debe ser cierto para que tu negocio gane?' },
       { name: 'Validación Lógica', category: 'Producto', desc: 'Comprueba el product-market fit.' },
@@ -126,7 +130,9 @@ export default function StartupLifecycle() {
             paddingBottom: '0.5rem',
           }}
         >
-          {stages.map((s, i) => (
+          {stages.map((s, i) => {
+            const isActive = activeStage === i
+            return (
             <button
               key={s.id}
               onClick={() => setActiveStage(i)}
@@ -134,9 +140,9 @@ export default function StartupLifecycle() {
                 flex: '1 0 200px',
                 padding: '1.5rem',
                 borderRadius: 'var(--radius-lg)',
-                border: activeStage === i ? '2px solid var(--color-ink)' : '1px solid var(--color-border)',
-                background: activeStage === i ? 'var(--color-ink)' : 'var(--color-paper)',
-                color: activeStage === i ? 'var(--color-paper)' : 'var(--color-ink)',
+                border: isActive ? `2px solid ${s.stageColor}` : '1px solid var(--color-border)',
+                background: isActive ? 'var(--color-ink)' : 'var(--color-paper)',
+                color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.2s var(--ease-smooth)',
@@ -150,7 +156,7 @@ export default function StartupLifecycle() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: activeStage === i ? 1 : 0.5 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: isActive ? 1 : 0.5, color: isActive ? 'var(--color-paper)' : 'var(--color-ink)' }}>
                   <s.icon size={18} strokeWidth={2} />
                   <span style={{
                     fontFamily: 'var(--font-body)',
@@ -158,6 +164,7 @@ export default function StartupLifecycle() {
                     fontWeight: 700,
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase' as const,
+                    color: isActive ? 'var(--color-paper)' : 'inherit',
                   }}>
                     {s.number}
                   </span>
@@ -165,12 +172,12 @@ export default function StartupLifecycle() {
                 <span style={{
                   padding: '0.2rem 0.6rem',
                   borderRadius: 'var(--radius-full)',
-                  background: activeStage === i ? 'rgba(255,255,255,0.15)' : 'var(--color-bg-primary)',
-                  border: activeStage === i ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--color-border)',
+                  background: isActive ? 'rgba(255,255,255,0.15)' : 'var(--color-bg-primary)',
+                  border: isActive ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--color-border)',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.625rem',
                   fontWeight: 600,
-                  color: activeStage === i ? 'rgba(255,255,255,0.8)' : 'var(--color-text-secondary)',
+                  color: isActive ? 'var(--color-paper)' : 'var(--color-text-secondary)',
                   letterSpacing: '0.02em',
                   whiteSpace: 'nowrap' as const,
                 }}>
@@ -184,11 +191,20 @@ export default function StartupLifecycle() {
                 letterSpacing: '-0.02em',
                 margin: 0,
                 lineHeight: 1.2,
+                color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
               }}>
                 {s.title}
               </h3>
+              <div style={{
+                width: '100%',
+                height: 3,
+                borderRadius: 2,
+                background: isActive ? s.stageColor : 'transparent',
+                transition: 'background 0.2s ease',
+              }} />
             </button>
-          ))}
+            )
+          })}
         </div>
 
         {/* Stage content */}
@@ -204,20 +220,7 @@ export default function StartupLifecycle() {
               marginBottom: '3rem',
               borderBottom: '1px solid var(--color-border)',
               paddingBottom: '2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
             }}>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-heading-lg)',
-                fontWeight: 700,
-                color: 'var(--color-ink)',
-                letterSpacing: '-0.03em',
-                margin: 0,
-              }}>
-                {stage.subtitle}
-              </h3>
               <p style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: 'var(--text-body-lg)',

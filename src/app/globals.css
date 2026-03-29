@@ -47,9 +47,9 @@
   --container-px: clamp(1.5rem, 5vw, 6rem);
 
   /* Typography Scales (Massive for Typeform feel) */
-  --text-display-xl: clamp(3.5rem, 8vw, 7.5rem);
-  --text-display-lg: clamp(2.5rem, 6vw, 5rem);
-  --text-display-md: clamp(1.8rem, 4vw, 3.5rem);
+  --text-display-xl: clamp(2.8rem, 6vw, 5.5rem);
+  --text-display-lg: clamp(2.2rem, 5vw, 4rem);
+  --text-display-md: clamp(1.6rem, 3.5vw, 2.8rem);
   --text-heading-lg: clamp(1.5rem, 3vw, 2.5rem);
   --text-heading-md: clamp(1.2rem, 2vw, 1.8rem);
   --text-body-lg: clamp(1.1rem, 1.5vw, 1.3rem);

@@ -147,7 +147,7 @@ export default function ReportesPage() {
                     ? 'var(--color-accent-primary)'
                     : 'var(--color-border)'}`,
                   background: selectedType === type.value
-                    ? 'rgba(5,150,105,0.04)' : 'var(--color-bg-card)',
+                    ? 'rgba(13,148,136,0.04)' : 'var(--color-bg-card)',
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.15s',

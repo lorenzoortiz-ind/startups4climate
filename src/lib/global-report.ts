@@ -18,7 +18,7 @@ export interface GlobalReportUser {
 
 const STAGE_COLORS: Record<number, string> = {
   1: '#7C3AED',
-  2: '#059669',
+  2: '#0D9488',
   3: '#D97706',
   4: '#0891B2',
 }
@@ -87,8 +87,8 @@ export function generateGlobalReport(user: GlobalReportUser): void {
             : null
 
           const statusBadge = completed
-            ? `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'JetBrains Mono',monospace;font-size:0.625rem;font-weight:600;color:#059669;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.15)">Completado</span>`
-            : `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'JetBrains Mono',monospace;font-size:0.625rem;font-weight:600;color:#9CA3AF;background:rgba(156,163,175,0.08);border:1px solid rgba(156,163,175,0.15)">Pendiente</span>`
+            ? `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#0D9488;background:rgba(13,148,136,0.08);border:1px solid rgba(13,148,136,0.15)">Completado</span>`
+            : `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#9CA3AF;background:rgba(156,163,175,0.08);border:1px solid rgba(156,163,175,0.15)">Pendiente</span>`
 
           const dataHtml =
             completed && Object.keys(data).length > 0
@@ -101,7 +101,7 @@ export function generateGlobalReport(user: GlobalReportUser): void {
             <div style="margin-bottom:24px;background:white;border-radius:14px;border:1px solid #E5E7EB;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04);${!completed ? 'opacity:0.7' : ''}">
               <div style="padding:16px 20px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
                 <div>
-                  <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700;color:#111827;margin:0 0 4px 0">${tool.name}</h3>
+                  <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#111827;margin:0 0 4px 0">${tool.name}</h3>
                   <p style="font-family:'Inter',sans-serif;font-size:0.75rem;color:#6B7280;margin:0">${tool.category}${completedAtStr ? ` · Completado: ${completedAtStr}` : ''}</p>
                 </div>
                 ${statusBadge}
@@ -115,10 +115,10 @@ export function generateGlobalReport(user: GlobalReportUser): void {
         <div style="margin-bottom:40px" class="page-break">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
             <div style="width:40px;height:40px;border-radius:12px;background:${s.color}12;display:flex;align-items:center;justify-content:center">
-              <span style="font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:${s.color}">${s.stage}</span>
+              <span style="font-family:'Inter',monospace;font-size:1rem;font-weight:700;color:${s.color}">${s.stage}</span>
             </div>
             <div>
-              <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.25rem;font-weight:800;color:#111827;margin:0;letter-spacing:-0.01em">${s.name}: ${s.subtitle}</h2>
+              <h2 style="font-family:'Inter',sans-serif;font-size:1.25rem;font-weight:800;color:#111827;margin:0;letter-spacing:-0.01em">${s.name}: ${s.subtitle}</h2>
               <p style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin:2px 0 0 0">${completedInStage} de ${totalInStage} herramientas completadas</p>
             </div>
           </div>
@@ -154,10 +154,10 @@ export function generateGlobalReport(user: GlobalReportUser): void {
 <body>
   <div style="max-width:800px;margin:0 auto;padding:48px 24px">
     <!-- Header -->
-    <div style="background:linear-gradient(135deg,#059669,#047857);border-radius:20px;padding:40px 36px;margin-bottom:36px;color:white;position:relative;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0D9488,#0B7C72);border-radius:20px;padding:40px 36px;margin-bottom:36px;color:white;position:relative;overflow:hidden">
       <div style="position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 60%)"></div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;opacity:0.8;margin-bottom:8px">Startups4Climate</div>
-      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.875rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em">Reporte Global &mdash; ${user.startup}</h1>
+      <div style="font-family:'Inter',monospace;font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;opacity:0.8;margin-bottom:8px">Startups4Climate</div>
+      <h1 style="font-family:'Inter',sans-serif;font-size:1.875rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em">Reporte Global &mdash; ${user.startup}</h1>
       <p style="font-family:'Inter',sans-serif;font-size:0.9375rem;opacity:0.85">${user.name} &middot; Generado el ${dateStr}</p>
     </div>
 
@@ -165,15 +165,15 @@ export function generateGlobalReport(user: GlobalReportUser): void {
     ${summaryHtml}
 
     <!-- Stage sections -->
-    <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.375rem;font-weight:800;color:#111827;margin-bottom:24px;letter-spacing:-0.01em">Detalle por etapa</h2>
+    <h2 style="font-family:'Inter',sans-serif;font-size:1.375rem;font-weight:800;color:#111827;margin-bottom:24px;letter-spacing:-0.01em">Detalle por etapa</h2>
     ${stageSectionsHtml}
 
     <!-- Footer -->
     <div class="no-print" style="margin-top:48px;padding:24px 0;border-top:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-      <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:#059669;color:white;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(5,150,105,0.3)">Imprimir / Guardar PDF</button>
-      <a href="mailto:?subject=Reporte%20Global%20-%20${encodeURIComponent(user.startup)}&body=Adjunto%20el%20reporte%20global%20de%20Startups4Climate" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:white;color:#059669;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:1px solid rgba(5,150,105,0.3);text-decoration:none;cursor:pointer">Enviar por email</a>
+      <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:#0D9488;color:white;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(13,148,136,0.3)">Imprimir / Guardar PDF</button>
+      <a href="mailto:?subject=Reporte%20Global%20-%20${encodeURIComponent(user.startup)}&body=Adjunto%20el%20reporte%20global%20de%20Startups4Climate" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:white;color:#0D9488;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:1px solid rgba(13,148,136,0.3);text-decoration:none;cursor:pointer">Enviar por email</a>
     </div>
-    <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:#9CA3AF;margin-top:16px">Generado por Startups4Climate | startups4climate.com</p>
+    <p style="text-align:center;font-family:'Inter',monospace;font-size:0.6875rem;color:#9CA3AF;margin-top:16px">Generado por Startups4Climate | startups4climate.com</p>
   </div>
 </body>
 </html>`
@@ -211,8 +211,8 @@ function buildExecutiveSummary(
       return `
         <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.8125rem;font-weight:700;color:${s.color}">${s.name}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;font-weight:600;color:${pct === 100 ? '#059669' : '#6B7280'}">${done}/${total}</span>
+            <span style="font-family:'Inter',sans-serif;font-size:0.8125rem;font-weight:700;color:${s.color}">${s.name}</span>
+            <span style="font-family:'Inter',monospace;font-size:0.75rem;font-weight:600;color:${pct === 100 ? '#0D9488' : '#6B7280'}">${done}/${total}</span>
           </div>
           <div style="height:4px;background:#F3F4F6;border-radius:2px;overflow:hidden">
             <div style="height:100%;width:${pct}%;background:${s.color};border-radius:2px"></div>
@@ -223,24 +223,24 @@ function buildExecutiveSummary(
 
   return `
     <div style="margin-bottom:36px">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.375rem;font-weight:800;color:#111827;margin-bottom:20px;letter-spacing:-0.01em">Resumen ejecutivo</h2>
+      <h2 style="font-family:'Inter',sans-serif;font-size:1.375rem;font-weight:800;color:#111827;margin-bottom:20px;letter-spacing:-0.01em">Resumen ejecutivo</h2>
 
       <!-- Key metrics -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px">
         <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:1.75rem;font-weight:700;color:#059669">${completedTools.length}<span style="font-size:0.875rem;color:#9CA3AF;font-weight:400">/${totalTools}</span></div>
+          <div style="font-family:'Inter',monospace;font-size:1.75rem;font-weight:700;color:#0D9488">${completedTools.length}<span style="font-size:0.875rem;color:#9CA3AF;font-weight:400">/${totalTools}</span></div>
           <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Herramientas completadas</div>
         </div>
         <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:1.75rem;font-weight:700;color:#059669">${overallPct}%</div>
+          <div style="font-family:'Inter',monospace;font-size:1.75rem;font-weight:700;color:#0D9488">${overallPct}%</div>
           <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Progreso total</div>
         </div>
         <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:1.75rem;font-weight:700;color:#059669">${stagesCovered.size}<span style="font-size:0.875rem;color:#9CA3AF;font-weight:400">/4</span></div>
+          <div style="font-family:'Inter',monospace;font-size:1.75rem;font-weight:700;color:#0D9488">${stagesCovered.size}<span style="font-size:0.875rem;color:#9CA3AF;font-weight:400">/4</span></div>
           <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Etapas cubiertas</div>
         </div>
         <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700;color:#059669">${currentStageName}</div>
+          <div style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#0D9488">${currentStageName}</div>
           <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Etapa mas avanzada</div>
         </div>
       </div>

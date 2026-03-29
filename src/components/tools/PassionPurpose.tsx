@@ -109,7 +109,7 @@ ${data.reclutamiento || '(No completado)'}
             <textarea value={f.gaps} onChange={e => updateFounder(i, 'gaps', e.target.value)} placeholder="Brechas o áreas de mejora" rows={2} style={{ ...taStyle, marginTop: '0.5rem' }} />
           </div>
         ))}
-        <button onClick={addFounder} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}>+ Agregar fundador</button>
+        <button onClick={addFounder} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}>+ Agregar fundador</button>
       </SectionCollapsible>
 
       {/* Reclutamiento */}
@@ -175,16 +175,16 @@ const btnOutlineGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#059669',
-  border: '1.5px solid #05966940', cursor: 'pointer',
+  background: 'transparent', color: '#0D9488',
+  border: '1.5px solid #0D948840', cursor: 'pointer',
 }
 
 const btnSolidGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#059669', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
+  background: '#0D9488', color: 'white',
+  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
 }
 
 const btnOutline: React.CSSProperties = {

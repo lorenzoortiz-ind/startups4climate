@@ -59,7 +59,7 @@ export default function ChatMessage({ role, content, timestamp }: ChatMessagePro
           background: isUser
             ? 'var(--color-chat-user-bg)'
             : 'var(--color-chat-assistant-bg)',
-          border: `1px solid ${isUser ? 'rgba(5,150,105,0.15)' : 'var(--color-border)'}`,
+          border: `1px solid ${isUser ? 'rgba(13,148,136,0.15)' : 'var(--color-border)'}`,
         }}
       >
         <div

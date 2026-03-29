@@ -15,8 +15,8 @@ const features = [
     icon: Users,
     title: 'Gestión de cohortes',
     description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de cálculo ni cadenas de correos.',
-    color: '#059669',
-    bg: 'rgba(5,150,105,0.06)',
+    color: '#0D9488',
+    bg: 'rgba(13,148,136,0.06)',
   },
   {
     icon: FileText,
@@ -148,7 +148,7 @@ export default function ForOrganizations() {
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
           style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(5,150,105,0.04) 100%)',
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(13,148,136,0.04) 100%)',
             borderRadius: 20,
             border: '1px solid rgba(124,58,237,0.12)',
             padding: '3rem 2rem',

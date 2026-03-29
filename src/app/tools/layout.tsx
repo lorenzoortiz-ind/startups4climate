@@ -28,10 +28,10 @@ import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-dat
 import { getProgress } from '@/lib/progress'
 
 const STAGE_CONFIG = {
-  1: { label: 'Pre-incubación', color: '#7C3AED', bg: 'rgba(124,58,237,0.07)' },
-  2: { label: 'Incubación', color: '#059669', bg: 'rgba(5,150,105,0.07)' },
-  3: { label: 'Aceleración', color: '#D97706', bg: 'rgba(217,119,6,0.07)' },
-  4: { label: 'Escalamiento', color: '#0891B2', bg: 'rgba(8,145,178,0.07)' },
+  1: { label: 'Pre-incubacion', color: '#FF6B4A', bg: 'rgba(255,107,74,0.07)' },
+  2: { label: 'Incubacion', color: '#0D9488', bg: 'rgba(13,148,136,0.07)' },
+  3: { label: 'Aceleracion', color: '#2A222B', bg: 'rgba(42,34,43,0.07)' },
+  4: { label: 'Escalamiento', color: '#0D9488', bg: 'rgba(13,148,136,0.07)' },
 } as const
 
 function StageSidebarSection({
@@ -87,7 +87,7 @@ function StageSidebarSection({
           />
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-heading)',
               fontSize: '0.6875rem',
               fontWeight: 700,
               color: cfg.color,
@@ -101,7 +101,7 @@ function StageSidebarSection({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               color: 'var(--color-text-muted)',
             }}
@@ -248,7 +248,7 @@ function StageSidebarSection({
                         borderRadius: 9999,
                         background: 'rgba(107,114,128,0.1)',
                         color: 'var(--color-text-muted)',
-                        fontFamily: 'var(--font-mono)',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.5rem',
                         fontWeight: 600,
                         lineHeight: 1.6,
@@ -353,7 +353,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             height: 40,
             borderRadius: '50%',
             border: '3px solid #E5E7EB',
-            borderTopColor: '#059669',
+            borderTopColor: '#0D9488',
             animation: 'spin 0.8s linear infinite',
           }}
         />
@@ -399,7 +399,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             letterSpacing: '-0.01em',
           }}
         >
-          Startups<span style={{ color: '#059669' }}>4</span>Climate
+          Startups<span style={{ color: '#0D9488' }}>4</span>Climate
         </span>
       </Link>
 
@@ -408,8 +408,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         style={{
           padding: '0.875rem',
           borderRadius: 12,
-          background: 'linear-gradient(135deg, rgba(5,150,105,0.06), rgba(5,150,105,0.02))',
-          border: '1px solid rgba(5,150,105,0.12)',
+          background: 'linear-gradient(135deg, rgba(13,148,136,0.06), rgba(13,148,136,0.02))',
+          border: '1px solid rgba(13,148,136,0.12)',
           marginBottom: '1.25rem',
         }}
       >
@@ -444,7 +444,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         >
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               color: 'var(--color-text-muted)',
             }}
@@ -453,21 +453,21 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           </span>
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               fontWeight: 700,
-              color: '#059669',
+              color: '#FF6B4A',
             }}
           >
             {completedCount}/{totalTools}
           </span>
         </div>
-        <div style={{ height: 4, borderRadius: 2, background: 'rgba(5,150,105,0.12)' }}>
+        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,107,74,0.12)' }}>
           <div
             style={{
               height: '100%',
               borderRadius: 2,
-              background: '#059669',
+              background: '#FF6B4A',
               width: `${(completedCount / totalTools) * 100}%`,
               transition: 'width 0.6s ease',
             }}
@@ -484,8 +484,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             gap: '0.5rem',
             padding: '0.5rem 0.75rem',
             borderRadius: 8,
-            background: 'rgba(217,119,6,0.08)',
-            border: '1px solid rgba(217,119,6,0.15)',
+            background: 'rgba(42,34,43,0.08)',
+            border: '1px solid rgba(42,34,43,0.15)',
             textDecoration: 'none',
             marginBottom: '0.75rem',
             transition: 'all 0.15s',
@@ -494,7 +494,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           <span style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.6875rem',
-            color: '#D97706',
+            color: '#2A222B',
             lineHeight: 1.4,
           }}>
             Completa tu perfil para recomendaciones personalizadas
@@ -511,8 +511,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           gap: '0.5rem',
           padding: '0.5rem 0.75rem',
           borderRadius: 8,
-          background: pathname === '/tools' ? 'rgba(5,150,105,0.07)' : 'transparent',
-          border: pathname === '/tools' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+          background: pathname === '/tools' ? 'rgba(13,148,136,0.07)' : 'transparent',
+          border: pathname === '/tools' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
           textDecoration: 'none',
           marginBottom: '0.75rem',
           transition: 'all 0.15s',
@@ -526,14 +526,14 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       >
         <LayoutDashboard
           size={15}
-          color={pathname === '/tools' ? '#059669' : '#9CA3AF'}
+          color={pathname === '/tools' ? '#0D9488' : '#9CA3AF'}
         />
         <span
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: pathname === '/tools' ? 600 : 400,
-            color: pathname === '/tools' ? '#059669' : 'var(--color-text-secondary)',
+            color: pathname === '/tools' ? '#0D9488' : 'var(--color-text-secondary)',
           }}
         >
           Dashboard
@@ -551,8 +551,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       {/* Featured tools */}
       {[
         { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#6366F1' },
-        { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#D97706' },
-        { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0891B2' },
+        { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#2A222B' },
+        { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0D9488' },
       ].map((item) => {
         const active = pathname === item.href
         const IconComp = item.icon
@@ -597,9 +597,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 alignItems: 'center',
                 padding: '1px 6px',
                 borderRadius: 9999,
-                background: '#059669',
+                background: '#0D9488',
                 color: 'white',
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.5625rem',
                 fontWeight: 700,
                 lineHeight: 1.6,
@@ -620,10 +620,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           gap: '0.5rem',
           padding: '0.5rem 0.75rem',
           borderRadius: 8,
-          background: pathname === '/tools/recursos' ? 'rgba(5,150,105,0.07)' : 'transparent',
-          border: pathname === '/tools/recursos' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+          background: pathname === '/tools/recursos' ? 'rgba(13,148,136,0.07)' : 'transparent',
+          border: pathname === '/tools/recursos' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
           textDecoration: 'none',
-          color: pathname === '/tools/recursos' ? '#059669' : 'var(--color-text-muted)',
+          color: pathname === '/tools/recursos' ? '#0D9488' : 'var(--color-text-muted)',
           fontFamily: 'var(--font-body)',
           fontSize: '0.8125rem',
           fontWeight: pathname === '/tools/recursos' ? 600 : 400,
@@ -674,10 +674,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             gap: '0.5rem',
             padding: '0.5rem 0.75rem',
             borderRadius: 8,
-            background: pathname === '/tools/perfil' ? 'rgba(5,150,105,0.07)' : 'transparent',
-            border: pathname === '/tools/perfil' ? '1px solid rgba(5,150,105,0.15)' : '1px solid transparent',
+            background: pathname === '/tools/perfil' ? 'rgba(13,148,136,0.07)' : 'transparent',
+            border: pathname === '/tools/perfil' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
             textDecoration: 'none',
-            color: pathname === '/tools/perfil' ? '#059669' : 'var(--color-text-muted)',
+            color: pathname === '/tools/perfil' ? '#0D9488' : 'var(--color-text-muted)',
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: pathname === '/tools/perfil' ? 600 : 400,
@@ -738,7 +738,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
         >
           <LogOut size={13} />
-          Cerrar sesión
+          Cerrar sesion
         </button>
       </div>
     </div>
@@ -758,7 +758,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         style={{
           width: 240,
           flexShrink: 0,
-          background: 'var(--color-bg-card)',
+          background: '#2A222B',
           borderRight: '1px solid var(--color-border)',
           position: 'fixed',
           top: 0,
@@ -781,7 +781,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           right: 0,
           zIndex: 50,
           height: 56,
-          background: 'var(--color-bg-card)',
+          background: '#2A222B',
           backdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--color-border)',
           display: 'flex',
@@ -846,7 +846,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 bottom: 0,
                 width: 260,
                 zIndex: 60,
-                background: 'var(--color-bg-card)',
+                background: '#2A222B',
                 borderRight: '1px solid var(--color-border)',
               }}
               onClick={(e) => e.stopPropagation()}

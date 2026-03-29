@@ -39,7 +39,7 @@ export default function WorkbookMockup({
       {/* Front cover with 3D perspective tilt */}
       <g transform="translate(0, -4) skewY(-2)">
         {/* Cover background */}
-        <rect x="58" y="32" width="264" height="360" rx="10" fill="#059669" />
+        <rect x="58" y="32" width="264" height="360" rx="10" fill="#0D9488" />
 
         {/* Subtle gradient overlay */}
         <defs>

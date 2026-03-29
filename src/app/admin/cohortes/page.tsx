@@ -47,7 +47,7 @@ const MOCK_COHORTS: Cohort[] = [
 ]
 
 const STATUS_CONFIG = {
-  active: { label: 'Activa', color: '#059669', bg: 'rgba(5,150,105,0.08)' },
+  active: { label: 'Activa', color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
   planned: { label: 'Planificada', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
   completed: { label: 'Completada', color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
 }

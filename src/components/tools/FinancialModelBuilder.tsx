@@ -289,7 +289,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             </div>
           </div>
         ))}
-        <button onClick={addRevenue} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar fuente de ingreso</button>
+        <button onClick={addRevenue} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar fuente de ingreso</button>
       </SectionCollapsible>
 
       {/* Fixed Costs */}
@@ -303,7 +303,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addFixed} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar costo fijo</button>
+        <button onClick={addFixed} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar costo fijo</button>
       </SectionCollapsible>
 
       {/* Variable Costs */}
@@ -317,7 +317,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addVariable} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar costo variable</button>
+        <button onClick={addVariable} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar costo variable</button>
       </SectionCollapsible>
 
       {/* Team */}
@@ -336,7 +336,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addTeam} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar miembro</button>
+        <button onClick={addTeam} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar miembro</button>
       </SectionCollapsible>
 
       {/* Funding Rounds */}
@@ -350,7 +350,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             <button onClick={() => removeRound(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.3rem 0.5rem' }}><Trash2 size={11} /></button>
           </div>
         ))}
-        <button onClick={addRound} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar ronda</button>
+        <button onClick={addRound} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar ronda</button>
       </SectionCollapsible>
 
       {/* Auto-calculated outputs */}
@@ -365,13 +365,13 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Runway estimado</span>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#059669' : summaryMetrics.runway >= 12 ? '#D97706' : '#DC2626' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#0D9488' : summaryMetrics.runway >= 12 ? '#D97706' : '#DC2626' }}>
               {summaryMetrics.runway >= 999 ? '∞' : `${summaryMetrics.runway} meses`}
             </span>
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Break-even</span>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.breakEvenMonth ? '#059669' : '#6B7280' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.breakEvenMonth ? '#0D9488' : '#6B7280' }}>
               {summaryMetrics.breakEvenMonth ? `Mes ${summaryMetrics.breakEvenMonth}` : 'No alcanzado'}
             </span>
           </div>
@@ -393,9 +393,9 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
               {projections.slice(0, 12).map(p => (
                 <tr key={p.month}>
                   <td style={tdStyle}>{p.month}</td>
-                  <td style={{ ...tdStyle, color: '#059669' }}>{data.currency} {fmt(p.revenue)}</td>
+                  <td style={{ ...tdStyle, color: '#0D9488' }}>{data.currency} {fmt(p.revenue)}</td>
                   <td style={{ ...tdStyle, color: '#DC2626' }}>{data.currency} {fmt(p.costs)}</td>
-                  <td style={{ ...tdStyle, color: p.net >= 0 ? '#059669' : '#DC2626', fontWeight: 600 }}>{data.currency} {fmt(p.net)}</td>
+                  <td style={{ ...tdStyle, color: p.net >= 0 ? '#0D9488' : '#DC2626', fontWeight: 600 }}>{data.currency} {fmt(p.net)}</td>
                 </tr>
               ))}
             </tbody>
@@ -474,16 +474,16 @@ const btnOutlineGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#059669',
-  border: '1.5px solid #05966940', cursor: 'pointer',
+  background: 'transparent', color: '#0D9488',
+  border: '1.5px solid #0D948840', cursor: 'pointer',
 }
 
 const btnSolidGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#059669', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
+  background: '#0D9488', color: 'white',
+  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
 }
 
 const btnOutline: React.CSSProperties = {

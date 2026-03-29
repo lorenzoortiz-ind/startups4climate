@@ -66,11 +66,11 @@ const ODS_COLORS: Record<number, string> = {
 const categoryLabels: Record<string, { label: string; color: string }> = {
   output: { label: 'Output', color: '#0891B2' },
   outcome: { label: 'Outcome', color: '#7C3AED' },
-  impact: { label: 'Impacto', color: '#059669' },
+  impact: { label: 'Impacto', color: '#0D9488' },
 }
 
 const progressColor = (pct: number) => {
-  if (pct >= 70) return '#059669'
+  if (pct >= 70) return '#0D9488'
   if (pct >= 40) return '#D97706'
   return '#DC2626'
 }
@@ -222,7 +222,7 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
             </div>
           )
         })}
-        <button onClick={addMetric} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar métrica</button>
+        <button onClick={addMetric} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar métrica</button>
       </SectionCollapsible>
 
       {/* Buttons */}
@@ -289,16 +289,16 @@ const btnOutlineGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#059669',
-  border: '1.5px solid #05966940', cursor: 'pointer',
+  background: 'transparent', color: '#0D9488',
+  border: '1.5px solid #0D948840', cursor: 'pointer',
 }
 
 const btnSolidGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#059669', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
+  background: '#0D9488', color: 'white',
+  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
 }
 
 const btnOutline: React.CSSProperties = {

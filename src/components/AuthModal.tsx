@@ -128,7 +128,7 @@ export default function AuthModal() {
           <div
             style={{
               height: 4,
-              background: 'linear-gradient(90deg, #7C3AED, #059669, #D97706)',
+              background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #D97706)',
             }}
           />
 
@@ -178,14 +178,14 @@ export default function AuthModal() {
                     width: 64,
                     height: 64,
                     borderRadius: '50%',
-                    background: 'rgba(5,150,105,0.08)',
+                    background: 'rgba(13,148,136,0.08)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1rem',
                   }}
                 >
-                  <CheckCircle2 size={32} color="#059669" />
+                  <CheckCircle2 size={32} color="#0D9488" />
                 </div>
                 <h3
                   style={{
@@ -220,12 +220,12 @@ export default function AuthModal() {
                       gap: '0.5rem',
                       padding: '0.25rem 0.75rem',
                       borderRadius: 9999,
-                      background: 'rgba(5,150,105,0.07)',
-                      border: '1px solid rgba(5,150,105,0.14)',
+                      background: 'rgba(13,148,136,0.07)',
+                      border: '1px solid rgba(13,148,136,0.14)',
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.6875rem',
                       fontWeight: 600,
-                      color: '#059669',
+                      color: '#0D9488',
                       letterSpacing: '0.04em',
                       textTransform: 'uppercase',
                       marginBottom: '0.75rem',
@@ -259,7 +259,7 @@ export default function AuthModal() {
                       ? (orgMode
                         ? <>Ingresa las credenciales proporcionadas por S4C.</>
                         : <>+30 herramientas operativas para startups de impacto, listas para usar.</>)
-                      : <>Accede a la Plataforma <span style={{ background: 'linear-gradient(135deg, #059669, #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> sin costo.</>}
+                      : <>Accede a la Plataforma <span style={{ background: 'linear-gradient(135deg, #0D9488, #0D9488)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> sin costo.</>}
                   </p>
                 </div>
 
@@ -350,7 +350,7 @@ export default function AuthModal() {
                       width: '100%',
                       padding: '0.875rem',
                       borderRadius: 12,
-                      background: loading ? '#6EE7B7' : '#059669',
+                      background: loading ? '#99E5DD' : '#0D9488',
                       color: 'white',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
@@ -358,14 +358,14 @@ export default function AuthModal() {
                       border: 'none',
                       cursor: loading ? 'not-allowed' : 'pointer',
                       transition: 'all 0.2s',
-                      boxShadow: '0 4px 14px rgba(5,150,105,0.3)',
+                      boxShadow: '0 4px 14px rgba(13,148,136,0.3)',
                       marginTop: '0.25rem',
                     }}
                     onMouseEnter={(e) => {
-                      if (!loading) e.currentTarget.style.background = '#047857'
+                      if (!loading) e.currentTarget.style.background = '#0B7C72'
                     }}
                     onMouseLeave={(e) => {
-                      if (!loading) e.currentTarget.style.background = '#059669'
+                      if (!loading) e.currentTarget.style.background = '#0D9488'
                     }}
                   >
                     {loading ? (
@@ -401,7 +401,7 @@ export default function AuthModal() {
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         fontWeight: 600,
-                        color: '#059669',
+                        color: '#0D9488',
                         cursor: 'pointer',
                         textDecoration: 'underline',
                         textUnderlineOffset: 2,
@@ -433,7 +433,7 @@ export default function AuthModal() {
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
                           fontWeight: 600,
-                          color: '#059669',
+                          color: '#0D9488',
                           cursor: 'pointer',
                           textDecoration: 'underline',
                           textUnderlineOffset: 2,
@@ -475,8 +475,8 @@ export default function AuthModal() {
                         transition: 'all 0.2s',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = '#059669'
-                        e.currentTarget.style.color = '#059669'
+                        e.currentTarget.style.borderColor = '#0D9488'
+                        e.currentTarget.style.color = '#0D9488'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -524,10 +524,10 @@ function InputField({
         gap: '0.625rem',
         padding: '0 0.875rem',
         borderRadius: 10,
-        border: `1px solid ${focused ? '#059669' : 'var(--color-border)'}`,
-        background: focused ? 'rgba(5,150,105,0.02)' : 'var(--color-bg-primary)',
+        border: `1px solid ${focused ? '#0D9488' : 'var(--color-border)'}`,
+        background: focused ? 'rgba(13,148,136,0.02)' : 'var(--color-bg-primary)',
         transition: 'all 0.18s ease',
-        boxShadow: focused ? '0 0 0 3px rgba(5,150,105,0.08)' : 'none',
+        boxShadow: focused ? '0 0 0 3px rgba(13,148,136,0.08)' : 'none',
       }}
     >
       <span style={{ flexShrink: 0, display: 'flex' }}>{icon}</span>

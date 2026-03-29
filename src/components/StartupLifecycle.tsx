@@ -12,9 +12,9 @@ const stages = [
     title: 'Pre-incubación',
     subtitle: 'Ideación y Descubrimiento',
     focus: 'Define tu propósito, descubre tu mercado y entiende a tu usuario',
-    color: '#7C3AED',
-    bg: 'rgba(124,58,237,0.06)',
-    borderColor: 'rgba(124,58,237,0.15)',
+    color: '#FF6B4A',
+    bg: 'rgba(255,107,74,0.05)',
+    borderColor: 'rgba(255,107,74,0.15)',
     tools: [
       { name: 'Propósito & Equipo', category: 'Equipo', desc: 'Define la misión de tu startup y evalúa las capacidades y brechas de tu equipo fundador.' },
       { name: 'Segmentación de Mercado', category: 'Mercado', desc: 'Identifica y mapea los segmentos de mercado donde tu solución puede generar mayor impacto.' },
@@ -31,9 +31,9 @@ const stages = [
     title: 'Incubación',
     subtitle: 'Validación y Producto',
     focus: 'Valida tu propuesta de valor y diseña tu producto mínimo viable',
-    color: '#059669',
-    bg: 'rgba(5,150,105,0.06)',
-    borderColor: 'rgba(5,150,105,0.15)',
+    color: '#0D9488',
+    bg: 'rgba(13,148,136,0.05)',
+    borderColor: 'rgba(13,148,136,0.15)',
     tools: [
       { name: 'User Journey', category: 'Producto', desc: 'Mapea el recorrido completo de tu usuario desde el descubrimiento hasta la retención y referencia.' },
       { name: 'Especificación de Producto', category: 'Producto', desc: 'Define las funcionalidades clave, la arquitectura y los requerimientos técnicos de tu producto.' },
@@ -50,9 +50,9 @@ const stages = [
     title: 'Aceleración',
     subtitle: 'Modelo de Negocio y Crecimiento',
     focus: 'Estructura tu modelo de negocio, pricing y proceso de ventas',
-    color: '#D97706',
-    bg: 'rgba(217,119,6,0.06)',
-    borderColor: 'rgba(217,119,6,0.15)',
+    color: '#2A222B',
+    bg: 'rgba(42,34,43,0.04)',
+    borderColor: 'rgba(42,34,43,0.12)',
     tools: [
       { name: 'Decisiones de Compra', category: 'Ventas', desc: 'Identifica a todas las personas involucradas en la decisión de compra final, sus intenciones y motivaciones.' },
       { name: 'Proceso de Adquisición', category: 'Marketing', desc: 'Diseña el embudo completo de adquisición de clientes: desde awareness hasta conversión.' },
@@ -69,9 +69,9 @@ const stages = [
     title: 'Escalamiento',
     subtitle: 'Plan y Fundraising',
     focus: 'Valida tu tracción, construye tu producto y prepara tu ronda de inversión',
-    color: '#0891B2',
-    bg: 'rgba(8,145,178,0.06)',
-    borderColor: 'rgba(8,145,178,0.15)',
+    color: '#0D9488',
+    bg: 'rgba(13,148,136,0.05)',
+    borderColor: 'rgba(13,148,136,0.15)',
     tools: [
       { name: 'Supuestos Clave', category: 'Estrategia', desc: 'Identifica y prioriza los supuestos críticos que deben validarse antes de escalar tu negocio.' },
       { name: 'Producto Mínimo Viable', category: 'Producto', desc: 'Define y construye la versión mínima de tu producto que prueba tu propuesta de valor central.' },
@@ -84,14 +84,14 @@ const stages = [
 ]
 
 const categoryColors: Record<string, string> = {
-  'Equipo': '#7C3AED',
-  'Mercado': '#059669',
-  'Estrategia': '#0891B2',
-  'Producto': '#2563EB',
-  'Ventas': '#DC2626',
-  'Marketing': '#DB2777',
-  'Modelo': '#059669',
-  'Finanzas': '#D97706',
+  'Equipo': '#FF6B4A',
+  'Mercado': '#0D9488',
+  'Estrategia': '#2A222B',
+  'Producto': '#0D9488',
+  'Ventas': '#FF6B4A',
+  'Marketing': '#FF6B4A',
+  'Modelo': '#0D9488',
+  'Finanzas': '#2A222B',
 }
 
 export default function StartupLifecycle() {
@@ -113,39 +113,33 @@ export default function StartupLifecycle() {
   }
 
   return (
-    <section id="ciclo-de-vida" style={{ padding: '6rem 0', background: 'var(--color-bg-primary)' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+    <section id="ciclo-de-vida" style={{ padding: 'clamp(4rem, 8vw, 10rem) 0', background: 'white' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 5rem)' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 3rem' }}
         >
           <span style={{
             display: 'inline-block',
-            padding: '0.3rem 0.875rem',
-            borderRadius: 9999,
-            background: 'rgba(5,150,105,0.06)',
-            border: '1px solid rgba(5,150,105,0.12)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
+            fontSize: '0.8125rem',
             fontWeight: 600,
-            color: '#059669',
-            letterSpacing: '0.03em',
-            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase' as const,
+            color: '#93908C',
             marginBottom: '1rem',
           }}>
             +30 Herramientas en 4 Etapas
           </span>
           <h2 style={{
-            fontFamily: 'var(--font-heading)',
             fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-            fontWeight: 800,
+            fontWeight: 700,
             lineHeight: 1.15,
-            letterSpacing: '-0.02em',
-            color: 'var(--color-text-primary)',
+            letterSpacing: '-0.025em',
+            color: '#2A222B',
             marginBottom: '1rem',
           }}>
             El Toolkit que necesita todo founder para crecer y escalar
@@ -175,7 +169,7 @@ export default function StartupLifecycle() {
                 flex: '1 1 0',
                 minWidth: 180,
                 padding: '1.25rem 1.25rem',
-                borderRadius: 14,
+                borderRadius: 12,
                 border: activeStage === i ? `2px solid ${s.color}` : '1px solid var(--color-border)',
                 background: activeStage === i ? s.bg : 'white',
                 cursor: 'pointer',
@@ -236,7 +230,7 @@ export default function StartupLifecycle() {
             transition={{ duration: 0.3 }}
             style={{
               background: 'white',
-              borderRadius: 20,
+              borderRadius: 16,
               border: '1px solid var(--color-border)',
               padding: '2rem',
               boxShadow: 'var(--shadow-card)',
@@ -260,7 +254,7 @@ export default function StartupLifecycle() {
                 <div style={{
                   width: 48,
                   height: 48,
-                  borderRadius: 14,
+                  borderRadius: 12,
                   background: stage.bg,
                   display: 'flex',
                   alignItems: 'center',

@@ -8,13 +8,13 @@ import type { ToolComponentProps } from './ToolPage'
 const BLOCKS = [
   { id: 'problem', label: 'Problema', hint: 'Top 3 problemas del cliente. ¿Qué está roto? ¿Qué alternativas existen hoy?', color: '#DC2626', row: 0, col: 0, span: 1 },
   { id: 'solution', label: 'Solución', hint: 'Top 3 características de tu solución que resuelven el problema directamente.', color: '#7C3AED', row: 0, col: 1, span: 1 },
-  { id: 'uvp', label: 'Propuesta de Valor Única', hint: 'Un mensaje claro y convincente: ¿qué te hace diferente y por qué importa?', color: '#059669', row: 0, col: 2, span: 1 },
+  { id: 'uvp', label: 'Propuesta de Valor Única', hint: 'Un mensaje claro y convincente: ¿qué te hace diferente y por qué importa?', color: '#0D9488', row: 0, col: 2, span: 1 },
   { id: 'advantage', label: 'Ventaja Diferencial', hint: 'Algo que no puede copiarse fácilmente: IP, red, datos exclusivos, acceso regulatorio.', color: '#0891B2', row: 0, col: 3, span: 1 },
   { id: 'segments', label: 'Segmentos de Cliente', hint: '¿A quién le vendes? Define el early adopter más específico posible.', color: '#D97706', row: 0, col: 4, span: 1 },
   { id: 'metrics', label: 'Métricas Clave', hint: 'Las 3-5 métricas que miden la salud del negocio (TRL, MWh, tCO2eq, contratos LOI).', color: '#0D9488', row: 1, col: 0, span: 1 },
   { id: 'channels', label: 'Canales', hint: '¿Cómo llega tu solución al cliente? Venta directa, distribuidores, partnerships.', color: '#7C3AED', row: 1, col: 3, span: 1 },
   { id: 'costs', label: 'Estructura de Costos', hint: 'Costos fijos y variables más relevantes: I+D, manufactura, ventas, capex.', color: '#DC2626', row: 2, col: 0, span: 2 },
-  { id: 'revenue', label: 'Flujo de Ingresos', hint: 'Cómo generas dinero: precio, HaaS/PPA, licencias, grants, créditos de carbono.', color: '#059669', row: 2, col: 2, span: 2 },
+  { id: 'revenue', label: 'Flujo de Ingresos', hint: 'Cómo generas dinero: precio, HaaS/PPA, licencias, grants, créditos de carbono.', color: '#0D9488', row: 2, col: 2, span: 2 },
   { id: 'impact', label: 'Impacto Ambiental', hint: 'tCO2eq reducidas/año, energía renovable generada, residuos evitados. Cuantifica.', color: '#10B981', row: 2, col: 0, span: 1 },
   { id: 'regulatory', label: 'Contexto Regulatorio', hint: 'Normativas aplicables, subsidios disponibles, barreras de certificación y plazos.', color: '#F97316', row: 2, col: 1, span: 1 },
 ]

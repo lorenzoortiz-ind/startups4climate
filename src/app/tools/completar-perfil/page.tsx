@@ -172,7 +172,7 @@ export default function CompletarPerfilPage() {
               margin: '0 auto 1rem',
             }}
           >
-            <Sparkles size={24} color="#059669" />
+            <Sparkles size={24} color="#0D9488" />
           </div>
           <h1
             style={{
@@ -220,7 +220,7 @@ export default function CompletarPerfilPage() {
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   fontFamily: 'var(--font-mono)',
-                  background: step >= s ? '#059669' : 'var(--color-bg-muted, #f3f4f6)',
+                  background: step >= s ? '#0D9488' : 'var(--color-bg-muted, #f3f4f6)',
                   color: step >= s ? '#fff' : 'var(--color-text-muted, #9ca3af)',
                   transition: 'all 0.3s ease',
                 }}
@@ -242,7 +242,7 @@ export default function CompletarPerfilPage() {
                   style={{
                     width: 32,
                     height: 2,
-                    background: step >= 2 ? '#059669' : 'var(--color-border, #e5e7eb)',
+                    background: step >= 2 ? '#0D9488' : 'var(--color-border, #e5e7eb)',
                     borderRadius: 1,
                     transition: 'background 0.3s ease',
                   }}
@@ -363,7 +363,7 @@ export default function CompletarPerfilPage() {
                   padding: '0.75rem 1.5rem',
                   borderRadius: 10,
                   border: 'none',
-                  background: step1Valid ? '#059669' : 'var(--color-border, #d1d5db)',
+                  background: step1Valid ? '#0D9488' : 'var(--color-border, #d1d5db)',
                   color: '#fff',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.875rem',
@@ -475,7 +475,7 @@ export default function CompletarPerfilPage() {
                     padding: '0.75rem 1.5rem',
                     borderRadius: 10,
                     border: 'none',
-                    background: '#059669',
+                    background: '#0D9488',
                     color: '#fff',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.875rem',

@@ -518,7 +518,7 @@ export default function PerfilPage() {
                   type="checkbox"
                   checked={radarNewsletter}
                   onChange={(e) => setRadarNewsletter(e.target.checked)}
-                  style={{ width: 18, height: 18, accentColor: '#059669', cursor: 'pointer' }}
+                  style={{ width: 18, height: 18, accentColor: '#0D9488', cursor: 'pointer' }}
                 />
               </label>
 
@@ -542,7 +542,7 @@ export default function PerfilPage() {
                   type="checkbox"
                   checked={oppsNewsletter}
                   onChange={(e) => setOppsNewsletter(e.target.checked)}
-                  style={{ width: 18, height: 18, accentColor: '#059669', cursor: 'pointer' }}
+                  style={{ width: 18, height: 18, accentColor: '#0D9488', cursor: 'pointer' }}
                 />
               </label>
             </div>
@@ -588,14 +588,14 @@ export default function PerfilPage() {
                 gap: '0.5rem',
                 padding: '0.75rem 1.75rem',
                 borderRadius: 10,
-                background: saving ? '#6B7280' : '#059669',
+                background: saving ? '#6B7280' : '#0D9488',
                 color: 'white',
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 border: 'none',
                 cursor: saving ? 'wait' : 'pointer',
-                boxShadow: '0 2px 10px rgba(5,150,105,0.25)',
+                boxShadow: '0 2px 10px rgba(13,148,136,0.25)',
                 transition: 'all 0.2s',
               }}
             >
@@ -612,7 +612,7 @@ export default function PerfilPage() {
                   gap: '0.375rem',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.8125rem',
-                  color: '#059669',
+                  color: '#0D9488',
                   fontWeight: 500,
                 }}
               >

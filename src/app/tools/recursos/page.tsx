@@ -79,9 +79,9 @@ const stages: Stage[] = [
     id: 2,
     label: 'Incubación',
     sublabel: 'Validación de mercado y prototipo',
-    color: '#059669',
-    bg: 'rgba(5,150,105,0.06)',
-    border: 'rgba(5,150,105,0.15)',
+    color: '#0D9488',
+    bg: 'rgba(13,148,136,0.06)',
+    border: 'rgba(13,148,136,0.15)',
     icon: Rocket,
     tools: [
       {
@@ -328,12 +328,12 @@ export default function RecursosPage() {
             gap: '0.5rem',
             padding: '0.3rem 0.875rem',
             borderRadius: 9999,
-            background: 'rgba(5,150,105,0.06)',
-            border: '1px solid rgba(5,150,105,0.12)',
+            background: 'rgba(13,148,136,0.06)',
+            border: '1px solid rgba(13,148,136,0.12)',
             fontFamily: 'var(--font-mono)',
             fontSize: '0.6875rem',
             fontWeight: 600,
-            color: '#059669',
+            color: '#0D9488',
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
             marginBottom: '1rem',
@@ -491,8 +491,8 @@ export default function RecursosPage() {
           marginTop: '3rem',
           padding: '1.5rem 2rem',
           borderRadius: 16,
-          background: 'linear-gradient(135deg, rgba(5,150,105,0.04), rgba(124,58,237,0.04))',
-          border: '1px solid rgba(5,150,105,0.1)',
+          background: 'linear-gradient(135deg, rgba(13,148,136,0.04), rgba(124,58,237,0.04))',
+          border: '1px solid rgba(13,148,136,0.1)',
           textAlign: 'center',
         }}
       >
@@ -512,7 +512,7 @@ export default function RecursosPage() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: '#059669',
+              color: '#0D9488',
               fontWeight: 600,
               textDecoration: 'none',
             }}

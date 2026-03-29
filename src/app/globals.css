@@ -1,53 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  /* ─── V2 Typeform-inspired Design Tokens ─── */
+  /* ─── S4C Typeform-inspired Design Tokens ─── */
 
-  /* Backgrounds — subtle warm off-white */
-  --color-bg-primary:    #FAFAF8;
-  --color-bg-warm:       #F5F3EF;
+  /* Core palette — Ink & Paper */
+  --color-ink:           #2A222B;
+  --color-paper:         #FFFFFF;
+  --color-cream:         #FAF8F5;
+  --color-off-white:     #F5F3F0;
+  --color-warm-gray:     #E8E4DF;
+  --color-mid-gray:      #93908C;
+  --color-light-gray:    #F0EFEA;
+
+  /* Backgrounds */
+  --color-bg-primary:    #FFFFFF;
+  --color-bg-warm:       #FAF8F5;
   --color-bg-card:       #FFFFFF;
-  --color-bg-muted:      #F0EEEA;
+  --color-bg-muted:      #F0EFEA;
 
-  /* Climate Green Accents (brand) */
-  --color-accent-primary:   #059669;
-  --color-accent-hover:     #047857;
-  --color-accent-light:     #D1FAE5;
-  --color-accent-glow:      rgba(5, 150, 105, 0.08);
+  /* Accent — Coral (energy, ambition) */
+  --color-accent-primary:   #FF6B4A;
+  --color-accent-hover:     #E85D3A;
+  --color-accent-light:     #FFF0EC;
+  --color-accent-glow:      rgba(255, 107, 74, 0.08);
 
-  /* Secondary Accent — Indigo (Typeform-inspired) */
-  --color-accent-secondary:    #6366F1;
-  --color-accent-secondary-hover: #4F46E5;
-  --color-accent-secondary-light: #E0E7FF;
+  /* Accent — Teal (sustainability, growth) */
+  --color-accent-secondary:       #0D9488;
+  --color-accent-secondary-hover: #0B7C72;
+  --color-accent-secondary-light: #CCFBF1;
 
-  /* Warm Gradient Palette */
-  --color-warm-peach:     #FECDD3;
-  --color-warm-coral:     #FED7AA;
-  --color-warm-amber:     #FDE68A;
-  --color-warm-lavender:  #DDD6FE;
-  --color-warm-mint:      #A7F3D0;
-
-  /* Text — darker, bolder like Typeform */
-  --color-text-primary:   #191919;
-  --color-text-secondary: #5E5E5E;
-  --color-text-muted:     #8F8F8F;
+  /* Text */
+  --color-text-primary:   #2A222B;
+  --color-text-secondary: #5E5A60;
+  --color-text-muted:     #93908C;
   --color-text-on-dark:   #F9FAFB;
 
-  /* Borders — softer, warmer */
-  --color-border:         #E8E8E5;
-  --color-border-strong:  #D4D4D0;
+  /* Borders */
+  --color-border:         #E8E4DF;
+  --color-border-strong:  #D4D0CC;
 
   /* States */
-  --color-success:  #059669;
+  --color-success:  #0D9488;
   --color-warning:  #D97706;
   --color-error:    #DC2626;
 
-  /* Colores por vertical */
+  /* Vertical colors */
   --color-vertical-fintech:       #3B82F6;
   --color-vertical-healthtech:    #EF4444;
   --color-vertical-edtech:        #8B5CF6;
   --color-vertical-agritech:      #22C55E;
-  --color-vertical-cleantech:     #059669;
+  --color-vertical-cleantech:     #0D9488;
   --color-vertical-biotech:       #06B6D4;
   --color-vertical-logistics:     #F97316;
   --color-vertical-saas:          #6366F1;
@@ -55,46 +57,51 @@
   --color-vertical-other:         #6B7280;
 
   /* Chat AI */
-  --color-chat-user-bg:           #F0FDF4;
-  --color-chat-assistant-bg:      #F8F8F6;
+  --color-chat-user-bg:           #FFF0EC;
+  --color-chat-assistant-bg:      #F5F3F0;
   --color-chat-input-bg:          #FFFFFF;
-  --color-chat-input-border:      #E8E8E5;
+  --color-chat-input-border:      #E8E4DF;
 
   /* Admin panel */
-  --color-admin-sidebar-bg:       #191919;
-  --color-admin-sidebar-text:     #B0B0B0;
-  --color-admin-sidebar-active:   #059669;
+  --color-admin-sidebar-bg:       #2A222B;
+  --color-admin-sidebar-text:     #B0ACB2;
+  --color-admin-sidebar-active:   #FF6B4A;
 
   /* Match score */
-  --color-match-high:             #059669;
+  --color-match-high:             #0D9488;
   --color-match-medium:           #D97706;
-  --color-match-low:              #8F8F8F;
+  --color-match-low:              #93908C;
 
   /* ─── Shadows — Typeform-style elevation ─── */
-  --shadow-sm:       0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm:       0 1px 3px rgba(0,0,0,0.04);
   --shadow-card:     0 2px 8px rgba(0,0,0,0.05);
-  --shadow-md:       0 4px 16px rgba(0,0,0,0.06);
+  --shadow-md:       0 4px 12px rgba(0,0,0,0.06);
   --shadow-lg:       0 8px 32px rgba(0,0,0,0.08);
   --shadow-hover:    0 12px 40px rgba(0,0,0,0.12);
   --shadow-elevated: 0 4px 20px rgba(0,0,0,0.08);
-  --shadow-glow:     0 4px 30px rgba(5,150,105,0.10);
+  --shadow-glow:     0 4px 30px rgba(255,107,74,0.10);
+  --shadow-xl:       0 16px 48px rgba(0,0,0,0.12);
 
-  /* ─── Corner Radii — generous, rounded ─── */
-  --radius-xs:  6px;
-  --radius-sm:  10px;
-  --radius-md:  16px;
-  --radius-lg:  24px;
-  --radius-xl:  32px;
-  --radius-2xl: 40px;
+  /* ─── Corner Radii — Typeform-style ─── */
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-2xl: 32px;
   --radius-full: 9999px;
 
-  /* ─── Section Spacing ─── */
-  --section-spacing-lg: 6rem;
-  --section-spacing-md: 4rem;
-  --section-spacing-sm: 2.5rem;
+  /* ─── Section Spacing — generous whitespace ─── */
+  --section-spacing-lg: 10rem;
+  --section-spacing-md: 6rem;
+  --section-spacing-sm: 3rem;
 
-  /* ─── Typography Scale (display/heading sizes) ─── */
-  --text-display-xl: clamp(3rem, 5vw, 4.5rem);
+  /* ─── Container ─── */
+  --container-max: 1200px;
+  --container-padding: 24px;
+
+  /* ─── Typography Scale ─── */
+  --text-display-xl: clamp(3rem, 5vw, 4rem);
   --text-display-lg: clamp(2.5rem, 4vw, 3.5rem);
   --text-display-md: clamp(2rem, 3vw, 2.75rem);
   --text-heading-lg: clamp(1.5rem, 2.5vw, 2rem);
@@ -102,36 +109,29 @@
   --text-heading-sm: clamp(1.1rem, 1.5vw, 1.25rem);
 
   /* ─── Transitions — smooth Typeform-style ─── */
-  --transition-fast:   0.15s ease-out;
-  --transition-base:   0.3s ease-out;
-  --transition-smooth: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-  --transition-spring: 0.5s cubic-bezier(0.33, 1, 0.68, 1);
-
-  /* ─── Gradients ─── */
-  --gradient-hero: linear-gradient(135deg, #FAFAF8 0%, #F0FDF4 40%, #E0E7FF 100%);
-  --gradient-warm: linear-gradient(135deg, #D1FAE5 0%, #E0E7FF 50%, #DDD6FE 100%);
-  --gradient-mesh: radial-gradient(at 20% 20%, rgba(5,150,105,0.06) 0%, transparent 50%),
-                   radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%),
-                   radial-gradient(at 50% 80%, rgba(5,150,105,0.04) 0%, transparent 50%);
+  --transition-fast:   150ms ease;
+  --transition-base:   300ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-spring: 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* ─── Dark Mode — applied via data-theme="dark" on html ─── */
+/* ─── Dark Mode ─── */
 :root[data-theme="dark"],
 [data-theme="dark"] {
-  --color-bg-primary:    #0F0F0F;
-  --color-bg-warm:       #141414;
-  --color-bg-card:       #1A1A1A;
-  --color-bg-muted:      #222222;
+  --color-bg-primary:    #1A1418;
+  --color-bg-warm:       #1E181C;
+  --color-bg-card:       #241E22;
+  --color-bg-muted:      #2E282C;
 
-  --color-text-primary:   #F5F5F5;
-  --color-text-secondary: #A0A0A0;
-  --color-text-muted:     #666666;
-  --color-text-on-dark:   #F5F5F5;
+  --color-text-primary:   #F5F3F4;
+  --color-text-secondary: #A09CA2;
+  --color-text-muted:     #6B6770;
+  --color-text-on-dark:   #F5F3F4;
 
-  --color-border:         #2A2A2A;
-  --color-border-strong:  #3A3A3A;
+  --color-border:         #3A343C;
+  --color-border-strong:  #4A444C;
 
-  --color-accent-secondary-light: #1E1B4B;
+  --color-accent-secondary-light: #0F2928;
 
   --shadow-sm:       0 1px 2px rgba(0,0,0,0.3);
   --shadow-card:     0 2px 8px rgba(0,0,0,0.3);
@@ -139,25 +139,19 @@
   --shadow-lg:       0 8px 32px rgba(0,0,0,0.4);
   --shadow-hover:    0 12px 40px rgba(0,0,0,0.45);
   --shadow-elevated: 0 4px 20px rgba(0,0,0,0.35);
-  --shadow-glow:     0 4px 30px rgba(5,150,105,0.15);
+  --shadow-glow:     0 4px 30px rgba(255,107,74,0.15);
 
-  --gradient-hero: linear-gradient(135deg, #0F0F0F 0%, #0F1A14 40%, #0F0F1A 100%);
-  --gradient-warm: linear-gradient(135deg, #0F1A14 0%, #0F0F1A 50%, #140F1A 100%);
-  --gradient-mesh: radial-gradient(at 20% 20%, rgba(5,150,105,0.08) 0%, transparent 50%),
-                   radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%),
-                   radial-gradient(at 50% 80%, rgba(5,150,105,0.04) 0%, transparent 50%);
-
-  --color-chat-user-bg:         #0F1A14;
-  --color-chat-assistant-bg:    #1A1A1A;
-  --color-chat-input-bg:        #222222;
-  --color-chat-input-border:    #2A2A2A;
-  --color-admin-sidebar-bg:     #0A0A0A;
+  --color-chat-user-bg:         #2A1F1E;
+  --color-chat-assistant-bg:    #241E22;
+  --color-chat-input-bg:        #2E282C;
+  --color-chat-input-border:    #3A343C;
+  --color-admin-sidebar-bg:     #161216;
 }
 
 @theme inline {
-  --font-heading: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
-  --font-body: var(--font-inter), 'Inter', sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  --font-heading: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, monospace;
 }
 
 @layer base {
@@ -181,6 +175,7 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     line-height: 1.6;
     letter-spacing: -0.011em;
+    font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -188,6 +183,7 @@
     font-weight: 700;
     letter-spacing: -0.025em;
     line-height: 1.15;
+    color: var(--color-ink);
   }
 
   h1 { font-size: var(--text-display-lg); }
@@ -218,16 +214,16 @@
   background: var(--color-bg-muted);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-strong);
+  background: var(--color-warm-gray);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: var(--color-mid-gray);
 }
 
-/* Selection — green tint */
+/* Selection */
 ::selection {
-  background: rgba(5, 150, 105, 0.15);
+  background: rgba(255, 107, 74, 0.15);
   color: var(--color-text-primary);
 }
 
@@ -239,13 +235,40 @@
 
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(135deg, #059669, #6366F1);
+  background: linear-gradient(135deg, #FF6B4A, #0D9488);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Warm gradient blob animation */
+/* Marquee animation for logos */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track-reverse {
+  display: flex;
+  animation: marquee 30s linear infinite reverse;
+}
+
+/* Scroll reveal animation */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.reveal-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Blob animation */
 @keyframes blob {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -50px) scale(1.1); }
@@ -264,7 +287,7 @@
   animation-delay: 4s;
 }
 
-/* Reduced motion: disable all CSS animations and transitions */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -40,7 +40,7 @@ const DEFAULT: Data = {
 }
 
 const scoreColor = (s: number) => {
-  if (s >= 4) return '#059669'
+  if (s >= 4) return '#0D9488'
   if (s >= 3) return '#D97706'
   if (s >= 2) return '#EA580C'
   return '#DC2626'
@@ -134,7 +134,7 @@ ${data.differentiation || '(No completado)'}
             </div>
           </div>
         ))}
-        <button onClick={addCompetitor} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930' }}><Plus size={12} /> Agregar competidor</button>
+        <button onClick={addCompetitor} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar competidor</button>
       </SectionCollapsible>
 
       {/* Competitive Matrix */}
@@ -185,7 +185,7 @@ ${data.differentiation || '(No completado)'}
             </tbody>
           </table>
         </div>
-        <button onClick={addDimension} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930', marginTop: '0.75rem' }}><Plus size={12} /> Agregar dimensión</button>
+        <button onClick={addDimension} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830', marginTop: '0.75rem' }}><Plus size={12} /> Agregar dimensión</button>
       </SectionCollapsible>
 
       {/* Differentiation */}
@@ -261,16 +261,16 @@ const btnOutlineGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#059669',
-  border: '1.5px solid #05966940', cursor: 'pointer',
+  background: 'transparent', color: '#0D9488',
+  border: '1.5px solid #0D948840', cursor: 'pointer',
 }
 
 const btnSolidGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#059669', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
+  background: '#0D9488', color: 'white',
+  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
 }
 
 const btnOutline: React.CSSProperties = {

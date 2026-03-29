@@ -40,7 +40,7 @@ const CHART_DATA = [
 function getTrend(org: number, platform: number) {
   const diff = org - platform
   const pct = platform > 0 ? ((diff / platform) * 100).toFixed(0) : '0'
-  if (diff > 0) return { icon: TrendingUp, color: '#059669', text: `+${pct}% vs promedio` }
+  if (diff > 0) return { icon: TrendingUp, color: '#0D9488', text: `+${pct}% vs promedio` }
   if (diff < 0) return { icon: TrendingDown, color: '#DC2626', text: `${pct}% vs promedio` }
   return { icon: Minus, color: '#6B7280', text: 'Igual al promedio' }
 }
@@ -232,7 +232,7 @@ export default function BenchmarkingPage() {
               <Legend
                 wrapperStyle={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem' }}
               />
-              <Bar dataKey="tuOrg" name="Tu organización" fill="#059669" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="tuOrg" name="Tu organización" fill="#0D9488" radius={[4, 4, 0, 0]} />
               <Bar dataKey="promedio" name="Promedio plataforma" fill="#94A3B8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>

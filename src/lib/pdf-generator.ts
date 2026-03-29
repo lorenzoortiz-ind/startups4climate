@@ -49,7 +49,7 @@ export function generateToolReport(
     month: 'long',
     year: 'numeric',
   })
-  const stageColor = tool.stageColor || '#059669'
+  const stageColor = tool.stageColor || '#0D9488'
 
   const win = window.open('', '_blank')
   if (!win) return
@@ -71,17 +71,17 @@ export function generateToolReport(
     position: relative; overflow: hidden;
   }
   .header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); }
-  .header .logo { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
-  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 9999px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
-  .header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
+  .header .logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
+  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 9999px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'Inter', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
+  .header h1 { font-family: 'Inter', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
   .header .subtitle { font-size: 0.9375rem; opacity: 0.85; line-height: 1.5; }
   .header .meta { display: flex; gap: 2rem; margin-top: 1.25rem; font-size: 0.8125rem; opacity: 0.75; flex-wrap: wrap; }
   .header .meta span { display: flex; align-items: center; gap: 0.375rem; }
 
   .info-bar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .info-card { flex: 1; min-width: 140px; background: white; border-radius: 12px; border: 1px solid #E5E7EB; padding: 1rem; text-align: center; }
-  .info-card .label { font-family: 'JetBrains Mono', monospace; font-size: 0.625rem; text-transform: uppercase; color: #9CA3AF; font-weight: 600; letter-spacing: 0.05em; }
-  .info-card .value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.125rem; font-weight: 700; color: ${stageColor}; margin-top: 0.25rem; }
+  .info-card .label { font-family: 'Inter', monospace; font-size: 0.625rem; text-transform: uppercase; color: #9CA3AF; font-weight: 600; letter-spacing: 0.05em; }
+  .info-card .value { font-family: 'Inter', sans-serif; font-size: 1.125rem; font-weight: 700; color: ${stageColor}; margin-top: 0.25rem; }
 
   .content {
     background: white; padding: 2.5rem; border-radius: 16px; border: 1px solid #E5E7EB;
@@ -89,7 +89,7 @@ export function generateToolReport(
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .content h2.section-title {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.0625rem; font-weight: 700;
+    font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 700;
     color: ${stageColor}; margin: 2rem 0 0.875rem; padding-bottom: 0.5rem;
     border-bottom: 2px solid ${stageColor}20; text-transform: none;
   }

@@ -48,8 +48,8 @@ const TOC_ITEMS = [
   { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#7C3AED' },
   { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#7C3AED' },
   { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#7C3AED' },
-  { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#059669' },
-  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#059669' },
+  { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#0D9488' },
+  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#0D9488' },
   { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
   { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },
   { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0891B2' },
@@ -159,14 +159,14 @@ export default function WorkbookPage() {
             textDecoration: 'none',
           }}
         >
-          Startups<span style={{ color: '#059669' }}>4</span>Climate
+          Startups<span style={{ color: '#0D9488' }}>4</span>Climate
         </Link>
         <Link
           href="/tools"
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
-            color: '#059669',
+            color: '#0D9488',
             textDecoration: 'none',
             fontWeight: 600,
           }}
@@ -206,18 +206,18 @@ export default function WorkbookPage() {
                 gap: '0.5rem',
                 padding: '0.5rem 1rem',
                 borderRadius: 9999,
-                background: 'rgba(5,150,105,0.08)',
-                border: '1px solid rgba(5,150,105,0.15)',
+                background: 'rgba(13,148,136,0.08)',
+                border: '1px solid rgba(13,148,136,0.15)',
                 marginBottom: '1.5rem',
               }}
             >
-              <BookOpen size={16} color="#059669" />
+              <BookOpen size={16} color="#0D9488" />
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.75rem',
                   fontWeight: 600,
-                  color: '#059669',
+                  color: '#0D9488',
                 }}
               >
                 Recurso gratuito
@@ -236,7 +236,7 @@ export default function WorkbookPage() {
               }}
             >
               Gu&iacute;a completa para{' '}
-              <span style={{ color: '#059669' }}>founders de impacto</span>
+              <span style={{ color: '#0D9488' }}>founders de impacto</span>
             </h1>
 
             <p
@@ -380,14 +380,14 @@ export default function WorkbookPage() {
                     width: 56,
                     height: 56,
                     borderRadius: 14,
-                    background: 'rgba(5,150,105,0.08)',
+                    background: 'rgba(13,148,136,0.08)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1.25rem',
                   }}
                 >
-                  <Download size={24} color="#059669" />
+                  <Download size={24} color="#0D9488" />
                 </div>
                 <h2
                   style={{
@@ -418,14 +418,14 @@ export default function WorkbookPage() {
                     gap: '0.5rem',
                     padding: '0.875rem 2rem',
                     borderRadius: 12,
-                    background: '#059669',
+                    background: '#0D9488',
                     color: 'white',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.9375rem',
                     fontWeight: 600,
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 2px 12px rgba(5,150,105,0.3)',
+                    boxShadow: '0 2px 12px rgba(13,148,136,0.3)',
                     transition: 'all 0.2s',
                   }}
                 >
@@ -445,14 +445,14 @@ export default function WorkbookPage() {
                     width: 56,
                     height: 56,
                     borderRadius: 14,
-                    background: 'rgba(5,150,105,0.08)',
+                    background: 'rgba(13,148,136,0.08)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1.25rem',
                   }}
                 >
-                  <CheckCircle2 size={28} color="#059669" />
+                  <CheckCircle2 size={28} color="#0D9488" />
                 </div>
                 <h2
                   style={{
@@ -486,7 +486,7 @@ export default function WorkbookPage() {
                     gap: '0.375rem',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.8125rem',
-                    color: '#059669',
+                    color: '#0D9488',
                     textDecoration: 'none',
                     fontWeight: 600,
                   }}
@@ -643,14 +643,14 @@ export default function WorkbookPage() {
                       width: '100%',
                       padding: '0.875rem',
                       borderRadius: 12,
-                      background: submitting ? '#6B7280' : '#059669',
+                      background: submitting ? '#6B7280' : '#0D9488',
                       color: 'white',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
                       fontWeight: 600,
                       border: 'none',
                       cursor: submitting ? 'wait' : 'pointer',
-                      boxShadow: '0 2px 12px rgba(5,150,105,0.3)',
+                      boxShadow: '0 2px 12px rgba(13,148,136,0.3)',
                       transition: 'all 0.2s',
                       marginTop: '0.5rem',
                     }}
@@ -687,8 +687,8 @@ export default function WorkbookPage() {
                     }}
                   >
                     &iquest;Ya tienes cuenta?{' '}
-                    <span style={{ color: '#059669', fontWeight: 600 }}>Inicia sesi&oacute;n</span>
-                    <ChevronRight size={14} color="#059669" />
+                    <span style={{ color: '#0D9488', fontWeight: 600 }}>Inicia sesi&oacute;n</span>
+                    <ChevronRight size={14} color="#0D9488" />
                   </Link>
                 </div>
               </>

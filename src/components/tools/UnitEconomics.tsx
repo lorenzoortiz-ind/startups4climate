@@ -111,26 +111,26 @@ ${calc.greenPremium > 15 ? '  → Green premium alto. Cuantifica CO2 reducido y 
         {/* Results panel */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <MetricCard label="Customer Acquisition Cost" value={`$${calc.cac.toLocaleString('es')}`} sub="Costo de adquirir un cliente" color="#0891B2" />
-          <MetricCard label="Margen Bruto" value={`$${calc.grossMargin.toLocaleString('es')}`} sub={`${calc.grossMarginPct}% sobre ingresos`} color={calc.grossMarginPct > 50 ? '#059669' : '#D97706'} />
+          <MetricCard label="Margen Bruto" value={`$${calc.grossMargin.toLocaleString('es')}`} sub={`${calc.grossMarginPct}% sobre ingresos`} color={calc.grossMarginPct > 50 ? '#0D9488' : '#D97706'} />
           <MetricCard label="Lifetime Value (LTV)" value={`$${calc.ltv.toLocaleString('es')}`} sub="Valor total del cliente" color="#7C3AED" />
           <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem', boxShadow: 'var(--shadow-card)' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '0.375rem' }}>LTV / CAC Ratio</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: calc.ltvCacRatio >= 3 ? '#059669' : calc.ltvCacRatio >= 1 ? '#D97706' : '#DC2626' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: calc.ltvCacRatio >= 3 ? '#0D9488' : calc.ltvCacRatio >= 1 ? '#D97706' : '#DC2626' }}>
                 {calc.ltvCacRatio}x
               </span>
-              {calc.ltvCacRatio >= 3 ? <TrendingUp size={16} color="#059669" /> : <TrendingDown size={16} color="#D97706" />}
+              {calc.ltvCacRatio >= 3 ? <TrendingUp size={16} color="#0D9488" /> : <TrendingDown size={16} color="#D97706" />}
             </div>
             <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
               {calc.ltvCacRatio >= 3 ? '✓ Saludable — objetivo ≥3x' : calc.ltvCacRatio >= 1 ? '⚠ Mejorable — objetivo ≥3x' : '✗ Crítico — revisar modelo'}
             </div>
             <div style={{ marginTop: '0.5rem', height: 4, borderRadius: 2, background: 'var(--color-bg-muted)' }}>
-              <div style={{ height: '100%', borderRadius: 2, background: calc.ltvCacRatio >= 3 ? '#059669' : '#D97706', width: `${Math.min(100, (calc.ltvCacRatio / 5) * 100)}%`, transition: 'width 0.6s' }} />
+              <div style={{ height: '100%', borderRadius: 2, background: calc.ltvCacRatio >= 3 ? '#0D9488' : '#D97706', width: `${Math.min(100, (calc.ltvCacRatio / 5) * 100)}%`, transition: 'width 0.6s' }} />
             </div>
           </div>
           <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem', boxShadow: 'var(--shadow-card)' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '0.375rem' }}>Green Premium</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: calc.greenPremium > 0 ? '#D97706' : '#059669' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.75rem', fontWeight: 700, color: calc.greenPremium > 0 ? '#D97706' : '#0D9488' }}>
               {calc.greenPremium > 0 ? '+' : ''}{calc.greenPremium}%
             </div>
             <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
@@ -145,13 +145,13 @@ ${calc.greenPremium > 15 ? '  → Green premium alto. Cuantifica CO2 reducido y 
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
           width: '100%', padding: '0.875rem', borderRadius: 12,
-          background: '#059669', color: 'white',
+          background: '#0D9488', color: 'white',
           fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600,
-          border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(5,150,105,0.3)',
+          border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(13,148,136,0.3)',
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = '#047857')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#059669')}
+        onMouseEnter={(e) => (e.currentTarget.style.background = '#0B7C72')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = '#0D9488')}
       >
         <Download size={17} />
         Generar Reporte de Unit Economics
@@ -171,7 +171,7 @@ function NumberInput({ label, value, onChange, prefix, suffix, hint }: {
         {label}
       </label>
       {hint && <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>{hint}</div>}
-      <div style={{ display: 'flex', alignItems: 'center', borderRadius: 8, border: `1px solid ${focused ? '#059669' : 'var(--color-border)'}`, background: 'var(--color-bg-primary)', overflow: 'hidden', transition: 'border 0.15s', boxShadow: focused ? '0 0 0 2px rgba(5,150,105,0.08)' : 'none' }}>
+      <div style={{ display: 'flex', alignItems: 'center', borderRadius: 8, border: `1px solid ${focused ? '#0D9488' : 'var(--color-border)'}`, background: 'var(--color-bg-primary)', overflow: 'hidden', transition: 'border 0.15s', boxShadow: focused ? '0 0 0 2px rgba(13,148,136,0.08)' : 'none' }}>
         {prefix && <span style={{ padding: '0 0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', borderRight: '1px solid var(--color-border)', background: 'var(--color-bg-muted)' }}>{prefix}</span>}
         <input type="number" value={value} onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           style={{ flex: 1, padding: '0.5625rem 0.625rem', border: 'none', background: 'transparent', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }}

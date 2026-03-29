@@ -71,7 +71,7 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (score / 100) * circumference
-  const color = score >= 70 ? '#059669' : score >= 40 ? '#D97706' : '#DC2626'
+  const color = score >= 70 ? '#0D9488' : score >= 40 ? '#D97706' : '#DC2626'
 
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
@@ -431,14 +431,14 @@ export default function PassportPage() {
               width: 64,
               height: 64,
               borderRadius: 16,
-              background: 'rgba(5,150,105,0.08)',
+              background: 'rgba(13,148,136,0.08)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1.5rem',
             }}
           >
-            <Award size={28} color="#059669" />
+            <Award size={28} color="#0D9488" />
           </div>
           <h1
             style={{
@@ -472,13 +472,13 @@ export default function PassportPage() {
               marginTop: '1.5rem',
               padding: '0.75rem 1.5rem',
               borderRadius: 10,
-              background: '#059669',
+              background: '#0D9488',
               color: 'white',
               fontFamily: 'var(--font-body)',
               fontSize: '0.875rem',
               fontWeight: 600,
               textDecoration: 'none',
-              boxShadow: '0 2px 10px rgba(5,150,105,0.25)',
+              boxShadow: '0 2px 10px rgba(13,148,136,0.25)',
             }}
           >
             Ir al diagnóstico
@@ -802,10 +802,10 @@ export default function PassportPage() {
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.75rem',
                   fontWeight: 700,
-                  color: '#059669',
+                  color: '#0D9488',
                   padding: '0.25rem 0.625rem',
                   borderRadius: 9999,
-                  background: 'rgba(5,150,105,0.08)',
+                  background: 'rgba(13,148,136,0.08)',
                 }}
               >
                 {completedCount}/{totalTools} herramientas
@@ -818,7 +818,7 @@ export default function PassportPage() {
                 style={{
                   height: 8,
                   borderRadius: 4,
-                  background: 'rgba(5,150,105,0.10)',
+                  background: 'rgba(13,148,136,0.10)',
                   overflow: 'hidden',
                 }}
               >
@@ -829,7 +829,7 @@ export default function PassportPage() {
                   style={{
                     height: '100%',
                     borderRadius: 4,
-                    background: 'linear-gradient(90deg, #059669, #34D399)',
+                    background: 'linear-gradient(90deg, #0D9488, #34D399)',
                   }}
                 />
               </div>
@@ -874,7 +874,7 @@ export default function PassportPage() {
               }}
             >
               <MetricCard icon={Target} label="TAM" value={passportData?.tam || '—'} color="#6366F1" />
-              <MetricCard icon={DollarSign} label="LTV" value={passportData?.ltv || '—'} color="#059669" />
+              <MetricCard icon={DollarSign} label="LTV" value={passportData?.ltv || '—'} color="#0D9488" />
               <MetricCard icon={DollarSign} label="CAC" value={passportData?.cac || '—'} color="#D97706" />
               <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0891B2"  />
               <MetricCard
@@ -894,7 +894,7 @@ export default function PassportPage() {
                   icon={TrendingUp}
                   label="Unit Economics"
                   value={passportData.unitEconomics}
-                  color="#059669"
+                  color="#0D9488"
                 />
               )}
               {passportData?.runway && (

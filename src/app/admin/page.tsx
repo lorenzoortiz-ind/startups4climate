@@ -53,7 +53,7 @@ const fadeUp = {
 }
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  active: { bg: 'rgba(5,150,105,0.1)', text: '#059669' },
+  active: { bg: 'rgba(13,148,136,0.1)', text: '#0D9488' },
   planned: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6' },
   completed: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' },
 }
@@ -166,8 +166,8 @@ export default function AdminDashboard() {
       label: 'Total startups',
       value: metrics.totalStartups,
       icon: Rocket,
-      color: '#059669',
-      bg: 'rgba(5,150,105,0.08)',
+      color: '#0D9488',
+      bg: 'rgba(13,148,136,0.08)',
     },
     {
       label: 'Cohortes activas',
@@ -197,7 +197,7 @@ export default function AdminDashboard() {
       label: 'Crear cohorte',
       href: '/admin/cohortes/nueva',
       icon: Plus,
-      color: '#059669',
+      color: '#0D9488',
     },
     {
       label: 'Generar reporte',
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
             width: 32,
             height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#059669',
+            borderTopColor: '#0D9488',
             borderRadius: '50%',
           }}
         />
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
             marginBottom: '0.25rem',
           }}
         >
-          <Building2 size={20} color="#059669" />
+          <Building2 size={20} color="#0D9488" />
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
@@ -382,7 +382,7 @@ export default function AdminDashboard() {
               gap: '0.375rem',
               fontFamily: 'var(--font-body)',
               fontSize: '0.8125rem',
-              color: '#059669',
+              color: '#0D9488',
               textDecoration: 'none',
               fontWeight: 500,
             }}
@@ -658,14 +658,14 @@ export default function AdminDashboard() {
                             width: 28,
                             height: 28,
                             borderRadius: 'var(--radius-sm)',
-                            background: 'rgba(5,150,105,0.08)',
+                            background: 'rgba(13,148,136,0.08)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
                             fontSize: '0.75rem',
                             fontWeight: 700,
-                            color: '#059669',
+                            color: '#0D9488',
                           }}
                         >
                           {startup.name?.charAt(0).toUpperCase() || 'S'}
@@ -703,8 +703,8 @@ export default function AdminDashboard() {
                           borderRadius: 999,
                           fontSize: '0.6875rem',
                           fontWeight: 500,
-                          background: 'rgba(5,150,105,0.08)',
-                          color: '#059669',
+                          background: 'rgba(13,148,136,0.08)',
+                          color: '#0D9488',
                         }}
                       >
                         {startup.stage || 'Sin etapa'}

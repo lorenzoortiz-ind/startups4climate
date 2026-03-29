@@ -81,7 +81,7 @@ const DEFAULT: Data = {
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   pendiente: { bg: '#FEE2E2', color: '#DC2626', label: 'Pendiente' },
   borrador: { bg: '#FEF3C7', color: '#D97706', label: 'Borrador' },
-  listo: { bg: '#D1FAE5', color: '#059669', label: 'Listo' },
+  listo: { bg: '#CCFBF1', color: '#0D9488', label: 'Listo' },
 }
 
 export default function DataRoomBuilder({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
@@ -156,10 +156,10 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Preparación general del Data Room</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#059669' : overallReadiness >= 50 ? '#D97706' : '#DC2626' }}>{overallReadiness}%</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#D97706' : '#DC2626' }}>{overallReadiness}%</span>
         </div>
         <div style={{ height: 10, borderRadius: 5, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#059669' : overallReadiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
+          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
         </div>
       </div>
 
@@ -168,11 +168,11 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
         const readiness = categoryReadiness(cat)
         return (
           <SectionCollapsible key={catIdx} title={cat.name} sectionKey={`cat-${catIdx}`} open={openSections} toggle={toggle}
-            right={<span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 600, color: readiness >= 75 ? '#059669' : readiness >= 50 ? '#D97706' : '#DC2626' }}>{readiness}%</span>}
+            right={<span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 600, color: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#D97706' : '#DC2626' }}>{readiness}%</span>}
           >
             {/* Progress bar per category */}
             <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden', marginBottom: '1rem' }}>
-              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#059669' : readiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
+              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
             </div>
 
             {cat.documents.map((doc, docIdx) => {
@@ -197,7 +197,7 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
                 </div>
               )
             })}
-            <button onClick={() => addDocument(catIdx)} style={{ ...btnSmall, color: '#059669', borderColor: '#05966930', marginTop: '0.25rem' }}>+ Agregar documento</button>
+            <button onClick={() => addDocument(catIdx)} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830', marginTop: '0.25rem' }}>+ Agregar documento</button>
           </SectionCollapsible>
         )
       })}
@@ -260,16 +260,16 @@ const btnOutlineGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#059669',
-  border: '1.5px solid #05966940', cursor: 'pointer',
+  background: 'transparent', color: '#0D9488',
+  border: '1.5px solid #0D948840', cursor: 'pointer',
 }
 
 const btnSolidGreen: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: '0.5rem',
   padding: '0.75rem 1.25rem', borderRadius: 10,
   fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#059669', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
+  background: '#0D9488', color: 'white',
+  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
 }
 
 const btnOutline: React.CSSProperties = {

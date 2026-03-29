@@ -60,19 +60,19 @@ export function PreIncubationIllustration({
       <line x1="168" y1="80" x2="158" y2="80" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
       <line x1="32" y1="80" x2="42" y2="80" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
       {/* Small seedling at base */}
-      <path d="M100 172L100 182" stroke="#059669" strokeWidth="2" strokeLinecap="round" />
+      <path d="M100 172L100 182" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" />
       <path
         d="M100 178C95 174 88 175 87 180C86 185 92 187 100 182"
-        stroke="#059669"
+        stroke="#0D9488"
         strokeWidth="1.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.15}
       />
       <path
         d="M100 175C105 170 112 171 113 176C114 181 108 183 100 178"
-        stroke="#059669"
+        stroke="#0D9488"
         strokeWidth="1.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.15}
       />
     </svg>
@@ -104,7 +104,7 @@ export function IncubationIllustration({
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.08}
       />
       {/* Flask neck */}
@@ -112,52 +112,52 @@ export function IncubationIllustration({
       {/* Liquid level */}
       <path
         d="M62 130Q80 122 100 130Q120 138 138 130L155 150C160 160 153 172 142 172L58 172C47 172 40 160 45 150Z"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.15}
         stroke="none"
       />
       {/* Bubbles */}
-      <circle cx="85" cy="145" r="4" stroke="#059669" strokeWidth="1.5" fill="none" />
-      <circle cx="110" cy="155" r="3" stroke="#059669" strokeWidth="1.5" fill="none" />
-      <circle cx="95" cy="160" r="2.5" stroke="#059669" strokeWidth="1.5" fill="none" />
+      <circle cx="85" cy="145" r="4" stroke="#0D9488" strokeWidth="1.5" fill="none" />
+      <circle cx="110" cy="155" r="3" stroke="#0D9488" strokeWidth="1.5" fill="none" />
+      <circle cx="95" cy="160" r="2.5" stroke="#0D9488" strokeWidth="1.5" fill="none" />
       {/* Plant growing inside flask */}
-      <path d="M100 130L100 90" stroke="#059669" strokeWidth="2" strokeLinecap="round" />
+      <path d="M100 130L100 90" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" />
       <path
         d="M100 105C92 98 84 100 84 106C84 112 92 114 100 108"
-        stroke="#059669"
+        stroke="#0D9488"
         strokeWidth="1.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.2}
       />
       <path
         d="M100 95C108 88 116 90 116 96C116 102 108 104 100 98"
-        stroke="#059669"
+        stroke="#0D9488"
         strokeWidth="1.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.2}
       />
       <path
         d="M100 88C96 82 90 83 90 88C90 92 96 94 100 90"
-        stroke="#059669"
+        stroke="#0D9488"
         strokeWidth="1.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.2}
       />
       {/* Data points — small chart left */}
       <rect x="28" y="50" width="24" height="16" rx="3" stroke="#1a1a1a" strokeWidth="1.5" fill="none" />
-      <line x1="32" y1="58" x2="36" y2="54" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="36" y1="54" x2="40" y2="56" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="40" y1="56" x2="48" y2="52" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="32" y1="58" x2="36" y2="54" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="36" y1="54" x2="40" y2="56" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="40" y1="56" x2="48" y2="52" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
       {/* Data points — bar chart right */}
       <rect x="148" y="60" width="24" height="16" rx="3" stroke="#1a1a1a" strokeWidth="1.5" fill="none" />
-      <line x1="152" y1="72" x2="152" y2="66" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="157" y1="72" x2="157" y2="64" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="162" y1="72" x2="162" y2="68" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="167" y1="72" x2="167" y2="63" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="152" y1="72" x2="152" y2="66" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="157" y1="72" x2="157" y2="64" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="162" y1="72" x2="162" y2="68" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="167" y1="72" x2="167" y2="63" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
       {/* Small dots */}
-      <circle cx="35" cy="85" r="2" fill="#059669" fillOpacity={0.4} />
-      <circle cx="165" cy="42" r="2" fill="#059669" fillOpacity={0.4} />
-      <circle cx="155" cy="95" r="2" fill="#059669" fillOpacity={0.4} />
+      <circle cx="35" cy="85" r="2" fill="#0D9488" fillOpacity={0.4} />
+      <circle cx="165" cy="42" r="2" fill="#0D9488" fillOpacity={0.4} />
+      <circle cx="155" cy="95" r="2" fill="#0D9488" fillOpacity={0.4} />
     </svg>
   )
 }
@@ -337,17 +337,17 @@ export function ToolIllustration({
         rx="6"
         stroke="#1a1a1a"
         strokeWidth="2.5"
-        fill="#059669"
+        fill="#0D9488"
         fillOpacity={0.06}
       />
       {/* Document fold */}
       <path d="M125 30L155 30L155 60L125 30Z" stroke="#1a1a1a" strokeWidth="1.5" fill="white" />
       <path d="M125 30L125 60L155 60" stroke="#1a1a1a" strokeWidth="2" strokeLinejoin="round" fill="none" />
       {/* Checkmark boxes */}
-      <rect x="72" y="70" width="10" height="10" rx="2" stroke="#059669" strokeWidth="1.5" fill="none" />
-      <path d="M74 75L77 78L80 72" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="72" y="85" width="10" height="10" rx="2" stroke="#059669" strokeWidth="1.5" fill="none" />
-      <path d="M74 90L77 93L80 87" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="72" y="70" width="10" height="10" rx="2" stroke="#0D9488" strokeWidth="1.5" fill="none" />
+      <path d="M74 75L77 78L80 72" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="72" y="85" width="10" height="10" rx="2" stroke="#0D9488" strokeWidth="1.5" fill="none" />
+      <path d="M74 90L77 93L80 87" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       {/* Document lines */}
       <line x1="88" y1="75" x2="138" y2="75" stroke="#1a1a1a" strokeWidth="1.5" strokeLinecap="round" opacity={0.3} />
       <line x1="88" y1="90" x2="130" y2="90" stroke="#1a1a1a" strokeWidth="1.5" strokeLinecap="round" opacity={0.3} />
@@ -360,21 +360,21 @@ export function ToolIllustration({
           d="M0 10C0 4.5 4.5 0 10 0L12 0L12 4L8 8L12 12L12 16L10 16C4.5 16 0 11.5 0 6Z"
           stroke="#1a1a1a"
           strokeWidth="2"
-          fill="#059669"
+          fill="#0D9488"
           fillOpacity={0.12}
         />
-        <rect x="10" y="4" width="40" height="8" rx="1" stroke="#1a1a1a" strokeWidth="2" fill="#059669" fillOpacity={0.08} />
+        <rect x="10" y="4" width="40" height="8" rx="1" stroke="#1a1a1a" strokeWidth="2" fill="#0D9488" fillOpacity={0.08} />
         <path
           d="M50 4L58 0L58 4L54 8L58 12L58 16L50 12Z"
           stroke="#1a1a1a"
           strokeWidth="2"
-          fill="#059669"
+          fill="#0D9488"
           fillOpacity={0.12}
         />
       </g>
       {/* Small gear accent */}
-      <circle cx="158" cy="150" r="14" stroke="#059669" strokeWidth="2" fill="#059669" fillOpacity={0.1} />
-      <circle cx="158" cy="150" r="6" stroke="#059669" strokeWidth="2" fill="none" />
+      <circle cx="158" cy="150" r="14" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.1} />
+      <circle cx="158" cy="150" r="6" stroke="#0D9488" strokeWidth="2" fill="none" />
       {/* Gear teeth */}
       {gearAngles.map((angle) => {
         const rad = (angle * Math.PI) / 180
@@ -389,7 +389,7 @@ export function ToolIllustration({
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="#059669"
+            stroke="#0D9488"
             strokeWidth="2.5"
             strokeLinecap="round"
           />

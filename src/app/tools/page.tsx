@@ -46,13 +46,13 @@ const NAV_TABS = [
 
 /* ─── Category color mapping ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
-  Estrategia: { color: '#6366F1', bg: 'rgba(99,102,241,0.1)' },
-  Mercado: { color: '#0891B2', bg: 'rgba(8,145,178,0.1)' },
-  Producto: { color: '#059669', bg: 'rgba(5,150,105,0.1)' },
-  Finanzas: { color: '#D97706', bg: 'rgba(217,119,6,0.1)' },
-  Ventas: { color: '#DC2626', bg: 'rgba(220,38,38,0.1)' },
-  Marketing: { color: '#7C3AED', bg: 'rgba(124,58,237,0.1)' },
-  Equipo: { color: '#EA580C', bg: 'rgba(234,88,12,0.1)' },
+  Estrategia: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.1)' },
+  Mercado: { color: '#0D9488', bg: 'rgba(13,148,136,0.1)' },
+  Producto: { color: '#0D9488', bg: 'rgba(13,148,136,0.1)' },
+  Finanzas: { color: '#2A222B', bg: 'rgba(42,34,43,0.1)' },
+  Ventas: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.1)' },
+  Marketing: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.1)' },
+  Equipo: { color: '#0D9488', bg: 'rgba(13,148,136,0.1)' },
 }
 
 /* ─── Tool card ─── */
@@ -129,7 +129,6 @@ function ToolCard({
         ) : (
           <div
             style={{
-              fontFamily: 'var(--font-mono)',
               fontSize: '0.6875rem',
               fontWeight: 700,
               color: tool.stageColor,
@@ -167,7 +166,6 @@ function ToolCard({
               padding: '1px 8px',
               borderRadius: 9999,
               fontSize: '0.5625rem',
-              fontFamily: 'var(--font-mono)',
               fontWeight: 600,
               color: catColor.color,
               background: catColor.bg,
@@ -181,7 +179,6 @@ function ToolCard({
             <Clock size={10} color="var(--color-text-muted)" />
             <span
               style={{
-                fontFamily: 'var(--font-mono)',
                 fontSize: '0.625rem',
                 color: 'var(--color-text-muted)',
               }}
@@ -322,7 +319,7 @@ export default function ToolsDashboard() {
               fontSize: '0.8125rem',
               fontWeight: tab.active ? 600 : 500,
               color: tab.active ? 'white' : 'var(--color-text-secondary)',
-              background: tab.active ? '#059669' : 'transparent',
+              background: tab.active ? '#0D9488' : 'transparent',
               textDecoration: 'none',
               transition: 'all 0.15s ease',
               whiteSpace: 'nowrap',
@@ -352,10 +349,9 @@ export default function ToolsDashboard() {
           <div>
             <div
               style={{
-                fontFamily: 'var(--font-mono)',
                 fontSize: '0.6875rem',
                 fontWeight: 600,
-                color: '#059669',
+                color: '#0D9488',
                 letterSpacing: '0.05em',
                 textTransform: 'uppercase',
                 marginBottom: '0.375rem',
@@ -416,7 +412,7 @@ export default function ToolsDashboard() {
                     cy="28"
                     r="23"
                     fill="none"
-                    stroke="#059669"
+                    stroke="#FF6B4A"
                     strokeWidth="5"
                     strokeLinecap="round"
                     strokeDasharray={`${2 * Math.PI * 23}`}
@@ -431,10 +427,9 @@ export default function ToolsDashboard() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontFamily: 'var(--font-mono)',
                     fontSize: '0.75rem',
                     fontWeight: 700,
-                    color: '#059669',
+                    color: '#FF6B4A',
                   }}
                 >
                   {pct}%
@@ -443,7 +438,6 @@ export default function ToolsDashboard() {
               <div>
                 <div
                   style={{
-                    fontFamily: 'var(--font-mono)',
                     fontSize: '1.25rem',
                     fontWeight: 700,
                     color: 'var(--color-text-primary)',
@@ -485,14 +479,14 @@ export default function ToolsDashboard() {
                   gap: '0.5rem',
                   padding: '0.625rem 1.25rem',
                   borderRadius: 9999,
-                  background: '#059669',
+                  background: '#0D9488',
                   color: 'white',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.875rem',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 2px 10px rgba(5,150,105,0.3)',
+                  boxShadow: '0 2px 10px rgba(13,148,136,0.3)',
                   whiteSpace: 'nowrap',
                 }}
               >
@@ -566,9 +560,9 @@ export default function ToolsDashboard() {
           >
             <div
               style={{
-                background: 'linear-gradient(135deg, #F0FDF4, #ECFDF5)',
+                background: 'linear-gradient(135deg, #F0FDFA, #CCFBF1)',
                 borderRadius: 16,
-                border: '1px solid rgba(5,150,105,0.18)',
+                border: '1px solid rgba(13,148,136,0.18)',
                 padding: '1.125rem 1.5rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -583,21 +577,21 @@ export default function ToolsDashboard() {
                     width: 40,
                     height: 40,
                     borderRadius: 10,
-                    background: 'rgba(5,150,105,0.1)',
+                    background: 'rgba(13,148,136,0.1)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
                   }}
                 >
-                  <TrendingUp size={18} color="#059669" />
+                  <TrendingUp size={18} color="#0D9488" />
                 </div>
                 <div>
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.75rem',
-                      color: '#059669',
+                      color: '#0D9488',
                       fontWeight: 600,
                       marginBottom: '0.125rem',
                     }}
@@ -615,7 +609,6 @@ export default function ToolsDashboard() {
                     {nextTool.shortName}
                     <span
                       style={{
-                        fontFamily: 'var(--font-mono)',
                         fontSize: '0.625rem',
                         color: 'var(--color-text-muted)',
                         marginLeft: '0.5rem',
@@ -635,13 +628,13 @@ export default function ToolsDashboard() {
                   gap: '0.375rem',
                   padding: '0.625rem 1.25rem',
                   borderRadius: 9999,
-                  background: '#059669',
+                  background: '#0D9488',
                   color: 'white',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.875rem',
                   fontWeight: 600,
                   textDecoration: 'none',
-                  boxShadow: '0 2px 10px rgba(5,150,105,0.3)',
+                  boxShadow: '0 2px 10px rgba(13,148,136,0.3)',
                   whiteSpace: 'nowrap',
                 }}
               >
@@ -681,8 +674,8 @@ export default function ToolsDashboard() {
                 fontSize: '0.75rem',
                 fontWeight: isActive ? 600 : 500,
                 color: isActive ? 'white' : 'var(--color-text-secondary)',
-                background: isActive ? '#059669' : 'var(--color-bg-card)',
-                border: `1px solid ${isActive ? '#059669' : 'var(--color-border)'}`,
+                background: isActive ? '#0D9488' : 'var(--color-bg-card)',
+                border: `1px solid ${isActive ? '#0D9488' : 'var(--color-border)'}`,
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
                 whiteSpace: 'nowrap',
@@ -705,7 +698,7 @@ export default function ToolsDashboard() {
             top: 0,
             bottom: 0,
             width: 2,
-            background: 'linear-gradient(to bottom, #7C3AED, #059669, #D97706, #0891B2)',
+            background: 'linear-gradient(to bottom, #FF6B4A, #0D9488, #2A222B, #0D9488)',
             borderRadius: 2,
             opacity: 0.18,
             zIndex: 0,
@@ -766,7 +759,7 @@ export default function ToolsDashboard() {
               <div
                 style={{
                   background: 'var(--color-bg-card)',
-                  borderRadius: 18,
+                  borderRadius: 16,
                   border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
                   borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
                   overflow: 'hidden',
@@ -803,7 +796,6 @@ export default function ToolsDashboard() {
                       >
                         <span
                           style={{
-                            fontFamily: 'var(--font-mono)',
                             fontSize: '0.625rem',
                             fontWeight: 700,
                             color: isLocked ? 'var(--color-text-muted)' : meta.color,
@@ -822,7 +814,6 @@ export default function ToolsDashboard() {
                               padding: '1px 8px',
                               borderRadius: 9999,
                               background: 'rgba(0,0,0,0.05)',
-                              fontFamily: 'var(--font-mono)',
                               fontSize: '0.5625rem',
                               color: 'var(--color-text-muted)',
                             }}
@@ -839,11 +830,10 @@ export default function ToolsDashboard() {
                               gap: '0.25rem',
                               padding: '1px 8px',
                               borderRadius: 9999,
-                              background: 'rgba(5,150,105,0.1)',
-                              fontFamily: 'var(--font-mono)',
+                              background: 'rgba(13,148,136,0.1)',
                               fontSize: '0.5625rem',
                               fontWeight: 600,
-                              color: '#059669',
+                              color: '#0D9488',
                             }}
                           >
                             <CheckCircle2 size={10} />
@@ -882,7 +872,6 @@ export default function ToolsDashboard() {
                           borderRadius: 9999,
                           background: 'var(--color-bg-card)',
                           border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                          fontFamily: 'var(--font-mono)',
                           fontSize: '0.6875rem',
                           fontWeight: 700,
                           color: isLocked ? 'var(--color-text-muted)' : meta.color,

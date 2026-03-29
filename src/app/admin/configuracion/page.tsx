@@ -159,8 +159,8 @@ export default function ConfiguracionPage() {
           <div style={{
             padding: '1rem',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(5,150,105,0.04)',
-            border: '1px solid rgba(5,150,105,0.12)',
+            background: 'rgba(13,148,136,0.04)',
+            border: '1px solid rgba(13,148,136,0.12)',
             marginBottom: '1.25rem',
           }}>
             <div style={{
@@ -184,7 +184,7 @@ export default function ConfiguracionPage() {
               </div>
               <span style={{
                 padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)',
-                background: 'rgba(5,150,105,0.08)', color: '#059669',
+                background: 'rgba(13,148,136,0.08)', color: '#0D9488',
                 fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
               }}>
                 Activo
@@ -252,7 +252,7 @@ export default function ConfiguracionPage() {
               animate={{ opacity: 1, x: 0 }}
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                fontWeight: 500, color: '#059669',
+                fontWeight: 500, color: '#0D9488',
               }}
             >
               Cambios guardados

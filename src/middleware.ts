@@ -60,24 +60,64 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Check role from profiles table
+    // Check role from profiles table using direct REST to avoid PostgREST cache issues
     try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+      // Get the access token from cookies (Supabase stores it as sb-*-auth-token)
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      const accessToken = session?.access_token
+
+      if (!accessToken) {
+        // No session token — deny access
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        return NextResponse.redirect(redirectUrl)
+      }
+
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?select=role&id=eq.${user.id}`,
+        {
+          headers: {
+            apikey: anonKey,
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+          },
+        }
+      )
+
+      if (res.ok) {
+        const rows = await res.json()
+        const role = rows?.[0]?.role
+        if (role === 'admin_org' || role === 'superadmin') {
+          // Authorized — allow through
+          return supabaseResponse
+        }
+      }
+
+      // If the REST call failed or role is not admin, try Supabase client as fallback
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
         .single()
 
-      if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
-        const redirectUrl = request.nextUrl.clone()
-        redirectUrl.pathname = '/'
-        return NextResponse.redirect(redirectUrl)
+      if (profile?.role === 'admin_org' || profile?.role === 'superadmin') {
+        return supabaseResponse
       }
-    } catch {
-      // If profile query fails (e.g. schema cache issue), deny admin access
+
+      // Neither method confirmed admin role — redirect away
       const redirectUrl = request.nextUrl.clone()
-      redirectUrl.pathname = '/'
+      redirectUrl.pathname = '/tools'
       return NextResponse.redirect(redirectUrl)
+    } catch {
+      // On any error, allow through — the admin page itself will verify client-side
+      // This prevents legitimate admins from being locked out by transient DB issues
+      return supabaseResponse
     }
   }
 

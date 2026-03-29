@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { BookOpen, Download, CheckCircle2, ArrowRight, ChevronRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import WorkbookMockup from '@/components/illustrations/WorkbookMockup'
+import Image from 'next/image'
 
 /* ─── Country data with flag emojis ─── */
 const COUNTRY_OPTIONS = [
@@ -349,7 +349,20 @@ export default function WorkbookPage() {
               justifyContent: 'center',
             }}
           >
-            <WorkbookMockup width={300} />
+            <Image
+              src="/workbook-cover.png"
+              alt="Workbook: De la idea al escalamiento"
+              width={300}
+              height={460}
+              style={{
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: '0 24px 48px -12px rgba(25,25,25,0.15), 0 8px 16px -4px rgba(25,25,25,0.08)',
+                objectFit: 'cover',
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+              priority
+            />
           </motion.div>
         </div>
       </section>

@@ -126,8 +126,8 @@ export default function Hero() {
               margin: '0 0 2rem 0',
             }}
           >
-            Tu startup de impacto merece la misma infraestructura{' '}
-            <span style={{ color: 'var(--color-accent-primary)' }}>que las de Silicon Valley</span>
+            Tu startup de impacto merece la mejor infraestructura{' '}
+            <span style={{ color: 'var(--color-accent-primary)' }}>para escalar globalmente</span>
           </motion.h1>
 
           {/* Subtitle */}

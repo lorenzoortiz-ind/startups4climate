@@ -318,9 +318,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: 'No se pudo iniciar sesión.' }
       }
 
-      // Get role via direct REST fetch (bypasses PostgREST cache issues)
+      // Get role via multiple methods for maximum reliability
       let role: string = 'founder'
       let orgId: string | null = null
+
+      // Method 1: Direct REST fetch (bypasses PostgREST cache issues)
       try {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
         const res = await fetch(
@@ -329,6 +331,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             headers: {
               'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
               'Authorization': `Bearer ${data.session.access_token}`,
+              'Accept': 'application/json',
             },
           }
         )
@@ -338,7 +341,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (rows?.[0]?.org_id) orgId = rows[0].org_id
         }
       } catch {
-        // Fall back to founder role
+        // Method 1 failed — try method 2
+      }
+
+      // Method 2: Supabase client query (fallback if REST failed)
+      if (role === 'founder') {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, org_id')
+            .eq('id', data.user.id)
+            .single()
+          if (profile?.role) role = profile.role
+          if (profile?.org_id) orgId = profile.org_id
+        } catch {
+          // Both methods failed — default to founder
+        }
       }
 
       // Set a minimal user immediately so the UI is not blocked

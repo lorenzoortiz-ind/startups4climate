@@ -23,28 +23,28 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#111827', color: '#9CA3AF', padding: '4rem 0 2rem' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+    <footer style={{ background: '#0A0F1A', color: '#9CA3AF', padding: '5rem 0 2.5rem' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '2.5rem',
-          marginBottom: '3rem',
+          gap: '3rem',
+          marginBottom: '3.5rem',
         }}>
           {/* Brand */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1.25rem' }}>
               <div style={{
-                width: 32, height: 32, borderRadius: 8,
+                width: 36, height: 36, borderRadius: 10,
                 background: 'linear-gradient(135deg, #059669, #0D9488)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'white', fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700,
+                color: 'white', fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700,
               }}>S4C</div>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: '#F9FAFB' }}>
-                Startups<span style={{ color: '#059669' }}>4</span>Climate
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.0625rem', color: '#F9FAFB' }}>
+                Startups<span style={{ color: '#34D399' }}>4</span>Climate
               </span>
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: '#D1D5DB', maxWidth: 280 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', lineHeight: 1.7, color: '#94A3B8', maxWidth: 300 }}>
               Democratizando el desarrollo de startups de impacto en Latinoamérica.
             </p>
           </div>
@@ -53,18 +53,19 @@ export default function Footer() {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h4 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700,
-                color: '#F9FAFB', textTransform: 'capitalize', marginBottom: '0.75rem',
+                fontFamily: 'var(--font-heading)', fontSize: '0.875rem', fontWeight: 700,
+                color: '#F1F5F9', textTransform: 'capitalize', marginBottom: '1rem',
+                letterSpacing: '0.01em',
               }}>{title}</h4>
-              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 {links.map(link => (
                   <li key={link.label}>
                     {'isPage' in link && link.isPage ? (
                       <Link
                         href={link.href}
                         style={{
-                          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                          color: '#9CA3AF', textDecoration: 'none', transition: 'color 0.2s',
+                          fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
+                          color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s',
                         }}
                       >{link.label}</Link>
                     ) : (
@@ -73,11 +74,11 @@ export default function Footer() {
                         target={link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         style={{
-                          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                          color: '#9CA3AF', textDecoration: 'none', transition: 'color 0.2s',
+                          fontFamily: 'var(--font-body)', fontSize: '0.9375rem',
+                          color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s',
                         }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#D1D5DB')}
-                        onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#E2E8F0')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#94A3B8')}
                       >{link.label}</a>
                     )}
                   </li>
@@ -87,22 +88,28 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* Divider */}
+        <div style={{
+          height: 1,
+          background: 'linear-gradient(to right, transparent, rgba(148,163,184,0.15), transparent)',
+          marginBottom: '2rem',
+        }} />
+
         {/* Bottom */}
         <div style={{
-          borderTop: '1px solid #1F2937', paddingTop: '1.5rem',
-          display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem',
+          display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem',
         }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#9CA3AF' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: '#64748B' }}>
             &copy; {new Date().getFullYear()} Startups4Climate by Redesign Lab. Todos los derechos reservados.
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', gap: '2rem' }}>
             {['Privacidad', 'Términos'].map(item => (
               <a key={item} href="#" style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#9CA3AF',
+                fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: '#64748B',
                 textDecoration: 'none', transition: 'color 0.2s',
               }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#D1D5DB')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E2E8F0')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#64748B')}
               >{item}</a>
             ))}
           </div>

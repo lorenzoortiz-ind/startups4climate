@@ -18,6 +18,7 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -46,6 +47,75 @@ export default function Navbar() {
     }
   }
 
+  const linkBaseStyle = {
+    fontFamily: 'var(--font-body)',
+    fontSize: '0.9375rem',
+    fontWeight: 500 as const,
+    color: scrolled ? 'var(--color-text-secondary)' : 'rgba(17,24,39,0.7)',
+    textDecoration: 'none' as const,
+    transition: 'color 0.25s ease',
+    position: 'relative' as const,
+    paddingBottom: '2px',
+  }
+
+  const renderNavLink = (link: typeof navLinks[0]) => {
+    const isHovered = hoveredLink === link.href
+    const underline = (
+      <span
+        style={{
+          position: 'absolute',
+          bottom: -2,
+          left: 0,
+          right: 0,
+          height: 2,
+          borderRadius: 1,
+          background: '#059669',
+          transform: isHovered ? 'scaleX(1)' : 'scaleX(0)',
+          transformOrigin: 'left',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      />
+    )
+
+    if (link.isPage) {
+      return (
+        <Link
+          key={link.href}
+          href={link.href}
+          style={{
+            ...linkBaseStyle,
+            color: isHovered ? 'var(--color-text-primary)' : linkBaseStyle.color,
+          }}
+          onMouseEnter={() => setHoveredLink(link.href)}
+          onMouseLeave={() => setHoveredLink(null)}
+        >
+          {link.label}
+          {underline}
+        </Link>
+      )
+    }
+
+    return (
+      <a
+        key={link.href}
+        href={link.href}
+        onClick={(e) => {
+          e.preventDefault()
+          handleNavClick(link.href)
+        }}
+        style={{
+          ...linkBaseStyle,
+          color: isHovered ? 'var(--color-text-primary)' : linkBaseStyle.color,
+        }}
+        onMouseEnter={() => setHoveredLink(link.href)}
+        onMouseLeave={() => setHoveredLink(null)}
+      >
+        {link.label}
+        {underline}
+      </a>
+    )
+  }
+
   return (
     <>
       <nav
@@ -55,11 +125,11 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 50,
-          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.88)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
-          transition: 'all 0.3s ease',
+          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.92)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid transparent',
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
@@ -68,7 +138,7 @@ export default function Navbar() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              height: 64,
+              height: 72,
             }}
           >
             {/* Logo */}
@@ -128,47 +198,7 @@ export default function Navbar() {
                 gap: '2rem',
               }}
             >
-              {navLinks.map((link) => (
-                'isPage' in link && link.isPage ? (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      fontWeight: 500,
-                      color: 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleNavClick(link.href)
-                    }}
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      fontWeight: 500,
-                      color: 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-                  >
-                    {link.label}
-                  </a>
-                )
-              ))}
+              {navLinks.map(renderNavLink)}
             </div>
 
             {/* Desktop CTA */}
@@ -181,16 +211,16 @@ export default function Navbar() {
                     alignItems: 'center',
                     gap: '0.375rem',
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.8125rem',
+                    fontSize: '0.9375rem',
                     fontWeight: 500,
                     color: 'var(--color-text-secondary)',
                     textDecoration: 'none',
-                    transition: 'color 0.2s ease',
+                    transition: 'color 0.25s ease',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
                 >
-                  <ShieldCheck size={14} /> Panel admin
+                  <ShieldCheck size={15} /> Panel admin
                 </Link>
               )}
               {user ? (
@@ -199,29 +229,31 @@ export default function Navbar() {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.375rem',
-                    padding: '0.5rem 1.125rem',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1.25rem',
                     borderRadius: 9999,
                     backgroundColor: '#059669',
                     color: '#FFFFFF',
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.8125rem',
+                    fontSize: '0.875rem',
                     fontWeight: 600,
                     border: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.2)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#047857'
-                    e.currentTarget.style.transform = 'scale(1.03)'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(5, 150, 105, 0.3)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = '#059669'
-                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(5, 150, 105, 0.2)'
                   }}
                 >
-                  <LayoutDashboard size={14} /> Mi Plataforma
+                  <LayoutDashboard size={15} /> Mi Plataforma
                 </button>
               ) : (
                 <button
@@ -230,28 +262,30 @@ export default function Navbar() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.375rem',
-                    padding: '0.5rem 1.25rem',
+                    padding: '0.5rem 1.5rem',
                     borderRadius: 9999,
                     backgroundColor: '#059669',
                     color: '#FFFFFF',
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.8125rem',
+                    fontSize: '0.875rem',
                     fontWeight: 600,
                     border: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: '0 2px 8px rgba(5, 150, 105, 0.2)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#047857'
-                    e.currentTarget.style.transform = 'scale(1.03)'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(5, 150, 105, 0.3)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = '#059669'
-                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(5, 150, 105, 0.2)'
                   }}
                 >
-                  Acceder a la Plataforma
+                  Acceder gratis
                 </button>
               )}
             </div>
@@ -268,6 +302,7 @@ export default function Navbar() {
                 background: 'transparent',
                 color: 'var(--color-text-primary)',
                 cursor: 'pointer',
+                transition: 'transform 0.2s ease',
               }}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -285,12 +320,14 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.25 }}
               style={{
                 position: 'fixed',
                 inset: 0,
                 zIndex: 55,
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)',
               }}
               onClick={() => setMobileOpen(false)}
             />
@@ -299,21 +336,21 @@ export default function Navbar() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               style={{
                 position: 'fixed',
                 top: 0,
                 right: 0,
                 bottom: 0,
                 zIndex: 60,
-                width: 280,
+                width: 300,
                 backgroundColor: '#FFFFFF',
-                borderLeft: '1px solid var(--color-border)',
+                boxShadow: '-8px 0 30px rgba(0,0,0,0.08)',
                 display: 'flex',
                 flexDirection: 'column',
                 paddingTop: '5rem',
-                paddingLeft: '1.5rem',
-                paddingRight: '1.5rem',
+                paddingLeft: '1.75rem',
+                paddingRight: '1.75rem',
                 paddingBottom: '2rem',
               }}
             >
@@ -321,28 +358,30 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 style={{
                   position: 'absolute',
-                  top: 16,
-                  right: 16,
+                  top: 18,
+                  right: 18,
                   padding: 8,
+                  borderRadius: 8,
                   border: 'none',
                   background: 'transparent',
                   color: 'var(--color-text-secondary)',
                   cursor: 'pointer',
+                  transition: 'color 0.2s ease',
                 }}
               >
                 <X size={22} />
               </button>
 
-              <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <nav style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {navLinks.map((link) => {
                   const linkStyle = {
-                    padding: '0.75rem 1rem',
-                    borderRadius: 10,
+                    padding: '0.875rem 1rem',
+                    borderRadius: 12,
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
+                    fontSize: '0.9375rem',
+                    fontWeight: 500 as const,
                     color: 'var(--color-text-secondary)',
-                    textDecoration: 'none',
+                    textDecoration: 'none' as const,
                     transition: 'all 0.2s ease',
                     display: 'block' as const,
                   }
@@ -352,6 +391,14 @@ export default function Navbar() {
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
                       style={linkStyle}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = 'var(--color-text-primary)'
+                        e.currentTarget.style.backgroundColor = '#F0FDF4'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--color-text-secondary)'
+                        e.currentTarget.style.backgroundColor = 'transparent'
+                      }}
                     >
                       {link.label}
                     </Link>
@@ -386,10 +433,11 @@ export default function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                      width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999,
+                      width: '100%', padding: '0.875rem 1.5rem', borderRadius: 9999,
                       backgroundColor: 'transparent', color: 'var(--color-text-secondary)',
-                      fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+                      fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600,
                       border: '1px solid var(--color-border)', textDecoration: 'none',
+                      transition: 'all 0.2s ease',
                     }}
                   >
                     <ShieldCheck size={16} /> Panel admin
@@ -398,16 +446,16 @@ export default function Navbar() {
                 {user ? (
                   <button
                     onClick={() => { setMobileOpen(false); window.location.href = '/tools' }}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 12px rgba(5, 150, 105, 0.25)', transition: 'all 0.2s ease' }}
                   >
                     <LayoutDashboard size={16} /> Mi Plataforma
                   </button>
                 ) : (
                   <button
                     onClick={() => { setMobileOpen(false); openAuthModal('login') }}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.75rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(5, 150, 105, 0.25)' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.875rem 1.5rem', borderRadius: 9999, backgroundColor: '#059669', color: '#FFFFFF', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 12px rgba(5, 150, 105, 0.25)', transition: 'all 0.2s ease' }}
                   >
-                    Acceder a la Plataforma
+                    Acceder gratis
                   </button>
                 )}
               </div>
@@ -415,6 +463,14 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      <style>{`
+        @media (max-width: 767px) {
+          nav > div > div {
+            height: 60px !important;
+          }
+        }
+      `}</style>
     </>
   )
 }

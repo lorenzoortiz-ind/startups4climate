@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  /* Backgrounds */
-  --color-bg-primary:    #FAFAF8;
-  --color-bg-warm:       #FFF8F3;
-  --color-bg-card:       #FFFFFF;
-  --color-bg-muted:      #F5F1EC;
+  /* ─── V2 Typeform-inspired Design Tokens ─── */
 
-  /* Climate Green Accents */
+  /* Backgrounds — subtle warm off-white */
+  --color-bg-primary:    #FAFAF8;
+  --color-bg-warm:       #F5F3EF;
+  --color-bg-card:       #FFFFFF;
+  --color-bg-muted:      #F0EEEA;
+
+  /* Climate Green Accents (brand) */
   --color-accent-primary:   #059669;
   --color-accent-hover:     #047857;
   --color-accent-light:     #D1FAE5;
   --color-accent-glow:      rgba(5, 150, 105, 0.08);
+
+  /* Secondary Accent — Indigo (Typeform-inspired) */
+  --color-accent-secondary:    #6366F1;
+  --color-accent-secondary-hover: #4F46E5;
+  --color-accent-secondary-light: #E0E7FF;
 
   /* Warm Gradient Palette */
   --color-warm-peach:     #FECDD3;
@@ -20,22 +27,22 @@
   --color-warm-lavender:  #DDD6FE;
   --color-warm-mint:      #A7F3D0;
 
-  /* Text */
-  --color-text-primary:   #111827;
-  --color-text-secondary: #4B5563;
-  --color-text-muted:     #9CA3AF;
+  /* Text — darker, bolder like Typeform */
+  --color-text-primary:   #191919;
+  --color-text-secondary: #5E5E5E;
+  --color-text-muted:     #8F8F8F;
   --color-text-on-dark:   #F9FAFB;
 
-  /* Borders */
-  --color-border:         #E5E7EB;
-  --color-border-strong:  #D1D5DB;
+  /* Borders — softer, warmer */
+  --color-border:         #E8E8E5;
+  --color-border-strong:  #D4D4D0;
 
   /* States */
   --color-success:  #059669;
   --color-warning:  #D97706;
   --color-error:    #DC2626;
 
-  /* Colores por vertical (NUEVO) */
+  /* Colores por vertical */
   --color-vertical-fintech:       #3B82F6;
   --color-vertical-healthtech:    #EF4444;
   --color-vertical-edtech:        #8B5CF6;
@@ -49,70 +56,102 @@
 
   /* Chat AI */
   --color-chat-user-bg:           #F0FDF4;
-  --color-chat-assistant-bg:      #F8FAFC;
+  --color-chat-assistant-bg:      #F8F8F6;
   --color-chat-input-bg:          #FFFFFF;
-  --color-chat-input-border:      #E2E8F0;
+  --color-chat-input-border:      #E8E8E5;
 
   /* Admin panel */
-  --color-admin-sidebar-bg:       #1E293B;
-  --color-admin-sidebar-text:     #CBD5E1;
+  --color-admin-sidebar-bg:       #191919;
+  --color-admin-sidebar-text:     #B0B0B0;
   --color-admin-sidebar-active:   #059669;
 
   /* Match score */
   --color-match-high:             #059669;
   --color-match-medium:           #D97706;
-  --color-match-low:              #9CA3AF;
+  --color-match-low:              #8F8F8F;
 
-  /* Shadows */
+  /* ─── Shadows — Typeform-style elevation ─── */
   --shadow-sm:       0 1px 2px rgba(0,0,0,0.04);
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card:     0 2px 8px rgba(0,0,0,0.05);
+  --shadow-md:       0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg:       0 8px 32px rgba(0,0,0,0.08);
+  --shadow-hover:    0 12px 40px rgba(0,0,0,0.12);
   --shadow-elevated: 0 4px 20px rgba(0,0,0,0.08);
   --shadow-glow:     0 4px 30px rgba(5,150,105,0.10);
 
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  /* ─── Corner Radii — generous, rounded ─── */
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+  --radius-2xl: 40px;
+  --radius-full: 9999px;
 
-  /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #FFF1F2 0%, #FFF7ED 30%, #FFFBEB 60%, #ECFDF5 100%);
-  --gradient-warm: linear-gradient(135deg, #FECDD3 0%, #FED7AA 50%, #A7F3D0 100%);
-  --gradient-mesh: radial-gradient(at 20% 20%, #FFF1F2 0%, transparent 50%),
-                   radial-gradient(at 80% 20%, #FFF7ED 0%, transparent 50%),
-                   radial-gradient(at 50% 80%, #ECFDF5 0%, transparent 50%);
+  /* ─── Section Spacing ─── */
+  --section-spacing-lg: 6rem;
+  --section-spacing-md: 4rem;
+  --section-spacing-sm: 2.5rem;
+
+  /* ─── Typography Scale (display/heading sizes) ─── */
+  --text-display-xl: clamp(3rem, 5vw, 4.5rem);
+  --text-display-lg: clamp(2.5rem, 4vw, 3.5rem);
+  --text-display-md: clamp(2rem, 3vw, 2.75rem);
+  --text-heading-lg: clamp(1.5rem, 2.5vw, 2rem);
+  --text-heading-md: clamp(1.25rem, 2vw, 1.5rem);
+  --text-heading-sm: clamp(1.1rem, 1.5vw, 1.25rem);
+
+  /* ─── Transitions — smooth Typeform-style ─── */
+  --transition-fast:   0.15s ease-out;
+  --transition-base:   0.3s ease-out;
+  --transition-smooth: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  --transition-spring: 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* ─── Gradients ─── */
+  --gradient-hero: linear-gradient(135deg, #FAFAF8 0%, #F0FDF4 40%, #E0E7FF 100%);
+  --gradient-warm: linear-gradient(135deg, #D1FAE5 0%, #E0E7FF 50%, #DDD6FE 100%);
+  --gradient-mesh: radial-gradient(at 20% 20%, rgba(5,150,105,0.06) 0%, transparent 50%),
+                   radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%),
+                   radial-gradient(at 50% 80%, rgba(5,150,105,0.04) 0%, transparent 50%);
 }
 
-/* Dark mode — applied via data-theme="dark" on html */
+/* ─── Dark Mode — applied via data-theme="dark" on html ─── */
 :root[data-theme="dark"],
 [data-theme="dark"] {
-  --color-bg-primary:    #121318;
-  --color-bg-warm:       #161820;
-  --color-bg-card:       #1C1E28;
-  --color-bg-muted:      #23262F;
+  --color-bg-primary:    #0F0F0F;
+  --color-bg-warm:       #141414;
+  --color-bg-card:       #1A1A1A;
+  --color-bg-muted:      #222222;
 
-  --color-text-primary:   #E8EAED;
-  --color-text-secondary: #9BA1B0;
-  --color-text-muted:     #5F6575;
-  --color-text-on-dark:   #F3F4F6;
+  --color-text-primary:   #F5F5F5;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted:     #666666;
+  --color-text-on-dark:   #F5F5F5;
 
-  --color-border:         #2A2D38;
-  --color-border-strong:  #383C4A;
+  --color-border:         #2A2A2A;
+  --color-border-strong:  #3A3A3A;
 
-  --shadow-sm:       0 1px 2px rgba(0,0,0,0.25);
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.15);
+  --color-accent-secondary-light: #1E1B4B;
+
+  --shadow-sm:       0 1px 2px rgba(0,0,0,0.3);
+  --shadow-card:     0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md:       0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg:       0 8px 32px rgba(0,0,0,0.4);
+  --shadow-hover:    0 12px 40px rgba(0,0,0,0.45);
   --shadow-elevated: 0 4px 20px rgba(0,0,0,0.35);
-  --shadow-glow:     0 4px 30px rgba(5,150,105,0.12);
+  --shadow-glow:     0 4px 30px rgba(5,150,105,0.15);
 
-  --gradient-hero: linear-gradient(135deg, #1a1520 0%, #181a22 30%, #161820 60%, #121a18 100%);
-  --gradient-warm: linear-gradient(135deg, #1a1520 0%, #1a1818 50%, #121a18 100%);
+  --gradient-hero: linear-gradient(135deg, #0F0F0F 0%, #0F1A14 40%, #0F0F1A 100%);
+  --gradient-warm: linear-gradient(135deg, #0F1A14 0%, #0F0F1A 50%, #140F1A 100%);
+  --gradient-mesh: radial-gradient(at 20% 20%, rgba(5,150,105,0.08) 0%, transparent 50%),
+                   radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%),
+                   radial-gradient(at 50% 80%, rgba(5,150,105,0.04) 0%, transparent 50%);
 
-  --color-chat-user-bg:         #1A2E1A;
-  --color-chat-assistant-bg:    #1C1E28;
-  --color-chat-input-bg:        #23262F;
-  --color-chat-input-border:    #2A2D38;
-  --color-admin-sidebar-bg:     #0F172A;
+  --color-chat-user-bg:         #0F1A14;
+  --color-chat-assistant-bg:    #1A1A1A;
+  --color-chat-input-bg:        #222222;
+  --color-chat-input-border:    #2A2A2A;
+  --color-admin-sidebar-bg:     #0A0A0A;
 }
 
 @theme inline {
@@ -130,6 +169,7 @@
 
   html {
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -138,10 +178,34 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    line-height: 1.6;
+    letter-spacing: -0.011em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  h1 { font-size: var(--text-display-lg); }
+  h2 { font-size: var(--text-display-md); }
+  h3 { font-size: var(--text-heading-lg); }
+  h4 { font-size: var(--text-heading-md); }
+
+  a {
+    transition: color var(--transition-fast);
+  }
+
+  button {
+    transition: all var(--transition-smooth);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -161,7 +225,7 @@
   background: var(--color-text-muted);
 }
 
-/* Selection */
+/* Selection — green tint */
 ::selection {
   background: rgba(5, 150, 105, 0.15);
   color: var(--color-text-primary);
@@ -175,7 +239,7 @@
 
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(135deg, #059669, #0D9488, #0891B2);
+  background: linear-gradient(135deg, #059669, #6366F1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

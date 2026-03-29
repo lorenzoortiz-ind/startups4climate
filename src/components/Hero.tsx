@@ -18,77 +18,62 @@ export default function Hero() {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        background: 'var(--gradient-hero)',
+        background: 'linear-gradient(180deg, #FAFDFB 0%, #F0FDF4 40%, #FAFAFA 100%)',
       }}
     >
-      {/* Gradient mesh blobs */}
+      {/* Subtle background texture — soft radial gradients */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <div
-          className="animate-blob"
           style={{
             position: 'absolute',
-            top: '-10%',
-            right: '-5%',
-            width: '40vw',
-            height: '40vw',
+            top: '-20%',
+            right: '-10%',
+            width: '60vw',
+            height: '60vw',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(254,205,211,0.4) 0%, transparent 70%)',
-            filter: 'blur(60px)',
+            background: 'radial-gradient(circle, rgba(5,150,105,0.04) 0%, transparent 70%)',
+            filter: 'blur(80px)',
           }}
         />
         <div
-          className="animate-blob animation-delay-2000"
           style={{
             position: 'absolute',
-            bottom: '0%',
-            left: '-5%',
-            width: '35vw',
-            height: '35vw',
+            bottom: '-10%',
+            left: '-10%',
+            width: '50vw',
+            height: '50vw',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(167,243,208,0.35) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
-        <div
-          className="animate-blob animation-delay-4000"
-          style={{
-            position: 'absolute',
-            top: '30%',
-            left: '40%',
-            width: '30vw',
-            height: '30vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(254,215,170,0.3) 0%, transparent 70%)',
-            filter: 'blur(60px)',
+            background: 'radial-gradient(circle, rgba(167,243,208,0.15) 0%, transparent 70%)',
+            filter: 'blur(80px)',
           }}
         />
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '7rem 1.5rem 5rem', width: '100%', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3rem', alignItems: 'center' }} className="lg:!grid-cols-[55fr_45fr]">
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '8rem 1.5rem 6rem', width: '100%', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem', alignItems: 'center' }} className="lg:!grid-cols-[55fr_45fr]">
           {/* Left column */}
           <div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
             >
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '0.375rem 1rem',
+                  padding: '0.4rem 1rem',
                   borderRadius: 9999,
-                  background: 'rgba(5,150,105,0.08)',
-                  border: '1px solid rgba(5,150,105,0.15)',
+                  background: 'rgba(5,150,105,0.06)',
+                  border: '1px solid rgba(5,150,105,0.12)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
+                  fontSize: '0.8125rem',
                   fontWeight: 600,
                   color: '#059669',
-                  letterSpacing: '0.03em',
+                  letterSpacing: '0.02em',
                   textTransform: 'uppercase',
-                  marginBottom: '1.5rem',
+                  marginBottom: '2rem',
                 }}
               >
                 <Zap size={14} strokeWidth={2} />
@@ -97,17 +82,17 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
+                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
                 fontWeight: 800,
-                lineHeight: 1.1,
-                letterSpacing: '-0.025em',
+                lineHeight: 1.08,
+                letterSpacing: '-0.03em',
                 color: 'var(--color-text-primary)',
-                marginBottom: '1.5rem',
+                marginBottom: '1.75rem',
               }}
             >
               Tu startup de impacto merece{' '}
@@ -117,16 +102,16 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: '1.125rem',
-                lineHeight: 1.7,
+                lineHeight: 1.75,
                 color: 'var(--color-text-secondary)',
-                maxWidth: 520,
-                marginBottom: '2rem',
+                maxWidth: 600,
+                marginBottom: '2.5rem',
               }}
             >
               Herramientas interactivas, mentores AI personalizados, oportunidades
@@ -135,28 +120,29 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}
             >
               <button
                 onClick={() => user ? (window.location.href = '/tools') : openAuthModal('register')}
+                className="hero-cta-primary"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '0.875rem 2rem',
+                  padding: '1rem 2.5rem',
                   borderRadius: 9999,
                   backgroundColor: '#059669',
                   color: 'white',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.9375rem',
+                  fontSize: '1rem',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 16px rgba(5,150,105,0.3)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 4px 20px rgba(5,150,105,0.3), 0 1px 3px rgba(0,0,0,0.08)',
                 }}
               >
                 {user ? 'Ir a mi plataforma' : 'Acceder gratis'}
@@ -164,38 +150,39 @@ export default function Hero() {
               </button>
               <a
                 href="/organizaciones"
+                className="hero-cta-secondary"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '0.875rem 2rem',
+                  padding: '1rem 2.5rem',
                   borderRadius: 9999,
-                  backgroundColor: 'white',
+                  backgroundColor: 'transparent',
                   color: 'var(--color-text-primary)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.9375rem',
+                  fontSize: '1rem',
                   fontWeight: 600,
                   textDecoration: 'none',
-                  border: '1px solid var(--color-border)',
-                  transition: 'all 0.2s ease',
+                  border: '2px solid rgba(0,0,0,0.12)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
                 Para organizaciones
               </a>
             </motion.div>
 
-            {/* Mini stats */}
+            {/* Stats section */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
               className="hero-stats"
               style={{
                 display: 'flex',
-                gap: '2rem',
-                marginTop: '3rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid var(--color-border)',
+                gap: '3rem',
+                marginTop: '4rem',
+                paddingTop: '2rem',
+                borderTop: '1px solid rgba(0,0,0,0.06)',
               }}
             >
               {[
@@ -204,14 +191,14 @@ export default function Hero() {
                 { value: 100, prefix: '', suffix: '%', label: 'Gratuito para founders' },
               ].map((stat) => (
                 <div key={stat.label}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: '#059669' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '2rem', fontWeight: 700, color: '#059669', lineHeight: 1.2 }}>
                     {stat.customDisplay ? (
                       <span>{stat.customDisplay}</span>
                     ) : (
                       <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} duration={1.5} />
                     )}
                   </div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginTop: '0.25rem', fontWeight: 500 }}>
                     {stat.label}
                   </div>
                 </div>
@@ -223,18 +210,20 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
             className="hidden lg:block"
           >
             <div
+              className="hero-card"
               style={{
                 background: 'white',
-                borderRadius: 20,
-                border: '1px solid var(--color-border)',
-                boxShadow: 'var(--shadow-elevated)',
-                padding: '1.75rem',
+                borderRadius: 24,
+                border: '1px solid rgba(0,0,0,0.06)',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+                padding: '2rem',
                 position: 'relative',
                 overflow: 'hidden',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               {/* Top gradient accent */}
@@ -245,11 +234,11 @@ export default function Hero() {
                 right: 0,
                 height: 4,
                 background: 'linear-gradient(90deg, #7C3AED, #059669, #D97706, #0891B2)',
-                borderRadius: '20px 20px 0 0',
+                borderRadius: '24px 24px 0 0',
               }} />
 
               {/* Terminal header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#EF4444' }} />
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#F59E0B' }} />
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981' }} />
@@ -264,11 +253,11 @@ export default function Hero() {
               </div>
 
               {/* Score display */}
-              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   Startup Readiness Score
                 </div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '3rem', fontWeight: 700, color: '#059669', lineHeight: 1 }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '3.25rem', fontWeight: 700, color: '#059669', lineHeight: 1 }}>
                   72<span style={{ fontSize: '1.25rem', color: 'var(--color-text-muted)' }}>/100</span>
                 </div>
                 <div style={{
@@ -287,7 +276,7 @@ export default function Hero() {
               </div>
 
               {/* Dimension bars */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                 {[
                   { label: 'Validación de mercado', value: 75, color: '#059669' },
                   { label: 'Propuesta de valor', value: 60, color: '#7C3AED' },
@@ -295,7 +284,7 @@ export default function Hero() {
                   { label: 'Estructura de negocio', value: 55, color: '#0891B2' },
                 ].map((dim) => (
                   <div key={dim.label}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
                         {dim.label}
                       </span>
@@ -317,22 +306,22 @@ export default function Hero() {
 
               {/* Recommended tools */}
               <div style={{
-                marginTop: '1.25rem',
-                padding: '0.75rem',
-                borderRadius: 10,
+                marginTop: '1.5rem',
+                padding: '0.875rem',
+                borderRadius: 14,
                 background: '#F0FDF4',
-                border: '1px solid rgba(5,150,105,0.1)',
+                border: '1px solid rgba(5,150,105,0.08)',
               }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
                   Herramientas recomendadas
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                   {['Lean Canvas de Impacto', 'Propuesta de Valor', 'Perfil del Usuario'].map(tool => (
                     <span key={tool} style={{
-                      padding: '0.2rem 0.625rem',
-                      borderRadius: 6,
+                      padding: '0.25rem 0.625rem',
+                      borderRadius: 8,
                       background: 'white',
-                      border: '1px solid rgba(5,150,105,0.15)',
+                      border: '1px solid rgba(5,150,105,0.12)',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.6875rem',
                       color: '#059669',
@@ -348,10 +337,25 @@ export default function Hero() {
         </div>
       </div>
       <style>{`
+        .hero-cta-primary:hover {
+          background-color: #047857 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(5,150,105,0.35), 0 2px 4px rgba(0,0,0,0.08) !important;
+        }
+        .hero-cta-secondary:hover {
+          border-color: #059669 !important;
+          color: #059669 !important;
+          background-color: rgba(5,150,105,0.04) !important;
+          transform: translateY(-2px);
+        }
+        .hero-card:hover {
+          box-shadow: 0 16px 60px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.04) !important;
+          transform: translateY(-4px);
+        }
         @media (max-width: 640px) {
           .hero-stats {
             flex-wrap: wrap !important;
-            gap: 1.25rem !important;
+            gap: 1.5rem !important;
           }
         }
       `}</style>

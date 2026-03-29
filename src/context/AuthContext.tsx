@@ -1,6 +1,6 @@
 'use client'
 
-import {
+import React, {
   createContext,
   useContext,
   useState,
@@ -47,7 +47,7 @@ interface AuthContextType {
     password: string,
     name: string,
     startup: string
-  ) => Promise<{ error?: string }>
+  ) => Promise<{ error?: string; role?: string }>
   logout: () => Promise<void>
   updateProfile: (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => Promise<{ error?: string }>
   openAuthModal: (mode?: 'login' | 'register') => void
@@ -145,6 +145,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login')
+  // Flag to prevent onAuthStateChange from overwriting the user
+  // that login/register already set with accurate role data.
+  const loginInProgressRef = React.useRef(false)
 
   const user = appUser ? appUserToUser(appUser) : null
 
@@ -177,6 +180,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (cancelled) return
+      // If login() or register() already set the user with accurate role data,
+      // skip re-fetching here to avoid overwriting with stale/fallback data.
+      if (loginInProgressRef.current) return
       if (session?.user) {
         // Set fallback immediately, then enrich
         setAppUser(await fallbackAppUser(session))
@@ -201,6 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (email: string, password: string, name: string, startup: string) => {
+      loginInProgressRef.current = true
       const { data, error } = await supabase.auth.signUp({
         email: email.toLowerCase(),
         password,
@@ -213,6 +220,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) {
+        loginInProgressRef.current = false
         return { error: mapSupabaseError(error.message) }
       }
 
@@ -226,6 +234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             password,
           })
         if (signInError) {
+          loginInProgressRef.current = false
           // If the error is about email confirmation, tell the user to check their inbox
           // instead of showing a generic error.
           if (signInError.message.includes('Email not confirmed')) {
@@ -237,6 +246,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Ensure profile exists (the DB trigger may not have fired yet)
+      let role: string = 'founder'
       if (activeUser) {
         // Try to load existing profile first
         let profile = await loadProfile(activeUser.id)
@@ -256,29 +266,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Use the active session for fallback if profile query keeps failing
         const { data: { session: activeSession } } = await supabase.auth.getSession()
         if (profile) {
+          role = profile.role
           setAppUser(profile)
         } else if (activeSession) {
-          setAppUser(await fallbackAppUser(activeSession))
+          const fb = await fallbackAppUser(activeSession)
+          role = fb.role
+          setAppUser(fb)
         }
       }
 
-      return {}
+      loginInProgressRef.current = false
+      return { role }
     },
     []
   )
 
   const login = useCallback(async (email: string, password: string) => {
     try {
+      // Prevent onAuthStateChange from overwriting user data we set here
+      loginInProgressRef.current = true
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.toLowerCase(),
         password,
       })
 
       if (error) {
+        loginInProgressRef.current = false
         return { error: mapSupabaseError(error.message) }
       }
 
       if (!data.user || !data.session) {
+        loginInProgressRef.current = false
         return { error: 'No se pudo iniciar sesión.' }
       }
 
@@ -327,10 +345,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           profile.org_id = orgId
           setAppUser(profile)
         }
-      }).catch(() => {})
+      }).catch(() => {}).finally(() => {
+        // Allow onAuthStateChange to resume normal behavior
+        loginInProgressRef.current = false
+      })
 
       return { role }
     } catch {
+      loginInProgressRef.current = false
       return { error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' }
     }
   }, [])

@@ -69,10 +69,14 @@ export default function AuthModal() {
         // Use full page navigation so the browser sends updated auth cookies
         // to the server middleware. router.push() does a client-side navigation
         // that skips cookie propagation, causing the middleware to reject the request.
-        window.location.href = mode === 'register'
-          ? '/tools/completar-perfil'
-          : isOrgAdmin ? '/admin' : '/tools'
-      }, 1800)
+        if (isOrgAdmin) {
+          window.location.href = '/admin'
+        } else if (mode === 'register') {
+          window.location.href = '/tools/completar-perfil'
+        } else {
+          window.location.href = '/tools'
+        }
+      }, 800)
     }
   }
 
@@ -95,7 +99,7 @@ export default function AuthModal() {
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 200,
+          zIndex: 9999,
           backgroundColor: 'rgba(25,25,25,0.6)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
@@ -115,10 +119,11 @@ export default function AuthModal() {
           style={{
             width: '100%',
             maxWidth: 480,
+            maxHeight: 'calc(100vh - 2rem)',
+            overflowY: 'auto',
             background: 'var(--color-paper)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: '0 40px 80px rgba(25,25,25,0.2), 0 8px 20px rgba(25,25,25,0.08)',
-            overflow: 'hidden',
             position: 'relative',
           }}
         >

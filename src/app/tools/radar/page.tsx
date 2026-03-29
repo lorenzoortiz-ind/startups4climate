@@ -35,8 +35,8 @@ interface VerticalItem {
 /* ─── Category styling ─── */
 const CATEGORY_COLORS: Record<Category, { color: string; bg: string; border: string }> = {
   Inversión: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
-  Regulación: { color: '#6366F1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
-  Tendencia: { color: '#D97706', bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.2)' },
+  Regulación: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
+  Tendencia: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
   Programa: { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)' },
 }
 
@@ -147,10 +147,10 @@ function CategoryPill({ category }: { category: Category }) {
         alignItems: 'center',
         gap: '0.25rem',
         padding: '0.125rem 0.5rem',
-        borderRadius: 9999,
+        borderRadius: 8,
         background: style.bg,
         border: `1px solid ${style.border}`,
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-body)',
         fontSize: '0.625rem',
         fontWeight: 600,
         color: style.color,
@@ -192,7 +192,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         <CategoryPill category={item.category} />
         <span
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.625rem',
             color: 'var(--color-text-muted)',
           }}
@@ -267,13 +267,13 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
           style={{
             display: 'inline-block',
             padding: '0.125rem 0.5rem',
-            borderRadius: 9999,
-            background: 'rgba(99,102,241,0.08)',
-            border: '1px solid rgba(99,102,241,0.2)',
-            fontFamily: 'var(--font-mono)',
+            borderRadius: 8,
+            background: 'rgba(42,34,43,0.08)',
+            border: '1px solid rgba(42,34,43,0.2)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.625rem',
             fontWeight: 600,
-            color: '#6366F1',
+            color: '#2A222B',
             whiteSpace: 'nowrap',
           }}
         >
@@ -281,7 +281,7 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
         </span>
         <span
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.625rem',
             color: 'var(--color-text-muted)',
           }}
@@ -366,22 +366,22 @@ export default function RadarPage() {
                 height: 40,
                 borderRadius: 12,
                 background:
-                  'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.04))',
-                border: '1px solid rgba(99,102,241,0.2)',
+                  'linear-gradient(135deg, rgba(42,34,43,0.12), rgba(42,34,43,0.04))',
+                border: '1px solid rgba(42,34,43,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Radio size={20} color="#6366F1" />
+              <Radio size={20} color="#2A222B" />
             </div>
             <div style={{ overflow: 'visible', minHeight: 'auto', flex: 1, minWidth: 0 }}>
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.5rem',
-                  fontWeight: 800,
+                  fontWeight: 400,
                   color: 'var(--color-text-primary)',
                   lineHeight: 1.3,
                   overflow: 'visible',
@@ -416,7 +416,7 @@ export default function RadarPage() {
             <Clock size={12} color="var(--color-text-muted)" />
             <span
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.6875rem',
                 color: 'var(--color-text-muted)',
               }}
@@ -453,13 +453,13 @@ export default function RadarPage() {
                   padding: '0.5rem 1rem',
                   borderRadius: 10,
                   border: isActive
-                    ? '1px solid rgba(99,102,241,0.3)'
+                    ? '1px solid rgba(42,34,43,0.3)'
                     : '1px solid var(--color-border)',
-                  background: isActive ? 'rgba(99,102,241,0.08)' : 'var(--color-bg-card)',
+                  background: isActive ? 'rgba(42,34,43,0.08)' : 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.8125rem',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#6366F1' : 'var(--color-text-secondary)',
+                  color: isActive ? '#2A222B' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',
@@ -493,12 +493,12 @@ export default function RadarPage() {
                 gap: '0.5rem',
                 padding: '0.75rem 1rem',
                 borderRadius: 10,
-                background: 'rgba(99,102,241,0.04)',
-                border: '1px solid rgba(99,102,241,0.1)',
+                background: 'rgba(42,34,43,0.04)',
+                border: '1px solid rgba(42,34,43,0.1)',
                 marginBottom: '1rem',
               }}
             >
-              <Target size={14} color="#6366F1" />
+              <Target size={14} color="#2A222B" />
               <span
                 style={{
                   fontFamily: 'var(--font-body)',
@@ -507,7 +507,7 @@ export default function RadarPage() {
                 }}
               >
                 Mostrando noticias relevantes para:{' '}
-                <strong style={{ color: '#6366F1' }}>{userVertical}</strong>
+                <strong style={{ color: '#2A222B' }}>{userVertical}</strong>
               </span>
             </motion.div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>

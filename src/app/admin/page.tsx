@@ -180,8 +180,8 @@ export default function AdminDashboard() {
       label: 'Score promedio',
       value: metrics.avgScore,
       icon: TrendingUp,
-      color: '#D97706',
-      bg: 'rgba(217,119,6,0.08)',
+      color: '#2A222B',
+      bg: 'rgba(42,34,43,0.08)',
     },
     {
       label: 'Herramientas promedio',

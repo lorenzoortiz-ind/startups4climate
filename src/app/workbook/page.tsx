@@ -45,14 +45,14 @@ const VERTICAL_OPTIONS = [
 ]
 
 const TOC_ITEMS = [
-  { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#7C3AED' },
-  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#7C3AED' },
-  { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#7C3AED' },
+  { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#FF6B4A' },
+  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#FF6B4A' },
+  { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#FF6B4A' },
   { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#0D9488' },
   { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#0D9488' },
-  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
-  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },
-  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0891B2' },
+  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#2A222B' },
+  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#2A222B' },
+  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0D9488' },
 ]
 
 /* ─── Shared Styles (matching DiagnosticForm) ─── */
@@ -205,7 +205,7 @@ export default function WorkbookPage() {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.5rem 1rem',
-                borderRadius: 9999,
+                borderRadius: 8,
                 background: 'rgba(13,148,136,0.08)',
                 border: '1px solid rgba(13,148,136,0.15)',
                 marginBottom: '1.5rem',
@@ -214,7 +214,7 @@ export default function WorkbookPage() {
               <BookOpen size={16} color="#0D9488" />
               <span
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                   color: '#0D9488',
@@ -228,7 +228,7 @@ export default function WorkbookPage() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 800,
+                fontWeight: 400,
                 color: 'var(--color-text-primary, #111827)',
                 letterSpacing: '-0.03em',
                 lineHeight: 1.15,
@@ -323,7 +323,7 @@ export default function WorkbookPage() {
                 >
                   <span
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.6875rem',
                       fontWeight: 700,
                       color: item.color,
@@ -346,12 +346,12 @@ export default function WorkbookPage() {
                   </span>
                   <span
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.5625rem',
                       fontWeight: 600,
                       color: item.color,
                       padding: '2px 8px',
-                      borderRadius: 9999,
+                      borderRadius: 8,
                       background: `${item.color}12`,
                       textTransform: 'uppercase',
                       letterSpacing: '0.03em',
@@ -612,7 +612,7 @@ export default function WorkbookPage() {
                             borderRadius: 10,
                             border: '1px solid var(--color-border, #e5e7eb)',
                             background: 'var(--color-bg-card, #ffffff)',
-                            fontFamily: 'var(--font-mono)',
+                            fontFamily: 'var(--font-body)',
                             fontSize: '0.8125rem',
                             color: 'var(--color-text-secondary, #6B7280)',
                             whiteSpace: 'nowrap',

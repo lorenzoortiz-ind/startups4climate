@@ -76,11 +76,11 @@ ${data.herramientas || '(No completado)'}
                 <input value={s.description} onChange={e => updateStage(i, 'description', e.target.value)} placeholder="Descripción" style={inputStyle} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <input type="number" value={s.avgDays} onChange={e => updateStage(i, 'avgDays', e.target.value)} placeholder="0" style={{ ...inputStyle, width: 60, textAlign: 'center' }} />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>días</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>días</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <input type="number" value={s.conversionRate} onChange={e => updateStage(i, 'conversionRate', e.target.value)} placeholder="0" style={{ ...inputStyle, width: 60, textAlign: 'center' }} />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>%</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>%</span>
                 </div>
               </div>
             </div>

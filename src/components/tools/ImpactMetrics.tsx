@@ -64,14 +64,14 @@ const ODS_COLORS: Record<number, string> = {
 }
 
 const categoryLabels: Record<string, { label: string; color: string }> = {
-  output: { label: 'Output', color: '#0891B2' },
-  outcome: { label: 'Outcome', color: '#7C3AED' },
+  output: { label: 'Output', color: '#0D9488' },
+  outcome: { label: 'Outcome', color: '#FF6B4A' },
   impact: { label: 'Impacto', color: '#0D9488' },
 }
 
 const progressColor = (pct: number) => {
   if (pct >= 70) return '#0D9488'
-  if (pct >= 40) return '#D97706'
+  if (pct >= 40) return '#2A222B'
   return '#DC2626'
 }
 
@@ -148,7 +148,7 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
               }}>
                 <input type="checkbox" checked={selected} onChange={() => toggleODS(n)} style={{ accentColor: ODS_COLORS[n] }} />
                 <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', fontWeight: 700,
+                  fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 700,
                   color: ODS_COLORS[n], minWidth: 30,
                 }}>ODS {n}</span>
                 <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-secondary)', lineHeight: 1.3 }}>{ODS_NAMES[n]}</span>
@@ -178,10 +178,10 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Métrica {i + 1}</span>
-                  <span style={{ padding: '0.15rem 0.5rem', borderRadius: 9999, background: `${catInfo.color}15`, color: catInfo.color, fontFamily: 'var(--font-mono)', fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase' }}>{catInfo.label}</span>
+                  <span style={{ padding: '0.15rem 0.5rem', borderRadius: 8, background: `${catInfo.color}15`, color: catInfo.color, fontFamily: 'var(--font-body)', fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase' }}>{catInfo.label}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(pct) }}>{pct}%</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(pct) }}>{pct}%</span>
                   {data.metrics.length > 1 && (
                     <button onClick={() => removeMetric(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.2rem 0.4rem' }}><Trash2 size={11} /></button>
                   )}

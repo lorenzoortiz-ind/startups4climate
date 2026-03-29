@@ -322,7 +322,7 @@ export default function PerfilPage() {
           style={{
             fontFamily: 'var(--font-heading)',
             fontSize: '1.5rem',
-            fontWeight: 800,
+            fontWeight: 400,
             color: 'var(--color-text-primary)',
             letterSpacing: '-0.02em',
             marginBottom: '1.5rem',

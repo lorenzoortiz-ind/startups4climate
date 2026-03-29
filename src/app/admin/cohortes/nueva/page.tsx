@@ -279,7 +279,7 @@ export default function NuevaCohorte() {
                     marginBottom: '0.75rem',
                   }}>
                     <span style={{
-                      fontFamily: 'var(--font-mono)', fontSize: '0.6875rem',
+                      fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
                       fontWeight: 600, color: 'var(--color-text-muted)',
                       textTransform: 'uppercase',
                     }}>

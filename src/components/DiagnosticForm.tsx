@@ -212,7 +212,7 @@ const profiles = [
     tag: 'Crecimiento',
     description: 'Tu modelo de negocio está validado y es momento de escalar. Optimiza tus unit economics, profesionaliza tu proceso de ventas y afina tu estrategia de pricing.',
     tools: ['Unit Economics', 'Proceso de Ventas', 'Modelo de Negocio', 'Framework de Pricing'],
-    color: '#D97706',
+    color: '#2A222B',
   },
   {
     range: [22, 24] as [number, number],
@@ -404,7 +404,7 @@ export default function DiagnosticForm() {
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 1.5rem' }}>
         <div style={{
           background: 'white',
-          borderRadius: 24,
+          borderRadius: 12,
           border: '1px solid var(--color-border)',
           boxShadow: 'var(--shadow-elevated)',
           overflow: 'hidden',
@@ -413,17 +413,17 @@ export default function DiagnosticForm() {
           {/* Top gradient accent */}
           <div style={{
             height: 4,
-            background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #D97706, #0D9488)',
+            background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #2A222B, #0D9488)',
           }} />
 
           {/* Progress bar */}
           {step < 12 && (
             <div style={{ padding: '1rem 2rem 0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
                   {step === 0 ? 'Datos de contacto' : step <= 10 ? `Pregunta ${step}/10` : 'Procesando...'}
                 </span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#0D9488', fontWeight: 600 }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: '#0D9488', fontWeight: 600 }}>
                   {Math.round(progress)}%
                 </span>
               </div>
@@ -676,7 +676,7 @@ export default function DiagnosticForm() {
                   >
                     <ArrowLeft size={16} /> Anterior
                   </button>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', fontWeight: 600, color: '#0D9488', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 600, color: '#0D9488', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
                     {questions[step - 1].subtitle}
                   </p>
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '1.5rem', lineHeight: 1.3 }}>
@@ -752,11 +752,11 @@ export default function DiagnosticForm() {
                 >
                   <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                     <CheckCircle2 size={32} color="#0D9488" style={{ margin: '0 auto 0.75rem' }} />
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 400, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>
                       Tu Startup Readiness Score
                     </h3>
                     <div style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '3.5rem',
                       fontWeight: 700,
                       color: profile.color,
@@ -768,10 +768,10 @@ export default function DiagnosticForm() {
                     <span style={{
                       display: 'inline-block',
                       padding: '0.375rem 1rem',
-                      borderRadius: 9999,
+                      borderRadius: 8,
                       background: `${profile.color}10`,
                       border: `1px solid ${profile.color}30`,
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.8125rem',
                       fontWeight: 700,
                       color: profile.color,
@@ -791,10 +791,10 @@ export default function DiagnosticForm() {
                       />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.375rem' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Incubación</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
                     </div>
                   </div>
 

@@ -80,7 +80,7 @@ ${data.estrategiaExpansion || '(No completado)'}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.625rem', marginBottom: '0.625rem' }}>
                 <input value={m.name} onChange={e => updateMarket(i, 'name', e.target.value)} placeholder="Nombre del mercado" style={inputStyle} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>$</span>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>$</span>
                   <input type="number" value={m.tamEstimate} onChange={e => updateMarket(i, 'tamEstimate', e.target.value)} placeholder="TAM estimado" style={{ ...inputStyle, width: 130 }} />
                 </div>
               </div>

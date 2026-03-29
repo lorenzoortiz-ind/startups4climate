@@ -33,7 +33,7 @@ export function PreIncubationIllustration({
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="#7C3AED"
+        fill="#FF6B4A"
         fillOpacity={0.1}
       />
       {/* Bulb base lines */}
@@ -45,20 +45,20 @@ export function PreIncubationIllustration({
       {/* Filament */}
       <path
         d="M88 110L92 90L96 105L100 85L104 105L108 90L112 110"
-        stroke="#7C3AED"
+        stroke="#FF6B4A"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       />
       {/* Radiating lines */}
-      <line x1="100" y1="12" x2="100" y2="22" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="140" y1="22" x2="135" y2="30" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="60" y1="22" x2="65" y2="30" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="162" y1="52" x2="154" y2="56" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="38" y1="52" x2="46" y2="56" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="168" y1="80" x2="158" y2="80" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
-      <line x1="32" y1="80" x2="42" y2="80" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+      <line x1="100" y1="12" x2="100" y2="22" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="140" y1="22" x2="135" y2="30" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="60" y1="22" x2="65" y2="30" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="162" y1="52" x2="154" y2="56" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="38" y1="52" x2="46" y2="56" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="168" y1="80" x2="158" y2="80" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="32" y1="80" x2="42" y2="80" stroke="#FF6B4A" strokeWidth="2" strokeLinecap="round" />
       {/* Small seedling at base */}
       <path d="M100 172L100 182" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" />
       <path
@@ -183,7 +183,7 @@ export function AccelerationIllustration({
       {/* Background trajectory graph */}
       <path
         d="M25 170C50 168 80 160 100 140C120 120 130 90 140 60C145 45 148 35 155 25"
-        stroke="#D97706"
+        stroke="#2A222B"
         strokeWidth="2"
         strokeLinecap="round"
         strokeDasharray="6 4"
@@ -192,7 +192,7 @@ export function AccelerationIllustration({
       {/* Graph area fill */}
       <path
         d="M25 170C50 168 80 160 100 140C120 120 130 90 140 60C145 45 148 35 155 25L155 170Z"
-        fill="#D97706"
+        fill="#2A222B"
         fillOpacity={0.06}
       />
       {/* Axis lines */}
@@ -209,39 +209,39 @@ export function AccelerationIllustration({
           stroke="#1a1a1a"
           strokeWidth="2.5"
           strokeLinejoin="round"
-          fill="#D97706"
+          fill="#2A222B"
           fillOpacity={0.12}
         />
         {/* Rocket window */}
-        <circle cx="0" cy="0" r="4" stroke="#D97706" strokeWidth="2" fill="#D97706" fillOpacity={0.2} />
+        <circle cx="0" cy="0" r="4" stroke="#2A222B" strokeWidth="2" fill="#2A222B" fillOpacity={0.2} />
         {/* Rocket fins */}
-        <path d="M-10 18L-18 28L-10 24" stroke="#1a1a1a" strokeWidth="1.5" fill="#D97706" fillOpacity={0.1} />
-        <path d="M10 18L18 28L10 24" stroke="#1a1a1a" strokeWidth="1.5" fill="#D97706" fillOpacity={0.1} />
+        <path d="M-10 18L-18 28L-10 24" stroke="#1a1a1a" strokeWidth="1.5" fill="#2A222B" fillOpacity={0.1} />
+        <path d="M10 18L18 28L10 24" stroke="#1a1a1a" strokeWidth="1.5" fill="#2A222B" fillOpacity={0.1} />
         {/* Exhaust flames */}
         <path
           d="M-4 32Q-2 42 0 38Q2 42 4 32"
-          stroke="#D97706"
+          stroke="#2A222B"
           strokeWidth="1.5"
-          fill="#D97706"
+          fill="#2A222B"
           fillOpacity={0.3}
         />
         <path
           d="M-2 36Q0 46 2 36"
-          stroke="#D97706"
+          stroke="#2A222B"
           strokeWidth="1"
-          fill="#D97706"
+          fill="#2A222B"
           fillOpacity={0.2}
         />
       </g>
       {/* Speed lines */}
-      <line x1="60" y1="115" x2="78" y2="100" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" opacity={0.5} />
-      <line x1="55" y1="130" x2="70" y2="118" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" opacity={0.4} />
-      <line x1="50" y1="145" x2="62" y2="135" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" opacity={0.3} />
+      <line x1="60" y1="115" x2="78" y2="100" stroke="#2A222B" strokeWidth="1.5" strokeLinecap="round" opacity={0.5} />
+      <line x1="55" y1="130" x2="70" y2="118" stroke="#2A222B" strokeWidth="1.5" strokeLinecap="round" opacity={0.4} />
+      <line x1="50" y1="145" x2="62" y2="135" stroke="#2A222B" strokeWidth="1.5" strokeLinecap="round" opacity={0.3} />
       {/* Data points on curve */}
-      <circle cx="50" cy="168" r="3" fill="#D97706" fillOpacity={0.6} />
-      <circle cx="80" cy="160" r="3" fill="#D97706" fillOpacity={0.6} />
-      <circle cx="100" cy="140" r="3" fill="#D97706" fillOpacity={0.6} />
-      <circle cx="130" cy="90" r="3" fill="#D97706" fillOpacity={0.6} />
+      <circle cx="50" cy="168" r="3" fill="#2A222B" fillOpacity={0.6} />
+      <circle cx="80" cy="160" r="3" fill="#2A222B" fillOpacity={0.6} />
+      <circle cx="100" cy="140" r="3" fill="#2A222B" fillOpacity={0.6} />
+      <circle cx="130" cy="90" r="3" fill="#2A222B" fillOpacity={0.6} />
     </svg>
   )
 }
@@ -265,7 +265,7 @@ export function ScalingIllustration({
       className={className}
     >
       {/* Globe */}
-      <circle cx="100" cy="100" r="70" stroke="#1a1a1a" strokeWidth="2.5" fill="#0891B2" fillOpacity={0.06} />
+      <circle cx="100" cy="100" r="70" stroke="#1a1a1a" strokeWidth="2.5" fill="#0D9488" fillOpacity={0.06} />
       {/* Globe horizontal lines */}
       <ellipse cx="100" cy="100" rx="70" ry="25" stroke="#1a1a1a" strokeWidth="1" fill="none" opacity={0.3} />
       <ellipse cx="100" cy="100" rx="70" ry="50" stroke="#1a1a1a" strokeWidth="1" fill="none" opacity={0.3} />
@@ -275,35 +275,35 @@ export function ScalingIllustration({
       {/* Central vertical line */}
       <line x1="100" y1="30" x2="100" y2="170" stroke="#1a1a1a" strokeWidth="1" opacity={0.3} />
       {/* Network nodes on globe */}
-      <circle cx="72" cy="72" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="130" cy="80" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="90" cy="120" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="140" cy="115" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="65" cy="105" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="108" cy="60" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
-      <circle cx="115" cy="140" r="6" stroke="#0891B2" strokeWidth="2" fill="#0891B2" fillOpacity={0.2} />
+      <circle cx="72" cy="72" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="130" cy="80" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="90" cy="120" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="140" cy="115" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="65" cy="105" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="108" cy="60" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
+      <circle cx="115" cy="140" r="6" stroke="#0D9488" strokeWidth="2" fill="#0D9488" fillOpacity={0.2} />
       {/* Network connection lines */}
-      <line x1="72" y1="72" x2="130" y2="80" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="72" y1="72" x2="90" y2="120" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="72" y1="72" x2="108" y2="60" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="130" y1="80" x2="140" y2="115" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="130" y1="80" x2="108" y2="60" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="90" y1="120" x2="140" y2="115" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="90" y1="120" x2="65" y2="105" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="90" y1="120" x2="115" y2="140" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="140" y1="115" x2="115" y2="140" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="65" y1="105" x2="72" y2="72" stroke="#0891B2" strokeWidth="1.5" opacity={0.5} />
-      <line x1="108" y1="60" x2="115" y2="140" stroke="#0891B2" strokeWidth="1.5" opacity={0.3} />
+      <line x1="72" y1="72" x2="130" y2="80" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="72" y1="72" x2="90" y2="120" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="72" y1="72" x2="108" y2="60" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="130" y1="80" x2="140" y2="115" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="130" y1="80" x2="108" y2="60" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="90" y1="120" x2="140" y2="115" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="90" y1="120" x2="65" y2="105" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="90" y1="120" x2="115" y2="140" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="140" y1="115" x2="115" y2="140" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="65" y1="105" x2="72" y2="72" stroke="#0D9488" strokeWidth="1.5" opacity={0.5} />
+      <line x1="108" y1="60" x2="115" y2="140" stroke="#0D9488" strokeWidth="1.5" opacity={0.3} />
       {/* Outer orbiting dots */}
-      <circle cx="28" cy="50" r="3" fill="#0891B2" fillOpacity={0.4} />
-      <circle cx="172" cy="55" r="3" fill="#0891B2" fillOpacity={0.4} />
-      <circle cx="20" cy="130" r="3" fill="#0891B2" fillOpacity={0.4} />
-      <circle cx="180" cy="140" r="3" fill="#0891B2" fillOpacity={0.4} />
+      <circle cx="28" cy="50" r="3" fill="#0D9488" fillOpacity={0.4} />
+      <circle cx="172" cy="55" r="3" fill="#0D9488" fillOpacity={0.4} />
+      <circle cx="20" cy="130" r="3" fill="#0D9488" fillOpacity={0.4} />
+      <circle cx="180" cy="140" r="3" fill="#0D9488" fillOpacity={0.4} />
       {/* Dashed lines to outer dots */}
-      <line x1="28" y1="50" x2="72" y2="72" stroke="#0891B2" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
-      <line x1="172" y1="55" x2="130" y2="80" stroke="#0891B2" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
-      <line x1="20" y1="130" x2="65" y2="105" stroke="#0891B2" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
-      <line x1="180" y1="140" x2="140" y2="115" stroke="#0891B2" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
+      <line x1="28" y1="50" x2="72" y2="72" stroke="#0D9488" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
+      <line x1="172" y1="55" x2="130" y2="80" stroke="#0D9488" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
+      <line x1="20" y1="130" x2="65" y2="105" stroke="#0D9488" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
+      <line x1="180" y1="140" x2="140" y2="115" stroke="#0D9488" strokeWidth="1" strokeDasharray="3 3" opacity={0.3} />
     </svg>
   )
 }

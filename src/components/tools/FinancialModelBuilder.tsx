@@ -360,17 +360,17 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
         {/* Key metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Burn rate (mes 1)</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Burn rate (mes 1)</span>
             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: '#DC2626' }}>{data.currency} {fmt(summaryMetrics.burnRate)}</span>
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Runway estimado</span>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#0D9488' : summaryMetrics.runway >= 12 ? '#D97706' : '#DC2626' }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Runway estimado</span>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#0D9488' : summaryMetrics.runway >= 12 ? '#2A222B' : '#DC2626' }}>
               {summaryMetrics.runway >= 999 ? '∞' : `${summaryMetrics.runway} meses`}
             </span>
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Break-even</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Break-even</span>
             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.breakEvenMonth ? '#0D9488' : '#6B7280' }}>
               {summaryMetrics.breakEvenMonth ? `Mes ${summaryMetrics.breakEvenMonth}` : 'No alcanzado'}
             </span>
@@ -380,7 +380,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
         {/* Monthly projection table (first 12 months) */}
         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Proyección mensual (primeros 12 meses)</span>
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-body)', fontSize: '0.75rem' }}>
             <thead>
               <tr>
                 <th style={thStyle}>Mes</th>

@@ -8,51 +8,56 @@ const founders = [
     photo: '/eddie.png',
     name: 'Eddie Ajalcrina',
     role: 'Co-Founder & CEO',
-    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovación y conexión con capital.',
+    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovacion y conexion con capital.',
     tags: ['Impact Strategy', 'Business Dev', 'LATAM Ecosystems'],
   },
   {
     photo: '/lorenzo.png',
     name: 'Lorenzo Ortiz',
     role: 'Co-Founder & CTO',
-    bio: 'Tecnología, producto y diseño de nuevos negocios. Background en finanzas avanzadas, desarrollo tech y escalamiento de startups.',
+    bio: 'Tecnologia, producto y diseno de nuevos negocios. Background en finanzas avanzadas, desarrollo tech y escalamiento de startups.',
     tags: ['Product Dev', 'Ops & Tech', 'Startup Tools'],
   },
 ]
 
-const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Unión Europea', 'NESsT', 'CATAL1.5°T', 'Stanford University']
+const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Union Europea', 'NESsT', 'CATAL1.5T', 'Stanford University']
+
+const ease = [0.25, 0.1, 0.25, 1] as [number, number, number, number]
 
 export default function AboutRedesignLab() {
   return (
-    <section id="about" style={{ padding: 'clamp(4rem, 8vw, 10rem) 0', background: '#FAF8F5', overflow: 'hidden' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 5rem)' }}>
+    <section id="about" style={{ padding: 'clamp(5rem, 10vw, 10rem) 0', background: '#FAF8F5', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 5rem)' }}>
         <div
           style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem', alignItems: 'center' }}
           className="lg:!grid-cols-[1fr_1fr]"
         >
+          {/* Text left */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6, ease }}
           >
             <span style={{
               display: 'inline-block',
-              fontSize: '0.8125rem',
+              fontFamily: 'var(--font-body)',
+              fontSize: '12px',
               fontWeight: 600,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase' as const,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
               color: '#93908C',
               marginBottom: '1.5rem',
             }}>
-              Quiénes somos
+              Quienes somos
             </span>
 
             <h2 style={{
+              fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(2rem, 4vw, 2.75rem)',
-              fontWeight: 700,
+              fontWeight: 400,
               lineHeight: 1.1,
-              letterSpacing: '-0.025em',
+              letterSpacing: '-0.02em',
               color: '#2A222B',
               marginBottom: '1.5rem',
             }}>
@@ -63,16 +68,18 @@ export default function AboutRedesignLab() {
             </h2>
 
             <p style={{
+              fontFamily: 'var(--font-body)',
               fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
               lineHeight: 1.75,
               color: '#5E5A60',
               marginBottom: '1.5rem',
             }}>
               Construimos la infraestructura operativa que los founders necesitan para dejar de
-              improvisar y enfocarse en lo que importa: crear soluciones que transformen la región.
+              improvisar y enfocarse en lo que importa: crear soluciones que transformen la region.
             </p>
           </motion.div>
 
+          {/* Founder cards right */}
           <div className="about-founder-cards" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
@@ -81,16 +88,16 @@ export default function AboutRedesignLab() {
             {founders.map((f, i) => (
               <motion.div
                 key={f.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-30px' }}
-                transition={{ duration: 0.4, delay: i * 0.12, ease: 'easeOut' }}
-                whileHover={{ y: -4, boxShadow: '0 12px 40px rgba(0,0,0,0.08)' }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.6, delay: i * 0.1, ease }}
+                className="founder-card"
                 style={{
                   background: 'white',
-                  borderRadius: 16,
-                  border: '1px solid rgba(0,0,0,0.06)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                  borderRadius: 12,
+                  border: '1px solid #E8E4DF',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.04)',
                   padding: '2.25rem 1.5rem',
                   textAlign: 'center',
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -114,25 +121,28 @@ export default function AboutRedesignLab() {
                   />
                 </div>
                 <h3 style={{
+                  fontFamily: 'var(--font-heading)',
                   fontSize: '1.125rem',
-                  fontWeight: 700,
+                  fontWeight: 400,
                   color: '#2A222B',
                   marginBottom: '0.375rem',
-                  letterSpacing: '-0.01em',
+                  letterSpacing: '-0.02em',
                 }}>
                   {f.name}
                 </h3>
                 <p style={{
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
                   color: '#FF6B4A',
                   fontWeight: 600,
                   marginBottom: '0.75rem',
                   letterSpacing: '0.02em',
-                  textTransform: 'uppercase' as const,
+                  textTransform: 'uppercase',
                 }}>
                   {f.role}
                 </p>
                 <p style={{
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.875rem',
                   lineHeight: 1.65,
                   color: '#5E5A60',
@@ -146,6 +156,7 @@ export default function AboutRedesignLab() {
                       padding: '0.2rem 0.625rem',
                       borderRadius: 8,
                       background: 'rgba(255,107,74,0.06)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.625rem',
                       color: '#FF6B4A',
                       fontWeight: 600,
@@ -160,17 +171,19 @@ export default function AboutRedesignLab() {
           </div>
         </div>
 
+        {/* Partners marquee */}
         <div style={{
           marginTop: '4.5rem',
           paddingTop: '3rem',
           borderTop: '1px solid rgba(0,0,0,0.06)',
         }}>
           <p style={{
-            fontSize: '0.8125rem',
+            fontFamily: 'var(--font-body)',
+            fontSize: '12px',
             fontWeight: 600,
             color: '#93908C',
-            textTransform: 'uppercase' as const,
-            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            letterSpacing: '0.12em',
             textAlign: 'center',
             marginBottom: '1.75rem',
           }}>
@@ -197,6 +210,7 @@ export default function AboutRedesignLab() {
                   key={`${name}-${i}`}
                   className="partner-logo-item"
                   style={{
+                    fontFamily: 'var(--font-body)',
                     fontSize: '1.0625rem',
                     fontWeight: 700,
                     color: '#2A222B',
@@ -220,13 +234,13 @@ export default function AboutRedesignLab() {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .partner-logo-item:hover {
-          opacity: 0.85 !important;
+        .partner-logo-item:hover { opacity: 0.85 !important; }
+        .founder-card:hover {
+          transform: translateY(-4px) !important;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.08) !important;
         }
         @media (max-width: 640px) {
-          .about-founder-cards {
-            grid-template-columns: 1fr !important;
-          }
+          .about-founder-cards { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

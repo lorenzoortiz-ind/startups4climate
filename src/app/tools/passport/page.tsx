@@ -71,7 +71,7 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (score / 100) * circumference
-  const color = score >= 70 ? '#0D9488' : score >= 40 ? '#D97706' : '#DC2626'
+  const color = score >= 70 ? '#0D9488' : score >= 40 ? '#2A222B' : '#DC2626'
 
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
@@ -112,7 +112,7 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
           style={{
             fontFamily: 'var(--font-heading)',
             fontSize: size * 0.28,
-            fontWeight: 800,
+            fontWeight: 400,
             color: 'var(--color-text-primary)',
             lineHeight: 1,
           }}
@@ -121,7 +121,7 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
         </span>
         <span
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: size * 0.1,
             color: 'var(--color-text-muted)',
             marginTop: 2,
@@ -179,7 +179,7 @@ function MetricCard({
       <div style={{ flex: 1, minWidth: 0, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
         <div
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.625rem',
             color: 'var(--color-text-muted)',
             textTransform: 'uppercase',
@@ -247,7 +247,7 @@ function StageProgressBar({ stage }: { stage: StageProgress }) {
         </div>
         <span
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.6875rem',
             fontWeight: 700,
             color: isComplete ? stage.color : 'var(--color-text-muted)',
@@ -444,7 +444,7 @@ export default function PassportPage() {
             style={{
               fontFamily: 'var(--font-heading)',
               fontSize: '1.5rem',
-              fontWeight: 800,
+              fontWeight: 400,
               color: 'var(--color-text-primary)',
               marginBottom: '0.75rem',
             }}
@@ -522,7 +522,7 @@ export default function PassportPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             style={{
-              borderRadius: 24,
+              borderRadius: 12,
               background: 'var(--color-bg-card)',
               border: `2px solid ${stageMeta.color}30`,
               overflow: 'hidden',
@@ -545,7 +545,7 @@ export default function PassportPage() {
               <div>
                 <div
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     fontSize: '0.625rem',
                     fontWeight: 700,
                     color: 'rgba(255,255,255,0.7)',
@@ -560,7 +560,7 @@ export default function PassportPage() {
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontSize: '1.5rem',
-                    fontWeight: 800,
+                    fontWeight: 400,
                     color: 'white',
                   }}
                 >
@@ -582,10 +582,10 @@ export default function PassportPage() {
               <div
                 style={{
                   padding: '0.375rem 0.875rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   background: 'rgba(255,255,255,0.2)',
                   backdropFilter: 'blur(8px)',
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.6875rem',
                   fontWeight: 700,
                   color: 'white',
@@ -612,7 +612,7 @@ export default function PassportPage() {
                   <div style={{ marginBottom: '1rem' }}>
                     <div
                       style={{
-                        fontFamily: 'var(--font-mono)',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.625rem',
                         color: 'var(--color-text-muted)',
                         textTransform: 'uppercase',
@@ -644,7 +644,7 @@ export default function PassportPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: 'var(--font-mono)',
+                          fontFamily: 'var(--font-body)',
                           fontSize: '0.625rem',
                           color: 'var(--color-text-muted)',
                           textTransform: 'uppercase',
@@ -672,7 +672,7 @@ export default function PassportPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: 'var(--font-mono)',
+                          fontFamily: 'var(--font-body)',
                           fontSize: '0.625rem',
                           color: 'var(--color-text-muted)',
                           textTransform: 'uppercase',
@@ -700,7 +700,7 @@ export default function PassportPage() {
                     <div>
                       <div
                         style={{
-                          fontFamily: 'var(--font-mono)',
+                          fontFamily: 'var(--font-body)',
                           fontSize: '0.625rem',
                           color: 'var(--color-text-muted)',
                           textTransform: 'uppercase',
@@ -716,7 +716,7 @@ export default function PassportPage() {
                           alignItems: 'center',
                           gap: '0.375rem',
                           padding: '0.125rem 0.625rem',
-                          borderRadius: 9999,
+                          borderRadius: 8,
                           background: `${stageMeta.color}15`,
                           border: `1px solid ${stageMeta.color}30`,
                         }}
@@ -748,7 +748,7 @@ export default function PassportPage() {
                 <div style={{ textAlign: 'center' }}>
                   <div
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.625rem',
                       color: 'var(--color-text-muted)',
                       textTransform: 'uppercase',
@@ -790,7 +790,7 @@ export default function PassportPage() {
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.0625rem',
-                  fontWeight: 800,
+                  fontWeight: 400,
                   color: 'var(--color-text-primary)',
                   margin: 0,
                 }}
@@ -799,12 +799,12 @@ export default function PassportPage() {
               </h2>
               <span
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   color: '#0D9488',
                   padding: '0.25rem 0.625rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   background: 'rgba(13,148,136,0.08)',
                 }}
               >
@@ -829,7 +829,7 @@ export default function PassportPage() {
                   style={{
                     height: '100%',
                     borderRadius: 4,
-                    background: 'linear-gradient(90deg, #0D9488, #34D399)',
+                    background: 'linear-gradient(90deg, #0D9488, #0D9488)',
                   }}
                 />
               </div>
@@ -859,7 +859,7 @@ export default function PassportPage() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: '1.0625rem',
-                fontWeight: 800,
+                fontWeight: 400,
                 color: 'var(--color-text-primary)',
                 margin: '0 0 1rem 0',
               }}
@@ -873,15 +873,15 @@ export default function PassportPage() {
                 gap: '0.75rem',
               }}
             >
-              <MetricCard icon={Target} label="TAM" value={passportData?.tam || '—'} color="#6366F1" />
+              <MetricCard icon={Target} label="TAM" value={passportData?.tam || '—'} color="#2A222B" />
               <MetricCard icon={DollarSign} label="LTV" value={passportData?.ltv || '—'} color="#0D9488" />
-              <MetricCard icon={DollarSign} label="CAC" value={passportData?.cac || '—'} color="#D97706" />
-              <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0891B2"  />
+              <MetricCard icon={DollarSign} label="CAC" value={passportData?.cac || '—'} color="#2A222B" />
+              <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0D9488"  />
               <MetricCard
                 icon={Users}
                 label="Equipo"
                 value={passportData?.teamSize ? `${passportData.teamSize} personas` : '—'}
-                color="#7C3AED"
+                color="#FF6B4A"
               />
               <MetricCard
                 icon={UserCheck}
@@ -902,7 +902,7 @@ export default function PassportPage() {
                   icon={DollarSign}
                   label="Runway"
                   value={passportData.runway}
-                  color="#6366F1"
+                  color="#2A222B"
                 />
               )}
             </div>
@@ -926,7 +926,7 @@ export default function PassportPage() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: '1.0625rem',
-                fontWeight: 800,
+                fontWeight: 400,
                 color: 'var(--color-text-primary)',
                 margin: '0 0 1rem 0',
               }}
@@ -1008,7 +1008,7 @@ export default function PassportPage() {
                     </span>
                     <span
                       style={{
-                        fontFamily: 'var(--font-mono)',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.625rem',
                         color: earned ? meta.color : 'var(--color-text-muted)',
                       }}

@@ -79,13 +79,9 @@ function ToolCard({
         alignItems: 'center',
         gap: '0.875rem',
         padding: '1rem 1.125rem',
-        borderRadius: 14,
-        background: locked
-          ? 'var(--color-bg-card)'
-          : done
-            ? tool.stageBg
-            : 'var(--color-bg-card)',
-        border: `1px solid ${locked ? 'var(--color-border)' : done ? tool.stageBorder : 'var(--color-border)'}`,
+        borderRadius: 12,
+        background: locked ? '#FFFFFF' : done ? tool.stageBg : '#FFFFFF',
+        border: `1px solid ${locked ? '#E8E4DF' : done ? tool.stageBorder : '#E8E4DF'}`,
         textDecoration: 'none',
         transition: 'all 0.18s ease',
         position: 'relative' as const,
@@ -93,8 +89,9 @@ function ToolCard({
         opacity: locked ? 0.5 : 1,
         filter: locked ? 'grayscale(0.7)' : 'none',
         cursor: locked ? 'not-allowed' : 'pointer',
+        boxShadow: '0 1px 3px rgba(42,34,43,0.04)',
       }}
-      whileHover={locked ? {} : { y: -2, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
+      whileHover={locked ? {} : { y: -2, boxShadow: '0 4px 20px rgba(42,34,43,0.08)' }}
     >
       {done && (
         <div
@@ -123,12 +120,13 @@ function ToolCard({
         }}
       >
         {locked ? (
-          <Lock size={16} color="var(--color-text-muted)" strokeWidth={1.5} />
+          <Lock size={16} color="#93908C" strokeWidth={1.5} />
         ) : done ? (
           <CheckCircle2 size={17} color={tool.stageColor} />
         ) : (
           <div
             style={{
+              fontFamily: 'var(--font-body)',
               fontSize: '0.6875rem',
               fontWeight: 700,
               color: tool.stageColor,
@@ -141,10 +139,10 @@ function ToolCard({
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
           style={{
-            fontFamily: 'var(--font-heading)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.875rem',
             fontWeight: 600,
-            color: locked ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+            color: locked ? '#93908C' : '#2A222B',
             marginBottom: '0.25rem',
             overflowWrap: 'break-word',
             wordBreak: 'break-word',
@@ -164,7 +162,8 @@ function ToolCard({
             style={{
               display: 'inline-block',
               padding: '1px 8px',
-              borderRadius: 9999,
+              borderRadius: 8,
+              fontFamily: 'var(--font-body)',
               fontSize: '0.5625rem',
               fontWeight: 600,
               color: catColor.color,
@@ -176,11 +175,12 @@ function ToolCard({
             {tool.category}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <Clock size={10} color="var(--color-text-muted)" />
+            <Clock size={10} color="#93908C" />
             <span
               style={{
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.625rem',
-                color: 'var(--color-text-muted)',
+                color: '#93908C',
               }}
             >
               {tool.estimatedTime}
@@ -191,16 +191,12 @@ function ToolCard({
       {!locked && (
         <ArrowRight
           size={14}
-          color={done ? tool.stageColor : 'var(--color-text-muted)'}
+          color={done ? tool.stageColor : '#93908C'}
           style={{ flexShrink: 0 }}
         />
       )}
       {locked && (
-        <Lock
-          size={13}
-          color="var(--color-text-muted)"
-          style={{ flexShrink: 0 }}
-        />
+        <Lock size={13} color="#93908C" style={{ flexShrink: 0 }} />
       )}
     </motion.div>
   )
@@ -228,22 +224,17 @@ export default function ToolsDashboard() {
     }
   }, [user])
 
-  /* ─── Derived state ─── */
   const completedIds = useMemo(
     () => new Set(Object.entries(progress).filter(([, v]) => v.completed).map(([k]) => k)),
     [progress]
   )
 
-  // Determine the user's unlocked stage
   const userStageNum = useMemo(() => {
-    // Parse user.stage to a number (1-4), default to 1
     let baseStage = 1
     if (user?.stage) {
       const parsed = parseInt(user.stage, 10)
       if (parsed >= 1 && parsed <= 4) baseStage = parsed
     }
-
-    // Check if completing all tools in a stage unlocks the next one
     let effectiveStage = baseStage
     for (let s = 1 as 1 | 2 | 3 | 4; s <= 4; s++) {
       const stageTools = TOOLS_BY_STAGE[s as 1 | 2 | 3 | 4]
@@ -252,7 +243,6 @@ export default function ToolsDashboard() {
         effectiveStage = Math.min(s + 1, 4) as 1 | 2 | 3 | 4
       }
     }
-
     return Math.max(baseStage, effectiveStage)
   }, [user, completedIds])
 
@@ -260,12 +250,10 @@ export default function ToolsDashboard() {
   const total = TOOLS.length
   const pct = Math.round((totalCompleted / total) * 100)
 
-  // Find the first incomplete, unlocked tool
   const nextTool = useMemo(() => {
     return TOOLS.find((t) => !completedIds.has(t.id) && t.stage <= userStageNum)
   }, [completedIds, userStageNum])
 
-  // Filter tools by category
   const filteredToolsByStage = useMemo(() => {
     const result: Record<1 | 2 | 3 | 4, ToolDef[]> = { 1: [], 2: [], 3: [], 4: [] }
     for (const s of [1, 2, 3, 4] as const) {
@@ -277,7 +265,6 @@ export default function ToolsDashboard() {
     return result
   }, [activeCategory])
 
-  /* ─── Global report generation ─── */
   const generateGlobalReport = useCallback(() => {
     if (!user) return
     generateGlobalReportUtil(user)
@@ -286,7 +273,15 @@ export default function ToolsDashboard() {
   if (!user) return null
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: 960, margin: '0 auto', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+    <div
+      style={{
+        padding: '2rem 1.5rem',
+        maxWidth: 960,
+        margin: '0 auto',
+        overflowWrap: 'break-word',
+        wordBreak: 'break-word',
+      }}
+    >
       {/* ─── Navigation tabs ─── */}
       <motion.nav
         initial={{ opacity: 0, y: -8 }}
@@ -294,18 +289,17 @@ export default function ToolsDashboard() {
         transition={{ duration: 0.3 }}
         style={{
           display: 'flex',
-          gap: '0.5rem',
+          gap: '0.375rem',
           marginBottom: '2rem',
-          background: 'var(--color-bg-card)',
+          background: '#FFFFFF',
           borderRadius: 12,
-          border: '1px solid var(--color-border)',
-          padding: '0.75rem 1rem',
+          border: '1px solid #E8E4DF',
+          padding: '0.5rem',
           overflowX: 'auto',
           flexWrap: 'nowrap',
           WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          paddingBottom: '0.25rem',
         }}
       >
         {NAV_TABS.map((tab) => (
@@ -313,13 +307,13 @@ export default function ToolsDashboard() {
             key={tab.href}
             href={tab.href}
             style={{
-              padding: '0.625rem 1.25rem',
-              borderRadius: 9,
+              padding: '0.5rem 1.125rem',
+              borderRadius: 8,
               fontFamily: 'var(--font-body)',
               fontSize: '0.8125rem',
               fontWeight: tab.active ? 600 : 500,
-              color: tab.active ? 'white' : 'var(--color-text-secondary)',
-              background: tab.active ? '#0D9488' : 'transparent',
+              color: tab.active ? '#FFFFFF' : '#5E5A60',
+              background: tab.active ? '#2A222B' : 'transparent',
               textDecoration: 'none',
               transition: 'all 0.15s ease',
               whiteSpace: 'nowrap',
@@ -349,6 +343,7 @@ export default function ToolsDashboard() {
           <div>
             <div
               style={{
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.6875rem',
                 fontWeight: 600,
                 color: '#0D9488',
@@ -363,8 +358,8 @@ export default function ToolsDashboard() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                fontWeight: 800,
-                color: 'var(--color-text-primary)',
+                fontWeight: 400,
+                color: '#2A222B',
                 letterSpacing: '-0.025em',
                 marginBottom: '0.375rem',
               }}
@@ -375,7 +370,7 @@ export default function ToolsDashboard() {
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.9375rem',
-                color: 'var(--color-text-secondary)',
+                color: '#5E5A60',
               }}
             >
               {user.startup} · Roadmap de impacto
@@ -393,11 +388,11 @@ export default function ToolsDashboard() {
           >
             <div
               style={{
-                background: 'var(--color-bg-card)',
-                borderRadius: 16,
-                border: '1px solid var(--color-border)',
+                background: '#FFFFFF',
+                borderRadius: 12,
+                border: '1px solid #E8E4DF',
                 padding: '1.25rem 1.5rem',
-                boxShadow: 'var(--shadow-card)',
+                boxShadow: '0 1px 3px rgba(42,34,43,0.04)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
@@ -406,7 +401,7 @@ export default function ToolsDashboard() {
             >
               <div style={{ position: 'relative', width: 56, height: 56, flexShrink: 0 }}>
                 <svg width="56" height="56" style={{ transform: 'rotate(-90deg)' }}>
-                  <circle cx="28" cy="28" r="23" fill="none" stroke="#F3F4F6" strokeWidth="5" />
+                  <circle cx="28" cy="28" r="23" fill="none" stroke="#E8E4DF" strokeWidth="5" />
                   <circle
                     cx="28"
                     cy="28"
@@ -427,6 +422,7 @@ export default function ToolsDashboard() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    fontFamily: 'var(--font-body)',
                     fontSize: '0.75rem',
                     fontWeight: 700,
                     color: '#FF6B4A',
@@ -438,9 +434,10 @@ export default function ToolsDashboard() {
               <div>
                 <div
                   style={{
+                    fontFamily: 'var(--font-body)',
                     fontSize: '1.25rem',
                     fontWeight: 700,
-                    color: 'var(--color-text-primary)',
+                    color: '#2A222B',
                     lineHeight: 1,
                   }}
                 >
@@ -449,7 +446,7 @@ export default function ToolsDashboard() {
                     style={{
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.75rem',
-                      color: 'var(--color-text-muted)',
+                      color: '#93908C',
                       fontWeight: 400,
                     }}
                   >
@@ -460,7 +457,7 @@ export default function ToolsDashboard() {
                   style={{
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.75rem',
-                    color: 'var(--color-text-secondary)',
+                    color: '#5E5A60',
                     marginTop: '0.25rem',
                   }}
                 >
@@ -478,7 +475,7 @@ export default function ToolsDashboard() {
                   alignItems: 'center',
                   gap: '0.5rem',
                   padding: '0.625rem 1.25rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   background: '#0D9488',
                   color: 'white',
                   fontFamily: 'var(--font-body)',
@@ -509,7 +506,8 @@ export default function ToolsDashboard() {
           style={{
             background: STAGE_META[userStageNum as 1 | 2 | 3 | 4].bg,
             border: `1px solid ${STAGE_META[userStageNum as 1 | 2 | 3 | 4].border}`,
-            borderRadius: 14,
+            borderLeft: `4px solid ${STAGE_META[userStageNum as 1 | 2 | 3 | 4].color}`,
+            borderRadius: 12,
             padding: '0.875rem 1.25rem',
             display: 'flex',
             alignItems: 'center',
@@ -537,13 +535,13 @@ export default function ToolsDashboard() {
           })()}
           <span
             style={{
-              fontFamily: 'var(--font-heading)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.9375rem',
-              fontWeight: 700,
+              fontWeight: 600,
               color: STAGE_META[userStageNum as 1 | 2 | 3 | 4].color,
             }}
           >
-            Tu startup está en la etapa de {STAGE_META[userStageNum as 1 | 2 | 3 | 4].name}
+            Tu startup esta en la etapa de {STAGE_META[userStageNum as 1 | 2 | 3 | 4].name}
           </span>
         </div>
       </motion.div>
@@ -560,15 +558,17 @@ export default function ToolsDashboard() {
           >
             <div
               style={{
-                background: 'linear-gradient(135deg, #F0FDFA, #CCFBF1)',
-                borderRadius: 16,
-                border: '1px solid rgba(13,148,136,0.18)',
+                background: '#FFFFFF',
+                borderRadius: 12,
+                border: '1px solid #E8E4DF',
+                borderLeft: '4px solid #0D9488',
                 padding: '1.125rem 1.5rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
                 gap: '0.875rem',
+                boxShadow: '0 1px 3px rgba(42,34,43,0.04)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
@@ -600,17 +600,18 @@ export default function ToolsDashboard() {
                   </div>
                   <div
                     style={{
-                      fontFamily: 'var(--font-heading)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
                       fontWeight: 700,
-                      color: 'var(--color-text-primary)',
+                      color: '#2A222B',
                     }}
                   >
                     {nextTool.shortName}
                     <span
                       style={{
+                        fontFamily: 'var(--font-body)',
                         fontSize: '0.625rem',
-                        color: 'var(--color-text-muted)',
+                        color: '#93908C',
                         marginLeft: '0.5rem',
                         fontWeight: 400,
                       }}
@@ -627,7 +628,7 @@ export default function ToolsDashboard() {
                   alignItems: 'center',
                   gap: '0.375rem',
                   padding: '0.625rem 1.25rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   background: '#0D9488',
                   color: 'white',
                   fontFamily: 'var(--font-body)',
@@ -660,7 +661,7 @@ export default function ToolsDashboard() {
           paddingBottom: '0.25rem',
         }}
       >
-        <Filter size={14} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
+        <Filter size={14} color="#93908C" style={{ flexShrink: 0 }} />
         {(['Todos', ...CATEGORIES] as const).map((cat) => {
           const isActive = activeCategory === cat
           return (
@@ -669,13 +670,13 @@ export default function ToolsDashboard() {
               onClick={() => setActiveCategory(cat as ToolCategory | 'Todos')}
               style={{
                 padding: '0.375rem 0.875rem',
-                borderRadius: 9999,
+                borderRadius: 8,
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.75rem',
                 fontWeight: isActive ? 600 : 500,
-                color: isActive ? 'white' : 'var(--color-text-secondary)',
-                background: isActive ? '#0D9488' : 'var(--color-bg-card)',
-                border: `1px solid ${isActive ? '#0D9488' : 'var(--color-border)'}`,
+                color: isActive ? '#FFFFFF' : '#5E5A60',
+                background: isActive ? '#2A222B' : '#FFFFFF',
+                border: `1px solid ${isActive ? '#2A222B' : '#E8E4DF'}`,
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
                 whiteSpace: 'nowrap',
@@ -715,7 +716,6 @@ export default function ToolsDashboard() {
           const isLocked = stageNum > userStageNum
           const isStageComplete = stageDone === stageTotal && stageTotal > 0
 
-          // Don't render the stage section if all tools are filtered out
           if (stageTools.length === 0 && activeCategory !== 'Todos') return null
 
           return (
@@ -740,8 +740,8 @@ export default function ToolsDashboard() {
                   width: 34,
                   height: 34,
                   borderRadius: '50%',
-                  background: isLocked ? '#F3F4F6' : meta.bg,
-                  border: `2px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
+                  background: isLocked ? '#FAF8F5' : meta.bg,
+                  border: `2px solid ${isLocked ? '#E8E4DF' : meta.color}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -749,7 +749,7 @@ export default function ToolsDashboard() {
                 }}
               >
                 {isLocked ? (
-                  <Lock size={14} color="var(--color-text-muted)" />
+                  <Lock size={14} color="#93908C" />
                 ) : (
                   <Icon size={15} color={meta.color} strokeWidth={1.8} />
                 )}
@@ -758,12 +758,12 @@ export default function ToolsDashboard() {
               {/* Stage header */}
               <div
                 style={{
-                  background: 'var(--color-bg-card)',
-                  borderRadius: 16,
-                  border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                  borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
+                  background: '#FFFFFF',
+                  borderRadius: 12,
+                  border: `1px solid ${isLocked ? '#E8E4DF' : meta.border}`,
+                  borderLeft: `4px solid ${isLocked ? '#E8E4DF' : meta.color}`,
                   overflow: 'hidden',
-                  boxShadow: 'var(--shadow-card)',
+                  boxShadow: '0 1px 3px rgba(42,34,43,0.04)',
                   opacity: isLocked ? 0.6 : 1,
                 }}
               >
@@ -772,7 +772,7 @@ export default function ToolsDashboard() {
                   style={{
                     padding: '1.25rem 1.5rem 1rem',
                     background: isLocked ? 'rgba(0,0,0,0.02)' : meta.bg,
-                    borderBottom: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
+                    borderBottom: `1px solid ${isLocked ? '#E8E4DF' : meta.border}`,
                   }}
                 >
                   <div
@@ -796,9 +796,10 @@ export default function ToolsDashboard() {
                       >
                         <span
                           style={{
+                            fontFamily: 'var(--font-body)',
                             fontSize: '0.625rem',
                             fontWeight: 700,
-                            color: isLocked ? 'var(--color-text-muted)' : meta.color,
+                            color: isLocked ? '#93908C' : meta.color,
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em',
                           }}
@@ -812,10 +813,11 @@ export default function ToolsDashboard() {
                               alignItems: 'center',
                               gap: '0.25rem',
                               padding: '1px 8px',
-                              borderRadius: 9999,
+                              borderRadius: 8,
                               background: 'rgba(0,0,0,0.05)',
+                              fontFamily: 'var(--font-body)',
                               fontSize: '0.5625rem',
-                              color: 'var(--color-text-muted)',
+                              color: '#93908C',
                             }}
                           >
                             <Lock size={9} />
@@ -829,8 +831,9 @@ export default function ToolsDashboard() {
                               alignItems: 'center',
                               gap: '0.25rem',
                               padding: '1px 8px',
-                              borderRadius: 9999,
+                              borderRadius: 8,
                               background: 'rgba(13,148,136,0.1)',
+                              fontFamily: 'var(--font-body)',
                               fontSize: '0.5625rem',
                               fontWeight: 600,
                               color: '#0D9488',
@@ -845,10 +848,8 @@ export default function ToolsDashboard() {
                         style={{
                           fontFamily: 'var(--font-heading)',
                           fontSize: '1.125rem',
-                          fontWeight: 700,
-                          color: isLocked
-                            ? 'var(--color-text-muted)'
-                            : 'var(--color-text-primary)',
+                          fontWeight: 400,
+                          color: isLocked ? '#93908C' : '#2A222B',
                           letterSpacing: '-0.01em',
                         }}
                       >
@@ -858,7 +859,7 @@ export default function ToolsDashboard() {
                         style={{
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
-                          color: 'var(--color-text-secondary)',
+                          color: '#5E5A60',
                           marginTop: '0.125rem',
                         }}
                       >
@@ -869,12 +870,13 @@ export default function ToolsDashboard() {
                       <div
                         style={{
                           padding: '0.25rem 0.75rem',
-                          borderRadius: 9999,
-                          background: 'var(--color-bg-card)',
-                          border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
+                          borderRadius: 8,
+                          background: '#FFFFFF',
+                          border: `1px solid ${isLocked ? '#E8E4DF' : meta.border}`,
+                          fontFamily: 'var(--font-body)',
                           fontSize: '0.6875rem',
                           fontWeight: 700,
-                          color: isLocked ? 'var(--color-text-muted)' : meta.color,
+                          color: isLocked ? '#93908C' : meta.color,
                         }}
                       >
                         {stageDone}/{stageTotal}
@@ -886,14 +888,14 @@ export default function ToolsDashboard() {
                     style={{
                       height: 3,
                       borderRadius: 2,
-                      background: isLocked ? 'var(--color-border)' : 'rgba(255,255,255,0.6)',
+                      background: isLocked ? '#E8E4DF' : 'rgba(255,255,255,0.6)',
                     }}
                   >
                     <div
                       style={{
                         height: '100%',
                         borderRadius: 2,
-                        background: isLocked ? 'var(--color-text-muted)' : meta.color,
+                        background: isLocked ? '#93908C' : meta.color,
                         width: `${stageTotal > 0 ? (stageDone / stageTotal) * 100 : 0}%`,
                         transition: 'width 0.6s ease',
                       }}
@@ -928,7 +930,7 @@ export default function ToolsDashboard() {
                         textAlign: 'center',
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
-                        color: 'var(--color-text-muted)',
+                        color: '#93908C',
                       }}
                     >
                       No hay herramientas en esta categoria para esta etapa.
@@ -974,7 +976,7 @@ export default function ToolsDashboard() {
                       <div>
                         <div
                           style={{
-                            fontFamily: 'var(--font-heading)',
+                            fontFamily: 'var(--font-body)',
                             fontSize: '0.8125rem',
                             fontWeight: 700,
                             color: meta.color,
@@ -987,7 +989,7 @@ export default function ToolsDashboard() {
                           style={{
                             fontFamily: 'var(--font-body)',
                             fontSize: '0.8125rem',
-                            color: 'var(--color-text-secondary)',
+                            color: '#5E5A60',
                             lineHeight: 1.6,
                             margin: 0,
                           }}

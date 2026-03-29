@@ -114,7 +114,7 @@ export default function BenchmarkingPage() {
               }}>
                 <div>
                   <div style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '0.625rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.625rem',
                     fontWeight: 600, color: 'var(--color-text-muted)',
                     textTransform: 'uppercase', letterSpacing: '0.05em',
                     marginBottom: '0.25rem',
@@ -131,7 +131,7 @@ export default function BenchmarkingPage() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '0.625rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.625rem',
                     fontWeight: 600, color: 'var(--color-text-muted)',
                     textTransform: 'uppercase', letterSpacing: '0.05em',
                     marginBottom: '0.25rem',

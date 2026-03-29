@@ -219,7 +219,7 @@ export default function CompletarPerfilPage() {
                   justifyContent: 'center',
                   fontSize: '0.75rem',
                   fontWeight: 700,
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   background: step >= s ? '#0D9488' : 'var(--color-bg-muted, #f3f4f6)',
                   color: step >= s ? '#fff' : 'var(--color-text-muted, #9ca3af)',
                   transition: 'all 0.3s ease',

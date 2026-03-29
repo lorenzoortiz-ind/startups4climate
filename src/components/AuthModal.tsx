@@ -34,7 +34,7 @@ export default function AuthModal() {
       return
     }
     if (form.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.')
+      setError('La contrasena debe tener al menos 6 caracteres.')
       return
     }
     if (mode === 'register' && (!form.name || !form.startup)) {
@@ -50,7 +50,7 @@ export default function AuthModal() {
           ? await login(form.email, form.password)
           : await register(form.email, form.password, form.name, form.startup)
     } catch {
-      setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+      setError('Error de conexion. Verifica tu internet e intenta de nuevo.')
       setLoading(false)
       return
     }
@@ -96,9 +96,9 @@ export default function AuthModal() {
           position: 'fixed',
           inset: 0,
           zIndex: 200,
-          backgroundColor: 'rgba(0,0,0,0.55)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(42,34,43,0.6)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -116,22 +116,13 @@ export default function AuthModal() {
             width: '100%',
             maxWidth: 440,
             background: '#FFFFFF',
-            borderRadius: 24,
-            border: '1px solid rgba(0,0,0,0.08)',
+            borderRadius: 16,
             boxShadow:
-              '0 32px 80px rgba(0,0,0,0.18), 0 8px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.9)',
+              '0 32px 80px rgba(42,34,43,0.18), 0 8px 20px rgba(42,34,43,0.08)',
             overflow: 'hidden',
             position: 'relative',
           }}
         >
-          {/* Top gradient bar */}
-          <div
-            style={{
-              height: 4,
-              background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #D97706)',
-            }}
-          />
-
           {/* Close button */}
           <button
             onClick={closeAuthModal}
@@ -141,24 +132,24 @@ export default function AuthModal() {
               right: 18,
               width: 32,
               height: 32,
-              borderRadius: '50%',
-              border: '1px solid var(--color-border)',
+              borderRadius: 8,
+              border: '1px solid #E8E4DF',
               background: 'white',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: 'var(--color-text-muted)',
+              color: '#93908C',
               transition: 'all 0.2s',
               zIndex: 10,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#F3F4F6'
-              e.currentTarget.style.color = 'var(--color-text-primary)'
+              e.currentTarget.style.background = '#FAF8F5'
+              e.currentTarget.style.color = '#2A222B'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'white'
-              e.currentTarget.style.color = 'var(--color-text-muted)'
+              e.currentTarget.style.color = '#93908C'
             }}
           >
             <X size={15} />
@@ -171,7 +162,7 @@ export default function AuthModal() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.35 }}
-                style={{ padding: '3rem 2rem', textAlign: 'center' }}
+                style={{ padding: '3rem', textAlign: 'center' }}
               >
                 <div
                   style={{
@@ -190,15 +181,15 @@ export default function AuthModal() {
                 <h3
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1.25rem',
+                    fontSize: '1.375rem',
                     fontWeight: 700,
-                    color: 'var(--color-text-primary)',
+                    color: '#2A222B',
                     marginBottom: '0.375rem',
                   }}
                 >
-                  {mode === 'register' ? '¡Cuenta creada!' : '¡Bienvenido de vuelta!'}
+                  {mode === 'register' ? '!Cuenta creada!' : '!Bienvenido de vuelta!'}
                 </h3>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.9375rem', color: '#5E5A60' }}>
                   Accediendo a tu plataforma...
                 </p>
               </motion.div>
@@ -209,38 +200,19 @@ export default function AuthModal() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: mode === 'register' ? -20 : 20 }}
                 transition={{ duration: 0.25 }}
-                style={{ padding: '2rem' }}
+                style={{ padding: '3rem' }}
               >
                 {/* Header */}
                 <div style={{ marginBottom: '1.75rem' }}>
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: 9999,
-                      background: 'rgba(13,148,136,0.07)',
-                      border: '1px solid rgba(13,148,136,0.14)',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.6875rem',
-                      fontWeight: 600,
-                      color: '#0D9488',
-                      letterSpacing: '0.04em',
-                      textTransform: 'uppercase',
-                      marginBottom: '0.75rem',
-                    }}
-                  >
-                    Startups4Climate
-                  </div>
                   <h2
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: '1.375rem',
-                      fontWeight: 800,
-                      color: 'var(--color-text-primary)',
-                      letterSpacing: '-0.02em',
-                      marginBottom: '0.375rem',
+                      fontSize: '1.75rem',
+                      fontWeight: 700,
+                      color: '#2A222B',
+                      letterSpacing: '-0.01em',
+                      marginBottom: '0.5rem',
+                      lineHeight: 1.2,
                     }}
                   >
                     {mode === 'login'
@@ -250,8 +222,8 @@ export default function AuthModal() {
                   <p
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.875rem',
-                      color: 'var(--color-text-secondary)',
+                      fontSize: '0.9375rem',
+                      color: '#5E5A60',
                       lineHeight: 1.5,
                     }}
                   >
@@ -259,7 +231,7 @@ export default function AuthModal() {
                       ? (orgMode
                         ? <>Ingresa las credenciales proporcionadas por S4C.</>
                         : <>+30 herramientas operativas para startups de impacto, listas para usar.</>)
-                      : <>Accede a la Plataforma <span style={{ background: 'linear-gradient(135deg, #0D9488, #0D9488)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 700 }}>S4C</span> sin costo.</>}
+                      : <>Accede a la Plataforma <span style={{ color: '#FF6B4A', fontWeight: 700 }}>S4C</span> sin costo.</>}
                   </p>
                 </div>
 
@@ -267,14 +239,14 @@ export default function AuthModal() {
                   {mode === 'register' && (
                     <>
                       <InputField
-                        icon={<User size={15} color="#9CA3AF" />}
+                        icon={<User size={15} color="#93908C" />}
                         placeholder="Tu nombre completo"
                         value={form.name}
                         onChange={set('name')}
                         autoComplete="name"
                       />
                       <InputField
-                        icon={<Building2 size={15} color="#9CA3AF" />}
+                        icon={<Building2 size={15} color="#93908C" />}
                         placeholder="Nombre de tu startup"
                         value={form.startup}
                         onChange={set('startup')}
@@ -283,7 +255,7 @@ export default function AuthModal() {
                     </>
                   )}
                   <InputField
-                    icon={<Mail size={15} color="#9CA3AF" />}
+                    icon={<Mail size={15} color="#93908C" />}
                     type="email"
                     placeholder="Email"
                     value={form.email}
@@ -292,9 +264,9 @@ export default function AuthModal() {
                   />
                   <div style={{ position: 'relative' }}>
                     <InputField
-                      icon={<Lock size={15} color="#9CA3AF" />}
+                      icon={<Lock size={15} color="#93908C" />}
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Contraseña (mín. 6 caracteres)"
+                      placeholder="Contrasena (min. 6 caracteres)"
                       value={form.password}
                       onChange={set('password')}
                       autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -311,7 +283,7 @@ export default function AuthModal() {
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        color: 'var(--color-text-muted)',
+                        color: '#93908C',
                         display: 'flex',
                         alignItems: 'center',
                         padding: 4,
@@ -327,10 +299,10 @@ export default function AuthModal() {
                       animate={{ opacity: 1, y: 0 }}
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.8125rem',
+                        fontSize: '0.875rem',
                         color: '#DC2626',
-                        background: 'rgba(220,38,38,0.05)',
-                        border: '1px solid rgba(220,38,38,0.12)',
+                        background: 'rgba(220,38,38,0.04)',
+                        border: '1px solid rgba(220,38,38,0.1)',
                         borderRadius: 8,
                         padding: '0.625rem 0.875rem',
                       }}
@@ -349,8 +321,8 @@ export default function AuthModal() {
                       gap: '0.5rem',
                       width: '100%',
                       padding: '0.875rem',
-                      borderRadius: 12,
-                      background: loading ? '#99E5DD' : '#0D9488',
+                      borderRadius: 8,
+                      background: loading ? '#3D3540' : '#2A222B',
                       color: 'white',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.9375rem',
@@ -358,14 +330,13 @@ export default function AuthModal() {
                       border: 'none',
                       cursor: loading ? 'not-allowed' : 'pointer',
                       transition: 'all 0.2s',
-                      boxShadow: '0 4px 14px rgba(13,148,136,0.3)',
                       marginTop: '0.25rem',
                     }}
                     onMouseEnter={(e) => {
-                      if (!loading) e.currentTarget.style.background = '#0B7C72'
+                      if (!loading) e.currentTarget.style.background = '#3D3540'
                     }}
                     onMouseLeave={(e) => {
-                      if (!loading) e.currentTarget.style.background = '#0D9488'
+                      if (!loading) e.currentTarget.style.background = '#2A222B'
                     }}
                   >
                     {loading ? (
@@ -383,7 +354,7 @@ export default function AuthModal() {
                   style={{
                     marginTop: '1.25rem',
                     paddingTop: '1.25rem',
-                    borderTop: '1px solid var(--color-border)',
+                    borderTop: '1px solid #E8E4DF',
                     textAlign: 'center',
                   }}
                 >
@@ -401,10 +372,15 @@ export default function AuthModal() {
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         fontWeight: 600,
-                        color: '#0D9488',
+                        color: '#FF6B4A',
                         cursor: 'pointer',
-                        textDecoration: 'underline',
-                        textUnderlineOffset: 2,
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.textDecoration = 'underline'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.textDecoration = 'none'
                       }}
                     >
                       Volver al login como founder
@@ -415,10 +391,10 @@ export default function AuthModal() {
                         style={{
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
-                          color: 'var(--color-text-secondary)',
+                          color: '#5E5A60',
                         }}
                       >
-                        {mode === 'login' ? '¿Aún no tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
+                        {mode === 'login' ? 'Aun no tienes cuenta?' : 'Ya tienes cuenta?'}{' '}
                       </span>
                       <button
                         type="button"
@@ -433,13 +409,18 @@ export default function AuthModal() {
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
                           fontWeight: 600,
-                          color: '#0D9488',
+                          color: '#FF6B4A',
                           cursor: 'pointer',
-                          textDecoration: 'underline',
-                          textUnderlineOffset: 2,
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.textDecoration = 'underline'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.textDecoration = 'none'
                         }}
                       >
-                        {mode === 'login' ? 'Regístrate gratis' : 'Iniciar sesión'}
+                        {mode === 'login' ? 'Registrate gratis' : 'Iniciar sesion'}
                       </button>
                     </>
                   )}
@@ -464,27 +445,27 @@ export default function AuthModal() {
                         alignItems: 'center',
                         gap: '0.375rem',
                         background: 'none',
-                        border: '1px solid var(--color-border)',
-                        borderRadius: 8,
-                        padding: '0.5rem 1rem',
+                        border: 'none',
+                        padding: 0,
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.75rem',
                         fontWeight: 500,
-                        color: 'var(--color-text-secondary)',
+                        color: '#93908C',
                         cursor: 'pointer',
+                        textDecoration: 'none',
                         transition: 'all 0.2s',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = '#0D9488'
-                        e.currentTarget.style.color = '#0D9488'
+                        e.currentTarget.style.color = '#2A222B'
+                        e.currentTarget.style.textDecoration = 'underline'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)'
-                        e.currentTarget.style.color = 'var(--color-text-secondary)'
+                        e.currentTarget.style.color = '#93908C'
+                        e.currentTarget.style.textDecoration = 'none'
                       }}
                     >
                       <Building2 size={13} />
-                      Acceder como organización
+                      Acceder como organizacion
                     </button>
                   </div>
                 )}
@@ -522,12 +503,12 @@ function InputField({
         display: 'flex',
         alignItems: 'center',
         gap: '0.625rem',
-        padding: '0 0.875rem',
-        borderRadius: 10,
-        border: `1px solid ${focused ? '#0D9488' : 'var(--color-border)'}`,
-        background: focused ? 'rgba(13,148,136,0.02)' : 'var(--color-bg-primary)',
+        padding: '0 1rem',
+        borderRadius: 8,
+        border: `1px solid ${focused ? '#2A222B' : '#E8E4DF'}`,
+        background: '#FFFFFF',
         transition: 'all 0.18s ease',
-        boxShadow: focused ? '0 0 0 3px rgba(13,148,136,0.08)' : 'none',
+        boxShadow: focused ? '0 0 0 3px rgba(42,34,43,0.06)' : 'none',
       }}
     >
       <span style={{ flexShrink: 0, display: 'flex' }}>{icon}</span>
@@ -541,13 +522,13 @@ function InputField({
         onBlur={() => setFocused(false)}
         style={{
           flex: 1,
-          padding: '0.75rem 0',
+          padding: '0.875rem 0',
           paddingRight: paddingRight ? `${paddingRight}px` : undefined,
           border: 'none',
           background: 'transparent',
           fontFamily: 'var(--font-body)',
-          fontSize: '0.875rem',
-          color: 'var(--color-text-primary)',
+          fontSize: '0.9375rem',
+          color: '#2A222B',
           outline: 'none',
         }}
       />

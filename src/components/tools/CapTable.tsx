@@ -21,7 +21,7 @@ interface Round {
   investorName: string
 }
 
-const COLORS = ['#0D9488', '#7C3AED', '#D97706', '#0891B2', '#DC2626', '#0D9488']
+const COLORS = ['#0D9488', '#FF6B4A', '#2A222B', '#0D9488', '#DC2626', '#0D9488']
 
 export default function CapTable({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [state, setState] = useToolState(userId, 'cap-table', {
@@ -138,7 +138,7 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.5rem', boxShadow: 'var(--shadow-card)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Equipo Fundador</h3>
-          <button onClick={addFounder} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.75rem', borderRadius: 8, background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.15)', color: '#D97706', fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={addFounder} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.75rem', borderRadius: 8, background: 'rgba(42,34,43,0.07)', border: '1px solid rgba(42,34,43,0.15)', color: '#2A222B', fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
             <Plus size={13} /> Añadir
           </button>
         </div>
@@ -152,10 +152,10 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
               />
               <div style={{ position: 'relative', flex: 1 }}>
                 <input type="number" value={f.shares} onChange={(e) => setFounders((p) => p.map((x) => x.id === f.id ? { ...x, shares: e.target.value } : x))}
-                  style={{ width: '100%', padding: '0.5rem 0.625rem', paddingRight: '3.5rem', borderRadius: 8, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none', background: 'var(--color-bg-primary)' }}
+                  style={{ width: '100%', padding: '0.5rem 0.625rem', paddingRight: '3.5rem', borderRadius: 8, border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none', background: 'var(--color-bg-primary)' }}
                   placeholder="Ej: 500000" step="1000"
                 />
-                <span style={{ position: 'absolute', right: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>shares</span>
+                <span style={{ position: 'absolute', right: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>shares</span>
               </div>
               {founders.length > 1 && (
                 <button onClick={() => setFounders((p) => p.filter((x) => x.id !== f.id))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#DC2626', display: 'flex' }}>
@@ -168,10 +168,10 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
             <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', flex: 2 }}>Option Pool</span>
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', borderRadius: 8, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
               <input type="number" value={optionPool} onChange={(e) => setOptionPool(e.target.value)}
-                style={{ flex: 1, padding: '0.5rem 0.625rem', border: 'none', fontFamily: 'var(--font-mono)', fontSize: '0.875rem', background: 'var(--color-bg-primary)', outline: 'none' }}
+                style={{ flex: 1, padding: '0.5rem 0.625rem', border: 'none', fontFamily: 'var(--font-body)', fontSize: '0.875rem', background: 'var(--color-bg-primary)', outline: 'none' }}
                 step="0.5" min="0" max="30" placeholder="Ej: 10"
               />
-              <span style={{ padding: '0 0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', borderLeft: '1px solid var(--color-border)', background: 'var(--color-bg-muted)' }}>%</span>
+              <span style={{ padding: '0 0.5rem', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', borderLeft: '1px solid var(--color-border)', background: 'var(--color-bg-muted)' }}>%</span>
             </div>
           </div>
         </div>
@@ -181,7 +181,7 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.5rem', boxShadow: 'var(--shadow-card)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Rondas de Financiamiento</h3>
-          <button onClick={addRound} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.75rem', borderRadius: 8, background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.15)', color: '#D97706', fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={addRound} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.75rem', borderRadius: 8, background: 'rgba(42,34,43,0.07)', border: '1px solid rgba(42,34,43,0.15)', color: '#2A222B', fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>
             <Plus size={13} /> Añadir ronda
           </button>
         </div>
@@ -193,7 +193,7 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
                   style={{ flex: '1 1 120px', padding: '0.5rem 0.625rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-heading)', fontSize: '0.875rem', fontWeight: 600, outline: 'none', background: 'var(--color-bg-card)' }} placeholder="Nombre ronda"
                 />
                 <select value={r.type} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, type: e.target.value as Round['type'] } : x))}
-                  style={{ flex: '0 0 110px', padding: '0.5rem 0.625rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', outline: 'none', background: 'var(--color-bg-card)' }}
+                  style={{ flex: '0 0 110px', padding: '0.5rem 0.625rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', outline: 'none', background: 'var(--color-bg-card)' }}
                 >
                   <option value="equity">Equity</option>
                   <option value="safe">SAFE</option>
@@ -211,9 +211,9 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
                   <div style={{ flex: '1 1 120px' }}>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Pre-money (USD)</div>
                     <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
+                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
                       <input type="number" value={r.preMoneyValuation} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, preMoneyValuation: e.target.value } : x))}
-                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
+                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
                         placeholder="Ej: 5000000" step="100000"
                       />
                     </div>
@@ -221,9 +221,9 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
                   <div style={{ flex: '1 1 120px' }}>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Monto a levantar (USD)</div>
                     <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
+                      <span style={{ position: 'absolute', left: '0.625rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }}>$</span>
                       <input type="number" value={r.amountRaised} onChange={(e) => setRounds((p) => p.map((x) => x.id === r.id ? { ...x, amountRaised: e.target.value } : x))}
-                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
+                        style={{ width: '100%', padding: '0.5rem 0.625rem', paddingLeft: '1.5rem', borderRadius: 7, border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.8125rem', outline: 'none', background: 'var(--color-bg-card)' }}
                         placeholder="Ej: 1000000" step="50000"
                       />
                     </div>
@@ -252,13 +252,13 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: COLORS[i % COLORS.length], flexShrink: 0 }} />
               <span style={{ flex: 1, fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>{e.name}</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-secondary)', width: 80, textAlign: 'right' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-secondary)', width: 80, textAlign: 'right' }}>
                 {Math.round(e.shares).toLocaleString('es')}
               </span>
               <div style={{ width: 80, height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', flexShrink: 0 }}>
                 <div style={{ height: '100%', borderRadius: 3, background: COLORS[i % COLORS.length], width: `${e.pct}%`, transition: 'width 0.5s' }} />
               </div>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', fontWeight: 600, color: COLORS[i % COLORS.length], width: 48, textAlign: 'right' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600, color: COLORS[i % COLORS.length], width: 48, textAlign: 'right' }}>
                 {Math.round(e.pct * 10) / 10}%
               </span>
             </div>
@@ -268,9 +268,9 @@ ${calc.finalEntries.filter(e => e.type === 'founder' && e.pct < 20).map(e => `  
 
       <button
         onClick={handleReport}
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem', borderRadius: 12, background: '#D97706', color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(217,119,6,0.3)', transition: 'all 0.2s' }}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem', borderRadius: 12, background: '#2A222B', color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(42,34,43,0.3)', transition: 'all 0.2s' }}
         onMouseEnter={(e) => (e.currentTarget.style.background = '#B45309')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#D97706')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = '#2A222B')}
       >
         <Download size={17} />
         Generar Análisis Cap Table

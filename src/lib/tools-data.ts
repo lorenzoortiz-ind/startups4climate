@@ -34,8 +34,8 @@ export const STAGE_META = {
     subtitle: 'Ideación y Descubrimiento',
     description: 'Encuentra tu idea, entiende tu mercado y define a tu cliente ideal. Aquí naces como startup. +30 herramientas te acompañan en cada paso.',
     color: '#FF6B4A',
-    bg: 'rgba(124,58,237,0.07)',
-    border: 'rgba(124,58,237,0.18)',
+    bg: 'rgba(255,107,74,0.07)',
+    border: 'rgba(255,107,74,0.18)',
     phaseAdvice: 'Has completado la etapa de Pre-incubación. Antes de avanzar, es momento de salir a la calle: habla con al menos 20 personas que podrían ser tus clientes. No vendas nada todavía — solo escucha, observa y valida que el problema que identificaste es real y duele lo suficiente como para que alguien pague por resolverlo. La investigación primaria de mercado no se hace desde el escritorio.',
   },
   2: {
@@ -52,8 +52,8 @@ export const STAGE_META = {
     subtitle: 'Modelo de Negocio y Crecimiento',
     description: 'Diseña tu modelo de negocio, define tu pricing y estructura tu proceso de ventas para crecer. +30 herramientas disponibles.',
     color: '#2A222B',
-    bg: 'rgba(217,119,6,0.07)',
-    border: 'rgba(217,119,6,0.18)',
+    bg: 'rgba(42,34,43,0.07)',
+    border: 'rgba(42,34,43,0.18)',
     phaseAdvice: 'Has completado la etapa de Aceleración. Ya tienes un modelo de negocio validado y clientes pagando. Ahora es el momento de profesionalizar tu operación: asegura que tu unit economics sea saludable (LTV/COCA > 3x), documenta tus procesos, y prepárate para escalar. Si estás considerando levantar capital, tu Data Room debería estar casi listo.',
   },
   4: {
@@ -61,8 +61,8 @@ export const STAGE_META = {
     subtitle: 'Producto, Plan y Fundraising',
     description: 'Valida tus supuestos, define tu MVP, demuestra tracción y prepárate para escalar. +30 herramientas disponibles.',
     color: '#0D9488',
-    bg: 'rgba(8,145,178,0.07)',
-    border: 'rgba(8,145,178,0.18)',
+    bg: 'rgba(13,148,136,0.07)',
+    border: 'rgba(13,148,136,0.18)',
     phaseAdvice: 'Has completado todas las etapas del roadmap. Ahora tienes una startup con un producto validado, clientes reales, un modelo de negocio sólido y un plan de escalamiento. Es momento de ejecutar: escala tu equipo, automatiza lo que puedas, y si necesitas capital externo, ya tienes todo lo que un inversor necesita ver. Recuerda: la ejecución disciplinada es lo que separa a las startups que sobreviven de las que transforman industrias.',
   },
 } as const

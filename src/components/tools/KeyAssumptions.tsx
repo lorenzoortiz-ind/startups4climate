@@ -35,7 +35,7 @@ export default function KeyAssumptions({ userId, onComplete, onGenerateReport }:
   const addAssumption = () => setData(p => ({ ...p, assumptions: [...p.assumptions, emptyAssumption()] }))
   const removeAssumption = (i: number) => setData(p => ({ ...p, assumptions: p.assumptions.filter((_, idx) => idx !== i) }))
 
-  const riesgoColor = (r: string) => r === 'Alto' ? '#DC2626' : r === 'Medio' ? '#D97706' : '#0D9488'
+  const riesgoColor = (r: string) => r === 'Alto' ? '#DC2626' : r === 'Medio' ? '#2A222B' : '#0D9488'
   const resultadoColor = (r: string) => r === 'Validado' ? '#0D9488' : r === 'Invalidado' ? '#DC2626' : '#9CA3AF'
 
   const handleReport = () => {
@@ -65,7 +65,7 @@ RESUMEN:
         {RESULTADOS.map(r => (
           <div key={r} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: resultadoColor(r) }} />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
               {r}: {data.assumptions.filter(a => a.resultado === r).length}
             </span>
           </div>
@@ -131,7 +131,7 @@ const subLabel: React.CSSProperties = { fontSize: '0.8125rem', fontWeight: 600, 
 const sectionBtnSmall: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)' }
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
 const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
 const btnDanger: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0.25rem 0.5rem', borderRadius: 6, background: 'transparent', color: '#DC2626', border: '1px solid #DC262630', cursor: 'pointer' }
 const btnAdd: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.8125rem', fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1px solid #0D948830', cursor: 'pointer' }
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }

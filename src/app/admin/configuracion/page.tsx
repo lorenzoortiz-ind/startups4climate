@@ -196,7 +196,7 @@ export default function ConfiguracionPage() {
             }}>
               <div>
                 <div style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.625rem',
+                  fontFamily: 'var(--font-body)', fontSize: '0.625rem',
                   color: 'var(--color-text-muted)', textTransform: 'uppercase',
                   letterSpacing: '0.05em', marginBottom: '0.125rem',
                 }}>
@@ -211,7 +211,7 @@ export default function ConfiguracionPage() {
               </div>
               <div>
                 <div style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '0.625rem',
+                  fontFamily: 'var(--font-body)', fontSize: '0.625rem',
                   color: 'var(--color-text-muted)', textTransform: 'uppercase',
                   letterSpacing: '0.05em', marginBottom: '0.125rem',
                 }}>

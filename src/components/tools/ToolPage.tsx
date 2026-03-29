@@ -175,13 +175,13 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 alignItems: 'center',
                 gap: '0.375rem',
                 padding: '0.3rem 0.75rem',
-                borderRadius: 9999,
-                background: 'rgba(8,145,178,0.07)',
-                border: '1px solid rgba(8,145,178,0.15)',
-                fontFamily: 'var(--font-mono)',
+                borderRadius: 8,
+                background: 'rgba(13,148,136,0.07)',
+                border: '1px solid rgba(13,148,136,0.15)',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.625rem',
                 fontWeight: 600,
-                color: '#0891B2',
+                color: '#0D9488',
                 textTransform: 'uppercase',
               }}
             >
@@ -196,10 +196,10 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 alignItems: 'center',
                 gap: '0.375rem',
                 padding: '0.3rem 0.75rem',
-                borderRadius: 9999,
+                borderRadius: 8,
                 background: `${displayStageColor}10`,
                 border: `1px solid ${displayStageColor}22`,
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.625rem',
                 fontWeight: 600,
                 color: displayStageColor,
@@ -264,7 +264,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                   flexShrink: 0,
                 }}
               >
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.125rem', color: displayStageColor, fontWeight: 700 }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.125rem', color: displayStageColor, fontWeight: 700 }}>
                   {(tool.stepNumber + 1).toString().padStart(2, '0')}
                 </span>
               </div>
@@ -273,10 +273,10 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                   <span
                     style={{
                       padding: '0.2rem 0.625rem',
-                      borderRadius: 9999,
+                      borderRadius: 8,
                       background: displayStageBg,
                       border: `1px solid ${displayStageBorder}`,
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.625rem',
                       fontWeight: 700,
                       color: displayStageColor,
@@ -291,9 +291,9 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                       alignItems: 'center',
                       gap: '0.3rem',
                       padding: '0.2rem 0.625rem',
-                      borderRadius: 9999,
+                      borderRadius: 8,
                       background: 'var(--color-bg-muted)',
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.625rem',
                       color: 'var(--color-text-muted)',
                       textTransform: 'uppercase',
@@ -307,7 +307,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.625rem',
                       color: 'var(--color-text-muted)',
                     }}
@@ -320,7 +320,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)',
-                    fontWeight: 800,
+                    fontWeight: 400,
                     color: 'var(--color-text-primary)',
                     letterSpacing: '-0.02em',
                     marginBottom: '0.25rem',

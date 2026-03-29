@@ -11,7 +11,6 @@ import {
   X,
   CheckCircle2,
   Circle,
-  ExternalLink,
   ChevronDown,
   ChevronRight,
   Radio,
@@ -19,6 +18,7 @@ import {
   FileText,
   BookOpen,
   User,
+  Search,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -28,11 +28,22 @@ import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-dat
 import { getProgress } from '@/lib/progress'
 
 const STAGE_CONFIG = {
-  1: { label: 'Pre-incubacion', color: '#FF6B4A', bg: 'rgba(255,107,74,0.07)' },
-  2: { label: 'Incubacion', color: '#0D9488', bg: 'rgba(13,148,136,0.07)' },
-  3: { label: 'Aceleracion', color: '#2A222B', bg: 'rgba(42,34,43,0.07)' },
-  4: { label: 'Escalamiento', color: '#0D9488', bg: 'rgba(13,148,136,0.07)' },
+  1: { label: 'Pre-incubacion', color: '#FF6B4A' },
+  2: { label: 'Incubacion', color: '#0D9488' },
+  3: { label: 'Aceleracion', color: '#2A222B' },
+  4: { label: 'Escalamiento', color: '#0D9488' },
 } as const
+
+/* ─── Sidebar colors (dark bg) ─── */
+const SB = {
+  bg: '#2A222B',
+  text: 'rgba(255,255,255,0.65)',
+  textActive: '#FFFFFF',
+  textMuted: 'rgba(255,255,255,0.4)',
+  divider: 'rgba(255,255,255,0.08)',
+  hoverBg: 'rgba(255,255,255,0.06)',
+  inputBg: 'rgba(255,255,255,0.06)',
+}
 
 function StageSidebarSection({
   stageNum,
@@ -49,14 +60,17 @@ function StageSidebarSection({
 }) {
   const cfg = STAGE_CONFIG[stageNum]
   const [open, setOpen] = useState(false)
-  // Non-transversal tools in this stage
   const nonTransversalTools = tools.filter((t) => !t.transversal)
-  // Transversal tools (from all stages) shown in this section
   const transversalInStage = TRANSVERSAL_TOOLS
   const totalToolCount = nonTransversalTools.length + transversalInStage.length
   const completedCount =
     nonTransversalTools.filter((t) => completedIds.has(t.id)).length +
     transversalInStage.filter((t) => completedIds.has(`${t.id}__stage${stageNum}`)).length
+
+  /* For stage 3 whose color is #2A222B (same as sidebar bg),
+     use a lighter shade for visibility on dark sidebar */
+  const labelColor = stageNum === 3 ? 'rgba(255,255,255,0.85)' : cfg.color
+  const dotColor = cfg.color === '#2A222B' ? 'rgba(255,255,255,0.5)' : cfg.color
 
   return (
     <div style={{ marginBottom: '0.25rem' }}>
@@ -81,16 +95,16 @@ function StageSidebarSection({
               width: 6,
               height: 6,
               borderRadius: '50%',
-              background: cfg.color,
+              background: dotColor,
               flexShrink: 0,
             }}
           />
           <span
             style={{
-              fontFamily: 'var(--font-heading)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.6875rem',
               fontWeight: 700,
-              color: cfg.color,
+              color: labelColor,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}
@@ -103,12 +117,16 @@ function StageSidebarSection({
             style={{
               fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
-              color: 'var(--color-text-muted)',
+              color: SB.textMuted,
             }}
           >
             {completedCount}/{totalToolCount}
           </span>
-          {open ? <ChevronDown size={12} color="#9CA3AF" /> : <ChevronRight size={12} color="#9CA3AF" />}
+          {open ? (
+            <ChevronDown size={12} color={SB.textMuted} />
+          ) : (
+            <ChevronRight size={12} color={SB.textMuted} />
+          )}
         </div>
       </button>
 
@@ -135,24 +153,24 @@ function StageSidebarSection({
                       gap: '0.5rem',
                       padding: '0.4375rem 0.625rem',
                       borderRadius: 8,
-                      background: active ? cfg.bg : 'transparent',
-                      border: active ? `1px solid ${cfg.color}22` : '1px solid transparent',
+                      background: 'transparent',
+                      borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
                     onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+                      if (!active) e.currentTarget.style.background = SB.hoverBg
                     }}
                     onMouseLeave={(e) => {
                       if (!active) e.currentTarget.style.background = 'transparent'
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={13} color={cfg.color === '#2A222B' ? '#0D9488' : cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
                         size={13}
-                        color={active ? cfg.color : '#D1D5DB'}
+                        color={active ? '#FF6B4A' : SB.textMuted}
                         style={{ flexShrink: 0 }}
                       />
                     )}
@@ -162,11 +180,7 @@ function StageSidebarSection({
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         fontWeight: active ? 600 : 400,
-                        color: active
-                          ? cfg.color
-                          : done
-                          ? 'var(--color-text-secondary)'
-                          : 'var(--color-text-secondary)',
+                        color: active ? SB.textActive : SB.text,
                         lineHeight: 1.3,
                         flex: 1,
                         minWidth: 0,
@@ -180,7 +194,7 @@ function StageSidebarSection({
                   </Link>
                 )
               })}
-              {/* Transversal tools — shown in every stage with stage-specific link */}
+              {/* Transversal tools */}
               {TRANSVERSAL_TOOLS.map((tool) => {
                 const href = `/tools/${tool.id}?stage=${stageNum}`
                 const active = currentPath === `/tools/${tool.id}` && currentSearchStage === stageNum
@@ -196,26 +210,24 @@ function StageSidebarSection({
                       gap: '0.5rem',
                       padding: '0.4375rem 0.625rem',
                       borderRadius: 8,
-                      background: active ? cfg.bg : 'transparent',
-                      border: active
-                        ? `1px solid ${cfg.color}22`
-                        : '1px solid transparent',
+                      background: 'transparent',
+                      borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
                     onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+                      if (!active) e.currentTarget.style.background = SB.hoverBg
                     }}
                     onMouseLeave={(e) => {
                       if (!active) e.currentTarget.style.background = 'transparent'
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={13} color={cfg.color === '#2A222B' ? '#0D9488' : cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
                         size={13}
-                        color={active ? cfg.color : '#D1D5DB'}
+                        color={active ? '#FF6B4A' : SB.textMuted}
                         style={{ flexShrink: 0 }}
                       />
                     )}
@@ -225,11 +237,7 @@ function StageSidebarSection({
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.8125rem',
                         fontWeight: active ? 600 : 400,
-                        color: active
-                          ? cfg.color
-                          : done
-                          ? 'var(--color-text-secondary)'
-                          : 'var(--color-text-secondary)',
+                        color: active ? SB.textActive : SB.text,
                         lineHeight: 1.3,
                         flex: 1,
                         minWidth: 0,
@@ -245,9 +253,9 @@ function StageSidebarSection({
                         display: 'inline-flex',
                         alignItems: 'center',
                         padding: '1px 5px',
-                        borderRadius: 9999,
-                        background: 'rgba(107,114,128,0.1)',
-                        color: 'var(--color-text-muted)',
+                        borderRadius: 8,
+                        background: 'rgba(255,255,255,0.08)',
+                        color: SB.textMuted,
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.5rem',
                         fontWeight: 600,
@@ -279,6 +287,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
   const [profileIncomplete, setProfileIncomplete] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (!loading && !user) {
@@ -291,7 +300,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       const checked = sessionStorage.getItem('s4c_profile_checked')
       if (checked) return
       sessionStorage.setItem('s4c_profile_checked', '1')
-
       try {
         const extra = localStorage.getItem('s4c_profile_extra')
         if (!extra || extra === '{}') {
@@ -318,7 +326,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Apply dark mode on mount, clean up on unmount (so landing stays light)
   useEffect(() => {
     const saved = localStorage.getItem('s4c_dark_mode')
     if (saved === 'true') {
@@ -344,7 +351,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'var(--color-bg-primary)',
+          background: '#FAF8F5',
         }}
       >
         <div
@@ -352,7 +359,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             width: 40,
             height: 40,
             borderRadius: '50%',
-            border: '3px solid #E5E7EB',
+            border: '3px solid #E8E4DF',
             borderTopColor: '#0D9488',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -362,10 +369,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     )
   }
 
-  // Non-transversal tools + transversal tools * 4 stages
   const nonTransversalCount = Object.values(TOOLS_BY_STAGE).flat().filter((t) => !t.transversal).length
   const totalTools = nonTransversalCount + TRANSVERSAL_TOOLS.length * 4
   const completedCount = completedIds.size
+  const progressPct = totalTools > 0 ? Math.round((completedCount / totalTools) * 100) : 0
 
   const sidebarContent = (
     <div
@@ -392,86 +399,125 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         <S4CLogo size={30} />
         <span
           style={{
-            fontFamily: 'var(--font-heading)',
+            fontFamily: 'var(--font-body)',
             fontWeight: 700,
             fontSize: '0.9rem',
-            color: 'var(--color-text-primary)',
+            color: '#FFFFFF',
             letterSpacing: '-0.01em',
           }}
         >
-          Startups<span style={{ color: '#0D9488' }}>4</span>Climate
+          Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
         </span>
       </Link>
 
-      {/* User info */}
+      {/* Search input */}
       <div
         style={{
-          padding: '0.875rem',
-          borderRadius: 12,
-          background: 'linear-gradient(135deg, rgba(13,148,136,0.06), rgba(13,148,136,0.02))',
-          border: '1px solid rgba(13,148,136,0.12)',
-          marginBottom: '1.25rem',
+          position: 'relative',
+          marginBottom: '1rem',
         }}
       >
-        <div
+        <Search
+          size={14}
+          color={SB.textMuted}
           style={{
+            position: 'absolute',
+            left: 10,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Buscar herramienta..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.5rem 0.75rem 0.5rem 2rem',
+            borderRadius: 8,
+            background: SB.inputBg,
+            border: 'none',
+            outline: 'none',
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
-            fontWeight: 600,
-            color: 'var(--color-text-primary)',
-            marginBottom: '0.125rem',
+            color: '#FFFFFF',
+            boxSizing: 'border-box',
           }}
-        >
-          {user.name}
-        </div>
-        <div
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
-            color: 'var(--color-text-secondary)',
-            marginBottom: '0.625rem',
-          }}
-        >
-          {user.startup}
-        </div>
+        />
+      </div>
+
+      {/* Progress bar section */}
+      <div
+        style={{
+          padding: '0.75rem',
+          borderRadius: 12,
+          background: 'rgba(255,255,255,0.04)',
+          marginBottom: '1rem',
+        }}
+      >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '0.375rem',
+            marginBottom: '0.5rem',
           }}
         >
+          <div>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+                color: '#FFFFFF',
+                marginBottom: '0.125rem',
+              }}
+            >
+              {user.name}
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.6875rem',
+                color: SB.text,
+              }}
+            >
+              {user.startup}
+            </div>
+          </div>
           <span
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: '0.625rem',
-              color: 'var(--color-text-muted)',
-            }}
-          >
-            Progreso general
-          </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.625rem',
+              fontSize: '0.6875rem',
               fontWeight: 700,
               color: '#FF6B4A',
             }}
           >
-            {completedCount}/{totalTools}
+            {progressPct}%
           </span>
         </div>
-        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,107,74,0.12)' }}>
+        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.08)' }}>
           <div
             style={{
               height: '100%',
               borderRadius: 2,
               background: '#FF6B4A',
-              width: `${(completedCount / totalTools) * 100}%`,
+              width: `${progressPct}%`,
               transition: 'width 0.6s ease',
             }}
           />
+        </div>
+        <div
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.625rem',
+            color: SB.textMuted,
+            marginTop: '0.375rem',
+          }}
+        >
+          {completedCount}/{totalTools} herramientas
         </div>
       </div>
 
@@ -484,19 +530,21 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             gap: '0.5rem',
             padding: '0.5rem 0.75rem',
             borderRadius: 8,
-            background: 'rgba(42,34,43,0.08)',
-            border: '1px solid rgba(42,34,43,0.15)',
+            background: 'rgba(255,107,74,0.1)',
+            border: 'none',
             textDecoration: 'none',
             marginBottom: '0.75rem',
             transition: 'all 0.15s',
           }}
         >
-          <span style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.6875rem',
-            color: '#2A222B',
-            lineHeight: 1.4,
-          }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.6875rem',
+              color: '#FF6B4A',
+              lineHeight: 1.4,
+            }}
+          >
             Completa tu perfil para recomendaciones personalizadas
           </span>
         </Link>
@@ -511,47 +559,38 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           gap: '0.5rem',
           padding: '0.5rem 0.75rem',
           borderRadius: 8,
-          background: pathname === '/tools' ? 'rgba(13,148,136,0.07)' : 'transparent',
-          border: pathname === '/tools' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
+          background: 'transparent',
+          borderLeft: pathname === '/tools' ? '3px solid #FF6B4A' : '3px solid transparent',
           textDecoration: 'none',
-          marginBottom: '0.75rem',
+          marginBottom: '0.5rem',
           transition: 'all 0.15s',
         }}
         onMouseEnter={(e) => {
-          if (pathname !== '/tools') e.currentTarget.style.background = 'var(--color-bg-muted)'
+          if (pathname !== '/tools') e.currentTarget.style.background = SB.hoverBg
         }}
         onMouseLeave={(e) => {
           if (pathname !== '/tools') e.currentTarget.style.background = 'transparent'
         }}
       >
-        <LayoutDashboard
-          size={15}
-          color={pathname === '/tools' ? '#0D9488' : '#9CA3AF'}
-        />
+        <LayoutDashboard size={15} color={pathname === '/tools' ? '#FFFFFF' : SB.text} />
         <span
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: pathname === '/tools' ? 600 : 400,
-            color: pathname === '/tools' ? '#0D9488' : 'var(--color-text-secondary)',
+            color: pathname === '/tools' ? SB.textActive : SB.text,
           }}
         >
           Dashboard
         </span>
       </Link>
 
-      <div
-        style={{
-          height: 1,
-          background: 'var(--color-border)',
-          margin: '0 0.375rem 0.75rem',
-        }}
-      />
+      <div style={{ height: 1, background: SB.divider, margin: '0.375rem 0.375rem 0.75rem' }} />
 
       {/* Featured tools */}
       {[
-        { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#6366F1' },
-        { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#2A222B' },
+        { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#0D9488' },
+        { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#FF6B4A' },
         { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0D9488' },
       ].map((item) => {
         const active = pathname === item.href
@@ -566,26 +605,26 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
               gap: '0.5rem',
               padding: '0.5rem 0.75rem',
               borderRadius: 8,
-              background: active ? `${item.color}0D` : 'transparent',
-              border: active ? `1px solid ${item.color}25` : '1px solid transparent',
+              background: 'transparent',
+              borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
               textDecoration: 'none',
               marginBottom: '0.125rem',
               transition: 'all 0.15s',
             }}
             onMouseEnter={(e) => {
-              if (!active) e.currentTarget.style.background = 'var(--color-bg-muted)'
+              if (!active) e.currentTarget.style.background = SB.hoverBg
             }}
             onMouseLeave={(e) => {
               if (!active) e.currentTarget.style.background = 'transparent'
             }}
           >
-            <IconComp size={15} color={active ? item.color : '#9CA3AF'} />
+            <IconComp size={15} color={active ? '#FFFFFF' : SB.text} />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.8125rem',
                 fontWeight: active ? 600 : 400,
-                color: active ? item.color : 'var(--color-text-secondary)',
+                color: active ? SB.textActive : SB.text,
                 flex: 1,
               }}
             >
@@ -596,7 +635,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 padding: '1px 6px',
-                borderRadius: 9999,
+                borderRadius: 8,
                 background: '#0D9488',
                 color: 'white',
                 fontFamily: 'var(--font-body)',
@@ -620,10 +659,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           gap: '0.5rem',
           padding: '0.5rem 0.75rem',
           borderRadius: 8,
-          background: pathname === '/tools/recursos' ? 'rgba(13,148,136,0.07)' : 'transparent',
-          border: pathname === '/tools/recursos' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
+          background: 'transparent',
+          borderLeft: pathname === '/tools/recursos' ? '3px solid #FF6B4A' : '3px solid transparent',
           textDecoration: 'none',
-          color: pathname === '/tools/recursos' ? '#0D9488' : 'var(--color-text-muted)',
+          color: pathname === '/tools/recursos' ? SB.textActive : SB.text,
           fontFamily: 'var(--font-body)',
           fontSize: '0.8125rem',
           fontWeight: pathname === '/tools/recursos' ? 600 : 400,
@@ -631,23 +670,17 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           marginBottom: '0.25rem',
         }}
         onMouseEnter={(e) => {
-          if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-primary)'
+          if (pathname !== '/tools/recursos') e.currentTarget.style.background = SB.hoverBg
         }}
         onMouseLeave={(e) => {
-          if (pathname !== '/tools/recursos') e.currentTarget.style.color = 'var(--color-text-muted)'
+          if (pathname !== '/tools/recursos') e.currentTarget.style.background = 'transparent'
         }}
       >
         <BookOpen size={13} />
         Recursos
       </Link>
 
-      <div
-        style={{
-          height: 1,
-          background: 'var(--color-border)',
-          margin: '0.5rem 0.375rem 0.75rem',
-        }}
-      />
+      <div style={{ height: 1, background: SB.divider, margin: '0.5rem 0.375rem 0.75rem' }} />
 
       {/* Tools by stage */}
       {([1, 2, 3, 4] as const).map((stage) => (
@@ -663,7 +696,69 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Bottom actions */}
       <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-        <div style={{ height: 1, background: 'var(--color-border)', margin: '0 0.375rem 1rem' }} />
+        <div style={{ height: 1, background: SB.divider, margin: '0 0.375rem 1rem' }} />
+
+        {/* User section */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.625rem',
+            padding: '0.5rem 0.75rem',
+            marginBottom: '0.75rem',
+          }}
+        >
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: 'rgba(255,107,74,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: '#FF6B4A',
+              }}
+            >
+              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+            </span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: SB.textActive,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {user.name}
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.625rem',
+                color: SB.textMuted,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {user.email || user.startup}
+            </div>
+          </div>
+        </div>
 
         {/* Perfil */}
         <Link
@@ -674,48 +769,29 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             gap: '0.5rem',
             padding: '0.5rem 0.75rem',
             borderRadius: 8,
-            background: pathname === '/tools/perfil' ? 'rgba(13,148,136,0.07)' : 'transparent',
-            border: pathname === '/tools/perfil' ? '1px solid rgba(13,148,136,0.15)' : '1px solid transparent',
+            background: 'transparent',
+            borderLeft: pathname === '/tools/perfil' ? '3px solid #FF6B4A' : '3px solid transparent',
             textDecoration: 'none',
-            color: pathname === '/tools/perfil' ? '#0D9488' : 'var(--color-text-muted)',
+            color: pathname === '/tools/perfil' ? SB.textActive : SB.text,
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             fontWeight: pathname === '/tools/perfil' ? 600 : 400,
             transition: 'all 0.15s',
-            marginBottom: '0.75rem',
+            marginBottom: '0.5rem',
           }}
           onMouseEnter={(e) => {
-            if (pathname !== '/tools/perfil') e.currentTarget.style.color = 'var(--color-text-primary)'
+            if (pathname !== '/tools/perfil') e.currentTarget.style.background = SB.hoverBg
           }}
           onMouseLeave={(e) => {
-            if (pathname !== '/tools/perfil') e.currentTarget.style.color = 'var(--color-text-muted)'
+            if (pathname !== '/tools/perfil') e.currentTarget.style.background = 'transparent'
           }}
         >
           <User size={13} />
           Perfil
         </Link>
+
         <DarkModeToggle />
-        <Link
-          href="/"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
-            borderRadius: 8,
-            textDecoration: 'none',
-            color: 'var(--color-text-muted)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            transition: 'color 0.15s',
-            marginBottom: '0.25rem',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
-        >
-          <ExternalLink size={13} />
-          Volver al inicio
-        </Link>
+
         <button
           onClick={logout}
           style={{
@@ -727,7 +803,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
-            color: 'var(--color-text-muted)',
+            color: SB.text,
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
             width: '100%',
@@ -735,7 +811,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             transition: 'color 0.15s',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = '#DC2626')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-muted)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = SB.text)}
         >
           <LogOut size={13} />
           Cerrar sesion
@@ -749,7 +825,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: 'var(--color-bg-primary)',
+        background: '#FAF8F5',
       }}
     >
       {/* Desktop sidebar */}
@@ -758,8 +834,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         style={{
           width: 240,
           flexShrink: 0,
-          background: '#2A222B',
-          borderRight: '1px solid var(--color-border)',
+          background: SB.bg,
           position: 'fixed',
           top: 0,
           left: 0,
@@ -781,9 +856,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           right: 0,
           zIndex: 50,
           height: 56,
-          background: '#2A222B',
-          backdropFilter: 'blur(16px)',
-          borderBottom: '1px solid var(--color-border)',
+          background: SB.bg,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -800,7 +873,14 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           }}
         >
           <S4CLogo size={28} />
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text-primary)' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              color: '#FFFFFF',
+            }}
+          >
             Plataforma
           </span>
         </Link>
@@ -810,7 +890,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            color: 'var(--color-text-primary)',
+            color: '#FFFFFF',
             display: 'flex',
           }}
         >
@@ -831,7 +911,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 position: 'fixed',
                 inset: 0,
                 zIndex: 55,
-                background: 'rgba(0,0,0,0.3)',
+                background: 'rgba(0,0,0,0.4)',
               }}
             />
             <motion.aside
@@ -846,8 +926,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 bottom: 0,
                 width: 260,
                 zIndex: 60,
-                background: '#2A222B',
-                borderRight: '1px solid var(--color-border)',
+                background: SB.bg,
               }}
               onClick={(e) => e.stopPropagation()}
             >

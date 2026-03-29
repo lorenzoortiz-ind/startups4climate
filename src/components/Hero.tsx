@@ -1,20 +1,17 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import AnimatedCounter from './AnimatedCounter'
 import { useAuth } from '@/context/AuthContext'
-import { useRouter } from 'next/navigation'
 
 export default function Hero() {
   const { user, openAuthModal } = useAuth()
-  const router = useRouter()
-  const prefersReducedMotion = useReducedMotion()
 
   const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5, delay, ease: [0, 0, 0.2, 1] as [number, number, number, number] },
+    transition: { duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
   })
 
   return (
@@ -31,7 +28,7 @@ export default function Hero() {
         style={{
           maxWidth: 960,
           margin: '0 auto',
-          padding: '160px 1.5rem 120px',
+          padding: '160px clamp(1.5rem, 4vw, 5rem) 100px',
           width: '100%',
           textAlign: 'center',
         }}
@@ -42,14 +39,15 @@ export default function Hero() {
             style={{
               display: 'inline-block',
               padding: '0.375rem 1rem',
-              borderRadius: 9999,
+              borderRadius: 8,
               background: '#FAF8F5',
-              border: '1px solid rgba(42,34,43,0.08)',
+              border: '1px solid #E8E4DF',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.8125rem',
-              fontWeight: 500,
-              color: '#5E5A60',
-              letterSpacing: '0.01em',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: '#93908C',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
               marginBottom: '2rem',
             }}
           >
@@ -62,10 +60,10 @@ export default function Hero() {
           {...fadeUp(0.1)}
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(2.5rem, 5.5vw, 3.75rem)',
-            fontWeight: 700,
-            lineHeight: 1.1,
-            letterSpacing: '-0.025em',
+            fontSize: 'clamp(2.5rem, 5.5vw, 4.5rem)',
+            fontWeight: 400,
+            lineHeight: 1.08,
+            letterSpacing: '-0.02em',
             color: '#2A222B',
             marginBottom: '1.5rem',
             maxWidth: 800,
@@ -81,7 +79,8 @@ export default function Hero() {
           {...fadeUp(0.2)}
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '1.175rem',
+            fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
+            fontWeight: 400,
             lineHeight: 1.7,
             color: '#5E5A60',
             maxWidth: 580,
@@ -142,7 +141,7 @@ export default function Hero() {
               fontSize: '1rem',
               fontWeight: 600,
               textDecoration: 'none',
-              border: '1px solid #2A222B',
+              border: '1.5px solid #2A222B',
               cursor: 'pointer',
               transition: 'background-color 0.2s ease',
             }}
@@ -153,9 +152,9 @@ export default function Hero() {
 
         {/* Stats */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.55 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
           className="hero-stats"
           style={{
             display: 'flex',
@@ -174,7 +173,7 @@ export default function Hero() {
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '2.25rem',
-                  fontWeight: 700,
+                  fontWeight: 400,
                   color: '#2A222B',
                   lineHeight: 1.2,
                 }}

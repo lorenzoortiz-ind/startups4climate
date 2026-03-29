@@ -39,9 +39,9 @@ export default function DecisionMakingUnit({ userId, onComplete, onGenerateRepor
   const rolColor = (r: string) => {
     switch (r) {
       case 'Champion': return '#0D9488'
-      case 'Comprador económico': return '#D97706'
-      case 'Usuario final': return '#0891B2'
-      case 'Influenciador técnico': return '#7C3AED'
+      case 'Comprador económico': return '#2A222B'
+      case 'Usuario final': return '#0D9488'
+      case 'Influenciador técnico': return '#FF6B4A'
       case 'Bloqueador potencial': return '#DC2626'
       default: return '#9CA3AF'
     }
@@ -81,7 +81,7 @@ ${data.stakeholders.map((s, i) => `STAKEHOLDER ${i + 1}:
               <div style={{ marginBottom: '0.625rem' }}>
                 <label style={labelStyle}>Nivel de influencia: {s.influencia}/5</label>
                 <input type="range" min={1} max={5} step={1} value={s.influencia} onChange={e => updateStakeholder(i, 'influencia', parseInt(e.target.value))} style={{ width: '100%' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
                   <span>1 = Muy bajo</span><span>3 = Medio</span><span>5 = Muy alto</span>
                 </div>
               </div>
@@ -116,7 +116,7 @@ const cardStyle: React.CSSProperties = { background: 'var(--color-bg-card)', bor
 const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
 const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
 const sectionBtnSmall: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)' }
 const btnDanger: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0.25rem 0.5rem', borderRadius: 6, background: 'transparent', color: '#DC2626', border: '1px solid #DC262630', cursor: 'pointer' }
 const btnAdd: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.8125rem', fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1px solid #0D948830', cursor: 'pointer' }

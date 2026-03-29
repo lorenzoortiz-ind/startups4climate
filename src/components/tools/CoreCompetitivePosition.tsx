@@ -87,14 +87,14 @@ MAPA DE POSICIONAMIENTO:
               <div>
                 <label style={labelStyle}>{data.ejeXLabel || 'Eje X'}: {data.tuX}</label>
                 <input type="range" min={1} max={10} value={Number(data.tuX)} onChange={e => setData(p => ({ ...p, tuX: parseInt(e.target.value) }))} style={{ width: '100%' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
                   <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
                 </div>
               </div>
               <div>
                 <label style={labelStyle}>{data.ejeYLabel || 'Eje Y'}: {data.tuY}</label>
                 <input type="range" min={1} max={10} value={Number(data.tuY)} onChange={e => setData(p => ({ ...p, tuY: parseInt(e.target.value) }))} style={{ width: '100%' }} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
                   <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
                 </div>
               </div>
@@ -112,14 +112,14 @@ MAPA DE POSICIONAMIENTO:
                 <div>
                   <label style={labelStyle}>{data.ejeXLabel || 'Eje X'}: {data[comp.xKey] as number}</label>
                   <input type="range" min={1} max={10} value={Number(data[comp.xKey])} onChange={e => setData(p => ({ ...p, [comp.xKey]: parseInt(e.target.value) }))} style={{ width: '100%' }} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
                     <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
                   </div>
                 </div>
                 <div>
                   <label style={labelStyle}>{data.ejeYLabel || 'Eje Y'}: {data[comp.yKey] as number}</label>
                   <input type="range" min={1} max={10} value={Number(data[comp.yKey])} onChange={e => setData(p => ({ ...p, [comp.yKey]: parseInt(e.target.value) }))} style={{ width: '100%' }} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '0.5625rem', color: 'var(--color-text-muted)', marginTop: '0.125rem' }}>
                     <span>1 = Mínimo</span><span>5 = Moderado</span><span>10 = Máximo</span>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', f
 const sectionBtn: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer' }
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
 const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }
 const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#0D9488', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)' }
 const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }

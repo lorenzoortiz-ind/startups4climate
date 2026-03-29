@@ -17,10 +17,10 @@ export interface GlobalReportUser {
 }
 
 const STAGE_COLORS: Record<number, string> = {
-  1: '#7C3AED',
+  1: '#FF6B4A',
   2: '#0D9488',
-  3: '#D97706',
-  4: '#0891B2',
+  3: '#2A222B',
+  4: '#0D9488',
 }
 
 /**
@@ -87,8 +87,8 @@ export function generateGlobalReport(user: GlobalReportUser): void {
             : null
 
           const statusBadge = completed
-            ? `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#0D9488;background:rgba(13,148,136,0.08);border:1px solid rgba(13,148,136,0.15)">Completado</span>`
-            : `<span style="display:inline-block;padding:3px 12px;border-radius:9999px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#9CA3AF;background:rgba(156,163,175,0.08);border:1px solid rgba(156,163,175,0.15)">Pendiente</span>`
+            ? `<span style="display:inline-block;padding:3px 12px;border-radius:8px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#0D9488;background:rgba(13,148,136,0.08);border:1px solid rgba(13,148,136,0.15)">Completado</span>`
+            : `<span style="display:inline-block;padding:3px 12px;border-radius:8px;font-family:'Inter',monospace;font-size:0.625rem;font-weight:600;color:#9CA3AF;background:rgba(156,163,175,0.08);border:1px solid rgba(156,163,175,0.15)">Pendiente</span>`
 
           const dataHtml =
             completed && Object.keys(data).length > 0
@@ -139,10 +139,10 @@ export function generateGlobalReport(user: GlobalReportUser): void {
 <title>Reporte Global - ${user.startup}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: #F9FAFB; color: #111827; }
+  body { font-family: 'Inter', sans-serif; background: #FAF8F5; color: #111827; }
   @media print {
     body { background: white; }
     .no-print { display: none !important; }
@@ -170,8 +170,8 @@ export function generateGlobalReport(user: GlobalReportUser): void {
 
     <!-- Footer -->
     <div class="no-print" style="margin-top:48px;padding:24px 0;border-top:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-      <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:#0D9488;color:white;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(13,148,136,0.3)">Imprimir / Guardar PDF</button>
-      <a href="mailto:?subject=Reporte%20Global%20-%20${encodeURIComponent(user.startup)}&body=Adjunto%20el%20reporte%20global%20de%20Startups4Climate" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;background:white;color:#0D9488;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:1px solid rgba(13,148,136,0.3);text-decoration:none;cursor:pointer">Enviar por email</a>
+      <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:#0D9488;color:white;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(13,148,136,0.3)">Imprimir / Guardar PDF</button>
+      <a href="mailto:?subject=Reporte%20Global%20-%20${encodeURIComponent(user.startup)}&body=Adjunto%20el%20reporte%20global%20de%20Startups4Climate" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:white;color:#0D9488;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;border:1px solid rgba(13,148,136,0.3);text-decoration:none;cursor:pointer">Enviar por email</a>
     </div>
     <p style="text-align:center;font-family:'Inter',monospace;font-size:0.6875rem;color:#9CA3AF;margin-top:16px">Generado por Startups4Climate | startups4climate.com</p>
   </div>
@@ -258,7 +258,7 @@ function buildExecutiveSummary(
             ? Array.from(categoriesCovered)
                 .map(
                   (c) =>
-                    `<span style="display:inline-block;padding:4px 12px;border-radius:9999px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;color:#374151;background:#F3F4F6">${c}</span>`
+                    `<span style="display:inline-block;padding:4px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;color:#374151;background:#F3F4F6">${c}</span>`
                 )
                 .join('')
             : '<span style="font-size:0.8125rem;color:#9CA3AF;font-style:italic">Ninguna aun</span>'

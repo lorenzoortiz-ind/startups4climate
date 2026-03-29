@@ -41,7 +41,7 @@ const DEFAULT: Data = {
 
 const scoreColor = (s: number) => {
   if (s >= 4) return '#0D9488'
-  if (s >= 3) return '#D97706'
+  if (s >= 3) return '#2A222B'
   if (s >= 2) return '#EA580C'
   return '#DC2626'
 }

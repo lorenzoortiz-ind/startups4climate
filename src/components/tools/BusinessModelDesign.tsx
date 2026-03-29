@@ -86,9 +86,9 @@ MARGEN BRUTO ESTIMADO: ${data.margenBruto}%
             <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
               <input value={s.name} onChange={e => updateStream(i, 'name', e.target.value)} placeholder="Fuente de ingreso" style={{ ...inputStyle, flex: 1 }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>$</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>$</span>
                 <input type="number" value={s.monthly} onChange={e => updateStream(i, 'monthly', e.target.value)} placeholder="0" style={{ ...inputStyle, width: 110 }} />
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>/mes</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>/mes</span>
               </div>
               {data.streams.length > 1 && <button onClick={() => removeStream(i)} style={btnDanger}><Trash2 size={12} /></button>}
             </div>
@@ -112,7 +112,7 @@ MARGEN BRUTO ESTIMADO: ${data.margenBruto}%
           <span style={headingStyle}>Margen bruto estimado</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <input type="number" value={data.margenBruto} onChange={e => setData(p => ({ ...p, margenBruto: e.target.value }))} placeholder="0" style={{ ...inputStyle, width: 80, textAlign: 'center' }} />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>%</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>%</span>
           </div>
         </div>
       </div>
@@ -143,7 +143,7 @@ const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', f
 const sectionBtn: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer' }
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
 const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.375rem', display: 'block' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.375rem', display: 'block' }
 const btnDanger: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0.35rem 0.5rem', borderRadius: 6, background: 'transparent', color: '#DC2626', border: '1px solid #DC262630', cursor: 'pointer' }
 const btnAdd: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.8125rem', fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1px solid #0D948830', cursor: 'pointer' }
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }

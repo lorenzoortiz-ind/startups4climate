@@ -43,9 +43,9 @@ export default function FirstTenCustomers({ userId, onComplete, onGenerateReport
   const statusColor = (s: string) => {
     switch (s) {
       case 'Cliente': return '#0D9488'
-      case 'En negociación': return '#D97706'
-      case 'Interesado': return '#0891B2'
-      case 'Contactado': return '#7C3AED'
+      case 'En negociación': return '#2A222B'
+      case 'Interesado': return '#0D9488'
+      case 'Contactado': return '#FF6B4A'
       default: return '#9CA3AF'
     }
   }
@@ -78,7 +78,7 @@ RESUMEN:
         {STATUSES.map(s => (
           <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: statusColor(s) }} />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
               {s}: {data.customers.filter(c => c.status === s).length}
             </span>
           </div>

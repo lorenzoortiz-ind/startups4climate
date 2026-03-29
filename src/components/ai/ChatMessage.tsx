@@ -77,7 +77,7 @@ export default function ChatMessage({ role, content, timestamp }: ChatMessagePro
         {timestamp && (
           <div
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               color: 'var(--color-text-muted)',
               marginTop: '0.375rem',

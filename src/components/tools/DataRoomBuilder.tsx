@@ -80,7 +80,7 @@ const DEFAULT: Data = {
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   pendiente: { bg: '#FEE2E2', color: '#DC2626', label: 'Pendiente' },
-  borrador: { bg: '#FEF3C7', color: '#D97706', label: 'Borrador' },
+  borrador: { bg: '#FEF3C7', color: '#2A222B', label: 'Borrador' },
   listo: { bg: '#CCFBF1', color: '#0D9488', label: 'Listo' },
 }
 
@@ -156,10 +156,10 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Preparación general del Data Room</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#D97706' : '#DC2626' }}>{overallReadiness}%</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#2A222B' : '#DC2626' }}>{overallReadiness}%</span>
         </div>
         <div style={{ height: 10, borderRadius: 5, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
+          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
         </div>
       </div>
 
@@ -168,11 +168,11 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
         const readiness = categoryReadiness(cat)
         return (
           <SectionCollapsible key={catIdx} title={cat.name} sectionKey={`cat-${catIdx}`} open={openSections} toggle={toggle}
-            right={<span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 600, color: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#D97706' : '#DC2626' }}>{readiness}%</span>}
+            right={<span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#2A222B' : '#DC2626' }}>{readiness}%</span>}
           >
             {/* Progress bar per category */}
             <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden', marginBottom: '1rem' }}>
-              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#D97706' : '#DC2626', transition: 'width 0.3s' }} />
+              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
             </div>
 
             {cat.documents.map((doc, docIdx) => {

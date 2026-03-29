@@ -8,8 +8,8 @@ const features = [
     icon: LayoutDashboard,
     title: 'Panel de portafolio',
     description: 'Dashboard centralizado con métricas en tiempo real de todas las startups de tu programa.',
-    color: '#7C3AED',
-    bg: 'rgba(124,58,237,0.06)',
+    color: '#FF6B4A',
+    bg: 'rgba(255,107,74,0.06)',
   },
   {
     icon: Users,
@@ -22,15 +22,15 @@ const features = [
     icon: FileText,
     title: 'Reportes automáticos',
     description: 'Genera reportes PDF de progreso por cohorte o por startup. Listos para compartir con stakeholders.',
-    color: '#0891B2',
-    bg: 'rgba(8,145,178,0.06)',
+    color: '#0D9488',
+    bg: 'rgba(13,148,136,0.06)',
   },
   {
     icon: TrendingUp,
     title: 'Benchmarking regional',
     description: 'Compara el desempeño de tus startups contra promedios por vertical, país y etapa.',
-    color: '#D97706',
-    bg: 'rgba(217,119,6,0.06)',
+    color: '#2A222B',
+    bg: 'rgba(42,34,43,0.06)',
   },
 ]
 
@@ -49,13 +49,13 @@ export default function ForOrganizations() {
           <span style={{
             display: 'inline-block',
             padding: '0.3rem 0.875rem',
-            borderRadius: 9999,
-            background: 'rgba(124,58,237,0.06)',
-            border: '1px solid rgba(124,58,237,0.12)',
+            borderRadius: 8,
+            background: 'rgba(255,107,74,0.06)',
+            border: '1px solid rgba(255,107,74,0.12)',
             fontFamily: 'var(--font-body)',
             fontSize: '0.75rem',
             fontWeight: 600,
-            color: '#7C3AED',
+            color: '#FF6B4A',
             letterSpacing: '0.03em',
             textTransform: 'uppercase',
             marginBottom: '1rem',
@@ -65,7 +65,7 @@ export default function ForOrganizations() {
           <h2 style={{
             fontFamily: 'var(--font-heading)',
             fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-            fontWeight: 800,
+            fontWeight: 400,
             lineHeight: 1.15,
             letterSpacing: '-0.02em',
             color: 'var(--color-text-primary)',
@@ -148,9 +148,9 @@ export default function ForOrganizations() {
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
           style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.04) 0%, rgba(13,148,136,0.04) 100%)',
+            background: 'linear-gradient(135deg, rgba(255,107,74,0.04) 0%, rgba(13,148,136,0.04) 100%)',
             borderRadius: 20,
-            border: '1px solid rgba(124,58,237,0.12)',
+            border: '1px solid rgba(255,107,74,0.12)',
             padding: '3rem 2rem',
             textAlign: 'center',
             maxWidth: 720,
@@ -185,8 +185,8 @@ export default function ForOrganizations() {
               alignItems: 'center',
               gap: '0.5rem',
               padding: '0.875rem 2.5rem',
-              borderRadius: 9999,
-              backgroundColor: '#7C3AED',
+              borderRadius: 8,
+              backgroundColor: '#FF6B4A',
               color: 'white',
               fontFamily: 'var(--font-body)',
               fontSize: '0.9375rem',
@@ -194,7 +194,7 @@ export default function ForOrganizations() {
               border: 'none',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: '0 4px 16px rgba(124,58,237,0.3)',
+              boxShadow: '0 4px 16px rgba(255,107,74,0.3)',
               textDecoration: 'none',
             }}
           >

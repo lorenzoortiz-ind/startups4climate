@@ -41,7 +41,7 @@ const DEFAULT: Data = {
 
 const progressColor = (pct: number) => {
   if (pct >= 70) return '#0D9488'
-  if (pct >= 40) return '#D97706'
+  if (pct >= 40) return '#2A222B'
   return '#DC2626'
 }
 
@@ -144,7 +144,7 @@ ${obj.key_results.map((kr, j) => `  KR ${j + 1}: ${kr.description || '(Sin descr
           <input type="number" value={data.year || ''} onChange={e => setData(p => ({ ...p, year: Number(e.target.value) }))} placeholder="2026" style={{ ...inputStyle, width: 100 }} />
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={labelStyle}>Score general:</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: progressColor(overallScore) }}>{overallScore}%</span>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.5rem', fontWeight: 700, color: progressColor(overallScore) }}>{overallScore}%</span>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ ${obj.key_results.map((kr, j) => `  KR ${j + 1}: ${kr.description || '(Sin descr
             sectionKey={`obj-${objIdx}`}
             open={openSections}
             toggle={toggle}
-            right={<span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(score) }}>{score}%</span>}
+            right={<span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(score) }}>{score}%</span>}
           >
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', alignItems: 'center' }}>
               <input value={obj.title} onChange={e => updateObjectiveTitle(objIdx, e.target.value)} placeholder="Título del objetivo" style={{ ...inputStyle, flex: 1, fontWeight: 600 }} />
@@ -175,7 +175,7 @@ ${obj.key_results.map((kr, j) => `  KR ${j + 1}: ${kr.description || '(Sin descr
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>Key Result {krIdx + 1}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(pct) }}>{pct}%</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700, color: progressColor(pct) }}>{pct}%</span>
                       {obj.key_results.length > 1 && (
                         <button onClick={() => removeKR(objIdx, krIdx)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.2rem 0.4rem' }}><Trash2 size={10} /></button>
                       )}

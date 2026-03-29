@@ -36,11 +36,11 @@ interface Opportunity {
 /* ─── Type styling ─── */
 const TYPE_COLORS: Record<OpportunityType, { color: string; bg: string; border: string }> = {
   Grant: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
-  Aceleradora: { color: '#6366F1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
-  Competencia: { color: '#D97706', bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.2)' },
-  Fondo: { color: '#0891B2', bg: 'rgba(8,145,178,0.08)', border: 'rgba(8,145,178,0.2)' },
+  Aceleradora: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
+  Competencia: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
+  Fondo: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
   Capacitación: { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)' },
-  Programa: { color: '#7C3AED', bg: 'rgba(124,58,237,0.08)', border: 'rgba(124,58,237,0.2)' },
+  Programa: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)', border: 'rgba(255,107,74,0.2)' },
 }
 
 const TYPE_ICONS: Record<OpportunityType, typeof Banknote> = {
@@ -205,7 +205,7 @@ const TIME_FILTERS: TimeFilter[] = ['Todas', 'Vigentes', 'Por vencer', 'Cerradas
 /* ─── Match score helpers ─── */
 function getMatchColor(score: number): { color: string; bg: string; border: string } {
   if (score >= 75) return { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' }
-  if (score >= 50) return { color: '#D97706', bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.2)' }
+  if (score >= 50) return { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' }
   return { color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)', border: 'rgba(156,163,175,0.2)' }
 }
 
@@ -248,10 +248,10 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
               alignItems: 'center',
               gap: '0.25rem',
               padding: '0.125rem 0.5rem',
-              borderRadius: 9999,
+              borderRadius: 8,
               background: typeStyle.bg,
               border: `1px solid ${typeStyle.border}`,
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               fontWeight: 600,
               color: typeStyle.color,
@@ -266,7 +266,7 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.25rem',
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.625rem',
               color: 'var(--color-text-muted)',
             }}
@@ -277,7 +277,7 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
           {item.amount && (
             <span
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 fontSize: '0.625rem',
                 fontWeight: 600,
                 color: 'var(--color-text-secondary)',
@@ -293,14 +293,14 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
             alignItems: 'center',
             gap: '0.25rem',
             padding: '0.2rem 0.625rem',
-            borderRadius: 9999,
+            borderRadius: 8,
             background: matchStyle.bg,
             border: `1px solid ${matchStyle.border}`,
           }}
         >
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.6875rem',
               fontWeight: 700,
               color: matchStyle.color,
@@ -371,7 +371,7 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.25rem',
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             fontSize: '0.6875rem',
             color: '#EF4444',
             fontWeight: 600,
@@ -456,22 +456,22 @@ export default function OportunidadesPage() {
                 height: 40,
                 borderRadius: 12,
                 background:
-                  'linear-gradient(135deg, rgba(217,119,6,0.12), rgba(217,119,6,0.04))',
-                border: '1px solid rgba(217,119,6,0.2)',
+                  'linear-gradient(135deg, rgba(42,34,43,0.12), rgba(42,34,43,0.04))',
+                border: '1px solid rgba(42,34,43,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Sparkles size={20} color="#D97706" />
+              <Sparkles size={20} color="#2A222B" />
             </div>
             <div style={{ overflow: 'visible', minHeight: 'auto', flex: 1, minWidth: 0 }}>
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: '1.5rem',
-                  fontWeight: 800,
+                  fontWeight: 400,
                   color: 'var(--color-text-primary)',
                   lineHeight: 1.3,
                   overflow: 'visible',
@@ -512,7 +512,7 @@ export default function OportunidadesPage() {
           <Filter size={14} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
           {FILTER_CATEGORIES.map((cat) => {
             const isActive = activeFilter === cat
-            const catColor = cat === 'Todas' ? '#6366F1' : TYPE_COLORS[cat as OpportunityType]?.color ?? '#6366F1'
+            const catColor = cat === 'Todas' ? '#2A222B' : TYPE_COLORS[cat as OpportunityType]?.color ?? '#2A222B'
             return (
               <button
                 key={cat}
@@ -522,7 +522,7 @@ export default function OportunidadesPage() {
                   alignItems: 'center',
                   gap: '0.25rem',
                   padding: '0.375rem 0.75rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   border: isActive
                     ? `1px solid ${catColor}40`
                     : '1px solid var(--color-border)',
@@ -568,15 +568,15 @@ export default function OportunidadesPage() {
                   alignItems: 'center',
                   gap: '0.25rem',
                   padding: '0.375rem 0.75rem',
-                  borderRadius: 9999,
+                  borderRadius: 8,
                   border: isActive
-                    ? '1px solid rgba(8,145,178,0.4)'
+                    ? '1px solid rgba(13,148,136,0.4)'
                     : '1px solid var(--color-border)',
-                  background: isActive ? 'rgba(8,145,178,0.1)' : 'var(--color-bg-card)',
+                  background: isActive ? 'rgba(13,148,136,0.1)' : 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#0891B2' : 'var(--color-text-secondary)',
+                  color: isActive ? '#0D9488' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',
@@ -597,7 +597,7 @@ export default function OportunidadesPage() {
         >
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               fontSize: '0.6875rem',
               color: 'var(--color-text-muted)',
               textTransform: 'uppercase',

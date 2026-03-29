@@ -83,13 +83,13 @@ ${data.metricasClave || '(No completado)'}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.5rem', marginTop: '1rem' }}>
               {[
                 { label: 'Clientes', value: data.clientes || '0', color: '#0D9488' },
-                { label: 'MRR', value: `$${Number(data.mrr).toLocaleString()}`, color: '#7C3AED' },
-                { label: 'Retención', value: `${data.retencion || 0}%`, color: '#0891B2' },
-                { label: 'NPS', value: String(data.nps || '—'), color: '#D97706' },
+                { label: 'MRR', value: `$${Number(data.mrr).toLocaleString()}`, color: '#FF6B4A' },
+                { label: 'Retención', value: `${data.retencion || 0}%`, color: '#0D9488' },
+                { label: 'NPS', value: String(data.nps || '—'), color: '#2A222B' },
               ].map(m => (
                 <div key={m.label} style={{ textAlign: 'center', padding: '0.75rem', borderRadius: 10, background: `${m.color}08`, border: `1px solid ${m.color}20` }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.625rem', color: m.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{m.label}</div>
-                  <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 800, color: m.color }}>{m.value}</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: m.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{m.label}</div>
+                  <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.125rem', fontWeight: 400, color: m.color }}>{m.value}</div>
                 </div>
               ))}
             </div>
@@ -129,9 +129,9 @@ const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', f
 const sectionBtn: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer' }
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
 const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.375rem', display: 'block' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.375rem', display: 'block' }
 const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }
 const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#0D9488', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)' }
 const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }
-const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
-const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }

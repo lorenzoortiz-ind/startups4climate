@@ -59,7 +59,7 @@ export function generateToolReport(
 <meta charset="UTF-8">
 <title>Reporte: ${tool.name} — ${user.startup}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', system-ui, sans-serif; color: #111827; background: #F8F7F4; padding: 0; }
@@ -72,7 +72,7 @@ export function generateToolReport(
   }
   .header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); }
   .header .logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
-  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 9999px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'Inter', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
+  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 8px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'Inter', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
   .header h1 { font-family: 'Inter', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
   .header .subtitle { font-size: 0.9375rem; opacity: 0.85; line-height: 1.5; }
   .header .meta { display: flex; gap: 2rem; margin-top: 1.25rem; font-size: 0.8125rem; opacity: 0.75; flex-wrap: wrap; }
@@ -109,7 +109,7 @@ export function generateToolReport(
   .btn-primary { background: ${stageColor}; color: white; box-shadow: 0 2px 8px ${stageColor}40; }
   .btn-primary:hover { filter: brightness(0.9); transform: translateY(-1px); }
   .btn-secondary { background: white; color: #374151; border: 1px solid #E5E7EB; }
-  .btn-secondary:hover { background: #F9FAFB; }
+  .btn-secondary:hover { background: #FAF8F5; }
 
   .disclaimer { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1.5rem; font-size: 0.8125rem; color: #92400E; line-height: 1.5; }
 

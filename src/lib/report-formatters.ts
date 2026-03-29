@@ -4,13 +4,13 @@
 const S = {
   label: 'color:#6B7280;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px',
   value: 'color:#111827;font-size:0.875rem;line-height:1.6',
-  card: 'background:#F9FAFB;border-radius:10px;padding:14px 16px;margin-bottom:8px',
+  card: 'background:#FAF8F5;border-radius:10px;padding:14px 16px;margin-bottom:8px',
   grid2: 'display:grid;grid-template-columns:1fr 1fr;gap:8px',
   grid3: 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px',
-  sectionTitle: 'font-family:"Plus Jakarta Sans",sans-serif;font-size:0.9375rem;font-weight:700;color:#111827;margin:16px 0 8px 0',
-  badge: (color: string) => `display:inline-block;padding:2px 10px;border-radius:9999px;font-size:0.6875rem;font-weight:600;color:${color};background:${color}15`,
+  sectionTitle: 'font-family:"DM Serif Display",serif;font-size:0.9375rem;font-weight:700;color:#111827;margin:16px 0 8px 0',
+  badge: (color: string) => `display:inline-block;padding:2px 10px;border-radius:8px;font-size:0.6875rem;font-weight:600;color:${color};background:${color}15`,
   status: (s: string) => {
-    const m: Record<string, string> = { done: '#0D9488', partial: '#D97706', 'in-progress': '#D97706', pending: '#9CA3AF', missing: '#EF4444', na: '#9CA3AF', identified: '#6B7280', applying: '#3B82F6', secured: '#0D9488', rejected: '#EF4444' }
+    const m: Record<string, string> = { done: '#0D9488', partial: '#2A222B', 'in-progress': '#2A222B', pending: '#9CA3AF', missing: '#EF4444', na: '#9CA3AF', identified: '#6B7280', applying: '#3B82F6', secured: '#0D9488', rejected: '#EF4444' }
     const labels: Record<string, string> = { done: 'Completado', partial: 'Parcial', 'in-progress': 'En progreso', pending: 'Pendiente', missing: 'Faltante', na: 'N/A', identified: 'Identificado', applying: 'Aplicando', secured: 'Asegurado', rejected: 'Rechazado' }
     const c = m[s] || '#6B7280'
     return `<span style="${S.badge(c)}">${labels[s] || s}</span>`
@@ -55,7 +55,7 @@ function formatTRL(data: Record<string, unknown>): string {
 
   return `
     <div style="${S.grid2}">
-      <div style="${S.card}"><div style="${S.label}">TRL Score</div><div style="font-size:1.5rem;font-weight:700;color:#7C3AED">${trlScore}/9</div></div>
+      <div style="${S.card}"><div style="${S.label}">TRL Score</div><div style="font-size:1.5rem;font-weight:700;color:#FF6B4A">${trlScore}/9</div></div>
       <div style="${S.card}"><div style="${S.label}">CRL Score</div><div style="font-size:1.5rem;font-weight:700;color:#0D9488">${crlScore}/6</div></div>
     </div>
     <div style="${S.sectionTitle}">Madurez Tecnológica (TRL)</div>
@@ -135,9 +135,9 @@ function formatFounderAudit(data: Record<string, unknown>): string {
       <div style="${S.card}">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <div><strong style="color:#111827">${f.name}</strong><span style="margin-left:8px;color:#6B7280;font-size:0.75rem">${f.role}</span></div>
-          <span style="${S.badge('#7C3AED')}">Promedio: ${avg.toFixed(1)}/5</span>
+          <span style="${S.badge('#FF6B4A')}">Promedio: ${avg.toFixed(1)}/5</span>
         </div>
-        <div style="${S.grid3}">${Object.entries(SKILL_LABELS).map(([k, label]) => `<div style="text-align:center"><div style="font-size:1rem;font-weight:700;color:#7C3AED">${f.scores[k] ?? 0}</div><div style="font-size:0.6875rem;color:#6B7280">${label}</div></div>`).join('')}</div>
+        <div style="${S.grid3}">${Object.entries(SKILL_LABELS).map(([k, label]) => `<div style="text-align:center"><div style="font-size:1rem;font-weight:700;color:#FF6B4A">${f.scores[k] ?? 0}</div><div style="font-size:0.6875rem;color:#6B7280">${label}</div></div>`).join('')}</div>
       </div>
     `
   }).join('')
@@ -195,7 +195,7 @@ function formatUnitEconomics(data: Record<string, unknown>): string {
     <div style="${S.grid2};margin-bottom:12px">
       <div style="${S.card};border-left:4px solid #0D9488"><div style="${S.label}">LTV</div><div style="font-size:1.25rem;font-weight:700;color:#0D9488">$${ltv.toLocaleString('en', { maximumFractionDigits: 0 })}</div></div>
       <div style="${S.card};border-left:4px solid #3B82F6"><div style="${S.label}">CAC</div><div style="font-size:1.25rem;font-weight:700;color:#3B82F6">$${cac.toLocaleString('en', { maximumFractionDigits: 0 })}</div></div>
-      <div style="${S.card};border-left:4px solid ${ltvCac >= 3 ? '#0D9488' : '#D97706'}"><div style="${S.label}">LTV / CAC</div><div style="font-size:1.25rem;font-weight:700;color:${ltvCac >= 3 ? '#0D9488' : '#D97706'}">${ltvCac.toFixed(1)}x</div></div>
+      <div style="${S.card};border-left:4px solid ${ltvCac >= 3 ? '#0D9488' : '#2A222B'}"><div style="${S.label}">LTV / CAC</div><div style="font-size:1.25rem;font-weight:700;color:${ltvCac >= 3 ? '#0D9488' : '#2A222B'}">${ltvCac.toFixed(1)}x</div></div>
       <div style="${S.card};border-left:4px solid ${greenPremium <= 20 ? '#0D9488' : '#EF4444'}"><div style="${S.label}">Green Premium</div><div style="font-size:1.25rem;font-weight:700;color:${greenPremium <= 20 ? '#0D9488' : '#EF4444'}">${greenPremium.toFixed(1)}%</div></div>
     </div>
     <div style="${S.sectionTitle}">Inputs</div>
@@ -227,7 +227,7 @@ function formatERP(data: Record<string, unknown>): string {
   return `
     <div style="${S.grid2};margin-bottom:12px">
       <div style="${S.card};border-left:4px solid #0D9488"><div style="${S.label}">Reducción anual</div><div style="font-size:1.25rem;font-weight:700;color:#0D9488">${annualReduction.toLocaleString('en', { maximumFractionDigits: 0 })} tCO₂eq</div></div>
-      <div style="${S.card};border-left:4px solid #7C3AED"><div style="${S.label}">Proyección 10 años</div><div style="font-size:1.25rem;font-weight:700;color:#7C3AED">${tenYear.toLocaleString('en', { maximumFractionDigits: 0 })} tCO₂eq</div></div>
+      <div style="${S.card};border-left:4px solid #FF6B4A"><div style="${S.label}">Proyección 10 años</div><div style="font-size:1.25rem;font-weight:700;color:#FF6B4A">${tenYear.toLocaleString('en', { maximumFractionDigits: 0 })} tCO₂eq</div></div>
     </div>
     <div style="${S.sectionTitle}">Parámetros</div>
     <div style="${S.grid2}">${Object.entries(ERP_LABELS).map(([k, label]) => `<div style="${S.card}"><div style="${S.label}">${label}</div><div style="${S.value}">${v[k] || '—'}</div></div>`).join('')}</div>
@@ -295,7 +295,7 @@ function formatCapTable(data: Record<string, unknown>): string {
       </tr></thead>
       <tbody>${founders.map(f => {
         const pct = totalShares > 0 ? ((parseFloat(f.shares) || 0) / totalShares * 100) : 0
-        return `<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:8px;color:#111827;font-weight:500">${f.name}</td><td style="padding:8px;text-align:right;color:#111827">${Number(f.shares || 0).toLocaleString()}</td><td style="padding:8px;text-align:right;font-weight:600;color:#7C3AED">${pct.toFixed(1)}%</td></tr>`
+        return `<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:8px;color:#111827;font-weight:500">${f.name}</td><td style="padding:8px;text-align:right;color:#111827">${Number(f.shares || 0).toLocaleString()}</td><td style="padding:8px;text-align:right;font-weight:600;color:#FF6B4A">${pct.toFixed(1)}%</td></tr>`
       }).join('')}</tbody>
     </table>`
 
@@ -370,7 +370,7 @@ function formatBankability(data: Record<string, unknown>): string {
   }))
 
   return `
-    <div style="${S.card};border-left:4px solid ${earnedWeight / totalWeight >= 0.7 ? '#0D9488' : '#D97706'};margin-bottom:12px"><div style="${S.label}">Bankability Score</div><div style="font-size:1.5rem;font-weight:700;color:${earnedWeight / totalWeight >= 0.7 ? '#0D9488' : '#D97706'}">${earnedWeight.toFixed(0)}/${totalWeight} pts</div></div>
+    <div style="${S.card};border-left:4px solid ${earnedWeight / totalWeight >= 0.7 ? '#0D9488' : '#2A222B'};margin-bottom:12px"><div style="${S.label}">Bankability Score</div><div style="font-size:1.5rem;font-weight:700;color:${earnedWeight / totalWeight >= 0.7 ? '#0D9488' : '#2A222B'}">${earnedWeight.toFixed(0)}/${totalWeight} pts</div></div>
     ${sections.map(sec => {
       const secTotal = sec.items.reduce((s, i) => s + i.weight, 0)
       const secEarned = sec.items.reduce((s, i) => s + (i.status === 'done' ? i.weight : i.status === 'partial' ? i.weight * 0.5 : 0), 0)

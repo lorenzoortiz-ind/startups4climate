@@ -6,6 +6,7 @@ import DiagnosticFeature from '@/components/DiagnosticFeature'
 import DiagnosticForm from '@/components/DiagnosticForm'
 import AboutRedesignLab from '@/components/AboutRedesignLab'
 import CTAFinal from '@/components/CTAFinal'
+import FloatingDiagnosticCTA from '@/components/FloatingDiagnosticCTA'
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <StartupLifecycle />
       <AboutRedesignLab />
       <CTAFinal />
+      <FloatingDiagnosticCTA />
     </main>
   )
 }

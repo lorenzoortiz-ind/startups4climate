@@ -46,13 +46,13 @@ const NAV_TABS = [
 
 /* ─── Category color mapping ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
-  Estrategia: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  Mercado: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  Producto: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  Finanzas: { color: '#191919', bg: 'rgba(25,25,25,0.06)' },
-  Ventas: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  Marketing: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  Equipo: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
+  Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
+  Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
+  Producto: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
+  Finanzas: { color: 'var(--color-ink)', bg: 'rgba(25,25,25,0.06)' },
+  Ventas: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
+  Marketing: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
+  Equipo: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
 }
 
 const springReveal = {
@@ -727,7 +727,7 @@ export default function ToolsDashboard() {
             top: 0,
             bottom: 0,
             width: 2,
-            background: 'linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-secondary), #A8A29E, var(--color-accent-secondary))',
+            background: 'linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-secondary), var(--color-text-muted), var(--color-accent-secondary))',
             borderRadius: 2,
             opacity: 0.15,
             zIndex: 0,

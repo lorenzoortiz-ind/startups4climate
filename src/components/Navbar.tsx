@@ -146,7 +146,7 @@ export default function Navbar() {
                   onClick={() => openAuthModal('login')}
                   className="typeform-btn"
                 >
-                  Log in
+                  Ingresar
                 </button>
               )}
             </div>
@@ -229,7 +229,7 @@ export default function Navbar() {
                   fontWeight: 700,
                 }}
               >
-                {user ? 'Dashboard' : 'Log in'}
+                {user ? 'Dashboard' : 'Ingresar'}
               </button>
             </div>
           </motion.div>

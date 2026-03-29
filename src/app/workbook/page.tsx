@@ -417,7 +417,7 @@ export default function WorkbookPage() {
                   <span
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-display-md)',
+                      fontSize: 'var(--text-heading-lg)',
                       fontWeight: 700,
                       color: `${item.color}30`,
                       width: 56,
@@ -431,11 +431,11 @@ export default function WorkbookPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: '1rem',
-                        fontWeight: 600,
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'var(--text-heading-md)',
+                        fontWeight: 700,
                         color: 'var(--color-ink)',
-                        letterSpacing: '-0.01em',
+                        letterSpacing: '-0.02em',
                         marginBottom: '0.125rem',
                       }}
                     >
@@ -444,11 +444,11 @@ export default function WorkbookPage() {
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.6875rem',
-                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
                         color: item.color,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
+                        letterSpacing: '0.06em',
                       }}
                     >
                       {item.stage}

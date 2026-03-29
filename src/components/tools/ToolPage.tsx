@@ -161,7 +161,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
             <ArrowLeft size={14} />
             Dashboard
           </Link>
-          <ChevronRight size={12} color="#D1D5DB" />
+          <ChevronRight size={12} color="var(--color-border)" />
           <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
             {tool.shortName}
           </span>
@@ -181,7 +181,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.625rem',
                 fontWeight: 600,
-                color: '#0D9488',
+                color: 'var(--color-accent-secondary)',
                 textTransform: 'uppercase',
               }}
             >

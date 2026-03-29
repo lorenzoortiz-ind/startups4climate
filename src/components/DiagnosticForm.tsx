@@ -14,7 +14,7 @@ const contactSchema = z.object({
   email: z.string().email('Email inválido'),
   startup_name: z.string().min(2, 'Nombre de startup requerido'),
   startup_description: z.string().min(10, 'Mínimo 10 caracteres'),
-  vertical: z.string().min(1, 'Selecciona una vertical'),
+  vertical: z.string().min(1, 'Elige una vertical'),
   country: z.string().optional(),
   phone: z.string().optional(),
   website: z.string().optional(),
@@ -545,7 +545,7 @@ export default function DiagnosticForm() {
                           onFocus={handleFocus}
                           onBlur={handleBlur('vertical')}
                         >
-                          <option value="" disabled>Selecciona una vertical</option>
+                          <option value="" disabled>Elige una vertical</option>
                           {verticalOptions.map(v => (
                             <option key={v} value={v}>{v}</option>
                           ))}

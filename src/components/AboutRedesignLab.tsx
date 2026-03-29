@@ -73,7 +73,7 @@ export default function AboutRedesignLab() {
                 color: 'var(--color-ink)',
                 marginBottom: '1.5rem',
               }}>
-                Creado por Re.design <span style={{ color: '#E63946' }}>Lab</span>
+                Creado por Re<span style={{ color: '#E63946' }}>.</span>design <span style={{ color: '#E63946' }}>Lab</span>
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)',

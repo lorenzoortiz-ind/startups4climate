@@ -41,8 +41,8 @@
   --radius-xl:  32px;
   --radius-full: 9999px;
   
-  --section-py: clamp(6rem, 12vw, 12rem);
-  --section-py-sm: clamp(4rem, 8vw, 8rem);
+  --section-py: clamp(4rem, 8vw, 8rem);
+  --section-py-sm: clamp(3rem, 6vw, 5rem);
   --container-max: 1400px;
   --container-px: clamp(1.5rem, 5vw, 6rem);
 

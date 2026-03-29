@@ -140,7 +140,7 @@ export default function StartupLifecycle() {
                 flex: '1 0 200px',
                 padding: '1.5rem',
                 borderRadius: 'var(--radius-lg)',
-                border: isActive ? `2px solid ${s.stageColor}` : '1px solid var(--color-border)',
+                border: isActive ? '2px solid var(--color-ink)' : '1px solid var(--color-border)',
                 background: isActive ? 'var(--color-ink)' : 'var(--color-paper)',
                 color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
                 cursor: 'pointer',

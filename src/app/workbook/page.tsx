@@ -338,27 +338,28 @@ export default function WorkbookPage() {
             </div>
           </motion.div>
 
-          {/* Right: workbook mockup */}
+          {/* Right: workbook mockup — flex:1 to match right column below */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
             style={{
-              flex: '0 1 320px',
+              flex: 1,
+              minWidth: 0,
               display: 'flex',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
             }}
           >
             <Image
               src="/workbook-cover.png"
               alt="Workbook: De la idea al escalamiento"
-              width={300}
-              height={460}
+              width={280}
+              height={430}
               style={{
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: '0 24px 48px -12px rgba(25,25,25,0.15), 0 8px 16px -4px rgba(25,25,25,0.08)',
                 objectFit: 'cover',
-                maxWidth: '100%',
+                maxWidth: 280,
                 height: 'auto',
               }}
               priority

@@ -143,7 +143,7 @@ export default function ValueProp() {
               marginBottom: '1.5rem',
             }}
           >
-            Un ecosistema completo para desarrollar tu startup
+            Un <span style={{ color: 'var(--color-accent-primary)' }}>ecosistema completo</span> para desarrollar tu startup
           </h2>
           <p
             style={{

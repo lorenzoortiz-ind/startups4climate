@@ -7,7 +7,7 @@ const problems = [
     number: '01',
     title: 'Founders sin infraestructura',
     description:
-      'Hay talento sobrado en LATAM para construir startups de impacto. Lo que falta son herramientas estructuradas y acompañamiento accesible.',
+      'Hay talento de sobra en LATAM para construir startups de impacto. Lo que falta son herramientas estructuradas y acompañamiento accesible.',
     accentColor: 'var(--color-accent-primary)',
   },
   {
@@ -69,7 +69,7 @@ export default function ProblemSection() {
               maxWidth: 700,
             }}
           >
-            El talento emprendedor está distribuido por toda Latinoamérica. La infraestructura para desarrollarlo, no.
+            En Latinoamérica sobra talento emprendedor. Lo que falta es la infraestructura para desarrollarlo.
           </p>
         </motion.div>
 

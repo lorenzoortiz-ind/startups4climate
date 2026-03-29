@@ -14,7 +14,7 @@ const contactSchema = z.object({
   email: z.string().email('Email inválido'),
   startup_name: z.string().min(2, 'Nombre de startup requerido'),
   startup_description: z.string().min(10, 'Mínimo 10 caracteres'),
-  vertical: z.string().min(1, 'Elige una vertical'),
+  vertical: z.string().min(1, 'Selecciona vertical'),
   country: z.string().optional(),
   phone: z.string().optional(),
   website: z.string().optional(),
@@ -462,7 +462,7 @@ export default function DiagnosticForm() {
                   transition={{ duration: 0.3 }}
                 >
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-heading-lg)', fontWeight: 700, marginBottom: '0.375rem', color: 'var(--color-ink)', letterSpacing: '-0.03em' }}>
-                    Comienza tu diagnóstico
+                    Realiza tu diagnóstico
                   </h3>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1.25rem' }}>
                     Ingresa tus datos para recibir tu reporte personalizado.
@@ -545,7 +545,7 @@ export default function DiagnosticForm() {
                           onFocus={handleFocus}
                           onBlur={handleBlur('vertical')}
                         >
-                          <option value="" disabled>Elige una vertical</option>
+                          <option value="" disabled>Selecciona vertical</option>
                           {verticalOptions.map(v => (
                             <option key={v} value={v}>{v}</option>
                           ))}
@@ -692,10 +692,10 @@ export default function DiagnosticForm() {
                   >
                     <ArrowLeft size={16} /> Anterior
                   </button>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+                  <p style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-accent-primary)', marginBottom: '0.5rem' }}>
                     {questions[step - 1].subtitle}
                   </p>
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '1.5rem', lineHeight: 1.3, letterSpacing: '-0.02em' }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-heading-lg)', fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--color-ink)', marginBottom: '1.5rem', lineHeight: 1.3 }}>
                     {questions[step - 1].text}
                   </h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -709,15 +709,16 @@ export default function DiagnosticForm() {
                             display: 'flex',
                             alignItems: 'center',
                             gap: '0.75rem',
-                            padding: '1rem 1.25rem',
-                            borderRadius: 'var(--radius-md)',
-                            border: selected ? '2px solid var(--color-ink)' : '1px solid var(--color-border)',
+                            padding: '1.25rem 1.5rem',
+                            borderRadius: 'var(--radius-lg)',
+                            border: selected ? '2px solid var(--color-ink)' : '1.5px solid var(--color-border)',
                             background: selected ? 'rgba(25,25,25,0.03)' : 'var(--color-paper)',
                             cursor: 'pointer',
                             textAlign: 'left',
                             transition: 'all 0.2s var(--ease-smooth)',
                             fontFamily: 'var(--font-body)',
-                            fontSize: '0.875rem',
+                            fontSize: 'var(--text-body-lg)',
+                            fontWeight: 500,
                             color: 'var(--color-ink)',
                             width: '100%',
                           }}

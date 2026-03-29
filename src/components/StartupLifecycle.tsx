@@ -107,7 +107,7 @@ export default function StartupLifecycle() {
             color: 'var(--color-ink)',
             marginBottom: '1.5rem',
           }}>
-            El Toolkit que necesitas para crecer y escalar
+            El <span style={{ color: 'var(--color-accent-primary)' }}>Toolkit</span> que necesitas para crecer y escalar
           </h2>
           <p style={{
             fontFamily: 'var(--font-body)',
@@ -225,8 +225,8 @@ export default function StartupLifecycle() {
                 fontFamily: 'var(--font-body)',
                 fontSize: 'var(--text-body-lg)',
                 color: 'var(--color-text-secondary)',
-                maxWidth: 600,
                 margin: 0,
+                whiteSpace: 'nowrap' as const,
               }}>
                 {stage.focus}
               </p>

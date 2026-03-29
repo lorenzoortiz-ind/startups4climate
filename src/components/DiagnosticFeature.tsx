@@ -44,7 +44,7 @@ export default function DiagnosticFeature() {
               color: 'var(--color-accent-primary)',
               marginBottom: '1.5rem',
             }}>
-              Diagnóstico Gratuito
+              EMPIEZA AQUÍ
             </span>
             <h2 style={{
               fontFamily: 'var(--font-heading)',

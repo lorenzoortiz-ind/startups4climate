@@ -77,7 +77,7 @@ export default function FloatingDiagnosticCTA() {
           }}
           whileTap={{ scale: 0.97 }}
         >
-          Haz tu diagnóstico <ArrowRight size={18} />
+          Realiza tu diagnóstico <ArrowRight size={18} />
         </motion.button>
       )}
     </AnimatePresence>

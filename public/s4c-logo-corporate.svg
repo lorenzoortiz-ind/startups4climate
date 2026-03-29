@@ -1,0 +1,45 @@
+<svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&amp;display=swap');
+      .text-title {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 72px;
+        fill: #FFFFFF;
+        letter-spacing: 1px;
+      }
+      .text-4 {
+        fill: #FF6B4A;
+      }
+      .text-subtitle {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        fill: #93908C;
+        letter-spacing: 6px;
+      }
+    </style>
+  </defs>
+
+  <!-- Fondo Charcoal -->
+  <rect width="800" height="400" rx="32" fill="#2A222B"/>
+  
+  <!-- Isotipo Escalado e iterado -->
+  <g transform="translate(48, 48) scale(0.6)">
+    <g transform="translate(12, 0)">
+      <circle cx="220" cy="276" r="140" fill="#0D9488" />
+      <path d="M 180 156 L 420 156 L 420 396 Z" fill="#FF6B4A" />
+      <path d="M 180 156 L 420 156 L 420 396 Z" fill="none" stroke="#2A222B" stroke-width="20" stroke-linejoin="miter" />
+    </g>
+  </g>
+
+  <!-- Tipografía en Bloque 2-Líneas -->
+  <!-- "STARTUPS" y "4CLIMATE" tienen 8 caracteres, logrando un bloque simétrico perfecto -->
+  <text x="360" y="190" class="text-title">STARTUPS</text>
+  <text x="360" y="275" class="text-title"><tspan class="text-4">4</tspan>CLIMATE</text>
+
+  <!-- Subtítulo elegante -->
+  <text x="365" y="315" class="text-subtitle">ACCELERATING IMPACT</text>
+
+</svg>

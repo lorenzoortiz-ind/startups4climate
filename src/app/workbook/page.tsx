@@ -32,16 +32,8 @@ const COUNTRY_OPTIONS = [
 ]
 
 const VERTICAL_OPTIONS = [
-  'Fintech',
-  'Healthtech',
-  'Edtech',
-  'Agritech',
-  'Cleantech / Energía',
-  'Logística / Movilidad',
-  'Proptech',
-  'Biotech',
-  'Deep Tech',
-  'Otra',
+  'Fintech', 'Healthtech', 'Edtech', 'Agritech', 'Cleantech / Energía',
+  'Logística / Movilidad', 'Proptech', 'Biotech', 'Deep Tech', 'Otra',
 ]
 
 const TOC_ITEMS = [
@@ -50,56 +42,150 @@ const TOC_ITEMS = [
   { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#FF6B4A' },
   { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#0D9488' },
   { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#0D9488' },
-  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#2A222B' },
-  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#2A222B' },
+  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#A8A29E' },
+  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#A8A29E' },
   { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#0D9488' },
 ]
 
-/* ─── Shared Styles (matching DiagnosticForm) ─── */
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '0.625rem 0.875rem',
-  borderRadius: 10,
-  border: '1px solid var(--color-border, #e5e7eb)',
-  fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
-  color: 'var(--color-text-primary, #111827)',
-  background: 'var(--color-bg-primary, #ffffff)',
-  outline: 'none',
-  transition: 'border-color 0.2s',
-  boxSizing: 'border-box' as const,
-}
-
-const selectStyle: React.CSSProperties = {
-  ...inputStyle,
-  appearance: 'none' as const,
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'right 0.75rem center',
-  paddingRight: '2.25rem',
-}
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontFamily: 'var(--font-body)',
-  fontSize: '0.8125rem',
-  fontWeight: 600,
-  color: 'var(--color-text-primary, #111827)',
-  marginBottom: '0.25rem',
-}
-
-const cardStyle: React.CSSProperties = {
-  borderRadius: 20,
-  background: 'var(--color-bg-card, #ffffff)',
-  border: '1px solid var(--color-border, #e5e7eb)',
-  padding: '2rem',
-  boxShadow: '0 2px 20px rgba(0,0,0,0.04)',
-}
-
-/* ─── Animation Variants ─── */
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
+const springReveal = {
+  initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 },
+  transition: { type: 'spring', damping: 20, stiffness: 100 } as const,
+}
+
+/* Typeform-style input field */
+function TFInput({
+  label,
+  type = 'text',
+  value,
+  onChange,
+  placeholder,
+  required = false,
+}: {
+  label: string
+  type?: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  required?: boolean
+}) {
+  const [focused, setFocused] = useState(false)
+  return (
+    <div>
+      <label
+        style={{
+          display: 'block',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          color: 'var(--color-text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          marginBottom: '0.125rem',
+        }}
+      >
+        {label}
+      </label>
+      <div
+        style={{
+          borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
+          transition: 'border-color 0.2s ease',
+        }}
+      >
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={{
+            width: '100%',
+            padding: '0.5rem 0 0.875rem',
+            border: 'none',
+            background: 'transparent',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-heading-md)',
+            color: 'var(--color-ink)',
+            outline: 'none',
+            letterSpacing: '-0.01em',
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+function TFSelect({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+  required = false,
+}: {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  options: string[]
+  placeholder: string
+  required?: boolean
+}) {
+  const [focused, setFocused] = useState(false)
+  return (
+    <div>
+      <label
+        style={{
+          display: 'block',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          color: 'var(--color-text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          marginBottom: '0.125rem',
+        }}
+      >
+        {label}
+      </label>
+      <div
+        style={{
+          borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
+          transition: 'border-color 0.2s ease',
+        }}
+      >
+        <select
+          value={value}
+          onChange={onChange}
+          required={required}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={{
+            width: '100%',
+            padding: '0.5rem 2rem 0.875rem 0',
+            border: 'none',
+            background: 'transparent',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-heading-md)',
+            color: value ? 'var(--color-ink)' : 'var(--color-text-muted)',
+            outline: 'none',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%235E5E5E' d='M2 4l5 6 5-6'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 0.25rem center',
+            letterSpacing: '-0.01em',
+            cursor: 'pointer',
+          }}
+        >
+          <option value="">{placeholder}</option>
+          {options.map((o) => (
+            <option key={o} value={o}>{o}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  )
 }
 
 export default function WorkbookPage() {
@@ -135,7 +221,7 @@ export default function WorkbookPage() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--color-bg-primary, #FAFAFA)',
+        background: 'var(--color-bg-primary)',
       }}
     >
       {/* Navigation */}
@@ -144,8 +230,8 @@ export default function WorkbookPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '1rem 2rem',
-          maxWidth: 1200,
+          padding: '1.25rem var(--container-px)',
+          maxWidth: 'var(--container-max)',
           margin: '0 auto',
         }}
       >
@@ -155,31 +241,36 @@ export default function WorkbookPage() {
             fontFamily: 'var(--font-heading)',
             fontWeight: 700,
             fontSize: '1rem',
-            color: 'var(--color-text-primary, #111827)',
+            color: 'var(--color-ink)',
             textDecoration: 'none',
+            letterSpacing: '-0.02em',
           }}
         >
-          Startups<span style={{ color: '#0D9488' }}>4</span>Climate
+          Startups<span style={{ color: 'var(--color-accent-primary)' }}>4</span>Climate
         </Link>
         <Link
           href="/tools"
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            color: '#0D9488',
+            fontSize: '0.875rem',
+            color: 'var(--color-accent-secondary)',
             textDecoration: 'none',
             fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.375rem',
           }}
         >
           Ir a la plataforma
+          <ArrowRight size={14} />
         </Link>
       </nav>
 
-      {/* Hero -- title + mockup */}
+      {/* Hero section */}
       <section
         style={{
-          padding: '4rem 2rem 3rem',
-          maxWidth: 1060,
+          padding: 'clamp(3rem, 6vw, 6rem) var(--container-px) clamp(2rem, 4vw, 4rem)',
+          maxWidth: 'var(--container-max)',
           margin: '0 auto',
         }}
       >
@@ -187,37 +278,37 @@ export default function WorkbookPage() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '3rem',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
+            gap: 'clamp(2rem, 5vw, 5rem)',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
           }}
         >
-          {/* Left column -- text */}
+          {/* Left: editorial text */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ flex: '1 1 340px', maxWidth: 560 }}
+            {...springReveal}
+            style={{ flex: '1 1 340px', maxWidth: 600 }}
           >
+            {/* Eyebrow */}
             <div
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                padding: '0.5rem 1rem',
-                borderRadius: 8,
+                padding: '0.375rem 0.875rem',
+                borderRadius: 'var(--radius-full)',
                 background: 'rgba(13,148,136,0.08)',
                 border: '1px solid rgba(13,148,136,0.15)',
-                marginBottom: '1.5rem',
+                marginBottom: '1.75rem',
               }}
             >
-              <BookOpen size={16} color="#0D9488" />
+              <BookOpen size={14} color="var(--color-accent-secondary)" />
               <span
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
-                  fontWeight: 600,
-                  color: '#0D9488',
+                  fontWeight: 700,
+                  color: 'var(--color-accent-secondary)',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
                 }}
               >
                 Recurso gratuito
@@ -227,37 +318,73 @@ export default function WorkbookPage() {
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 400,
-                color: 'var(--color-text-primary, #111827)',
-                letterSpacing: '-0.03em',
-                lineHeight: 1.15,
-                marginBottom: '1rem',
+                fontSize: 'var(--text-display-lg)',
+                fontWeight: 700,
+                color: 'var(--color-ink)',
+                letterSpacing: '-0.04em',
+                lineHeight: 1.05,
+                marginBottom: '1.5rem',
               }}
             >
-              Gu&iacute;a completa para{' '}
-              <span style={{ color: '#0D9488' }}>founders de impacto</span>
+              Guía completa para{' '}
+              <span style={{ color: 'var(--color-accent-secondary)' }}>founders de impacto</span>
             </h1>
 
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '1.125rem',
-                color: 'var(--color-text-secondary, #6B7280)',
-                maxWidth: 600,
-                lineHeight: 1.7,
+                fontSize: 'var(--text-body-lg)',
+                color: 'var(--color-text-secondary)',
+                maxWidth: 540,
+                lineHeight: 1.6,
+                marginBottom: '2rem',
+                letterSpacing: '-0.01em',
               }}
             >
               Todo lo que necesitas saber para lanzar, validar y escalar tu startup de impacto
-              en Am&eacute;rica Latina. Desde la ideaci&oacute;n hasta el fundraising, paso a paso.
+              en América Latina. Desde la ideación hasta el fundraising, paso a paso.
             </p>
+
+            {/* Stats row */}
+            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+              {[
+                { num: '8', label: 'capítulos' },
+                { num: '100+', label: 'páginas' },
+                { num: '4', label: 'etapas' },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-display-md)',
+                      fontWeight: 700,
+                      color: 'var(--color-ink)',
+                      letterSpacing: '-0.05em',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {stat.num}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.875rem',
+                      color: 'var(--color-text-muted)',
+                      marginTop: '0.25rem',
+                    }}
+                  >
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* Right column -- workbook mockup */}
+          {/* Right: workbook mockup */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
             style={{
               flex: '0 1 320px',
               display: 'flex',
@@ -272,8 +399,8 @@ export default function WorkbookPage() {
       {/* Two-column layout: TOC + Form */}
       <section
         style={{
-          padding: '0 2rem 5rem',
-          maxWidth: 1060,
+          padding: '0 var(--container-px) clamp(4rem, 8vw, 8rem)',
+          maxWidth: 'var(--container-max)',
           margin: '0 auto',
         }}
       >
@@ -285,149 +412,183 @@ export default function WorkbookPage() {
             alignItems: 'flex-start',
           }}
         >
-          {/* Left column -- Table of Contents */}
+          {/* Left column: Table of Contents */}
           <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            style={{ ...cardStyle, flex: 1, minWidth: 0 }}
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 }}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              background: 'var(--color-paper)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--color-border)',
+              padding: '2.5rem',
+              boxShadow: 'var(--shadow-float)',
+            }}
           >
             <h2
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: '1.25rem',
+                fontSize: 'var(--text-display-md)',
                 fontWeight: 700,
-                color: 'var(--color-text-primary, #111827)',
-                marginBottom: '1.5rem',
-                letterSpacing: '-0.01em',
+                color: 'var(--color-ink)',
+                letterSpacing: '-0.04em',
+                lineHeight: 1.05,
+                marginBottom: '2rem',
               }}
             >
-              Contenido del workbook
+              Contenido
             </h2>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
               {TOC_ITEMS.map((item, i) => (
                 <motion.div
                   key={item.chapter}
-                  initial={{ opacity: 0, x: -12 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.05 }}
+                  transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.2 + i * 0.05 }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.875rem',
-                    padding: '0.75rem 1rem',
-                    borderRadius: 12,
-                    background: `${item.color}06`,
-                    border: `1px solid ${item.color}15`,
+                    gap: '1.25rem',
+                    padding: '1rem 0',
+                    borderBottom: i < TOC_ITEMS.length - 1 ? '1px solid var(--color-border)' : 'none',
                   }}
                 >
                   <span
                     style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.6875rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-display-md)',
                       fontWeight: 700,
-                      color: item.color,
-                      width: 28,
+                      color: `${item.color}30`,
+                      width: 56,
                       flexShrink: 0,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
                     }}
                   >
                     {item.chapter}
                   </span>
-                  <span
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        color: 'var(--color-ink)',
+                        letterSpacing: '-0.01em',
+                        marginBottom: '0.125rem',
+                      }}
+                    >
+                      {item.title}
+                    </div>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        color: item.color,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      {item.stage}
+                    </span>
+                  </div>
+                  <div
                     style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      color: 'var(--color-text-primary, #111827)',
-                      flex: 1,
-                    }}
-                  >
-                    {item.title}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.5625rem',
-                      fontWeight: 600,
-                      color: item.color,
-                      padding: '2px 8px',
-                      borderRadius: 8,
-                      background: `${item.color}12`,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.03em',
+                      width: 6,
+                      height: 6,
+                      borderRadius: 'var(--radius-full)',
+                      background: item.color,
                       flexShrink: 0,
                     }}
-                  >
-                    {item.stage}
-                  </span>
+                  />
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right column -- Download Form */}
+          {/* Right column: Download Form */}
           <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            style={{ ...cardStyle, flex: 1, minWidth: 0 }}
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.18 }}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              background: 'var(--color-paper)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--color-border)',
+              padding: '2.5rem',
+              boxShadow: 'var(--shadow-float)',
+            }}
             id="descargar"
           >
             {user ? (
               /* Logged-in user: direct download */
-              <div style={{ textAlign: 'center' }}>
+              <div style={{ textAlign: 'center', padding: '1rem 0' }}>
                 <div
                   style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 14,
+                    width: 72,
+                    height: 72,
+                    borderRadius: 'var(--radius-full)',
                     background: 'rgba(13,148,136,0.08)',
+                    border: '1px solid rgba(13,148,136,0.15)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto 1.25rem',
+                    margin: '0 auto 1.5rem',
                   }}
                 >
-                  <Download size={24} color="#0D9488" />
+                  <Download size={28} color="var(--color-accent-secondary)" />
                 </div>
                 <h2
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1.25rem',
+                    fontSize: 'var(--text-display-md)',
                     fontWeight: 700,
-                    color: 'var(--color-text-primary, #111827)',
-                    marginBottom: '0.5rem',
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.05,
+                    marginBottom: '0.75rem',
                   }}
                 >
-                  Descargar directamente
+                  Descarga directa
                 </h2>
                 <p
                   style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.875rem',
-                    color: 'var(--color-text-secondary, #6B7280)',
-                    marginBottom: '1.5rem',
+                    fontSize: 'var(--text-body-lg)',
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: '2rem',
+                    lineHeight: 1.5,
+                    letterSpacing: '-0.01em',
                   }}
                 >
-                  Ya tienes sesi&oacute;n iniciada como {user.name}. Descarga tu copia gratuita.
+                  Ya tienes sesión como <strong style={{ color: 'var(--color-ink)' }}>{user.name}</strong>. Descarga tu copia gratuita.
                 </p>
                 <button
                   onClick={() => alert('Descarga iniciada. Revisa tu carpeta de descargas.')}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.875rem 2rem',
-                    borderRadius: 12,
-                    background: '#0D9488',
-                    color: 'white',
+                    gap: '0.625rem',
+                    padding: '1rem 2.5rem',
+                    borderRadius: 'var(--radius-full)',
+                    background: 'var(--color-ink)',
+                    color: 'var(--color-paper)',
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.9375rem',
-                    fontWeight: 600,
+                    fontSize: 'var(--text-body-lg)',
+                    fontWeight: 700,
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 2px 12px rgba(13,148,136,0.3)',
-                    transition: 'all 0.2s',
+                    letterSpacing: '-0.01em',
+                    transition: 'background 0.2s ease',
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)' }}
                 >
                   <Download size={18} />
                   Descargar Workbook (PDF)
@@ -438,44 +599,48 @@ export default function WorkbookPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ textAlign: 'center' }}
+                transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+                style={{ textAlign: 'center', padding: '1rem 0' }}
               >
                 <div
                   style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 14,
+                    width: 72,
+                    height: 72,
+                    borderRadius: 'var(--radius-full)',
                     background: 'rgba(13,148,136,0.08)',
+                    border: '1px solid rgba(13,148,136,0.15)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto 1.25rem',
+                    margin: '0 auto 1.5rem',
                   }}
                 >
-                  <CheckCircle2 size={28} color="#0D9488" />
+                  <CheckCircle2 size={32} color="var(--color-accent-secondary)" />
                 </div>
                 <h2
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1.25rem',
+                    fontSize: 'var(--text-display-md)',
                     fontWeight: 700,
-                    color: 'var(--color-text-primary, #111827)',
-                    marginBottom: '0.5rem',
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.05,
+                    marginBottom: '0.75rem',
                   }}
                 >
-                  &iexcl;Listo! Revisa tu email
+                  ¡Revisa tu email!
                 </h2>
                 <p
                   style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.875rem',
-                    color: 'var(--color-text-secondary, #6B7280)',
+                    fontSize: 'var(--text-body-lg)',
+                    color: 'var(--color-text-secondary)',
                     lineHeight: 1.6,
-                    marginBottom: '1.5rem',
+                    marginBottom: '2rem',
+                    letterSpacing: '-0.01em',
                   }}
                 >
-                  Te enviamos el workbook a <strong>{email}</strong>.
-                  <br />
+                  Te enviamos el workbook a <strong style={{ color: 'var(--color-ink)' }}>{email}</strong>.<br />
                   Si no lo ves, revisa tu carpeta de spam.
                 </p>
                 <Link
@@ -485,14 +650,15 @@ export default function WorkbookPage() {
                     alignItems: 'center',
                     gap: '0.375rem',
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.8125rem',
-                    color: '#0D9488',
+                    fontSize: 'var(--text-body-lg)',
+                    color: 'var(--color-accent-secondary)',
                     textDecoration: 'none',
-                    fontWeight: 600,
+                    fontWeight: 700,
+                    letterSpacing: '-0.01em',
                   }}
                 >
                   Volver al inicio
-                  <ArrowRight size={14} />
+                  <ArrowRight size={16} />
                 </Link>
               </motion.div>
             ) : (
@@ -501,122 +667,138 @@ export default function WorkbookPage() {
                 <h2
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1.25rem',
+                    fontSize: 'var(--text-display-md)',
                     fontWeight: 700,
-                    color: 'var(--color-text-primary, #111827)',
-                    marginBottom: '0.375rem',
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.05,
+                    marginBottom: '0.5rem',
                   }}
                 >
-                  Descarga gratis el workbook
+                  Descarga gratis
                 </h2>
                 <p
                   style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.8125rem',
-                    color: 'var(--color-text-secondary, #6B7280)',
-                    marginBottom: '1.5rem',
+                    fontSize: 'var(--text-body-lg)',
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: '2.25rem',
                     lineHeight: 1.5,
+                    letterSpacing: '-0.01em',
                   }}
                 >
                   Ingresa tus datos y te lo enviamos al instante.
                 </p>
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {/* Nombre */}
-                  <div>
-                    <label style={labelStyle}>Nombre</label>
-                    <input
-                      type="text"
-                      value={nombre}
-                      onChange={(e) => setNombre(e.target.value)}
-                      placeholder="Tu nombre completo"
-                      required
-                      style={inputStyle}
-                    />
-                  </div>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                  <TFInput
+                    label="Nombre"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    placeholder="Tu nombre completo"
+                    required
+                  />
 
-                  {/* Nombre de tu startup */}
-                  <div>
-                    <label style={labelStyle}>Nombre de tu startup</label>
-                    <input
-                      type="text"
-                      value={startupName}
-                      onChange={(e) => setStartupName(e.target.value)}
-                      placeholder="Nombre de tu startup"
-                      style={inputStyle}
-                    />
-                  </div>
+                  <TFInput
+                    label="Nombre de tu startup"
+                    value={startupName}
+                    onChange={(e) => setStartupName(e.target.value)}
+                    placeholder="Nombre de tu startup"
+                  />
 
-                  {/* Vertical */}
-                  <div>
-                    <label style={labelStyle}>Vertical</label>
-                    <select
-                      value={vertical}
-                      onChange={(e) => setVertical(e.target.value)}
-                      style={selectStyle}
-                    >
-                      <option value="">Selecciona una vertical</option>
-                      {VERTICAL_OPTIONS.map((v) => (
-                        <option key={v} value={v}>{v}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <TFSelect
+                    label="Vertical"
+                    value={vertical}
+                    onChange={(e) => setVertical(e.target.value)}
+                    options={VERTICAL_OPTIONS}
+                    placeholder="Selecciona una vertical"
+                  />
 
-                  {/* Email */}
-                  <div>
-                    <label style={labelStyle}>Email</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="tu@email.com"
-                      required
-                      style={inputStyle}
-                    />
-                  </div>
+                  <TFInput
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tu@email.com"
+                    required
+                  />
 
-                  {/* Row: Country (flag dropdown) + Phone */}
-                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                    <div style={{ flex: '0 0 auto', minWidth: 130 }}>
-                      <label style={labelStyle}>Pa&iacute;s</label>
-                      <select
-                        value={pais}
-                        onChange={(e) => {
-                          setPais(e.target.value)
-                          const match = COUNTRY_OPTIONS.find((c) => c.name === e.target.value)
-                          if (match) setPhoneCountryCode(match.code)
-                        }}
-                        required
+                  {/* Country + Phone */}
+                  <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '0 1 200px', minWidth: 160 }}>
+                      <label
                         style={{
-                          ...selectStyle,
-                          backgroundPosition: 'right 0.5rem center',
-                          paddingRight: '1.75rem',
+                          display: 'block',
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          color: 'var(--color-text-muted)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          marginBottom: '0.125rem',
                         }}
                       >
-                        <option value="">Selecciona</option>
-                        {COUNTRY_OPTIONS.map((c) => (
-                          <option key={c.name} value={c.name}>
-                            {c.flag} {c.name}
-                          </option>
-                        ))}
-                      </select>
+                        País
+                      </label>
+                      <div style={{ borderBottom: '2px solid var(--color-border)' }}>
+                        <select
+                          value={pais}
+                          onChange={(e) => {
+                            setPais(e.target.value)
+                            const match = COUNTRY_OPTIONS.find((c) => c.name === e.target.value)
+                            if (match) setPhoneCountryCode(match.code)
+                          }}
+                          required
+                          style={{
+                            width: '100%',
+                            padding: '0.5rem 2rem 0.875rem 0',
+                            border: 'none',
+                            background: 'transparent',
+                            fontFamily: 'var(--font-body)',
+                            fontSize: 'var(--text-heading-md)',
+                            color: pais ? 'var(--color-ink)' : 'var(--color-text-muted)',
+                            outline: 'none',
+                            appearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%235E5E5E' d='M2 4l5 6 5-6'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 0.25rem center',
+                            letterSpacing: '-0.01em',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <option value="">Selecciona</option>
+                          {COUNTRY_OPTIONS.map((c) => (
+                            <option key={c.name} value={c.name}>
+                              {c.flag} {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     <div style={{ flex: '1 1 160px', minWidth: 0 }}>
-                      <label style={labelStyle}>Tel&eacute;fono</label>
-                      <div style={{ display: 'flex', gap: '0.375rem' }}>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          color: 'var(--color-text-muted)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          marginBottom: '0.125rem',
+                        }}
+                      >
+                        Teléfono
+                      </label>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end', borderBottom: '2px solid var(--color-border)' }}>
                         <span
                           style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '0 0.625rem',
-                            borderRadius: 10,
-                            border: '1px solid var(--color-border, #e5e7eb)',
-                            background: 'var(--color-bg-card, #ffffff)',
                             fontFamily: 'var(--font-body)',
-                            fontSize: '0.8125rem',
-                            color: 'var(--color-text-secondary, #6B7280)',
-                            whiteSpace: 'nowrap',
+                            fontSize: 'var(--text-heading-md)',
+                            color: 'var(--color-text-muted)',
+                            paddingBottom: '0.875rem',
                             flexShrink: 0,
+                            letterSpacing: '-0.01em',
                           }}
                         >
                           {phoneCountryCode}
@@ -626,7 +808,17 @@ export default function WorkbookPage() {
                           value={telefono}
                           onChange={(e) => setTelefono(e.target.value)}
                           placeholder="55 1234 5678"
-                          style={{ ...inputStyle, flex: 1 }}
+                          style={{
+                            flex: 1,
+                            padding: '0.5rem 0 0.875rem',
+                            border: 'none',
+                            background: 'transparent',
+                            fontFamily: 'var(--font-body)',
+                            fontSize: 'var(--text-heading-md)',
+                            color: 'var(--color-ink)',
+                            outline: 'none',
+                            letterSpacing: '-0.01em',
+                          }}
                         />
                       </div>
                     </div>
@@ -639,21 +831,23 @@ export default function WorkbookPage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.5rem',
+                      gap: '0.625rem',
                       width: '100%',
-                      padding: '0.875rem',
-                      borderRadius: 12,
-                      background: submitting ? '#6B7280' : '#0D9488',
-                      color: 'white',
+                      padding: '1.125rem 2rem',
+                      borderRadius: 'var(--radius-full)',
+                      background: submitting ? 'var(--color-text-secondary)' : 'var(--color-ink)',
+                      color: 'var(--color-paper)',
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.9375rem',
-                      fontWeight: 600,
+                      fontSize: 'var(--text-body-lg)',
+                      fontWeight: 700,
                       border: 'none',
                       cursor: submitting ? 'wait' : 'pointer',
-                      boxShadow: '0 2px 12px rgba(13,148,136,0.3)',
-                      transition: 'all 0.2s',
-                      marginTop: '0.5rem',
+                      letterSpacing: '-0.01em',
+                      marginTop: '0.25rem',
+                      transition: 'background 0.2s ease',
                     }}
+                    onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.background = 'var(--color-accent-primary)' }}
+                    onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.background = 'var(--color-ink)' }}
                   >
                     {submitting ? (
                       'Enviando...'
@@ -668,9 +862,9 @@ export default function WorkbookPage() {
 
                 <div
                   style={{
-                    marginTop: '1.5rem',
+                    marginTop: '1.75rem',
                     textAlign: 'center',
-                    borderTop: '1px solid var(--color-border, #e5e7eb)',
+                    borderTop: '1px solid var(--color-border)',
                     paddingTop: '1.25rem',
                   }}
                 >
@@ -681,14 +875,15 @@ export default function WorkbookPage() {
                       alignItems: 'center',
                       gap: '0.375rem',
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
-                      color: 'var(--color-text-secondary, #6B7280)',
+                      fontSize: '0.9375rem',
+                      color: 'var(--color-text-secondary)',
                       textDecoration: 'none',
+                      letterSpacing: '-0.01em',
                     }}
                   >
-                    &iquest;Ya tienes cuenta?{' '}
-                    <span style={{ color: '#0D9488', fontWeight: 600 }}>Inicia sesi&oacute;n</span>
-                    <ChevronRight size={14} color="#0D9488" />
+                    ¿Ya tienes cuenta?{' '}
+                    <span style={{ color: 'var(--color-accent-secondary)', fontWeight: 700 }}>Inicia sesión</span>
+                    <ChevronRight size={14} color="var(--color-accent-secondary)" />
                   </Link>
                 </div>
               </>

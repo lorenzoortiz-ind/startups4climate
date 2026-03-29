@@ -6,241 +6,243 @@ import Image from 'next/image'
 const founders = [
   {
     photo: '/eddie.png',
-    name: 'Eddie Ajalcrina',
+    name: 'Eddie Ajalcriña',
     role: 'Co-Founder & CEO',
-    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovacion y conexion con capital.',
+    bio: 'Estrategia de impacto y desarrollo de negocio en Latam. Experiencia en ecosistemas de innovación y conexión con capital.',
     tags: ['Impact Strategy', 'Business Dev', 'LATAM Ecosystems'],
   },
   {
     photo: '/lorenzo.png',
     name: 'Lorenzo Ortiz',
     role: 'Co-Founder & CTO',
-    bio: 'Tecnologia, producto y diseno de nuevos negocios. Background en finanzas avanzadas, desarrollo tech y escalamiento de startups.',
+    bio: 'Tecnología, producto y diseño de nuevos negocios. Background en finanzas avanzadas, desarrollo tech y escalamiento de startups.',
     tags: ['Product Dev', 'Ops & Tech', 'Startup Tools'],
   },
 ]
 
-const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Union Europea', 'NESsT', 'CATAL1.5T', 'Stanford University']
+const partners = ['BID', 'MIT', 'SingularityU', 'ClimateKIC', 'Wyss Academy', 'Unión Europea', 'NESsT', 'CATAL1.5°T', 'Stanford University']
 
-const ease = [0.25, 0.1, 0.25, 1] as [number, number, number, number]
+const springReveal = {
+  initial: { opacity: 0, y: 60 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-100px' },
+  transition: { type: 'spring', damping: 20, stiffness: 100 } as any,
+}
 
 export default function AboutRedesignLab() {
   return (
-    <section id="about" style={{ padding: 'clamp(5rem, 10vw, 10rem) 0', background: '#FAF8F5', overflow: 'hidden' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 5rem)' }}>
-        <div
-          style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '4rem', alignItems: 'center' }}
-          className="lg:!grid-cols-[1fr_1fr]"
-        >
-          {/* Text left */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <span style={{
-              display: 'inline-block',
-              fontFamily: 'var(--font-body)',
-              fontSize: '12px',
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#93908C',
-              marginBottom: '1.5rem',
-            }}>
-              Quienes somos
-            </span>
+    <section
+      id="about"
+      style={{
+        padding: 'var(--section-py) 0',
+        background: 'var(--color-bg-primary)',
+        overflow: 'hidden',
+        borderTop: '1px solid var(--color-border)',
+      }}
+    >
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
 
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 4vw, 2.75rem)',
-              fontWeight: 400,
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              color: '#2A222B',
-              marginBottom: '1.5rem',
-            }}>
-              Creado por{' '}
-              <span style={{ color: '#FF6B4A' }}>
-                Redesign Lab
-              </span>
-            </h2>
-
-            <p style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
-              lineHeight: 1.75,
-              color: '#5E5A60',
-              marginBottom: '1.5rem',
-            }}>
-              Construimos la infraestructura operativa que los founders necesitan para dejar de
-              improvisar y enfocarse en lo que importa: crear soluciones que transformen la region.
-            </p>
-          </motion.div>
-
-          {/* Founder cards right */}
-          <div className="about-founder-cards" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '1.5rem',
-          }}>
-            {founders.map((f, i) => (
-              <motion.div
-                key={f.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.6, delay: i * 0.1, ease }}
-                className="founder-card"
-                style={{
-                  background: 'white',
-                  borderRadius: 12,
-                  border: '1px solid #E8E4DF',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.04)',
-                  padding: '2.25rem 1.5rem',
-                  textAlign: 'center',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  cursor: 'default',
-                }}
-              >
-                <div style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  margin: '0 auto 1.25rem',
-                  border: '3px solid rgba(255,107,74,0.15)',
-                }}>
-                  <Image
-                    src={f.photo}
-                    alt={f.name}
-                    width={80}
-                    height={80}
-                    style={{ objectFit: 'cover', display: 'block', width: '100%', height: '100%' }}
-                  />
-                </div>
-                <h3 style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.125rem',
-                  fontWeight: 400,
-                  color: '#2A222B',
-                  marginBottom: '0.375rem',
-                  letterSpacing: '-0.02em',
-                }}>
-                  {f.name}
-                </h3>
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
-                  color: '#FF6B4A',
-                  fontWeight: 600,
-                  marginBottom: '0.75rem',
-                  letterSpacing: '0.02em',
-                  textTransform: 'uppercase',
-                }}>
-                  {f.role}
-                </p>
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.875rem',
-                  lineHeight: 1.65,
-                  color: '#5E5A60',
-                  marginBottom: '1rem',
-                }}>
-                  {f.bio}
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
-                  {f.tags.map(tag => (
-                    <span key={tag} style={{
-                      padding: '0.2rem 0.625rem',
-                      borderRadius: 8,
-                      background: 'rgba(255,107,74,0.06)',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      color: '#FF6B4A',
-                      fontWeight: 600,
-                      letterSpacing: '0.01em',
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Partners marquee */}
-        <div style={{
-          marginTop: '4.5rem',
-          paddingTop: '3rem',
-          borderTop: '1px solid rgba(0,0,0,0.06)',
-        }}>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '12px',
-            fontWeight: 600,
-            color: '#93908C',
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            textAlign: 'center',
-            marginBottom: '1.75rem',
-          }}>
-            Alianzas y colaboraciones
-          </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
 
           <div style={{
-            position: 'relative',
-            overflow: 'hidden',
-            maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '4rem',
+            alignItems: 'start',
           }}>
-            <div
-              className="partner-marquee"
-              style={{
-                display: 'flex',
-                gap: '3.5rem',
-                width: 'max-content',
-                animation: 'marquee-scroll 30s linear infinite',
-              }}
-            >
-              {[...partners, ...partners].map((name, i) => (
-                <span
-                  key={`${name}-${i}`}
-                  className="partner-logo-item"
+            {/* Left Column */}
+            <motion.div {...springReveal}>
+              <span style={{
+                display: 'inline-block',
+                fontFamily: 'var(--font-body)',
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase' as const,
+                color: 'var(--color-text-secondary)',
+                marginBottom: '1.5rem',
+              }}>
+                Quiénes somos
+              </span>
+              <h2 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'var(--text-display-md)',
+                fontWeight: 700,
+                lineHeight: 1.1,
+                letterSpacing: '-0.03em',
+                color: 'var(--color-ink)',
+                marginBottom: '1.5rem',
+              }}>
+                Creado por Redesign Lab
+              </h2>
+              <p style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-body-lg)',
+                lineHeight: 1.6,
+                color: 'var(--color-text-secondary)',
+                maxWidth: 480,
+              }}>
+                Construimos la infraestructura operativa que los founders necesitan para dejar de improvisar y enfocarse en lo que importa: crear soluciones que transformen la región.
+              </p>
+            </motion.div>
+
+            {/* Right Column: Founder Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '1.5rem',
+            }}>
+              {founders.map((f, i) => (
+                <motion.div
+                  key={f.name}
+                  initial={{ opacity: 0, y: 60 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.1 }}
+                  whileHover={{ y: -6, boxShadow: '0 24px 48px -12px rgba(25,25,25,0.12)' }}
                   style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '1.0625rem',
-                    fontWeight: 700,
-                    color: '#2A222B',
-                    opacity: 0.25,
-                    whiteSpace: 'nowrap',
+                    background: 'var(--color-paper)',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid var(--color-border)',
+                    padding: '2.5rem 1.5rem',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                     cursor: 'default',
-                    transition: 'opacity 0.3s ease',
-                    letterSpacing: '-0.01em',
+                    transition: 'box-shadow 0.2s var(--ease-smooth)',
                   }}
                 >
-                  {name}
-                </span>
+                  <div style={{
+                    width: 72,
+                    height: 72,
+                    borderRadius: 'var(--radius-full)',
+                    background: 'var(--color-border)',
+                    overflow: 'hidden',
+                    marginBottom: '1.5rem',
+                    flexShrink: 0,
+                  }}>
+                    <Image
+                      src={f.photo}
+                      alt={f.name}
+                      width={72}
+                      height={72}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  </div>
+                  <h3 style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'var(--text-heading-md)',
+                    fontWeight: 700,
+                    color: 'var(--color-ink)',
+                    marginBottom: '0.25rem',
+                    letterSpacing: '-0.01em',
+                  }}>
+                    {f.name}
+                  </h3>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase' as const,
+                    letterSpacing: '0.05em',
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: '1rem',
+                  }}>
+                    {f.role}
+                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-body)',
+                    lineHeight: 1.6,
+                    color: 'var(--color-text-secondary)',
+                    marginBottom: '1.5rem',
+                  }}>
+                    {f.bio}
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+                    {f.tags.map(tag => (
+                      <span key={tag} style={{
+                        padding: '0.25rem 0.75rem',
+                        background: 'var(--color-bg-primary)',
+                        border: '1px solid var(--color-border)',
+                        borderRadius: 'var(--radius-full)',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.625rem',
+                        fontWeight: 600,
+                        color: 'var(--color-ink)',
+                        letterSpacing: '0.02em',
+                        textTransform: 'uppercase' as const,
+                      }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
+
+          {/* Marquee partners */}
+          <div style={{
+            paddingTop: '3rem',
+            borderTop: '1px solid var(--color-border)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '2rem',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '11px',
+              fontWeight: 600,
+              textTransform: 'uppercase' as const,
+              letterSpacing: '0.12em',
+              color: 'var(--color-text-secondary)',
+            }}>
+              Alianzas que respaldan nuestra metodología
+            </span>
+            <div style={{
+              width: '100%',
+              overflow: 'hidden',
+              maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+            }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '4rem',
+                  width: 'max-content',
+                  animation: 'marquee-scroll 40s linear infinite',
+                }}
+              >
+                {[...partners, ...partners, ...partners].map((name, i) => (
+                  <span
+                    key={`${name}-${i}`}
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-heading-md)',
+                      fontWeight: 700,
+                      color: 'var(--color-text-secondary)',
+                      opacity: 0.4,
+                      whiteSpace: 'nowrap',
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <style>{`
         @keyframes marquee-scroll {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .partner-logo-item:hover { opacity: 0.85 !important; }
-        .founder-card:hover {
-          transform: translateY(-4px) !important;
-          box-shadow: 0 12px 40px rgba(0,0,0,0.08) !important;
-        }
-        @media (max-width: 640px) {
-          .about-founder-cards { grid-template-columns: 1fr !important; }
+          100% { transform: translateX(-33.33%); }
         }
       `}</style>
     </section>

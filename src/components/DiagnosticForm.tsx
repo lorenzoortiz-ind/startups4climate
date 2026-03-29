@@ -277,17 +277,17 @@ export default function DiagnosticForm() {
     resolver: zodResolver(contactSchema),
   })
 
-  const calculateResults = useCallback(() => {
+  const calculateResults = useCallback((currentScores: Record<string, number>) => {
     let total = 0
     const scoreQuestions = ['P2', 'P3', 'P5', 'P6', 'P8', 'P10']
     scoreQuestions.forEach(qId => {
-      total += scores[qId] || 0
+      total += currentScores[qId] || 0
     })
     setTotalScore(total)
     const matched = profiles.find(p => total >= p.range[0] && total <= p.range[1]) || profiles[0]
     setProfile(matched)
     return { total, matched }
-  }, [scores])
+  }, [])
 
   const handleContactSubmit = (data: ContactData) => {
     const phone = data.phone ? `${phoneCountryCode} ${data.phone}` : undefined
@@ -298,14 +298,23 @@ export default function DiagnosticForm() {
 
   const handleAnswer = (questionIndex: number, value: string, score?: number) => {
     const qId = questions[questionIndex].id
-    setAnswers(prev => ({ ...prev, [qId]: value }))
+    
+    // Create updated objects for answers and scores
+    const updatedAnswers = { ...answers, [qId]: value }
+    setAnswers(updatedAnswers)
+    
+    let updatedScores = scores
     if (score !== undefined) {
-      setScores(prev => ({ ...prev, [qId]: score }))
+      updatedScores = { ...scores, [qId]: score }
+      setScores(updatedScores)
     }
+
     setTimeout(() => {
       if (questionIndex < questions.length - 1) {
         setStep(questionIndex + 2)
       } else {
+        // Final question! Calculate everything NOW to ensure the loading effect has the final data
+        calculateResults(updatedScores)
         setStep(11) // loading
       }
     }, 400)
@@ -314,7 +323,7 @@ export default function DiagnosticForm() {
   // Loading -> Results
   useEffect(() => {
     if (step === 11 && !submitted) {
-      const { total, matched } = calculateResults()
+      const { total, matched } = calculateResults(scores)
 
       const insertLead = async () => {
         try {

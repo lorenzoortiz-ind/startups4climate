@@ -5,7 +5,7 @@ import S4CLogo from '@/components/S4CLogo'
 
 const footerLinks = {
   plataforma: [
-    { label: 'Diagnostico gratuito', href: '#diagnostico' },
+    { label: 'Diagnóstico gratuito', href: '#diagnostico' },
     { label: 'Herramientas', href: '#plataforma' },
     { label: 'Workbook', href: '/workbook', isPage: true },
     { label: 'Acceder a la plataforma', href: '/tools' },
@@ -13,7 +13,7 @@ const footerLinks = {
   organizaciones: [
     { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
     { label: 'Solicitar demo', href: 'mailto:hello@redesignlab.org' },
-    { label: 'Metodologia', href: '#' },
+    { label: 'Metodología', href: '#' },
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },
@@ -22,147 +22,162 @@ const footerLinks = {
   ],
 }
 
-const colTitleColor = 'rgba(255,255,255,0.4)'
-const linkColor = 'rgba(255,255,255,0.65)'
-
 export default function Footer() {
   return (
-    <footer style={{ background: '#2A222B', color: '#FFFFFF', padding: '80px 0 40px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(1.5rem, 4vw, 5rem)' }}>
+    <footer style={{ background: 'var(--color-ink)', color: 'var(--color-paper)', padding: '6rem 0 3rem' }}>
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
 
-        {/* Logo + tagline */}
-        <div style={{ marginBottom: '3.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1rem' }}>
-            <S4CLogo size={36} />
-            <span style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 400,
-              fontSize: '1.0625rem',
-              color: '#FFFFFF',
-              letterSpacing: '-0.02em',
-            }}>
-              Startups<span style={{ color: '#0D9488' }}>4</span>Climate
-            </span>
-          </div>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '14px',
-            lineHeight: 1.7,
-            color: 'rgba(255,255,255,0.5)',
-            maxWidth: 340,
-            margin: 0,
-          }}>
-            Democratizando el desarrollo de startups de impacto en Latinoamerica.
-          </p>
-        </div>
-
-        {/* 4-column grid */}
+        {/* Top: Info + Logo & Links Grid */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '2.5rem',
-          marginBottom: '3.5rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '4rem',
+          justifyContent: 'space-between',
+          marginBottom: '5rem',
         }}>
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h4 style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: colTitleColor,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: '1.25rem',
-                marginTop: 0,
-              }}>{title}</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {links.map(link => (
-                  <li key={link.label}>
-                    {'isPage' in link && link.isPage ? (
-                      <Link
-                        href={link.href}
-                        className="footer-link"
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '14px',
-                          color: linkColor,
-                          textDecoration: 'none',
-                          transition: 'color 0.2s',
-                        }}
-                      >{link.label}</Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        target={link.href.startsWith('http') ? '_blank' : undefined}
-                        rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                        className="footer-link"
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '14px',
-                          color: linkColor,
-                          textDecoration: 'none',
-                          transition: 'color 0.2s',
-                        }}
-                      >{link.label}</a>
-                    )}
-                  </li>
-                ))}
-              </ul>
+          
+          {/* Logo & Info */}
+          <div style={{ maxWidth: 320 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <S4CLogo size={32} />
+              <span style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: '1.25rem',
+                color: 'var(--color-paper)',
+                letterSpacing: '-0.02em',
+              }}>
+                Startups4Climate
+              </span>
             </div>
-          ))}
-        </div>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              lineHeight: 1.6,
+              color: 'rgba(255, 255, 255, 0.6)',
+              margin: 0,
+            }}>
+              Democratizando el desarrollo de startups de impacto en Latinoamérica.
+            </p>
+          </div>
 
-        {/* Social icons */}
-        <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '2.5rem' }}>
-          <a href="https://www.linkedin.com/company/redesignlab" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="footer-social" style={{ color: 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-          </a>
-          <a href="https://x.com/redesignlabpe" target="_blank" rel="noopener noreferrer" aria-label="X" className="footer-social" style={{ color: 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-          </a>
-          <a href="https://instagram.com/redesignlab.pe" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="footer-social" style={{ color: 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-          </a>
+          {/* Links Grid */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '4rem',
+          }}>
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title} style={{ minWidth: 160 }}>
+                <h4 style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.6875rem',
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.4)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.12em',
+                  marginBottom: '1.5rem',
+                }}>
+                  {title}
+                </h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {links.map(link => (
+                    <li key={link.label}>
+                      {'isPage' in link && link.isPage ? (
+                        <Link
+                          href={link.href}
+                          style={{
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '0.875rem',
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            textDecoration: 'none',
+                            transition: 'color 0.2s',
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                          onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'}
+                        >
+                          {link.label}
+                        </Link>
+                      ) : (
+                        <a
+                          href={link.href}
+                          target={link.href.startsWith('http') ? '_blank' : undefined}
+                          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          style={{
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '0.875rem',
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            textDecoration: 'none',
+                            transition: 'color 0.2s',
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                          onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'}
+                        >
+                          {link.label}
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Separator */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: '1.5rem' }} />
+        <div style={{ height: 1, background: 'rgba(255, 255, 255, 0.1)', marginBottom: '2rem' }} />
 
-        {/* Bottom: copyright + legal links */}
+        {/* Bottom: Legal + Social */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '1rem',
+          gap: '1.5rem',
         }}>
           <p style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '13px',
-            color: 'rgba(255,255,255,0.35)',
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.4)',
             margin: 0,
           }}>
             &copy; {new Date().getFullYear()} Startups4Climate by Redesign Lab. Todos los derechos reservados.
           </p>
-          <div style={{ display: 'flex', gap: '2rem' }}>
-            {['Privacidad', 'Terminos'].map(item => (
-              <a key={item} href="#" className="footer-legal" style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '13px',
-                color: 'rgba(255,255,255,0.4)',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              }}>{item}</a>
-            ))}
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <div style={{ display: 'flex', gap: '1.5rem' }}>
+              {['Privacidad', 'Términos'].map(item => (
+                <a key={item} href="#" style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.8125rem',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  textDecoration: 'none',
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+            
+            <div style={{ width: 1, height: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+            
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <a href="https://www.linkedin.com/company/redesignlab" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255, 255, 255, 0.5)' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+              </a>
+              <a href="https://x.com/redesignlabpe" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255, 255, 255, 0.5)' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+              </a>
+              <a href="https://instagram.com/redesignlab.pe" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255, 255, 255, 0.5)' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
 
-      <style>{`
-        .footer-link:hover { color: #FFFFFF !important; }
-        .footer-social:hover { color: #FFFFFF !important; }
-        .footer-legal:hover { color: rgba(255,255,255,0.7) !important; }
-      `}</style>
+      </div>
     </footer>
   )
 }

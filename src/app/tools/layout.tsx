@@ -30,7 +30,7 @@ import { getProgress } from '@/lib/progress'
 const STAGE_CONFIG = {
   1: { label: 'Pre-incubacion', color: '#FF6B4A' },
   2: { label: 'Incubacion', color: '#0D9488' },
-  3: { label: 'Aceleracion', color: '#2A222B' },
+  3: { label: 'Aceleracion', color: '#A8A29E' },
   4: { label: 'Escalamiento', color: '#0D9488' },
 } as const
 
@@ -67,10 +67,9 @@ function StageSidebarSection({
     nonTransversalTools.filter((t) => completedIds.has(t.id)).length +
     transversalInStage.filter((t) => completedIds.has(`${t.id}__stage${stageNum}`)).length
 
-  /* For stage 3 whose color is #2A222B (same as sidebar bg),
-     use a lighter shade for visibility on dark sidebar */
-  const labelColor = stageNum === 3 ? 'rgba(255,255,255,0.85)' : cfg.color
-  const dotColor = cfg.color === '#2A222B' ? 'rgba(255,255,255,0.5)' : cfg.color
+  /* For stage 3 we use a light gray (#A8A29E) that reads well on the dark sidebar bg */
+  const labelColor = cfg.color
+  const dotColor = cfg.color
 
   return (
     <div style={{ marginBottom: '0.25rem' }}>
@@ -166,7 +165,7 @@ function StageSidebarSection({
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color === '#2A222B' ? '#0D9488' : cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
                         size={13}
@@ -223,7 +222,7 @@ function StageSidebarSection({
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color === '#2A222B' ? '#0D9488' : cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
                         size={13}
@@ -351,7 +350,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#FAF8F5',
+          background: 'var(--color-bg-primary)',
         }}
       >
         <div
@@ -825,7 +824,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: '#FAF8F5',
+        background: 'var(--color-bg-primary)',
       }}
     >
       {/* Desktop sidebar */}

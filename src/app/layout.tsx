@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { DM_Serif_Display, DM_Sans } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
+import { StartupProvider } from '@/context/StartupContext'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import AuthModal from '@/components/AuthModal'
 import './globals.css'
 
 const dmSerif = DM_Serif_Display({
@@ -56,7 +60,14 @@ export default function RootLayout({
       className={`${dmSerif.variable} ${dmSans.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <StartupProvider>
+            <Navbar />
+            <AuthModal />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </StartupProvider>
+        </AuthProvider>
       </body>
     </html>
   )

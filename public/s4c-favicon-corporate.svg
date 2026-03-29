@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo Charcoal Corporativo -->
+  <rect width="512" height="512" rx="100" fill="#2A222B"/>
+  
+  <!-- Isotipo Centrado Geométricamente (Asegurado para no cortarse) -->
+  <g transform="translate(12, 0)">
+    <!-- Círculo Teal (Impacto Global) -->
+    <circle cx="220" cy="276" r="140" fill="#0D9488" />
+    
+    <!-- Triángulo Coral (Aceleración y Startups LATAM) -->
+    <!-- Perfectamente contenido en el viewBox para evitar recortes -->
+    <path d="M 180 156 L 420 156 L 420 396 Z" fill="#FF6B4A" />
+    
+    <!-- Línea de corte (para separación visual impecable) -->
+    <path d="M 180 156 L 420 156 L 420 396 Z" fill="none" stroke="#2A222B" stroke-width="20" stroke-linejoin="miter" />
+  </g>
+</svg>

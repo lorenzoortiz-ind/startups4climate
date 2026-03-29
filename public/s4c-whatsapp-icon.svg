@@ -1,0 +1,29 @@
+<svg width="1024" height="1024" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="s4c-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stopColor="#2A222B" />
+      <stop offset="1" stopColor="#1E181C" />
+    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&amp;display=swap');
+      .text {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        fill: white;
+        letter-spacing: 0.5px;
+      }
+    </style>
+  </defs>
+  <rect width="40" height="40" rx="10" fill="url(#s4c-bg)" />
+  <circle cx="32" cy="8" r="4" fill="#FF6B4A" opacity="0.8" />
+  <text
+    x="50%"
+    y="54%"
+    dominant-baseline="central"
+    text-anchor="middle"
+    class="text"
+  >
+    S4C
+  </text>
+</svg>

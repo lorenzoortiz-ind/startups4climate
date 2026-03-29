@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Save, User, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Save, User, CheckCircle2, Mail, Phone, Globe, Link2 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { STAGE_META } from '@/lib/tools-data'
 import { supabase } from '@/lib/supabase'
@@ -31,26 +31,9 @@ const VERTICAL_OPTIONS = [
 ]
 
 const LATAM_COUNTRIES = [
-  'Argentina',
-  'Bolivia',
-  'Brasil',
-  'Chile',
-  'Colombia',
-  'Costa Rica',
-  'Cuba',
-  'Ecuador',
-  'El Salvador',
-  'Guatemala',
-  'Honduras',
-  'México',
-  'Nicaragua',
-  'Panamá',
-  'Paraguay',
-  'Perú',
-  'Puerto Rico',
-  'República Dominicana',
-  'Uruguay',
-  'Venezuela',
+  'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
+  'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'México', 'Nicaragua',
+  'Panamá', 'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana', 'Uruguay', 'Venezuela',
 ]
 
 const STAGE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
@@ -60,43 +43,154 @@ const STAGE_LABELS: Record<string, { label: string; color: string; bg: string }>
   '4': { label: 'Escalamiento', color: STAGE_META[4].color, bg: STAGE_META[4].bg },
 }
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '0.75rem 1rem',
-  borderRadius: 10,
-  border: '1px solid var(--color-border, #e5e7eb)',
-  fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
-  color: 'var(--color-text-primary, #111827)',
-  background: 'var(--color-bg-card, #ffffff)',
-  outline: 'none',
-  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-  boxSizing: 'border-box' as const,
+/* Typeform-style input: border-bottom only */
+function TFInput({
+  label,
+  icon,
+  type = 'text',
+  value,
+  onChange,
+  placeholder,
+  readOnly = false,
+}: {
+  label: string
+  icon?: React.ReactNode
+  type?: string
+  value: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  readOnly?: boolean
+}) {
+  const [focused, setFocused] = useState(false)
+  return (
+    <div>
+      <label
+        style={{
+          display: 'block',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          color: 'var(--color-text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          marginBottom: '0.25rem',
+        }}
+      >
+        {label}
+      </label>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          gap: '0.625rem',
+          borderBottom: `2px solid ${focused && !readOnly ? 'var(--color-ink)' : 'var(--color-border)'}`,
+          transition: 'border-color 0.2s ease',
+          paddingBottom: '0.125rem',
+        }}
+      >
+        {icon && (
+          <span style={{ flexShrink: 0, paddingBottom: '0.75rem', opacity: focused ? 1 : 0.4, transition: 'opacity 0.2s', color: 'var(--color-text-secondary)' }}>
+            {icon}
+          </span>
+        )}
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={{
+            flex: 1,
+            padding: '0.375rem 0 0.75rem',
+            border: 'none',
+            background: 'transparent',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-heading-md)',
+            color: readOnly ? 'var(--color-text-muted)' : 'var(--color-ink)',
+            outline: 'none',
+            letterSpacing: '-0.01em',
+            cursor: readOnly ? 'not-allowed' : 'text',
+          }}
+        />
+      </div>
+    </div>
+  )
 }
 
-const readOnlyStyle: React.CSSProperties = {
-  ...inputStyle,
-  background: 'var(--color-bg-muted, #f3f4f6)',
-  color: 'var(--color-text-secondary, #6B7280)',
-  cursor: 'not-allowed',
-}
-
-const selectStyle: React.CSSProperties = {
-  ...inputStyle,
-  appearance: 'none' as const,
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'right 1rem center',
-  paddingRight: '2.5rem',
-}
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontFamily: 'var(--font-body)',
-  fontSize: '0.8125rem',
-  fontWeight: 600,
-  color: 'var(--color-text-primary, #111827)',
-  marginBottom: '0.375rem',
+function TFSelect({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  options: { value: string; label: string }[] | string[]
+  placeholder: string
+}) {
+  const [focused, setFocused] = useState(false)
+  const normalizedOptions = options.map((o) =>
+    typeof o === 'string' ? { value: o, label: o } : o
+  )
+  return (
+    <div>
+      <label
+        style={{
+          display: 'block',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          color: 'var(--color-text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          marginBottom: '0.25rem',
+        }}
+      >
+        {label}
+      </label>
+      <div
+        style={{
+          borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
+          transition: 'border-color 0.2s ease',
+          paddingBottom: '0.125rem',
+        }}
+      >
+        <select
+          value={value}
+          onChange={onChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={{
+            width: '100%',
+            padding: '0.375rem 2rem 0.75rem 0',
+            border: 'none',
+            background: 'transparent',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-heading-md)',
+            color: value ? 'var(--color-ink)' : 'var(--color-text-muted)',
+            outline: 'none',
+            letterSpacing: '-0.01em',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%235E5E5E' d='M2 4l5 6 5-6'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 0.25rem center',
+            cursor: 'pointer',
+          }}
+        >
+          <option value="">{placeholder}</option>
+          {normalizedOptions.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  )
 }
 
 export default function PerfilPage() {
@@ -123,7 +217,6 @@ export default function PerfilPage() {
       setStartupName(user.startup || '')
     }
 
-    // Try to load startup data from Supabase first, then fall back to localStorage
     async function loadStartupData() {
       if (!appUser) return
 
@@ -135,14 +228,12 @@ export default function PerfilPage() {
           .single()
 
         if (startup) {
-          // Populate fields from Supabase startups table (authoritative source)
           if (startup.name) setStartupName(startup.name)
           if (startup.description) setDescripcion(startup.description)
           if (startup.vertical) setVertical(startup.vertical)
           if (startup.country) setCountry(startup.country)
           if (startup.website) setWebsite(startup.website)
           if (startup.team_size) setTeamSize(String(startup.team_size))
-          // Load remaining fields from localStorage (not stored in startups table)
           if (typeof window !== 'undefined') {
             try {
               const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
@@ -151,17 +242,12 @@ export default function PerfilPage() {
               if (extra.phone) setPhone(extra.phone)
               if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
               if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
-            } catch {
-              // ignore
-            }
+            } catch { /* ignore */ }
           }
           return
         }
-      } catch {
-        // Supabase query failed — fall through to localStorage
-      }
+      } catch { /* Supabase query failed — fall through to localStorage */ }
 
-      // Fallback: load all fields from localStorage
       if (typeof window !== 'undefined') {
         try {
           const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
@@ -175,9 +261,7 @@ export default function PerfilPage() {
           if (extra.teamSize) setTeamSize(String(extra.teamSize))
           if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
           if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
-        } catch {
-          // ignore
-        }
+        } catch { /* ignore */ }
       }
     }
 
@@ -188,17 +272,11 @@ export default function PerfilPage() {
     if (!user) return
     setSaving(true)
 
-    // Update profiles table via auth context
-    const result = await updateProfile({
-      full_name: nombre,
-      startup_name: startupName,
-    })
+    await updateProfile({ full_name: nombre, startup_name: startupName })
 
-    // Save extra profile fields to localStorage
     const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize, radarNewsletter, oppsNewsletter }
     localStorage.setItem('s4c_profile_extra', JSON.stringify(extraData))
 
-    // Also try to update startups table in Supabase (best effort)
     if (appUser) {
       try {
         const { error: startupError } = await supabase.from('startups').upsert(
@@ -213,9 +291,7 @@ export default function PerfilPage() {
           },
           { onConflict: 'founder_id' }
         )
-        if (startupError) {
-          console.warn('Failed to upsert startups table:', startupError.message)
-        }
+        if (startupError) console.warn('Failed to upsert startups table:', startupError.message)
       } catch (err) {
         console.warn('Error upserting startups table:', err)
       }
@@ -230,399 +306,490 @@ export default function PerfilPage() {
 
   const stageNum = user.stage || '1'
   const stageInfo = STAGE_LABELS[stageNum] || STAGE_LABELS['1']
+  const initials = nombre?.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() || 'U'
 
   return (
-    <div style={{ padding: '2rem 1.5rem', maxWidth: 700, margin: '0 auto' }}>
-      {/* Back link */}
-      <Link
-        href="/tools"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.375rem',
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
-          color: 'var(--color-text-muted)',
-          textDecoration: 'none',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <ArrowLeft size={14} />
-        Volver al dashboard
-      </Link>
-
-      {/* Stage banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        style={{
-          background: stageInfo.bg,
-          border: `1px solid ${stageInfo.color}30`,
-          borderRadius: 14,
-          padding: '1rem 1.5rem',
-          marginBottom: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-        }}
-      >
-        <div
+    <div
+      style={{
+        minHeight: '100vh',
+        background: 'var(--color-bg-primary)',
+        padding: '2.5rem 1.75rem',
+      }}
+    >
+      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        {/* Back link */}
+        <Link
+          href="/tools"
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            background: `${stageInfo.color}18`,
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
+            gap: '0.375rem',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--color-text-secondary)',
+            textDecoration: 'none',
+            marginBottom: '2rem',
+            transition: 'color 0.2s',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-ink)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-secondary)' }}
         >
-          <User size={20} color={stageInfo.color} />
-        </div>
-        <div>
-          <div
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: stageInfo.color,
-            }}
-          >
-            Tu startup est&aacute; en la etapa de {stageInfo.label}
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.8125rem',
-              color: 'var(--color-text-secondary)',
-              marginTop: '0.125rem',
-            }}
-          >
-            {user.email}
-          </div>
-        </div>
-      </motion.div>
+          <ArrowLeft size={15} />
+          Volver al dashboard
+        </Link>
 
-      {/* Profile form */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.05 }}
-        style={{
-          background: 'var(--color-bg-card, #ffffff)',
-          borderRadius: 16,
-          border: '1px solid var(--color-border, #e5e7eb)',
-          padding: '2rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-        }}
-      >
-        <h1
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.5rem',
-            fontWeight: 400,
-            color: 'var(--color-text-primary)',
-            letterSpacing: '-0.02em',
-            marginBottom: '1.5rem',
-          }}
+        {/* Profile header */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+          style={{ marginBottom: '2.5rem' }}
         >
-          Tu perfil
-        </h1>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* Full name */}
-          <div>
-            <label style={labelStyle}>Nombre completo</label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
-
-          {/* Email (read-only) */}
-          <div>
-            <label style={labelStyle}>Email</label>
-            <input
-              type="email"
-              value={user.email}
-              readOnly
-              style={readOnlyStyle}
-            />
-          </div>
-
-          {/* Startup name */}
-          <div>
-            <label style={labelStyle}>Nombre de la startup</label>
-            <input
-              type="text"
-              value={startupName}
-              onChange={(e) => setStartupName(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label style={labelStyle}>Descripci&oacute;n</label>
-            <textarea
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              placeholder="Cu&eacute;ntanos brevemente sobre tu startup y lo que est&aacute;s construyendo..."
-              rows={4}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+            {/* Avatar */}
+            <div
               style={{
-                ...inputStyle,
-                resize: 'vertical' as const,
-                minHeight: 100,
+                width: 80,
+                height: 80,
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-ink)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                border: '3px solid var(--color-paper)',
+                boxShadow: 'var(--shadow-float)',
               }}
-            />
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  color: 'var(--color-paper)',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {initials}
+              </span>
+            </div>
+            <div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  color: stageInfo.color,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  marginBottom: '0.25rem',
+                }}
+              >
+                {stageInfo.label}
+              </div>
+              <h1
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.05,
+                  marginBottom: '0.25rem',
+                }}
+              >
+                {nombre || 'Tu nombre'}
+              </h1>
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body-lg)',
+                  color: 'var(--color-text-secondary)',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {startupName || 'Tu startup'} · {user.email}
+              </p>
+            </div>
           </div>
+        </motion.div>
 
-          {/* Two-column grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(250px, 100%), 1fr))',
-              gap: '1.25rem',
-            }}
-          >
-            {/* Vertical */}
-            <div>
-              <label style={labelStyle}>Vertical</label>
-              <select
-                value={vertical}
-                onChange={(e) => setVertical(e.target.value)}
-                style={selectStyle}
-              >
-                <option value="">Selecciona tu vertical</option>
-                {VERTICAL_OPTIONS.map((v) => (
-                  <option key={v.value} value={v.value}>
-                    {v.label}
-                  </option>
-                ))}
-              </select>
+        {/* Profile form card */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.07 }}
+          style={{
+            background: 'var(--color-paper)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-border)',
+            padding: '2.5rem',
+            boxShadow: 'var(--shadow-float)',
+          }}
+        >
+          {/* Section: Personal */}
+          <div style={{ marginBottom: '2.5rem' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                marginBottom: '1.75rem',
+                paddingBottom: '0.75rem',
+                borderBottom: '1px solid var(--color-border)',
+              }}
+            >
+              Datos personales
             </div>
 
-            {/* Country */}
-            <div>
-              <label style={labelStyle}>Pa&iacute;s</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                style={selectStyle}
-              >
-                <option value="">Selecciona tu pa&iacute;s</option>
-                {LATAM_COUNTRIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+              <TFInput
+                label="Nombre completo"
+                icon={<User size={16} />}
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Tu nombre completo"
+              />
 
-            {/* Phone */}
-            <div>
-              <label style={labelStyle}>Tel&eacute;fono</label>
-              <input
+              <TFInput
+                label="Email"
+                icon={<Mail size={16} />}
+                type="email"
+                value={user.email}
+                readOnly
+              />
+
+              <TFSelect
+                label="Rol en la startup"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                options={ROLE_OPTIONS}
+                placeholder="Selecciona tu rol"
+              />
+
+              <TFInput
+                label="Teléfono"
+                icon={<Phone size={16} />}
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+52 55 1234 5678"
-                style={inputStyle}
+              />
+
+              <TFInput
+                label="LinkedIn URL"
+                icon={<Link2 size={16} />}
+                type="url"
+                value={linkedin}
+                onChange={(e) => setLinkedin(e.target.value)}
+                placeholder="https://linkedin.com/in/tu-perfil"
               />
             </div>
-
-            {/* Role */}
-            <div>
-              <label style={labelStyle}>Rol en la startup</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                style={selectStyle}
-              >
-                <option value="">Selecciona tu rol</option>
-                {ROLE_OPTIONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
-          {/* LinkedIn URL */}
-          <div>
-            <label style={labelStyle}>LinkedIn URL</label>
-            <input
-              type="url"
-              value={linkedin}
-              onChange={(e) => setLinkedin(e.target.value)}
-              placeholder="https://linkedin.com/in/tu-perfil"
-              style={inputStyle}
-            />
-          </div>
-
-          {/* Website */}
-          <div>
-            <label style={labelStyle}>Sitio web</label>
-            <input
-              type="url"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              placeholder="https://tustartup.com"
-              style={inputStyle}
-            />
-          </div>
-
-          {/* Team size */}
-          <div>
-            <label style={labelStyle}>Tama&ntilde;o del equipo</label>
-            <input
-              type="number"
-              min={1}
-              value={teamSize}
-              onChange={(e) => setTeamSize(e.target.value)}
-              placeholder="N&uacute;mero de personas en el equipo"
-              style={inputStyle}
-            />
-          </div>
-
-          {/* Newsletter subscriptions */}
-          <div style={{
-            padding: '1rem',
-            borderRadius: 12,
-            background: 'var(--color-bg-muted, #f9fafb)',
-            border: '1px solid var(--color-border, #e5e7eb)',
-          }}>
-            <label style={{ ...labelStyle, marginBottom: '0.75rem' }}>Suscripciones</label>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-              }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>
-                    Newsletter RADAR
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                    Recibe novedades del ecosistema de innovaci&oacute;n
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={radarNewsletter}
-                  onChange={(e) => setRadarNewsletter(e.target.checked)}
-                  style={{ width: 18, height: 18, accentColor: '#0D9488', cursor: 'pointer' }}
-                />
-              </label>
-
-              <div style={{ height: 1, background: 'var(--color-border, #e5e7eb)' }} />
-
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-              }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>
-                    Newsletter Oportunidades
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                    Recibe convocatorias y fondos para tu startup
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={oppsNewsletter}
-                  onChange={(e) => setOppsNewsletter(e.target.checked)}
-                  style={{ width: 18, height: 18, accentColor: '#0D9488', cursor: 'pointer' }}
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* Stage (read-only) */}
-          <div>
-            <label style={labelStyle}>Etapa (del diagn&oacute;stico)</label>
+          {/* Section: Startup */}
+          <div style={{ marginBottom: '2.5rem' }}>
             <div
               style={{
-                ...readOnlyStyle,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                marginBottom: '1.75rem',
+                paddingBottom: '0.75rem',
+                borderBottom: '1px solid var(--color-border)',
               }}
             >
+              Tu startup
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+              <TFInput
+                label="Nombre de la startup"
+                value={startupName}
+                onChange={(e) => setStartupName(e.target.value)}
+                placeholder="Nombre de tu startup"
+              />
+
+              {/* Description */}
+              <div>
+                <label
+                  style={{
+                    display: 'block',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: 'var(--color-text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Descripción
+                </label>
+                <div style={{ borderBottom: '2px solid var(--color-border)', paddingBottom: '0.125rem' }}>
+                  <textarea
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    placeholder="Cuéntanos brevemente sobre tu startup y lo que estás construyendo..."
+                    rows={3}
+                    style={{
+                      width: '100%',
+                      padding: '0.375rem 0 0.75rem',
+                      border: 'none',
+                      background: 'transparent',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-body-lg)',
+                      color: 'var(--color-ink)',
+                      outline: 'none',
+                      resize: 'vertical' as const,
+                      letterSpacing: '-0.01em',
+                      minHeight: 80,
+                    }}
+                  />
+                </div>
+              </div>
+
               <div
                 style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: stageInfo.color,
-                  flexShrink: 0,
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(250px, 100%), 1fr))',
+                  gap: '1.75rem',
                 }}
+              >
+                <TFSelect
+                  label="Vertical"
+                  value={vertical}
+                  onChange={(e) => setVertical(e.target.value)}
+                  options={VERTICAL_OPTIONS}
+                  placeholder="Selecciona tu vertical"
+                />
+
+                <TFSelect
+                  label="País"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  options={LATAM_COUNTRIES}
+                  placeholder="Selecciona tu país"
+                />
+              </div>
+
+              <TFInput
+                label="Sitio web"
+                icon={<Globe size={16} />}
+                type="url"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                placeholder="https://tustartup.com"
               />
-              {stageInfo.label}
-              {user.diagnosticScore != null && (
-                <span style={{ color: 'var(--color-text-muted)', marginLeft: 'auto', fontSize: '0.8125rem' }}>
-                  Puntaje: {user.diagnosticScore}/100
-                </span>
-              )}
+
+              <TFInput
+                label="Tamaño del equipo"
+                value={teamSize}
+                onChange={(e) => setTeamSize(e.target.value)}
+                type="number"
+                placeholder="Número de personas"
+              />
+
+              {/* Stage read-only */}
+              <div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: 'var(--color-text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  Etapa (del diagnóstico)
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: 'var(--radius-full)',
+                    background: stageInfo.bg,
+                    border: `1px solid ${stageInfo.color}30`,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 'var(--radius-full)',
+                      background: stageInfo.color,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      color: stageInfo.color,
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {stageInfo.label}
+                  </span>
+                  {user.diagnosticScore != null && (
+                    <span style={{ color: 'var(--color-text-muted)', fontSize: '0.8125rem' }}>
+                      · {user.diagnosticScore}/100
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Suscripciones */}
+          <div style={{ marginBottom: '2.5rem' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                marginBottom: '1.5rem',
+                paddingBottom: '0.75rem',
+                borderBottom: '1px solid var(--color-border)',
+              }}
+            >
+              Suscripciones
+            </div>
+
+            <div
+              style={{
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-border)',
+                overflow: 'hidden',
+              }}
+            >
+              {[
+                {
+                  key: 'radar',
+                  label: 'Newsletter RADAR',
+                  desc: 'Recibe novedades del ecosistema de innovación',
+                  checked: radarNewsletter,
+                  toggle: () => setRadarNewsletter((v) => !v),
+                },
+                {
+                  key: 'opps',
+                  label: 'Newsletter Oportunidades',
+                  desc: 'Recibe convocatorias y fondos para tu startup',
+                  checked: oppsNewsletter,
+                  toggle: () => setOppsNewsletter((v) => !v),
+                },
+              ].map((item, i) => (
+                <label
+                  key={item.key}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '1.125rem 1.25rem',
+                    cursor: 'pointer',
+                    borderTop: i > 0 ? '1px solid var(--color-border)' : 'none',
+                    gap: '1rem',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.9375rem',
+                        fontWeight: 600,
+                        color: 'var(--color-ink)',
+                        marginBottom: '0.125rem',
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {item.label}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        color: 'var(--color-text-secondary)',
+                      }}
+                    >
+                      {item.desc}
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={item.toggle}
+                    style={{ width: 20, height: 20, accentColor: 'var(--color-accent-secondary)', cursor: 'pointer', flexShrink: 0 }}
+                  />
+                </label>
+              ))}
             </div>
           </div>
 
           {/* Save button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button
               onClick={handleSave}
               disabled={saving}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.75rem 1.75rem',
-                borderRadius: 10,
-                background: saving ? '#6B7280' : '#0D9488',
-                color: 'white',
+                gap: '0.625rem',
+                padding: '0.875rem 2rem',
+                borderRadius: 'var(--radius-full)',
+                background: saving ? 'var(--color-text-secondary)' : 'var(--color-ink)',
+                color: 'var(--color-paper)',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.875rem',
-                fontWeight: 600,
+                fontSize: 'var(--text-body-lg)',
+                fontWeight: 700,
                 border: 'none',
                 cursor: saving ? 'wait' : 'pointer',
-                boxShadow: '0 2px 10px rgba(13,148,136,0.25)',
-                transition: 'all 0.2s',
+                letterSpacing: '-0.01em',
+                transition: 'background 0.2s ease',
               }}
+              onMouseEnter={(e) => { if (!saving) e.currentTarget.style.background = 'var(--color-accent-primary)' }}
+              onMouseLeave={(e) => { if (!saving) e.currentTarget.style.background = 'var(--color-ink)' }}
             >
-              <Save size={16} />
+              <Save size={17} />
               {saving ? 'Guardando...' : 'Guardar cambios'}
             </button>
             {saved && (
               <motion.div
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.375rem',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
-                  color: '#0D9488',
-                  fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  color: 'var(--color-accent-secondary)',
+                  fontWeight: 600,
+                  letterSpacing: '-0.01em',
                 }}
               >
-                <CheckCircle2 size={15} />
+                <CheckCircle2 size={16} />
                 Guardado
               </motion.div>
             )}
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   )
 }

@@ -2,17 +2,57 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import AnimatedCounter from './AnimatedCounter'
 import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation'
+
+function AnimatedCounter({ value, label }: { value: string; label: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+      <span
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+          fontWeight: 700,
+          letterSpacing: '-0.04em',
+          lineHeight: 1,
+          color: 'var(--color-ink)',
+        }}
+      >
+        {value}
+      </span>
+      <span
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          color: 'var(--color-text-secondary)',
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  )
+}
 
 export default function Hero() {
   const { user, openAuthModal } = useAuth()
+  const router = useRouter()
 
-  const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 30 },
+  const springReveal = {
+    initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
-  })
+    transition: { type: 'spring', damping: 20, stiffness: 100 } as any,
+  }
+
+  const containerVars = {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  }
 
   return (
     <section
@@ -21,198 +61,169 @@ export default function Hero() {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        background: '#FFFFFF',
+        justifyContent: 'center',
+        background: 'var(--color-bg-primary)',
+        paddingTop: '80px',
       }}
     >
       <div
         style={{
-          maxWidth: 960,
+          maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '160px clamp(1.5rem, 4vw, 5rem) 100px',
+          padding: '0 var(--container-px)',
           width: '100%',
-          textAlign: 'center',
         }}
       >
-        {/* Badge */}
-        <motion.div {...fadeUp(0)}>
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '0.375rem 1rem',
-              borderRadius: 8,
-              background: '#FAF8F5',
-              border: '1px solid #E8E4DF',
-              fontFamily: 'var(--font-body)',
-              fontSize: '12px',
-              fontWeight: 600,
-              color: '#93908C',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              marginBottom: '2rem',
-            }}
-          >
-            Ecosistema all-in-one para startups de impacto
-          </span>
-        </motion.div>
-
-        {/* Heading */}
-        <motion.h1
-          {...fadeUp(0.1)}
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(2.5rem, 5.5vw, 4.5rem)',
-            fontWeight: 400,
-            lineHeight: 1.08,
-            letterSpacing: '-0.02em',
-            color: '#2A222B',
-            marginBottom: '1.5rem',
-            maxWidth: 800,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          Tu startup de impacto merece la misma infraestructura que las de Silicon Valley
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          {...fadeUp(0.2)}
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
-            fontWeight: 400,
-            lineHeight: 1.7,
-            color: '#5E5A60',
-            maxWidth: 580,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginBottom: '2.5rem',
-          }}
-        >
-          Herramientas interactivas, mentores AI personalizados, oportunidades
-          personalizadas y mas. Todo en un solo lugar,
-          disenado para founders en Latinoamerica.
-        </motion.p>
-
-        {/* CTAs */}
         <motion.div
-          {...fadeUp(0.3)}
+          variants={containerVars}
+          initial="initial"
+          animate="animate"
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '0.875rem',
-            alignItems: 'center',
-            justifyContent: 'center',
+            maxWidth: 1000,
+            textAlign: 'left',
           }}
         >
-          <button
-            onClick={() => user ? (window.location.href = '/tools') : openAuthModal('register')}
-            className="hero-cta-primary"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '14px 28px',
-              borderRadius: 8,
-              backgroundColor: '#2A222B',
-              color: '#FFFFFF',
-              fontFamily: 'var(--font-body)',
-              fontSize: '1rem',
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-          >
-            {user ? 'Ir a mi plataforma' : 'Acceder gratis'} <ArrowRight size={17} />
-          </button>
-          <a
-            href="/organizaciones"
-            className="hero-cta-secondary"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '14px 28px',
-              borderRadius: 8,
-              backgroundColor: 'transparent',
-              color: '#2A222B',
-              fontFamily: 'var(--font-body)',
-              fontSize: '1rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              border: '1.5px solid #2A222B',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s ease',
-            }}
-          >
-            Para organizaciones <ArrowRight size={17} />
-          </a>
-        </motion.div>
+          {/* Badge */}
+          <motion.div variants={springReveal} style={{ marginBottom: '1.5rem' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.5rem 1.25rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-paper)',
+                border: '1px solid var(--color-border)',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              <span style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: 'var(--color-accent-primary)',
+                display: 'inline-block',
+                flexShrink: 0,
+              }} />
+              Ecosistema all-in-one para startups de impacto
+            </span>
+          </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          className="hero-stats"
-          style={{
-            display: 'flex',
-            gap: '4rem',
-            marginTop: '5rem',
-            justifyContent: 'center',
-          }}
-        >
-          {[
-            { value: 30, prefix: '+', suffix: '', label: 'Herramientas' },
-            { value: 0, prefix: '', suffix: '', label: 'AI personalizado', customDisplay: 'AI' },
-            { value: 100, prefix: '', suffix: '%', label: 'Gratuito para founders' },
-          ].map((stat) => (
-            <div key={stat.label} style={{ textAlign: 'center' }}>
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '2.25rem',
-                  fontWeight: 400,
-                  color: '#2A222B',
-                  lineHeight: 1.2,
-                }}
-              >
-                {stat.customDisplay ? (
-                  <span>{stat.customDisplay}</span>
-                ) : (
-                  <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} duration={1.5} />
-                )}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.875rem',
-                  color: '#93908C',
-                  marginTop: '0.375rem',
-                  fontWeight: 400,
-                }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
+          {/* Colossal Heading */}
+          <motion.h1
+            variants={springReveal}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'var(--text-display-xl)',
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: '-0.04em',
+              color: 'var(--color-ink)',
+              margin: '0 0 2rem 0',
+            }}
+          >
+            Tu startup de impacto merece la misma infraestructura{' '}
+            <span style={{ color: 'var(--color-accent-primary)' }}>que las de Silicon Valley</span>
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            variants={springReveal}
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-heading-lg)',
+              fontWeight: 400,
+              lineHeight: 1.4,
+              color: 'var(--color-text-secondary)',
+              maxWidth: 750,
+              marginBottom: '3rem',
+            }}
+          >
+            Herramientas interactivas, mentores AI por vertical, oportunidades personalizadas y radar del ecosistema. Todo en un solo lugar, diseñado para founders en Latinoamérica.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            variants={springReveal}
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              alignItems: 'center',
+              marginBottom: '4rem',
+            }}
+          >
+            <button
+              onClick={() => user ? router.push('/tools') : openAuthModal('register')}
+              className="hero-primary-btn"
+            >
+              {user ? 'Ir a mi plataforma' : 'Acceder gratis'} <ArrowRight size={20} />
+            </button>
+
+            <a
+              href="/organizaciones"
+              className="hero-secondary-link"
+            >
+              Para organizaciones
+            </a>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            variants={springReveal}
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 'clamp(2rem, 5vw, 4rem)',
+              paddingTop: '2rem',
+              borderTop: '1px solid var(--color-border)',
+            }}
+          >
+            <AnimatedCounter value="+30" label="Herramientas" />
+            <AnimatedCounter value="AI" label="Personalizado" />
+            <AnimatedCounter value="100%" label="Gratuito para founders" />
+          </motion.div>
         </motion.div>
       </div>
 
       <style>{`
-        .hero-cta-primary:hover {
-          transform: scale(1.02) !important;
-          box-shadow: 0 4px 12px rgba(42,34,43,0.15) !important;
+        .hero-primary-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 1.25rem 2.5rem;
+          border-radius: var(--radius-xl);
+          background-color: var(--color-ink);
+          color: var(--color-paper);
+          font-family: var(--font-body);
+          font-size: var(--text-body-lg);
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.2s ease, transform 0.2s var(--ease-spring);
         }
-        .hero-cta-secondary:hover {
-          background-color: rgba(42,34,43,0.04) !important;
+        .hero-primary-btn:hover {
+          background-color: var(--color-accent-primary);
+          transform: translateY(-2px);
         }
-        @media (max-width: 640px) {
-          .hero-stats {
-            flex-wrap: wrap !important;
-            gap: 2rem !important;
-          }
+        .hero-secondary-link {
+          display: inline-flex;
+          align-items: center;
+          padding: 1.25rem 1.5rem;
+          color: var(--color-ink);
+          font-family: var(--font-body);
+          font-size: var(--text-body-lg);
+          font-weight: 600;
+          text-decoration: underline;
+          text-underline-offset: 4px;
+          transition: color 0.2s ease;
+        }
+        .hero-secondary-link:hover {
+          color: var(--color-accent-primary);
         }
       `}</style>
     </section>

@@ -128,27 +128,24 @@ export function StartupProvider({ children }: { children: ReactNode }) {
 
   const updateStartup = useCallback(
     async (data: Partial<StartupProfile>) => {
-      if (!startup) return
-
-      // Optimistically update local state
-      const updated = { ...startup, ...data }
-      setStartup(updated)
-      cacheStartup(updated)
-
-      // Sync to Supabase in background
-      try {
-        // Remove id from the update payload — it's the primary key
-        const { id: _id, ...updatePayload } = data
-        await supabase
+      setStartup(prev => {
+        if (!prev) return prev
+        const updated = { ...prev, ...data }
+        cacheStartup(updated)
+        
+        // Sync to Supabase in background
+        supabase
           .from('startups')
-          .update(updatePayload)
-          .eq('id', startup.id)
-      } catch {
-        // Silently fail — local state is already updated
-        // Next refresh will reconcile with the server
-      }
+          .update(data)
+          .eq('id', prev.id)
+          .then(({ error }) => {
+            if (error) console.error('Error syncing startup:', error)
+          })
+
+        return updated
+      })
     },
-    [startup]
+    []
   )
 
   const refreshStartup = useCallback(async () => {

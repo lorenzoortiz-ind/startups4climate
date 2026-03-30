@@ -19,6 +19,7 @@ import {
   BookOpen,
   User,
   Search,
+  Building2,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -760,6 +761,31 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Perfil */}
+        <Link
+          href="/admin"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 8,
+            background: 'transparent',
+            borderLeft: '3px solid transparent',
+            textDecoration: 'none',
+            color: SB.text,
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            fontWeight: 400,
+            transition: 'all 0.15s',
+            marginBottom: '0.25rem',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = SB.hoverBg }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+        >
+          <Building2 size={13} />
+          Vista organización
+        </Link>
+
         <Link
           href="/tools/perfil"
           style={{

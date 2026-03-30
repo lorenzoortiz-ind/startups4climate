@@ -71,7 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
+  if (!appUser) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -79,51 +79,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         alignItems: 'center',
         justifyContent: 'center',
         background: 'var(--color-bg-primary)',
-        padding: '2rem',
       }}>
         <div style={{
-          maxWidth: 440,
-          textAlign: 'center',
-          padding: '3rem 2rem',
-          borderRadius: 'var(--radius-lg)',
-          background: 'var(--color-bg-card)',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-card)',
-        }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: '50%',
-            background: 'rgba(220,38,38,0.08)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1.25rem',
-          }}>
-            <Settings size={24} color="#DC2626" />
-          </div>
-          <h2 style={{
-            fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.25rem', color: 'var(--color-text-primary)',
-            marginBottom: '0.5rem',
-          }}>
-            Acceso restringido
-          </h2>
-          <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-            color: 'var(--color-text-secondary)', lineHeight: 1.6,
-            marginBottom: '1.5rem',
-          }}>
-            Necesitas permisos de administrador para acceder al panel de gestión.
-            Contacta al administrador de tu organización.
-          </p>
-          <Link href="/tools" style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',
-            background: 'var(--color-accent-primary)', color: '#fff',
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-            textDecoration: 'none', transition: 'background 0.15s',
-          }}>
-            <ChevronLeft size={16} />
-            Volver a la plataforma
-          </Link>
-        </div>
+          width: 40, height: 40, borderRadius: '50%',
+          border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
+          animation: 'spin 0.8s linear infinite',
+        }} />
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
       </div>
     )
   }

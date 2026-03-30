@@ -51,17 +51,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Admin routes: /admin/* requires authentication (any role can access)
-  if (pathname.startsWith('/admin') && !user) {
-    const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/'
-    redirectUrl.searchParams.set('auth', 'login')
-    return NextResponse.redirect(redirectUrl)
-  }
-
   return supabaseResponse
 }
 
 export const config = {
-  matcher: ['/tools/:path*', '/admin/:path*'],
+  matcher: ['/tools/:path*'],
 }

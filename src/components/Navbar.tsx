@@ -121,18 +121,16 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: '1rem' }}>
-              {user && (user as User & { role?: string }).role === 'admin' && (
-                <Link
-                  href="/admin"
-                  className="nav-hover"
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '0.5rem',
-                    fontSize: '1rem', fontWeight: 500, color: 'var(--color-ink)', opacity: 0.8, textDecoration: 'none'
-                  }}
-                >
-                  <ShieldCheck size={18} /> Admin
-                </Link>
-              )}
+              <Link
+                href="/admin"
+                className="nav-hover"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  fontSize: '1rem', fontWeight: 500, color: 'var(--color-ink)', opacity: 0.8, textDecoration: 'none'
+                }}
+              >
+                <LayoutDashboard size={18} /> Organizaciones
+              </Link>
               
               {user ? (
                 <button

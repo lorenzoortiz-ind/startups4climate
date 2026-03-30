@@ -71,23 +71,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  if (!appUser) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--color-bg-primary)',
-      }}>
-        <div style={{
-          width: 40, height: 40, borderRadius: '50%',
-          border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
-          animation: 'spin 0.8s linear infinite',
-        }} />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
-      </div>
-    )
+  // Demo mode: create a fallback user if not logged in
+  const demoUser = appUser || {
+    id: 'demo',
+    email: 'demo@startups4climate.com',
+    full_name: 'Demo Admin',
+    role: 'admin_org' as const,
+    startup_name: 'Mi Organización',
   }
 
   const isActive = (href: string) => {
@@ -189,13 +179,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
             fontWeight: 600, color: '#F1F5F9', marginBottom: '0.125rem',
           }}>
-            {appUser.full_name}
+            {demoUser.full_name}
           </div>
           <div style={{
             fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
             color: 'var(--color-admin-sidebar-text)', opacity: 0.7,
           }}>
-            {appUser.email}
+            {demoUser.email}
           </div>
         </div>
 
@@ -335,7 +325,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             fontFamily: 'var(--font-heading)', fontWeight: 600,
             fontSize: '0.9375rem', color: 'var(--color-text-primary)',
           }}>
-            {appUser.startup_name || 'Mi Organización'}
+            {demoUser.startup_name || 'Mi Organización'}
           </div>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '1rem',
@@ -344,7 +334,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
               color: 'var(--color-text-secondary)',
             }}>
-              {appUser.full_name}
+              {demoUser.full_name}
             </span>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
@@ -353,7 +343,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700,
               color: 'var(--color-accent-primary)',
             }}>
-              {appUser.full_name.charAt(0).toUpperCase()}
+              {demoUser.full_name.charAt(0).toUpperCase()}
             </div>
           </div>
         </div>

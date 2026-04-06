@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, LayoutDashboard, ShieldCheck, ArrowRight } from 'lucide-react'
+import { Menu, X, ArrowRight } from 'lucide-react'
 import { useAuth, type User } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -13,7 +13,6 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
   { label: 'Diagnóstico', href: '/#diagnostico' },
   { label: 'Quiénes somos', href: '/#about' },
   { label: 'Workbook', href: '/workbook', isPage: true },
-  { label: 'Organizaciones', href: '/organizaciones', isPage: true },
 ]
 
 export default function Navbar() {
@@ -121,17 +120,6 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: '1rem' }}>
-              <Link
-                href="/admin"
-                className="nav-hover"
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.5rem',
-                  fontSize: '1rem', fontWeight: 500, color: 'var(--color-ink)', opacity: 0.8, textDecoration: 'none'
-                }}
-              >
-                <LayoutDashboard size={18} /> Organizaciones
-              </Link>
-              
               {user ? (
                 <button
                   onClick={() => { window.location.href = '/tools' }}

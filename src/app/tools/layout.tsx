@@ -20,30 +20,34 @@ import {
   User,
   Search,
   Building2,
+  Users,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
-import DarkModeToggle from '@/components/tools/DarkModeToggle'
 import MentorWidget from '@/components/ai/MentorWidget'
 import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-data'
 import { getProgress } from '@/lib/progress'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { supabase } from '@/lib/supabase'
 
 const STAGE_CONFIG = {
-  1: { label: 'Pre-incubacion', color: '#FF6B4A' },
-  2: { label: 'Incubacion', color: '#0D9488' },
-  3: { label: 'Aceleracion', color: '#D97706' },
+  1: { label: 'Pre-incubación', color: '#FF6B4A' },
+  2: { label: 'Incubación', color: '#0D9488' },
+  3: { label: 'Aceleración', color: '#D97706' },
   4: { label: 'Escalamiento', color: '#3B82F6' },
 } as const
 
-/* ─── Sidebar colors (dark bg) ─── */
+/* ─── Sidebar palette ─── */
 const SB = {
-  bg: '#2A222B',
-  text: 'rgba(255,255,255,0.65)',
+  bg: 'var(--color-admin-sidebar-bg)',
+  text: '#94A3B8',
   textActive: '#FFFFFF',
-  textMuted: 'rgba(255,255,255,0.4)',
-  divider: 'rgba(255,255,255,0.08)',
+  textHover: '#F1F5F9',
+  textMuted: 'rgba(255,255,255,0.35)',
+  divider: 'rgba(255,255,255,0.06)',
   hoverBg: 'rgba(255,255,255,0.06)',
-  inputBg: 'rgba(255,255,255,0.06)',
+  inputBg: 'rgba(255,255,255,0.05)',
+  cardBg: 'rgba(255,255,255,0.03)',
 }
 
 function StageSidebarSection({
@@ -68,12 +72,8 @@ function StageSidebarSection({
     nonTransversalTools.filter((t) => completedIds.has(t.id)).length +
     transversalInStage.filter((t) => completedIds.has(`${t.id}__stage${stageNum}`)).length
 
-  /* For stage 3 we use a light gray (#A8A29E) that reads well on the dark sidebar bg */
-  const labelColor = cfg.color
-  const dotColor = cfg.color
-
   return (
-    <div style={{ marginBottom: '0.25rem' }}>
+    <div style={{ marginBottom: '0.125rem' }}>
       <button
         onClick={() => setOpen((o) => !o)}
         style={{
@@ -81,21 +81,23 @@ function StageSidebarSection({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0.5rem 0.75rem',
+          padding: '0.4375rem 0.75rem',
           borderRadius: 8,
-          background: 'transparent',
+          background: open ? SB.cardBg : 'transparent',
           border: 'none',
           cursor: 'pointer',
-          marginBottom: '0.25rem',
+          transition: 'background 0.15s',
         }}
+        onMouseEnter={(e) => { if (!open) e.currentTarget.style.background = SB.hoverBg }}
+        onMouseLeave={(e) => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <div
             style={{
-              width: 6,
-              height: 6,
+              width: 5,
+              height: 5,
               borderRadius: '50%',
-              background: dotColor,
+              background: cfg.color,
               flexShrink: 0,
             }}
           />
@@ -103,10 +105,10 @@ function StageSidebarSection({
             style={{
               fontFamily: 'var(--font-body)',
               fontSize: '0.6875rem',
-              fontWeight: 700,
-              color: labelColor,
+              fontWeight: 600,
+              color: cfg.color,
               textTransform: 'uppercase',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.06em',
             }}
           >
             {cfg.label}
@@ -116,16 +118,17 @@ function StageSidebarSection({
           <span
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: '0.625rem',
+              fontSize: '0.5625rem',
               color: SB.textMuted,
+              fontWeight: 500,
             }}
           >
             {completedCount}/{totalToolCount}
           </span>
           {open ? (
-            <ChevronDown size={12} color={SB.textMuted} />
+            <ChevronDown size={11} color={SB.textMuted} />
           ) : (
-            <ChevronRight size={12} color={SB.textMuted} />
+            <ChevronRight size={11} color={SB.textMuted} />
           )}
         </div>
       </button>
@@ -136,10 +139,10 @@ function StageSidebarSection({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: 0.2 }}
             style={{ overflow: 'hidden' }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2, paddingLeft: '0.375rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1, paddingLeft: '0.25rem', paddingTop: '0.125rem' }}>
               {nonTransversalTools.map((tool) => {
                 const active = currentPath === `/tools/${tool.id}`
                 const done = completedIds.has(tool.id)
@@ -151,10 +154,10 @@ function StageSidebarSection({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      padding: '0.4375rem 0.625rem',
-                      borderRadius: 8,
-                      background: 'transparent',
-                      borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
+                      padding: '0.375rem 0.625rem',
+                      borderRadius: 6,
+                      background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
+                      borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
@@ -166,10 +169,10 @@ function StageSidebarSection({
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={12} color={cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
-                        size={13}
+                        size={12}
                         color={active ? '#FF6B4A' : SB.textMuted}
                         style={{ flexShrink: 0 }}
                       />
@@ -178,7 +181,7 @@ function StageSidebarSection({
                       title={tool.shortName}
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.8125rem',
+                        fontSize: '0.6875rem',
                         fontWeight: active ? 600 : 400,
                         color: active ? SB.textActive : SB.text,
                         lineHeight: 1.3,
@@ -208,10 +211,10 @@ function StageSidebarSection({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      padding: '0.4375rem 0.625rem',
-                      borderRadius: 8,
-                      background: 'transparent',
-                      borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
+                      padding: '0.375rem 0.625rem',
+                      borderRadius: 6,
+                      background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
+                      borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
@@ -223,10 +226,10 @@ function StageSidebarSection({
                     }}
                   >
                     {done ? (
-                      <CheckCircle2 size={13} color={cfg.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={12} color={cfg.color} style={{ flexShrink: 0 }} />
                     ) : (
                       <Circle
-                        size={13}
+                        size={12}
                         color={active ? '#FF6B4A' : SB.textMuted}
                         style={{ flexShrink: 0 }}
                       />
@@ -235,7 +238,7 @@ function StageSidebarSection({
                       title={tool.shortName}
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.8125rem',
+                        fontSize: '0.6875rem',
                         fontWeight: active ? 600 : 400,
                         color: active ? SB.textActive : SB.text,
                         lineHeight: 1.3,
@@ -252,19 +255,18 @@ function StageSidebarSection({
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        padding: '1px 5px',
-                        borderRadius: 8,
-                        background: 'rgba(255,255,255,0.08)',
+                        padding: '0px 5px',
+                        borderRadius: 4,
+                        background: 'rgba(255,255,255,0.06)',
                         color: SB.textMuted,
                         fontFamily: 'var(--font-body)',
                         fontSize: '0.5rem',
-                        fontWeight: 600,
+                        fontWeight: 500,
                         lineHeight: 1.6,
                         flexShrink: 0,
-                        letterSpacing: '0.02em',
                       }}
                     >
-                      Transversal
+                      T
                     </span>
                   </Link>
                 )
@@ -278,7 +280,7 @@ function StageSidebarSection({
 }
 
 function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
-  const { user, loading, logout } = useAuth()
+  const { user, appUser, loading, logout } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -288,6 +290,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
   const [profileIncomplete, setProfileIncomplete] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [orgName, setOrgName] = useState<string | null>(null)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -326,15 +329,19 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // Load org name if founder belongs to one
   useEffect(() => {
-    const saved = localStorage.getItem('s4c_dark_mode')
-    if (saved === 'true') {
-      document.documentElement.setAttribute('data-theme', 'dark')
+    if (appUser?.org_id) {
+      supabase
+        .from('organizations')
+        .select('name')
+        .eq('id', appUser.org_id)
+        .single()
+        .then(({ data }) => {
+          if (data?.name) setOrgName(data.name)
+        })
     }
-    return () => {
-      document.documentElement.removeAttribute('data-theme')
-    }
-  }, [])
+  }, [appUser?.org_id])
 
   useEffect(() => {
     if (user) {
@@ -356,10 +363,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       >
         <div
           style={{
-            width: 40,
-            height: 40,
+            width: 36,
+            height: 36,
             borderRadius: '50%',
-            border: '3px solid #E8E4DF',
+            border: '2px solid #E8E4DF',
             borderTopColor: '#0D9488',
             animation: 'spin 0.8s linear infinite',
           }}
@@ -380,7 +387,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        padding: '1.25rem 0.875rem',
+        padding: '1.25rem 0.75rem',
         overflowY: 'auto',
       }}
     >
@@ -392,18 +399,18 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           alignItems: 'center',
           gap: '0.5rem',
           textDecoration: 'none',
-          marginBottom: '1.5rem',
-          padding: '0 0.375rem',
+          marginBottom: '1.25rem',
+          padding: '0 0.5rem',
         }}
       >
-        <S4CLogo size={30} />
+        <S4CLogo size={26} />
         <span
           style={{
-            fontFamily: 'var(--font-body)',
+            fontFamily: 'var(--font-heading)',
             fontWeight: 700,
-            fontSize: '0.9rem',
+            fontSize: '0.625rem',
             color: '#FFFFFF',
-            letterSpacing: '-0.01em',
+            letterSpacing: '-0.02em',
           }}
         >
           Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
@@ -411,14 +418,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       </Link>
 
       {/* Search input */}
-      <div
-        style={{
-          position: 'relative',
-          marginBottom: '1rem',
-        }}
-      >
+      <div style={{ position: 'relative', marginBottom: '0.875rem' }}>
         <Search
-          size={14}
+          size={13}
           color={SB.textMuted}
           style={{
             position: 'absolute',
@@ -435,44 +437,67 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: '0.5rem 0.75rem 0.5rem 2rem',
+            padding: '0.4375rem 0.75rem 0.4375rem 1.875rem',
             borderRadius: 8,
             background: SB.inputBg,
-            border: 'none',
+            border: '1px solid rgba(255,255,255,0.04)',
             outline: 'none',
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.6875rem',
             color: '#FFFFFF',
             boxSizing: 'border-box',
+            transition: 'border-color 0.15s',
           }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)' }}
         />
       </div>
 
-      {/* Progress bar section */}
+      {/* User card + progress */}
       <div
         style={{
-          padding: '0.75rem',
-          borderRadius: 12,
-          background: 'rgba(255,255,255,0.04)',
-          marginBottom: '1rem',
+          padding: '0.625rem 0.75rem',
+          borderRadius: 10,
+          background: SB.cardBg,
+          border: '1px solid rgba(255,255,255,0.04)',
+          marginBottom: '0.875rem',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '0.5rem',
-          }}
-        >
-          <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 7,
+              background: 'rgba(255,107,74,0.12)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                color: '#FF6B4A',
+              }}
+            >
+              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+            </span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <div
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
+                fontSize: '0.6875rem',
                 fontWeight: 600,
                 color: '#FFFFFF',
-                marginBottom: '0.125rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                lineHeight: 1.2,
               }}
             >
               {user.name}
@@ -480,17 +505,21 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             <div
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.6875rem',
-                color: SB.text,
+                fontSize: '0.625rem',
+                color: SB.textMuted,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                lineHeight: 1.3,
               }}
             >
-              {user.startup}
+              {user.startup || user.email}
             </div>
           </div>
           <span
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: '0.6875rem',
+              fontSize: '0.625rem',
               fontWeight: 700,
               color: '#FF6B4A',
             }}
@@ -498,12 +527,12 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             {progressPct}%
           </span>
         </div>
-        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.08)' }}>
+        <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
           <div
             style={{
               height: '100%',
               borderRadius: 2,
-              background: '#FF6B4A',
+              background: 'linear-gradient(90deg, #FF6B4A, #0D9488)',
               width: `${progressPct}%`,
               transition: 'width 0.6s ease',
             }}
@@ -512,12 +541,12 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         <div
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.625rem',
+            fontSize: '0.5625rem',
             color: SB.textMuted,
-            marginTop: '0.375rem',
+            marginTop: '0.25rem',
           }}
         >
-          {completedCount}/{totalTools} herramientas
+          {completedCount}/{totalTools} herramientas completadas
         </div>
       </div>
 
@@ -528,12 +557,12 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
+            padding: '0.4375rem 0.75rem',
             borderRadius: 8,
-            background: 'rgba(255,107,74,0.1)',
-            border: 'none',
+            background: 'rgba(255,107,74,0.06)',
+            border: '1px solid rgba(255,107,74,0.1)',
             textDecoration: 'none',
-            marginBottom: '0.75rem',
+            marginBottom: '0.625rem',
             transition: 'all 0.15s',
           }}
         >
@@ -550,6 +579,74 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </Link>
       )}
 
+      {/* Mi programa section */}
+      <div
+        style={{
+          padding: '0.5rem 0.75rem',
+          borderRadius: 8,
+          background: SB.cardBg,
+          border: '1px solid rgba(255,255,255,0.04)',
+          marginBottom: '0.875rem',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.5625rem',
+            fontWeight: 600,
+            color: SB.textMuted,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            marginBottom: '0.375rem',
+          }}
+        >
+          Mi programa
+        </div>
+        {appUser?.org_id && orgName ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <Building2 size={12} color="#0D9488" style={{ flexShrink: 0 }} />
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.6875rem',
+                fontWeight: 500,
+                color: SB.textActive,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {orgName}
+            </span>
+          </div>
+        ) : (
+          <Link
+            href="/tools/programas"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+              textDecoration: 'none',
+              padding: '0.125rem 0',
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.8' }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+          >
+            <Users size={12} color={SB.textMuted} style={{ flexShrink: 0 }} />
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.625rem',
+                color: SB.text,
+              }}
+            >
+              Unirse a un programa
+            </span>
+          </Link>
+        )}
+      </div>
+
       {/* Dashboard link */}
       <Link
         href="/tools"
@@ -557,12 +654,12 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.5rem 0.75rem',
+          padding: '0.4375rem 0.75rem',
           borderRadius: 8,
-          background: 'transparent',
-          borderLeft: pathname === '/tools' ? '3px solid #FF6B4A' : '3px solid transparent',
+          background: pathname === '/tools' ? 'rgba(255,107,74,0.08)' : 'transparent',
+          borderLeft: pathname === '/tools' ? '2px solid #FF6B4A' : '2px solid transparent',
           textDecoration: 'none',
-          marginBottom: '0.5rem',
+          marginBottom: '0.25rem',
           transition: 'all 0.15s',
         }}
         onMouseEnter={(e) => {
@@ -572,11 +669,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           if (pathname !== '/tools') e.currentTarget.style.background = 'transparent'
         }}
       >
-        <LayoutDashboard size={15} color={pathname === '/tools' ? '#FFFFFF' : SB.text} />
+        <LayoutDashboard size={14} color={pathname === '/tools' ? '#FFFFFF' : SB.text} />
         <span
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.6875rem',
             fontWeight: pathname === '/tools' ? 600 : 400,
             color: pathname === '/tools' ? SB.textActive : SB.text,
           }}
@@ -585,7 +682,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </span>
       </Link>
 
-      <div style={{ height: 1, background: SB.divider, margin: '0.375rem 0.375rem 0.75rem' }} />
+      <div style={{ height: 1, background: SB.divider, margin: '0.25rem 0.5rem 0.5rem' }} />
 
       {/* Featured tools */}
       {[
@@ -603,12 +700,12 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.5rem 0.75rem',
+              padding: '0.4375rem 0.75rem',
               borderRadius: 8,
-              background: 'transparent',
-              borderLeft: active ? '3px solid #FF6B4A' : '3px solid transparent',
+              background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
+              borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
               textDecoration: 'none',
-              marginBottom: '0.125rem',
+              marginBottom: '0.0625rem',
               transition: 'all 0.15s',
             }}
             onMouseEnter={(e) => {
@@ -618,33 +715,17 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
               if (!active) e.currentTarget.style.background = 'transparent'
             }}
           >
-            <IconComp size={15} color={active ? '#FFFFFF' : SB.text} />
+            <IconComp size={14} color={active ? '#FFFFFF' : SB.text} />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
+                fontSize: '0.6875rem',
                 fontWeight: active ? 600 : 400,
                 color: active ? SB.textActive : SB.text,
                 flex: 1,
               }}
             >
               {item.label}
-            </span>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '1px 6px',
-                borderRadius: 8,
-                background: '#0D9488',
-                color: 'white',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.5625rem',
-                fontWeight: 700,
-                lineHeight: 1.6,
-              }}
-            >
-              Nuevo
             </span>
           </Link>
         )
@@ -657,17 +738,17 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.5rem 0.75rem',
+          padding: '0.4375rem 0.75rem',
           borderRadius: 8,
-          background: 'transparent',
-          borderLeft: pathname === '/tools/recursos' ? '3px solid #FF6B4A' : '3px solid transparent',
+          background: pathname === '/tools/recursos' ? 'rgba(255,107,74,0.08)' : 'transparent',
+          borderLeft: pathname === '/tools/recursos' ? '2px solid #FF6B4A' : '2px solid transparent',
           textDecoration: 'none',
           color: pathname === '/tools/recursos' ? SB.textActive : SB.text,
           fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
+          fontSize: '0.6875rem',
           fontWeight: pathname === '/tools/recursos' ? 600 : 400,
           transition: 'all 0.15s',
-          marginBottom: '0.25rem',
+          marginBottom: '0.125rem',
         }}
         onMouseEnter={(e) => {
           if (pathname !== '/tools/recursos') e.currentTarget.style.background = SB.hoverBg
@@ -680,7 +761,23 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         Recursos
       </Link>
 
-      <div style={{ height: 1, background: SB.divider, margin: '0.5rem 0.375rem 0.75rem' }} />
+      <div style={{ height: 1, background: SB.divider, margin: '0.375rem 0.5rem 0.5rem' }} />
+
+      {/* Section label */}
+      <div
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.5625rem',
+          fontWeight: 600,
+          color: SB.textMuted,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          padding: '0 0.75rem',
+          marginBottom: '0.375rem',
+        }}
+      >
+        Herramientas por etapa
+      </div>
 
       {/* Tools by stage */}
       {([1, 2, 3, 4] as const).map((stage) => (
@@ -695,70 +792,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       ))}
 
       {/* Bottom actions */}
-      <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-        <div style={{ height: 1, background: SB.divider, margin: '0 0.375rem 1rem' }} />
-
-        {/* User section */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.625rem',
-            padding: '0.5rem 0.75rem',
-            marginBottom: '0.75rem',
-          }}
-        >
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              background: 'rgba(255,107,74,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: '#FF6B4A',
-              }}
-            >
-              {user.name?.charAt(0)?.toUpperCase() || 'U'}
-            </span>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: SB.textActive,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {user.name}
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
-                color: SB.textMuted,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {user.email || user.startup}
-            </div>
-          </div>
-        </div>
+      <div style={{ marginTop: 'auto', paddingTop: '0.75rem' }}>
+        <div style={{ height: 1, background: SB.divider, margin: '0 0.5rem 0.75rem' }} />
 
         {/* Perfil */}
         <Link
@@ -767,23 +802,23 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
+            padding: '0.4375rem 0.75rem',
             borderRadius: 8,
             background: 'transparent',
-            borderLeft: '3px solid transparent',
+            borderLeft: '2px solid transparent',
             textDecoration: 'none',
             color: SB.text,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.6875rem',
             fontWeight: 400,
             transition: 'all 0.15s',
-            marginBottom: '0.25rem',
+            marginBottom: '0.125rem',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.background = SB.hoverBg }}
           onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
         >
           <Building2 size={13} />
-          Vista organización
+          Vista organizacion
         </Link>
 
         <Link
@@ -792,17 +827,17 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
+            padding: '0.4375rem 0.75rem',
             borderRadius: 8,
-            background: 'transparent',
-            borderLeft: pathname === '/tools/perfil' ? '3px solid #FF6B4A' : '3px solid transparent',
+            background: pathname === '/tools/perfil' ? 'rgba(255,107,74,0.08)' : 'transparent',
+            borderLeft: pathname === '/tools/perfil' ? '2px solid #FF6B4A' : '2px solid transparent',
             textDecoration: 'none',
             color: pathname === '/tools/perfil' ? SB.textActive : SB.text,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.6875rem',
             fontWeight: pathname === '/tools/perfil' ? 600 : 400,
             transition: 'all 0.15s',
-            marginBottom: '0.5rem',
+            marginBottom: '0.25rem',
           }}
           onMouseEnter={(e) => {
             if (pathname !== '/tools/perfil') e.currentTarget.style.background = SB.hoverBg
@@ -815,22 +850,20 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           Perfil
         </Link>
 
-        <DarkModeToggle />
-
         <button
           onClick={logout}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.5rem 0.75rem',
+            padding: '0.4375rem 0.75rem',
             borderRadius: 8,
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
             color: SB.text,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.6875rem',
             width: '100%',
             textAlign: 'left',
             transition: 'color 0.15s',
@@ -866,6 +899,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           bottom: 0,
           zIndex: 40,
           flexDirection: 'column',
+          borderRight: '1px solid rgba(255,255,255,0.04)',
         }}
       >
         {sidebarContent}
@@ -880,12 +914,13 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           left: 0,
           right: 0,
           zIndex: 50,
-          height: 56,
+          height: 52,
           background: SB.bg,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0 1rem',
+          borderBottom: '1px solid rgba(255,255,255,0.04)',
         }}
       >
         <Link
@@ -897,13 +932,14 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             textDecoration: 'none',
           }}
         >
-          <S4CLogo size={28} />
+          <S4CLogo size={24} />
           <span
             style={{
-              fontFamily: 'var(--font-body)',
+              fontFamily: 'var(--font-heading)',
               fontWeight: 700,
-              fontSize: '0.9rem',
+              fontSize: '0.625rem',
               color: '#FFFFFF',
+              letterSpacing: '-0.02em',
             }}
           >
             Plataforma
@@ -919,7 +955,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             display: 'flex',
           }}
         >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </header>
 
@@ -936,14 +972,14 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
                 position: 'fixed',
                 inset: 0,
                 zIndex: 55,
-                background: 'rgba(0,0,0,0.4)',
+                background: 'rgba(0,0,0,0.5)',
               }}
             />
             <motion.aside
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.28, ease: 'easeInOut' }}
+              transition={{ type: 'tween', duration: 0.25, ease: 'easeInOut' }}
               style={{
                 position: 'fixed',
                 top: 0,
@@ -975,7 +1011,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         }}
         className="lg:ml-[240px] pt-14 lg:pt-0"
       >
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </main>
 
       {/* Floating Mentor AI Widget */}

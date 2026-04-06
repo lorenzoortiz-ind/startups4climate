@@ -6,7 +6,7 @@ import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
 const AGENT_PROMPTS: Record<string, string> = {
   mentor: MENTOR_GENERAL_PROMPT,
-  radar: `Eres un analista experto del ecosistema de innovacion en Latinoamerica. Respondes en espanol. Das informacion sobre tendencias, noticias, fondos de inversion, programas de aceleracion y eventos relevantes para startups de impacto en la region. Tus respuestas son concisas y accionables. No uses emojis ni markdown con # headers.`,
+  radar: `Eres un analista experto del ecosistema de innovación en Latinoamérica. Respondes en español. Das información sobre tendencias, noticias, fondos de inversión, programas de aceleración y eventos relevantes para startups de impacto en la región. Tus respuestas son concisas y accionables. No uses emojis ni markdown con # headers.`,
 }
 
 export async function POST(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return Response.json(
-        { error: 'No autenticado. Inicia sesion para usar el chat.' },
+        { error: 'No autenticado. Inicia sesión para usar el chat.' },
         { status: 401 }
       )
     }

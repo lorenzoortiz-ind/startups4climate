@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   BarChart,
@@ -11,31 +12,15 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
-const BENCHMARK_DATA = [
-  {
-    metric: 'Herramientas completadas',
-    org: 12.3,
-    platform: 8.7,
-  },
-  {
-    metric: 'Avance de etapa (%)',
-    org: 68,
-    platform: 52,
-  },
-  {
-    metric: 'Score diagnóstico',
-    org: 6.8,
-    platform: 5.9,
-  },
-]
-
-const CHART_DATA = [
-  { name: 'Herramientas', tuOrg: 12.3, promedio: 8.7 },
-  { name: 'Avance (%)', tuOrg: 68, promedio: 52 },
-  { name: 'Score diag.', tuOrg: 6.8, promedio: 5.9 },
-]
+interface BenchmarkMetric {
+  metric: string
+  org: number
+  platform: number
+}
 
 function getTrend(org: number, platform: number) {
   const diff = org - platform
@@ -43,6 +28,11 @@ function getTrend(org: number, platform: number) {
   if (diff > 0) return { icon: TrendingUp, color: '#0D9488', text: `+${pct}% vs promedio` }
   if (diff < 0) return { icon: TrendingDown, color: '#DC2626', text: `${pct}% vs promedio` }
   return { icon: Minus, color: '#6B7280', text: 'Igual al promedio' }
+}
+
+function avg(arr: number[]): number {
+  if (arr.length === 0) return 0
+  return Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10
 }
 
 const cardStyle: React.CSSProperties = {
@@ -60,6 +50,96 @@ const fadeUp = {
 }
 
 export default function BenchmarkingPage() {
+  const { appUser } = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [benchmarkData, setBenchmarkData] = useState<BenchmarkMetric[]>([])
+  const [chartData, setChartData] = useState<{ name: string; tuOrg: number; promedio: number }[]>([])
+
+  useEffect(() => {
+    if (!appUser?.org_id) return
+
+    async function loadBenchmark() {
+      setLoading(true)
+
+      // Get org's cohorts
+      const { data: cohorts } = await supabase
+        .from('cohorts')
+        .select('id')
+        .eq('org_id', appUser!.org_id!)
+
+      const cohortIds = cohorts?.map((c) => c.id) || []
+
+      // Get org's startup IDs
+      let orgStartupIds: string[] = []
+      if (cohortIds.length > 0) {
+        const { data: assignments } = await supabase
+          .from('cohort_startups')
+          .select('startup_id')
+          .in('cohort_id', cohortIds)
+        orgStartupIds = assignments?.map((a) => a.startup_id) || []
+      }
+
+      // Get org's startups
+      let orgStartups: { diagnostic_score: number | null; tools_completed: number | null; stage: string | null }[] = []
+      if (orgStartupIds.length > 0) {
+        const { data } = await supabase
+          .from('startups')
+          .select('diagnostic_score, tools_completed, stage')
+          .in('id', orgStartupIds)
+        orgStartups = data || []
+      }
+
+      // Get all platform startups
+      const { data: allStartups } = await supabase
+        .from('startups')
+        .select('diagnostic_score, tools_completed, stage')
+
+      const platformStartups = allStartups || []
+
+      // Calculate metrics
+      const orgScores = orgStartups.filter((s) => s.diagnostic_score != null).map((s) => s.diagnostic_score!)
+      const platformScores = platformStartups.filter((s) => s.diagnostic_score != null).map((s) => s.diagnostic_score!)
+
+      const orgTools = orgStartups.map((s) => s.tools_completed || 0)
+      const platformTools = platformStartups.map((s) => s.tools_completed || 0)
+
+      // Stage progress: map stages to % (pre=25, inc=50, acc=75, scal=100)
+      const stageToPercent: Record<string, number> = {
+        pre_incubation: 25,
+        incubation: 50,
+        acceleration: 75,
+        scaling: 100,
+      }
+      const orgProgress = orgStartups.map((s) => stageToPercent[s.stage || ''] || 0)
+      const platformProgress = platformStartups.map((s) => stageToPercent[s.stage || ''] || 0)
+
+      const metrics: BenchmarkMetric[] = [
+        { metric: 'Herramientas completadas', org: avg(orgTools), platform: avg(platformTools) },
+        { metric: 'Avance de etapa (%)', org: avg(orgProgress), platform: avg(platformProgress) },
+        { metric: 'Score diagnóstico', org: avg(orgScores), platform: avg(platformScores) },
+      ]
+
+      setBenchmarkData(metrics)
+      setChartData([
+        { name: 'Herramientas', tuOrg: metrics[0].org, promedio: metrics[0].platform },
+        { name: 'Avance (%)', tuOrg: metrics[1].org, promedio: metrics[1].platform },
+        { name: 'Score diag.', tuOrg: metrics[2].org, promedio: metrics[2].platform },
+      ])
+      setLoading(false)
+    }
+
+    loadBenchmark()
+  }, [appUser?.org_id])
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      </div>
+    )
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -90,7 +170,7 @@ export default function BenchmarkingPage() {
         gap: '1rem',
         marginBottom: '2rem',
       }}>
-        {BENCHMARK_DATA.map((item, i) => {
+        {benchmarkData.map((item, i) => {
           const trend = getTrend(item.org, item.platform)
           const TrendIcon = trend.icon
           return (
@@ -158,7 +238,7 @@ export default function BenchmarkingPage() {
                   <div style={{
                     position: 'absolute', top: 0, left: 0, height: '100%',
                     borderRadius: 3, background: 'var(--color-accent-primary)',
-                    width: `${Math.min((item.org / Math.max(item.org, item.platform)) * 100, 100)}%`,
+                    width: `${Math.max(item.org, item.platform) > 0 ? Math.min((item.org / Math.max(item.org, item.platform)) * 100, 100) : 0}%`,
                     transition: 'width 0.6s ease',
                   }} />
                 </div>
@@ -170,7 +250,7 @@ export default function BenchmarkingPage() {
                   <div style={{
                     position: 'absolute', top: 0, left: 0, height: '100%',
                     borderRadius: 2, background: 'var(--color-text-muted)',
-                    width: `${Math.min((item.platform / Math.max(item.org, item.platform)) * 100, 100)}%`,
+                    width: `${Math.max(item.org, item.platform) > 0 ? Math.min((item.platform / Math.max(item.org, item.platform)) * 100, 100) : 0}%`,
                     transition: 'width 0.6s ease',
                   }} />
                 </div>
@@ -207,7 +287,7 @@ export default function BenchmarkingPage() {
         </h3>
         <div style={{ width: '100%', height: 320 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={CHART_DATA} barGap={8}>
+            <BarChart data={chartData} barGap={8}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
               <XAxis
                 dataKey="name"

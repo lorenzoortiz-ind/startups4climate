@@ -55,6 +55,14 @@
   --text-body-lg: clamp(1.1rem, 1.5vw, 1.3rem);
   --text-body: 1.05rem;
 
+  /* Admin / Tools Sidebar */
+  --color-admin-sidebar-bg:      #1A1521;
+  --color-admin-sidebar-active:  #FF6B4A;
+  --color-admin-sidebar-text:    #94A3B8;
+
+  /* Card shadow */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04);
+
   /* Shadows (Soft & Float) */
   --shadow-float: 0 20px 40px -10px rgba(25, 25, 25, 0.08);
   --shadow-input: 0 4px 12px rgba(25, 25, 25, 0.04);

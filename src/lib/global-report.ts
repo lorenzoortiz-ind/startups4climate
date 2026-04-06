@@ -241,7 +241,7 @@ function buildExecutiveSummary(
         </div>
         <div style="background:white;border-radius:14px;border:1px solid #E5E7EB;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
           <div style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#0D9488">${currentStageName}</div>
-          <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Etapa mas avanzada</div>
+          <div style="font-family:'Inter',sans-serif;font-size:0.8125rem;color:#6B7280;margin-top:4px">Etapa más avanzada</div>
         </div>
       </div>
 

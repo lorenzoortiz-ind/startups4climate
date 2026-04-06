@@ -98,19 +98,19 @@ export default function AdminDashboard() {
         if (startupIds.length > 0) {
           const { data: startupData } = await supabase
             .from('startups')
-            .select('id, name, vertical, stage, diagnostic_score, tools_completed, country')
+            .select('id, name, vertical, stage, diagnostic_score, tools_completed, country, founder_id')
             .in('id', startupIds)
 
-          // Load founder profiles
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('id, full_name')
-            .eq('role', 'founder')
+          // Load founder profiles for these startups
+          const founderIds = (startupData || []).map((s) => s.founder_id).filter(Boolean)
+          const { data: profileData } = founderIds.length > 0
+            ? await supabase.from('profiles').select('id, full_name').in('id', founderIds)
+            : { data: [] }
 
           startupList = (startupData || []).map((s) => ({
             ...s,
             founder_name:
-              profileData?.find((p) => p.id === s.id)?.full_name || 'Sin nombre',
+              profileData?.find((p) => p.id === s.founder_id)?.full_name || 'Sin nombre',
           })) as StartupRow[]
         }
       }
@@ -207,7 +207,7 @@ export default function AdminDashboard() {
     },
     {
       label: 'Descargar datos',
-      href: '/admin/exportar',
+      href: '/admin/reportes',
       icon: Download,
       color: '#8B5CF6',
     },
@@ -260,7 +260,7 @@ export default function AdminDashboard() {
             style={{
               fontFamily: 'var(--font-heading)',
               fontWeight: 700,
-              fontSize: '1.5rem',
+              fontSize: '1.275rem',
               color: 'var(--color-text-primary)',
             }}
           >
@@ -272,7 +272,7 @@ export default function AdminDashboard() {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.875rem',
+            fontSize: '0.75rem',
             color: 'var(--color-text-secondary)',
           }}
         >
@@ -325,7 +325,7 @@ export default function AdminDashboard() {
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 700,
-                  fontSize: '1.75rem',
+                  fontSize: '1.5rem',
                   color: 'var(--color-text-primary)',
                   lineHeight: 1,
                   marginBottom: '0.25rem',
@@ -336,7 +336,7 @@ export default function AdminDashboard() {
               <div
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
+                  fontSize: '0.6875rem',
                   color: 'var(--color-text-secondary)',
                 }}
               >
@@ -367,7 +367,7 @@ export default function AdminDashboard() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
-                fontSize: '1rem',
+                fontSize: '0.75rem',
                 color: 'var(--color-text-primary)',
               }}
             >
@@ -381,7 +381,7 @@ export default function AdminDashboard() {
               alignItems: 'center',
               gap: '0.375rem',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.8125rem',
+              fontSize: '0.6875rem',
               color: '#0D9488',
               textDecoration: 'none',
               fontWeight: 500,
@@ -421,7 +421,7 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.875rem',
+                fontSize: '0.75rem',
                 color: 'var(--color-text-muted)',
                 marginBottom: '0.25rem',
               }}
@@ -431,7 +431,7 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
+                fontSize: '0.625rem',
                 color: 'var(--color-text-muted)',
               }}
             >
@@ -460,7 +460,7 @@ export default function AdminDashboard() {
                       style={{
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 600,
-                        fontSize: '0.875rem',
+                        fontSize: '0.75rem',
                         color: 'var(--color-text-primary)',
                         marginBottom: '0.125rem',
                       }}
@@ -473,7 +473,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         gap: '0.75rem',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.75rem',
+                        fontSize: '0.625rem',
                         color: 'var(--color-text-secondary)',
                       }}
                     >
@@ -539,7 +539,7 @@ export default function AdminDashboard() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
-                fontSize: '1rem',
+                fontSize: '0.75rem',
                 color: 'var(--color-text-primary)',
               }}
             >
@@ -550,7 +550,7 @@ export default function AdminDashboard() {
             <span
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
+                fontSize: '0.625rem',
                 color: 'var(--color-text-secondary)',
               }}
             >
@@ -588,7 +588,7 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.875rem',
+                fontSize: '0.75rem',
                 color: 'var(--color-text-muted)',
                 marginBottom: '0.25rem',
               }}
@@ -598,7 +598,7 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
+                fontSize: '0.625rem',
                 color: 'var(--color-text-muted)',
               }}
             >
@@ -612,7 +612,7 @@ export default function AdminDashboard() {
                 width: '100%',
                 borderCollapse: 'collapse',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
+                fontSize: '0.6875rem',
               }}
             >
               <thead>
@@ -627,7 +627,7 @@ export default function AdminDashboard() {
                           borderBottom: '1px solid var(--color-border)',
                           fontWeight: 600,
                           color: 'var(--color-text-secondary)',
-                          fontSize: '0.75rem',
+                          fontSize: '0.625rem',
                           textTransform: 'uppercase',
                           letterSpacing: '0.03em',
                         }}
@@ -663,7 +663,7 @@ export default function AdminDashboard() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
-                            fontSize: '0.75rem',
+                            fontSize: '0.625rem',
                             fontWeight: 700,
                             color: '#0D9488',
                           }}
@@ -751,7 +751,7 @@ export default function AdminDashboard() {
           style={{
             fontFamily: 'var(--font-heading)',
             fontWeight: 600,
-            fontSize: '1rem',
+            fontSize: '0.75rem',
             color: 'var(--color-text-primary)',
             marginBottom: '1rem',
           }}
@@ -774,7 +774,7 @@ export default function AdminDashboard() {
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.875rem',
+                  fontSize: '0.75rem',
                   fontWeight: 500,
                   color: 'var(--color-text-primary)',
                   textDecoration: 'none',

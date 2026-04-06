@@ -2,40 +2,155 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Building2, LayoutDashboard, Users, FileText, TrendingUp, ArrowRight, ChevronRight } from 'lucide-react'
+import {
+  Building2,
+  LayoutDashboard,
+  Users,
+  ArrowRight,
+  ChevronRight,
+  Mail,
+  MessageCircle,
+  Brain,
+  ClipboardCheck,
+  Download,
+  Wrench,
+  Check,
+  MapPin,
+} from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import OrgDashboardMockup from '@/components/illustrations/OrgDashboardMockup'
 
+/* ------------------------------------------------------------------ */
+/*  DATA                                                               */
+/* ------------------------------------------------------------------ */
+
 const FEATURES = [
   {
-    icon: LayoutDashboard,
-    title: 'Panel de portafolio',
-    description: 'Dashboard centralizado con métricas en tiempo real de todas las startups de tu programa.',
-    accent: '#FF6B4A',
-    accentBg: 'rgba(255,107,74,0.06)',
-  },
-  {
     icon: Users,
-    title: 'Gestión de cohortes',
-    description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de cálculo ni cadenas de correos.',
+    title: 'Gestion de cohorts',
+    description: 'Crea cohortes, invita founders por email y organiza tus programas sin hojas de calculo.',
     accent: '#0D9488',
     accentBg: 'rgba(13,148,136,0.06)',
   },
   {
-    icon: FileText,
-    title: 'Reportes automáticos',
-    description: 'Genera reportes PDF de progreso por cohorte o por startup. Listos para compartir con stakeholders.',
+    icon: Mail,
+    title: 'Invitación por email',
+    description: 'Envía invitaciones directas a founders. Se registran y quedan vinculados a tu cohorte automáticamente.',
+    accent: '#3B82F6',
+    accentBg: 'rgba(59,130,246,0.06)',
+  },
+  {
+    icon: LayoutDashboard,
+    title: 'Dashboard en tiempo real',
+    description: 'Visualiza el progreso de cada startup y de la cohorte completa con métricas actualizadas al instante.',
+    accent: '#FF6B4A',
+    accentBg: 'rgba(255,107,74,0.06)',
+  },
+  {
+    icon: Download,
+    title: 'Reportes Excel descargables',
+    description: 'Genera reportes detallados en Excel listos para compartir con stakeholders y equipos directivos.',
     accent: '#D97706',
     accentBg: 'rgba(217,119,6,0.06)',
   },
   {
-    icon: TrendingUp,
-    title: 'Benchmarking regional',
-    description: 'Compara el desempeño de tus startups contra promedios por vertical, país y etapa.',
-    accent: '#3B82F6',
-    accentBg: 'rgba(59,130,246,0.06)',
+    icon: Wrench,
+    title: '+30 herramientas interactivas',
+    description: 'Tus founders acceden a herramientas de estrategia, modelo de negocio, finanzas y más, todo en un solo lugar.',
+    accent: '#8B5CF6',
+    accentBg: 'rgba(139,92,246,0.06)',
+  },
+  {
+    icon: Brain,
+    title: 'Mentor AI personalizado',
+    description: 'Cada founder recibe retroalimentación inteligente adaptada a su vertical, etapa y contexto.',
+    accent: '#EC4899',
+    accentBg: 'rgba(236,72,153,0.06)',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Diagnóstico de startup readiness',
+    description: 'Evalúa el nivel de preparación de cada startup con un diagnóstico integral y accionable.',
+    accent: '#10B981',
+    accentBg: 'rgba(16,185,129,0.06)',
   },
 ]
+
+const PLANS = [
+  {
+    name: 'Regional',
+    price: 'Gratis',
+    priceSub: null,
+    description: 'Para incubadoras y aceleradoras regionales (fuera de Lima)',
+    accent: '#0D9488',
+    accentBg: 'rgba(13,148,136,0.06)',
+    features: [
+      'Hasta 20 startups por programa',
+      'Acceso a todas las herramientas',
+      'Dashboard de seguimiento',
+      'Reportes basicos',
+    ],
+    cta: 'Aplica gratis',
+    ctaLink: `https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa el plan Regional gratuito de S4C para mi incubadora.')}`,
+    highlighted: false,
+    badge: null,
+    ideal: 'Ideal para programas regionales de innovacion',
+  },
+  {
+    name: 'Profesional',
+    price: '$300',
+    priceSub: 'USD / ano',
+    description: 'Para incubadoras y aceleradoras en Lima',
+    accent: '#FF6B4A',
+    accentBg: 'rgba(255,107,74,0.06)',
+    features: [
+      'Hasta 30 startups por programa',
+      'Todo lo del plan Regional',
+      'Reportes avanzados en Excel',
+      'Benchmarking de cohorts',
+      'Soporte prioritario por WhatsApp',
+    ],
+    cta: 'Comenzar ahora',
+    ctaLink: `https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa el plan Profesional de S4C.')}`,
+    highlighted: true,
+    badge: 'Mas popular',
+    ideal: null,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Personalizado',
+    priceSub: null,
+    description: 'Para universidades y gobiernos',
+    accent: '#3B82F6',
+    accentBg: 'rgba(59,130,246,0.06)',
+    features: [
+      'Startups ilimitadas',
+      'Todo lo del plan Profesional',
+      'API de integracion',
+      'Onboarding personalizado',
+      'Branding personalizado',
+      'SLA garantizado',
+    ],
+    cta: 'Contactar ventas',
+    ctaLink: `https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa el plan Enterprise de S4C para mi organización.')}`,
+    highlighted: false,
+    badge: null,
+    ideal: null,
+  },
+]
+
+const SOCIAL_PROOF = [
+  'Universidad Nacional de Ingenieria',
+  'StartUp Peru',
+  'UTEC Ventures',
+  'Emprende UP',
+  'NeSst',
+  'Wayra',
+]
+
+/* ------------------------------------------------------------------ */
+/*  ANIMATION HELPERS                                                  */
+/* ------------------------------------------------------------------ */
 
 const springReveal = {
   initial: { opacity: 0, y: 40 },
@@ -43,7 +158,11 @@ const springReveal = {
   transition: { type: 'spring', damping: 20, stiffness: 100 } as const,
 }
 
-function FeatureCard({ feature, i }: { feature: typeof FEATURES[0]; i: number }) {
+/* ------------------------------------------------------------------ */
+/*  SUB-COMPONENTS                                                     */
+/* ------------------------------------------------------------------ */
+
+function FeatureCard({ feature, i }: { feature: (typeof FEATURES)[0]; i: number }) {
   const [hovered, setHovered] = useState(false)
   const IconComp = feature.icon
 
@@ -52,14 +171,14 @@ function FeatureCard({ feature, i }: { feature: typeof FEATURES[0]; i: number })
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.1 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.08 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
         background: 'var(--color-paper)',
         borderRadius: 'var(--radius-lg)',
         border: `1px solid ${hovered ? feature.accent : 'var(--color-border)'}`,
-        padding: '2.5rem 2rem',
+        padding: '2.25rem 1.75rem',
         display: 'flex',
         flexDirection: 'column',
         transition: 'transform 0.2s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease',
@@ -70,20 +189,20 @@ function FeatureCard({ feature, i }: { feature: typeof FEATURES[0]; i: number })
     >
       <div
         style={{
-          width: 52,
-          height: 52,
+          width: 48,
+          height: 48,
           borderRadius: 'var(--radius-md)',
           background: hovered ? feature.accentBg : 'var(--color-bg-primary)',
           border: `1px solid ${hovered ? feature.accent + '30' : 'var(--color-border)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '1.5rem',
+          marginBottom: '1.25rem',
           transition: 'background 0.2s ease, border-color 0.2s ease',
         }}
       >
         <IconComp
-          size={24}
+          size={22}
           strokeWidth={1.5}
           color={hovered ? feature.accent : 'var(--color-ink)'}
           style={{ transition: 'color 0.2s ease' }}
@@ -95,9 +214,9 @@ function FeatureCard({ feature, i }: { feature: typeof FEATURES[0]; i: number })
           fontSize: 'var(--text-heading-md)',
           fontWeight: 700,
           color: 'var(--color-ink)',
-          marginBottom: '0.75rem',
+          marginBottom: '0.5rem',
           letterSpacing: '-0.03em',
-          lineHeight: 1.1,
+          lineHeight: 1.15,
         }}
       >
         {feature.title}
@@ -117,6 +236,215 @@ function FeatureCard({ feature, i }: { feature: typeof FEATURES[0]; i: number })
   )
 }
 
+function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.12 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        background: plan.highlighted
+          ? 'var(--color-ink)'
+          : 'var(--color-paper)',
+        borderRadius: 'var(--radius-xl)',
+        border: plan.highlighted
+          ? '2px solid var(--color-accent-primary)'
+          : `1px solid ${hovered ? plan.accent : 'var(--color-border)'}`,
+        padding: '2.5rem 2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'transform 0.2s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease',
+        transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
+        boxShadow: hovered
+          ? plan.highlighted
+            ? '0 24px 48px -12px rgba(255,107,74,0.2)'
+            : 'var(--shadow-float)'
+          : '0 1px 4px rgba(25,25,25,0.04)',
+        flex: '1 1 300px',
+        maxWidth: 400,
+      }}
+    >
+      {/* Badge */}
+      {plan.badge && (
+        <div
+          style={{
+            position: 'absolute',
+            top: -14,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'var(--color-accent-primary)',
+            color: '#fff',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            padding: '0.375rem 1rem',
+            borderRadius: 'var(--radius-full)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {plan.badge}
+        </div>
+      )}
+
+      {/* Plan name */}
+      <h3
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: 'var(--text-heading-md)',
+          fontWeight: 700,
+          color: plan.highlighted ? 'var(--color-paper)' : 'var(--color-ink)',
+          letterSpacing: '-0.03em',
+          marginBottom: '0.5rem',
+        }}
+      >
+        {plan.name}
+      </h3>
+
+      {/* Price */}
+      <div style={{ marginBottom: '0.75rem' }}>
+        <span
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+            fontWeight: 700,
+            color: plan.highlighted ? 'var(--color-accent-primary)' : plan.accent,
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
+          }}
+        >
+          {plan.price}
+        </span>
+        {plan.priceSub && (
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              color: plan.highlighted ? 'rgba(255,255,255,0.5)' : 'var(--color-text-muted)',
+              marginLeft: '0.5rem',
+            }}
+          >
+            {plan.priceSub}
+          </span>
+        )}
+      </div>
+
+      {/* Description */}
+      <p
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.9375rem',
+          color: plan.highlighted ? 'rgba(255,255,255,0.6)' : 'var(--color-text-secondary)',
+          lineHeight: 1.5,
+          marginBottom: '1.5rem',
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {plan.description}
+      </p>
+
+      {/* Divider */}
+      <div
+        style={{
+          height: 1,
+          background: plan.highlighted ? 'rgba(255,255,255,0.1)' : 'var(--color-border)',
+          marginBottom: '1.5rem',
+        }}
+      />
+
+      {/* Features list */}
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0, flex: 1 }}>
+        {plan.features.map((feat) => (
+          <li
+            key={feat}
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.625rem',
+              marginBottom: '0.75rem',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.9375rem',
+              color: plan.highlighted ? 'rgba(255,255,255,0.85)' : 'var(--color-text-secondary)',
+              lineHeight: 1.4,
+            }}
+          >
+            <Check
+              size={16}
+              strokeWidth={2.5}
+              color={plan.highlighted ? 'var(--color-accent-primary)' : plan.accent}
+              style={{ flexShrink: 0, marginTop: 2 }}
+            />
+            {feat}
+          </li>
+        ))}
+      </ul>
+
+      {/* Ideal note */}
+      {plan.ideal && (
+        <p
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            color: plan.highlighted ? 'rgba(255,255,255,0.4)' : 'var(--color-text-muted)',
+            fontStyle: 'italic',
+            marginTop: '0.75rem',
+            marginBottom: '0.5rem',
+          }}
+        >
+          {plan.ideal}
+        </p>
+      )}
+
+      {/* CTA */}
+      <a
+        href={plan.ctaLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          marginTop: '1.5rem',
+          padding: '1rem 1.5rem',
+          borderRadius: 'var(--radius-full)',
+          background: plan.highlighted ? 'var(--color-accent-primary)' : 'var(--color-ink)',
+          color: '#fff',
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-body)',
+          fontWeight: 700,
+          textDecoration: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)'
+          e.currentTarget.style.opacity = '0.9'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.opacity = '1'
+        }}
+      >
+        {plan.cta}
+        <ArrowRight size={18} strokeWidth={2.5} />
+      </a>
+    </motion.div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  PAGE                                                               */
+/* ------------------------------------------------------------------ */
+
 export default function OrganizacionesPage() {
   const { openAuthModal } = useAuth()
   const [isMobile, setIsMobile] = useState(false)
@@ -130,7 +458,10 @@ export default function OrganizacionesPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
-      {/* Hero section — similar to workbook layout */}
+
+      {/* ============================================================ */}
+      {/*  HERO                                                        */}
+      {/* ============================================================ */}
       <section
         style={{
           padding: 'clamp(3rem, 6vw, 6rem) var(--container-px) clamp(2rem, 4vw, 4rem)',
@@ -190,8 +521,9 @@ export default function OrganizacionesPage() {
                 marginBottom: '1.5rem',
               }}
             >
-              La tecnología que tu{' '}
-              <span style={{ color: 'var(--color-accent-primary)' }}>programa de innovación</span> necesita
+              Gestiona tu{' '}
+              <span style={{ color: 'var(--color-accent-primary)' }}>programa de innovacion</span>{' '}
+              con datos reales
             </h1>
 
             <p
@@ -205,16 +537,16 @@ export default function OrganizacionesPage() {
                 letterSpacing: '-0.01em',
               }}
             >
-              Incubadoras, aceleradoras y gobiernos usan nuestra plataforma para gestionar cohortes,
-              medir progreso y generar reportes con datos reales de sus startups.
+              Universidades, incubadoras, aceleradoras y gobiernos usan S4C para gestionar cohortes,
+              medir el progreso de cada startup y generar reportes ejecutivos. Todo en una sola plataforma.
             </p>
 
             {/* Stats row */}
-            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
               {[
                 { num: '+30', label: 'herramientas' },
                 { num: 'Real-time', label: 'métricas' },
-                { num: 'PDF', label: 'reportes automáticos' },
+                { num: 'Excel', label: 'reportes descargables' },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div
@@ -242,6 +574,65 @@ export default function OrganizacionesPage() {
                 </div>
               ))}
             </div>
+
+            {/* Hero CTA buttons */}
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <a
+                href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa S4C para mi programa de innovacion.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.625rem',
+                  padding: '1rem 2rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'var(--color-accent-primary)',
+                  color: '#fff',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body)',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                }}
+              >
+                <MessageCircle size={18} strokeWidth={2} />
+                Hablar por WhatsApp
+              </a>
+              <a
+                href="#precios"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '1rem 2rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'transparent',
+                  color: 'var(--color-ink)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body)',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  border: '1px solid var(--color-border)',
+                  transition: 'border-color 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-ink)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)'
+                }}
+              >
+                Ver planes
+                <ChevronRight size={16} />
+              </a>
+            </div>
           </motion.div>
 
           {/* Right: dashboard mockup */}
@@ -253,7 +644,7 @@ export default function OrganizacionesPage() {
               flex: '0 1 480px',
               display: 'flex',
               justifyContent: 'flex-end',
-              paddingLeft: '2rem',
+              paddingLeft: isMobile ? 0 : '2rem',
             }}
           >
             <OrgDashboardMockup width="100%" />
@@ -261,36 +652,68 @@ export default function OrganizacionesPage() {
         </div>
       </section>
 
-      {/* Feature cards — 2x2 grid */}
+      {/* ============================================================ */}
+      {/*  FEATURES                                                     */}
+      {/* ============================================================ */}
       <section
         style={{
-          padding: '0 var(--container-px) clamp(3rem, 6vw, 5rem)',
+          padding: 'clamp(3rem, 6vw, 5rem) var(--container-px)',
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
         }}
       >
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-display-md)',
-            fontWeight: 700,
-            color: 'var(--color-ink)',
-            letterSpacing: '-0.04em',
-            lineHeight: 1.05,
-            marginBottom: '2rem',
-          }}
+          style={{ textAlign: 'center', marginBottom: '3rem' }}
         >
-          Funcionalidades
-        </motion.h2>
+          <span
+            style={{
+              display: 'inline-block',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--color-accent-primary)',
+              marginBottom: '1rem',
+            }}
+          >
+            Funcionalidades
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'var(--text-display-md)',
+              fontWeight: 700,
+              color: 'var(--color-ink)',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+              marginBottom: '1rem',
+            }}
+          >
+            Todo lo que necesitas para gestionar tu programa
+          </h2>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-body-lg)',
+              color: 'var(--color-text-secondary)',
+              maxWidth: 600,
+              margin: '0 auto',
+              lineHeight: 1.6,
+            }}
+          >
+            Desde la invitación de founders hasta los reportes finales, una plataforma integrada para todo el ciclo.
+          </p>
+        </motion.div>
 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '1.25rem',
           }}
         >
@@ -300,7 +723,262 @@ export default function OrganizacionesPage() {
         </div>
       </section>
 
-      {/* Full-width CTA */}
+      {/* ============================================================ */}
+      {/*  PRICING                                                      */}
+      {/* ============================================================ */}
+      <section
+        id="precios"
+        style={{
+          padding: 'clamp(4rem, 8vw, 6rem) var(--container-px)',
+          maxWidth: 'var(--container-max)',
+          margin: '0 auto',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--color-accent-primary)',
+              marginBottom: '1rem',
+            }}
+          >
+            Precios
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'var(--text-display-md)',
+              fontWeight: 700,
+              color: 'var(--color-ink)',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+              marginBottom: '1rem',
+            }}
+          >
+            Planes disenados para tu programa
+          </h2>
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-body-lg)',
+              color: 'var(--color-text-secondary)',
+              maxWidth: 560,
+              margin: '0 auto',
+              lineHeight: 1.6,
+            }}
+          >
+            Sin sorpresas. Elige el plan que se adapta a tu organización y escala cuando lo necesites.
+          </p>
+        </motion.div>
+
+        {/* Pricing cards */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '1.5rem',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'stretch',
+          }}
+        >
+          {PLANS.map((plan, i) => (
+            <PricingCard key={plan.name} plan={plan} i={i} />
+          ))}
+        </div>
+
+        {/* Regional CTA callout */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.2 }}
+          style={{
+            marginTop: '3rem',
+            background: 'rgba(13,148,136,0.06)',
+            border: '1px solid rgba(13,148,136,0.15)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '2rem 2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1.5rem',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 300px' }}>
+            <MapPin size={24} color="#0D9488" strokeWidth={1.5} />
+            <div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'var(--text-heading-md)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.2,
+                  marginBottom: '0.25rem',
+                }}
+              >
+                Eres una incubadora regional?
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body)',
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                Aplica al plan gratuito y potencia tu programa de innovacion sin costo.
+              </p>
+            </div>
+          </div>
+          <a
+            href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, soy una incubadora regional y quiero aplicar al plan gratuito de S4C.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.625rem',
+              padding: '0.875rem 1.75rem',
+              borderRadius: 'var(--radius-full)',
+              background: '#0D9488',
+              color: '#fff',
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-body)',
+              fontWeight: 700,
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+          >
+            Aplica gratis
+            <ArrowRight size={18} strokeWidth={2.5} />
+          </a>
+        </motion.div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  SOCIAL PROOF                                                 */}
+      {/* ============================================================ */}
+      <section
+        style={{
+          padding: 'clamp(3rem, 6vw, 5rem) var(--container-px)',
+          maxWidth: 'var(--container-max)',
+          margin: '0 auto',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+          style={{ textAlign: 'center', marginBottom: '2.5rem' }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: 'var(--color-accent-primary)',
+              marginBottom: '1rem',
+            }}
+          >
+            Confianza
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'var(--text-display-md)',
+              fontWeight: 700,
+              color: 'var(--color-ink)',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+            }}
+          >
+            Universidades e incubadoras que confian en nosotros
+          </h2>
+        </motion.div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '1.5rem',
+          }}
+        >
+          {SOCIAL_PROOF.map((name, i) => (
+            <motion.div
+              key={name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.06 }}
+              style={{
+                background: 'var(--color-paper)',
+                border: '1px solid var(--color-border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.5rem 2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: 180,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '0.9375rem',
+                  fontWeight: 600,
+                  color: 'var(--color-text-muted)',
+                  letterSpacing: '-0.02em',
+                  textAlign: 'center',
+                }}
+              >
+                {name}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        <p
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.8125rem',
+            color: 'var(--color-text-muted)',
+            textAlign: 'center',
+            marginTop: '1.5rem',
+            fontStyle: 'italic',
+          }}
+        >
+          Organizaciones en proceso de onboarding y pilotos activos
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  BOTTOM CTA                                                   */}
+      {/* ============================================================ */}
       <section
         style={{
           padding: '0 var(--container-px) clamp(4rem, 8vw, 8rem)',
@@ -322,7 +1000,7 @@ export default function OrganizacionesPage() {
             overflow: 'hidden',
           }}
         >
-          {/* Decorative accent */}
+          {/* Decorative accents */}
           <div
             style={{
               position: 'absolute',
@@ -332,6 +1010,18 @@ export default function OrganizacionesPage() {
               height: 300,
               borderRadius: '50%',
               background: 'rgba(255,107,74,0.06)',
+              pointerEvents: 'none',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: -60,
+              left: -60,
+              width: 200,
+              height: 200,
+              borderRadius: '50%',
+              background: 'rgba(13,148,136,0.05)',
               pointerEvents: 'none',
             }}
           />
@@ -348,7 +1038,7 @@ export default function OrganizacionesPage() {
               marginBottom: '1.25rem',
             }}
           >
-            Contáctanos
+            Comienza hoy
           </span>
 
           <h3
@@ -362,7 +1052,7 @@ export default function OrganizacionesPage() {
               color: 'var(--color-paper)',
             }}
           >
-            ¿Gestionas un programa de<br />incubación o aceleración?
+            Listo para potenciar tu programa?
           </h3>
           <p
             style={{
@@ -375,50 +1065,88 @@ export default function OrganizacionesPage() {
               letterSpacing: '-0.01em',
             }}
           >
-            Agenda una llamada y te mostramos cómo la plataforma puede integrarse a tu operación.
+            Conversemos sobre cómo S4C puede integrarse a tu operación.
+            Respondemos en menos de 24 horas.
           </p>
-          <a
-            href="https://calendly.com/redesignlab"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: '1.25rem 2.5rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-paper)',
-              color: 'var(--color-ink)',
-              fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-body-lg)',
-              fontWeight: 700,
-              border: 'none',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              letterSpacing: '-0.01em',
-              transition: 'background 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-spring)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-accent-primary)'
-              e.currentTarget.style.color = 'var(--color-paper)'
-              e.currentTarget.style.transform = 'translateY(-2px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-paper)'
-              e.currentTarget.style.color = 'var(--color-ink)'
-              e.currentTarget.style.transform = 'translateY(0)'
-            }}
-          >
-            Agenda una llamada
-            <ArrowRight size={20} strokeWidth={2.5} />
-          </a>
 
+          {/* CTA buttons */}
           <div
             style={{
-              marginTop: '1.75rem',
-              textAlign: 'center',
+              display: 'flex',
+              gap: '1rem',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
             }}
           >
+            <a
+              href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa S4C para mi organización. Quisiera agendar una demo.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1.25rem 2.5rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-accent-primary)',
+                color: '#fff',
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-body-lg)',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                letterSpacing: '-0.01em',
+                transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
+              <MessageCircle size={20} strokeWidth={2} />
+              WhatsApp
+            </a>
+
+            <a
+              href="mailto:hello@redesignlab.org?subject=Interes en S4C para organizaciones"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '1.25rem 2.5rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-paper)',
+                color: 'var(--color-ink)',
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-body-lg)',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                letterSpacing: '-0.01em',
+                transition: 'transform 0.2s var(--ease-spring), background 0.2s ease, color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.background = 'var(--color-accent-primary)'
+                e.currentTarget.style.color = '#fff'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.background = 'var(--color-paper)'
+                e.currentTarget.style.color = 'var(--color-ink)'
+              }}
+            >
+              <Mail size={20} strokeWidth={2} />
+              hello@redesignlab.org
+            </a>
+          </div>
+
+          {/* Login link */}
+          <div style={{ marginTop: '1.75rem' }}>
             <button
               type="button"
               onClick={() => openAuthModal('login')}
@@ -435,7 +1163,7 @@ export default function OrganizacionesPage() {
                 padding: 0,
               }}
             >
-              ¿Ya tienes acceso?{' '}
+              Ya tienes acceso?{' '}
               <span style={{ color: 'var(--color-accent-primary)', fontWeight: 700 }}>Iniciar sesión</span>
               <ChevronRight size={14} color="var(--color-accent-primary)" />
             </button>

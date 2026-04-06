@@ -50,7 +50,7 @@ export default function AuthModal() {
           ? await login(form.email, form.password)
           : await register(form.email, form.password, form.name, form.startup)
     } catch {
-      setError('Error de conexion. Verifica tu internet e intenta de nuevo.')
+      setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
       setLoading(false)
       return
     }

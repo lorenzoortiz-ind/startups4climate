@@ -1,0 +1,161 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createSupabaseServer } from '@/lib/supabase-server'
+
+export async function GET() {
+  const supabase = await createSupabaseServer()
+
+  // Auth check
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, org_id')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile) {
+    return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 })
+  }
+
+  if (profile.role === 'superadmin') {
+    // Superadmin: list all requests
+    const { data: requests, error } = await supabase
+      .from('cohort_requests')
+      .select('*, cohorts(id, name, org_id), startups(id, name)')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })
+    }
+
+    return NextResponse.json({ requests: requests || [] })
+  }
+
+  if (profile.role === 'admin_org' && profile.org_id) {
+    // Admin org: list requests for cohorts in their org
+    const { data: cohorts } = await supabase
+      .from('cohorts')
+      .select('id')
+      .eq('org_id', profile.org_id)
+
+    const cohortIds = (cohorts || []).map((c) => c.id)
+
+    if (cohortIds.length === 0) {
+      return NextResponse.json({ requests: [] })
+    }
+
+    const { data: requests, error } = await supabase
+      .from('cohort_requests')
+      .select('*, cohorts(id, name), startups(id, name)')
+      .in('cohort_id', cohortIds)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })
+    }
+
+    return NextResponse.json({ requests: requests || [] })
+  }
+
+  // Founder: list own requests
+  const { data: startup } = await supabase
+    .from('startups')
+    .select('id')
+    .eq('founder_id', user.id)
+    .single()
+
+  if (!startup) {
+    return NextResponse.json({ requests: [] })
+  }
+
+  const { data: requests, error } = await supabase
+    .from('cohort_requests')
+    .select('*, cohorts(id, name)')
+    .eq('startup_id', startup.id)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })
+  }
+
+  return NextResponse.json({ requests: requests || [] })
+}
+
+export async function POST(request: NextRequest) {
+  const supabase = await createSupabaseServer()
+
+  // Auth check
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  }
+
+  const body = await request.json()
+  const { cohort_id, message } = body
+
+  if (!cohort_id || typeof cohort_id !== 'string') {
+    return NextResponse.json({ error: 'cohort_id requerido' }, { status: 400 })
+  }
+
+  // Verify cohort exists and is open
+  const { data: cohort } = await supabase
+    .from('cohorts')
+    .select('id, name, access_mode')
+    .eq('id', cohort_id)
+    .single()
+
+  if (!cohort) {
+    return NextResponse.json({ error: 'Cohorte no encontrada' }, { status: 404 })
+  }
+
+  if (cohort.access_mode !== 'open') {
+    return NextResponse.json({ error: 'Esta cohorte no acepta solicitudes abiertas' }, { status: 403 })
+  }
+
+  // Get founder's startup
+  const { data: startup } = await supabase
+    .from('startups')
+    .select('id')
+    .eq('founder_id', user.id)
+    .single()
+
+  if (!startup) {
+    return NextResponse.json({ error: 'No se encontró tu startup. Debes registrar una startup primero.' }, { status: 404 })
+  }
+
+  // Check for existing pending request
+  const { data: existing } = await supabase
+    .from('cohort_requests')
+    .select('id')
+    .eq('cohort_id', cohort_id)
+    .eq('startup_id', startup.id)
+    .eq('status', 'pending')
+    .maybeSingle()
+
+  if (existing) {
+    return NextResponse.json({ error: 'Ya tienes una solicitud pendiente para esta cohorte' }, { status: 409 })
+  }
+
+  // Create request
+  const { data: cohortRequest, error: insertError } = await supabase
+    .from('cohort_requests')
+    .insert({
+      cohort_id,
+      startup_id: startup.id,
+      requested_by: user.id,
+      message: message || null,
+      status: 'pending',
+    })
+    .select()
+    .single()
+
+  if (insertError || !cohortRequest) {
+    console.error('Insert error:', insertError)
+    return NextResponse.json({ error: 'Error al crear la solicitud' }, { status: 500 })
+  }
+
+  return NextResponse.json({ success: true, request: cohortRequest })
+}

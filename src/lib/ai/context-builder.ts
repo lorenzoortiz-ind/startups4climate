@@ -33,10 +33,10 @@ export function buildStartupContext(
       parts.push('STARTUP: Sin nombre')
     }
     if (profile.stage) parts.push(`ETAPA: ${profile.stage}`)
-    if (profile.diagnostic_score) parts.push(`SCORE DIAGNOSTICO: ${profile.diagnostic_score}/100`)
-    parts.push('(Datos detallados de la startup aun no registrados. Pide al founder que complete su perfil para darte mas contexto.)')
+    if (profile.diagnostic_score) parts.push(`SCORE DIAGNÓSTICO: ${profile.diagnostic_score}/100`)
+    parts.push('(Datos detallados de la startup aún no registrados. Pide al founder que complete su perfil para darte más contexto.)')
   } else {
-    parts.push('No hay datos de la startup ni del founder registrados aun.')
+    parts.push('No hay datos de la startup ni del founder registrados aún.')
   }
 
   const completedTools = progress?.filter((p) => p.completed) || []

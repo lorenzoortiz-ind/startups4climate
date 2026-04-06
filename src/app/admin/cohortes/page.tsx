@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -8,48 +8,26 @@ import {
   Users,
   Calendar,
   ChevronRight,
+  Loader2,
 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
-interface Cohort {
+interface CohortRow {
   id: string
   name: string
-  startupsCount: number
-  startDate: string
-  endDate: string
-  status: 'active' | 'planned' | 'completed'
+  description: string | null
+  start_date: string | null
+  end_date: string | null
+  status: string
+  created_at: string
 }
 
-const MOCK_COHORTS: Cohort[] = [
-  {
-    id: '1',
-    name: 'Cohorte Climate 2026-I',
-    startupsCount: 12,
-    startDate: '2026-01-15',
-    endDate: '2026-06-15',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Cohorte Impacto LATAM',
-    startupsCount: 8,
-    startDate: '2026-03-01',
-    endDate: '2026-08-31',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'Pre-incubación Q4 2025',
-    startupsCount: 15,
-    startDate: '2025-10-01',
-    endDate: '2025-12-31',
-    status: 'completed',
-  },
-]
-
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   active: { label: 'Activa', color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
   planned: { label: 'Planificada', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
   completed: { label: 'Completada', color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
+  archived: { label: 'Archivada', color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)' },
 }
 
 const cardStyle: React.CSSProperties = {
@@ -60,7 +38,64 @@ const cardStyle: React.CSSProperties = {
 }
 
 export default function CohortesPage() {
-  const [cohorts] = useState<Cohort[]>(MOCK_COHORTS)
+  const { appUser } = useAuth()
+  const [cohorts, setCohorts] = useState<(CohortRow & { startupsCount: number })[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!appUser?.org_id) return
+
+    async function loadCohorts() {
+      setLoading(true)
+
+      // Fetch cohorts for this org
+      const { data: cohortsData } = await supabase
+        .from('cohorts')
+        .select('*')
+        .eq('org_id', appUser!.org_id!)
+        .order('created_at', { ascending: false })
+
+      if (!cohortsData || cohortsData.length === 0) {
+        setCohorts([])
+        setLoading(false)
+        return
+      }
+
+      // Get startup counts per cohort
+      const cohortIds = cohortsData.map((c) => c.id)
+      const { data: assignments } = await supabase
+        .from('cohort_startups')
+        .select('cohort_id')
+        .in('cohort_id', cohortIds)
+
+      const countMap: Record<string, number> = {}
+      assignments?.forEach((a) => {
+        countMap[a.cohort_id] = (countMap[a.cohort_id] || 0) + 1
+      })
+
+      setCohorts(
+        cohortsData.map((c) => ({
+          ...c,
+          startupsCount: countMap[c.id] || 0,
+        }))
+      )
+      setLoading(false)
+    }
+
+    loadCohorts()
+  }, [appUser?.org_id])
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        minHeight: '60vh',
+      }}>
+        <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -153,82 +188,89 @@ export default function CohortesPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {cohorts.map((cohort, i) => {
-            const status = STATUS_CONFIG[cohort.status]
+            const status = STATUS_CONFIG[cohort.status] || STATUS_CONFIG.planned
             return (
-              <motion.div
+              <Link
                 key={cohort.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.06 }}
-                style={{
-                  ...cardStyle,
-                  padding: '1.25rem 1.5rem',
-                  display: 'flex', alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem', cursor: 'pointer',
-                  transition: 'border-color 0.15s, box-shadow 0.15s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--color-border-strong)'
-                  e.currentTarget.style.boxShadow = 'var(--shadow-elevated)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--color-border)'
-                  e.currentTarget.style.boxShadow = 'var(--shadow-card)'
-                }}
+                href={`/admin/cohortes/${cohort.id}`}
+                style={{ textDecoration: 'none' }}
               >
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    marginBottom: '0.5rem', flexWrap: 'wrap',
-                  }}>
-                    <h3 style={{
-                      fontFamily: 'var(--font-heading)', fontWeight: 600,
-                      fontSize: '1rem', color: 'var(--color-text-primary)',
-                    }}>
-                      {cohort.name}
-                    </h3>
-                    <span style={{
-                      padding: '0.125rem 0.625rem', borderRadius: 'var(--radius-xl)',
-                      background: status.bg, color: status.color,
-                      fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
-                      fontWeight: 600,
-                    }}>
-                      {status.label}
-                    </span>
-                  </div>
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: '1.25rem',
-                    flexWrap: 'wrap',
-                  }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.06 }}
+                  style={{
+                    ...cardStyle,
+                    padding: '1.25rem 1.5rem',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '1rem', cursor: 'pointer',
+                    transition: 'border-color 0.15s, box-shadow 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border-strong)'
+                    e.currentTarget.style.boxShadow = 'var(--shadow-elevated)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)'
+                    e.currentTarget.style.boxShadow = 'var(--shadow-card)'
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      display: 'flex', alignItems: 'center', gap: '0.375rem',
+                      display: 'flex', alignItems: 'center', gap: '0.75rem',
+                      marginBottom: '0.5rem', flexWrap: 'wrap',
                     }}>
-                      <Users size={14} color="var(--color-text-muted)" />
-                      <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                        color: 'var(--color-text-secondary)',
+                      <h3 style={{
+                        fontFamily: 'var(--font-heading)', fontWeight: 600,
+                        fontSize: '1rem', color: 'var(--color-text-primary)',
                       }}>
-                        {cohort.startupsCount} startups
+                        {cohort.name}
+                      </h3>
+                      <span style={{
+                        padding: '0.125rem 0.625rem', borderRadius: 'var(--radius-xl)',
+                        background: status.bg, color: status.color,
+                        fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                        fontWeight: 600,
+                      }}>
+                        {status.label}
                       </span>
                     </div>
                     <div style={{
-                      display: 'flex', alignItems: 'center', gap: '0.375rem',
+                      display: 'flex', alignItems: 'center', gap: '1.25rem',
+                      flexWrap: 'wrap',
                     }}>
-                      <Calendar size={14} color="var(--color-text-muted)" />
-                      <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                        color: 'var(--color-text-secondary)',
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: '0.375rem',
                       }}>
-                        {new Date(cohort.startDate).toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}
-                        {' - '}
-                        {new Date(cohort.endDate).toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}
-                      </span>
+                        <Users size={14} color="var(--color-text-muted)" />
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                          color: 'var(--color-text-secondary)',
+                        }}>
+                          {cohort.startupsCount} startups
+                        </span>
+                      </div>
+                      {cohort.start_date && cohort.end_date && (
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: '0.375rem',
+                        }}>
+                          <Calendar size={14} color="var(--color-text-muted)" />
+                          <span style={{
+                            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                            color: 'var(--color-text-secondary)',
+                          }}>
+                            {new Date(cohort.start_date).toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}
+                            {' - '}
+                            {new Date(cohort.end_date).toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-                <ChevronRight size={18} color="var(--color-text-muted)" />
-              </motion.div>
+                  <ChevronRight size={18} color="var(--color-text-muted)" />
+                </motion.div>
+              </Link>
             )
           })}
         </div>

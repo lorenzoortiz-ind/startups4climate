@@ -1,8 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Save, Building2, CreditCard, Globe } from 'lucide-react'
+import { Save, Building2, CreditCard, Globe, Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
+
+const PLAN_LABELS: Record<string, string> = {
+  starter: 'Starter',
+  professional: 'Professional',
+  enterprise: 'Enterprise',
+  institutional: 'Institutional',
+}
 
 const cardStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
@@ -34,22 +43,106 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
 }
 
+interface OrgData {
+  name: string
+  website: string | null
+  logo_url: string | null
+  billing_email: string | null
+  plan: string
+  max_startups: number
+  contract_end: string | null
+}
+
 export default function ConfiguracionPage() {
-  const [orgName, setOrgName] = useState('Mi Organización')
-  const [website, setWebsite] = useState('https://')
+  const { appUser } = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [orgName, setOrgName] = useState('')
+  const [website, setWebsite] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
   const [billingEmail, setBillingEmail] = useState('')
+  const [plan, setPlan] = useState('starter')
+  const [maxStartups, setMaxStartups] = useState(25)
+  const [contractEnd, setContractEnd] = useState<string | null>(null)
+  const [startupCount, setStartupCount] = useState(0)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!appUser?.org_id) return
+
+    async function loadOrg() {
+      setLoading(true)
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('id', appUser!.org_id!)
+        .single()
+
+      if (org) {
+        setOrgName(org.name || '')
+        setWebsite(org.website || '')
+        setLogoUrl(org.logo_url || '')
+        setBillingEmail(org.billing_email || '')
+        setPlan(org.plan || 'starter')
+        setMaxStartups(org.max_startups || 25)
+        setContractEnd(org.contract_end)
+      }
+
+      // Count startups in org's cohorts
+      const { data: cohorts } = await supabase
+        .from('cohorts')
+        .select('id')
+        .eq('org_id', appUser!.org_id!)
+
+      if (cohorts && cohorts.length > 0) {
+        const { count } = await supabase
+          .from('cohort_startups')
+          .select('id', { count: 'exact', head: true })
+          .in('cohort_id', cohorts.map((c) => c.id))
+
+        setStartupCount(count || 0)
+      }
+
+      setLoading(false)
+    }
+
+    loadOrg()
+  }, [appUser?.org_id])
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!appUser?.org_id) return
+
     setSaving(true)
-    // Placeholder: will connect to Supabase later
-    await new Promise((r) => setTimeout(r, 1000))
+    setError(null)
+
+    const { error: updateError } = await supabase
+      .from('organizations')
+      .update({
+        name: orgName.trim(),
+        website: website.trim() || null,
+        logo_url: logoUrl.trim() || null,
+        billing_email: billingEmail.trim() || null,
+      })
+      .eq('id', appUser.org_id)
+
+    if (updateError) {
+      setError('Error al guardar los cambios. Intenta de nuevo.')
+    } else {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    }
     setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+  }
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      </div>
+    )
   }
 
   return (
@@ -74,6 +167,17 @@ export default function ConfiguracionPage() {
           Administra los datos de tu organización y plan
         </p>
       </div>
+
+      {error && (
+        <div style={{
+          padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)',
+          background: '#FEF2F2', border: '1px solid #FECACA',
+          color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+          marginBottom: '1rem',
+        }}>
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSave}>
         {/* Organization info */}
@@ -173,13 +277,13 @@ export default function ConfiguracionPage() {
                   fontSize: '1rem', color: 'var(--color-text-primary)',
                   marginBottom: '0.125rem',
                 }}>
-                  Plan Incubadora
+                  Plan {PLAN_LABELS[plan] || plan}
                 </div>
                 <div style={{
                   fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                   color: 'var(--color-text-secondary)',
                 }}>
-                  Hasta 30 startups
+                  Hasta {maxStartups} startups
                 </div>
               </div>
               <span style={{
@@ -206,7 +310,7 @@ export default function ConfiguracionPage() {
                   fontFamily: 'var(--font-heading)', fontWeight: 600,
                   fontSize: '0.9375rem', color: 'var(--color-text-primary)',
                 }}>
-                  24 / 30
+                  {startupCount} / {maxStartups}
                 </div>
               </div>
               <div>
@@ -215,13 +319,15 @@ export default function ConfiguracionPage() {
                   color: 'var(--color-text-muted)', textTransform: 'uppercase',
                   letterSpacing: '0.05em', marginBottom: '0.125rem',
                 }}>
-                  Próxima renovación
+                  Fin del contrato
                 </div>
                 <div style={{
                   fontFamily: 'var(--font-heading)', fontWeight: 600,
                   fontSize: '0.9375rem', color: 'var(--color-text-primary)',
                 }}>
-                  15 abr 2026
+                  {contractEnd
+                    ? new Date(contractEnd).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' })
+                    : 'Sin definir'}
                 </div>
               </div>
             </div>

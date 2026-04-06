@@ -93,7 +93,7 @@ export default function ChatInterface({
 
         setMessages((prev) => [...prev, assistantMsg])
       } catch {
-        setError('Error de conexion. Verifica tu internet e intenta de nuevo.')
+        setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
       } finally {
         setLoading(false)
       }

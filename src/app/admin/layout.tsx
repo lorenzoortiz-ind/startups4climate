@@ -17,8 +17,17 @@ import {
   Radar,
   Lightbulb,
   BookOpen,
+  Building2,
+  UsersRound,
+  Activity,
+  LifeBuoy,
+  ScrollText,
+  Wrench,
+  Shield,
 } from 'lucide-react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useAuth } from '@/context/AuthContext'
+import { SuperadminProvider } from '@/context/SuperadminContext'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -31,6 +40,15 @@ const NAV_ITEMS = [
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ] as const
 
+const SUPERADMIN_NAV = [
+  { href: '/admin/organizaciones', label: 'Organizaciones', icon: Building2 },
+  { href: '/admin/usuarios', label: 'Usuarios', icon: UsersRound },
+  { href: '/admin/metricas', label: 'Métricas globales', icon: Activity },
+  { href: '/admin/incidencias', label: 'Incidencias', icon: LifeBuoy },
+  { href: '/admin/actividad', label: 'Actividad', icon: ScrollText },
+  { href: '/admin/plataforma', label: 'Plataforma', icon: Wrench },
+] as const
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { appUser, loading, logout } = useAuth()
   const pathname = usePathname()
@@ -41,16 +59,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setMobileOpen(false)
   }, [pathname])
 
-  // Apply dark mode on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('s4c_dark_mode')
-    if (saved === 'true') {
-      document.documentElement.setAttribute('data-theme', 'dark')
-    }
-    return () => {
-      document.documentElement.removeAttribute('data-theme')
-    }
-  }, [])
 
   if (loading) {
     return (
@@ -71,13 +79,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  // Demo mode: create a fallback user if not logged in
-  const demoUser = appUser || {
-    id: 'demo',
-    email: 'demo@startups4climate.com',
-    full_name: 'Demo Admin',
-    role: 'admin_org' as const,
-    startup_name: 'Mi Organización',
+  // Redirect if not authenticated or not admin
+  if (!appUser) {
+    router.replace('/')
+    return null
+  }
+
+  if (appUser.role !== 'admin_org' && appUser.role !== 'superadmin') {
+    router.replace('/tools')
+    return null
   }
 
   const isActive = (href: string) => {
@@ -106,14 +116,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div>
           <div style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '0.875rem', color: '#F1F5F9',
+            fontSize: '0.75rem', color: '#F1F5F9',
             lineHeight: 1.2,
           }}>
             S4C Admin
           </div>
           <div style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
-            color: 'var(--color-admin-sidebar-text)', opacity: 0.7,
+            fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+            color: '#94A3B8', opacity: 0.7,
           }}>
             Panel de gestión
           </div>
@@ -134,7 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
                 textDecoration: 'none', transition: 'all 0.15s ease',
                 background: active ? 'var(--color-admin-sidebar-active)' : 'transparent',
-                color: active ? '#fff' : 'var(--color-admin-sidebar-text)',
+                color: active ? '#fff' : '#94A3B8',
               }}
               onMouseEnter={(e) => {
                 if (!active) {
@@ -145,13 +155,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               onMouseLeave={(e) => {
                 if (!active) {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = 'var(--color-admin-sidebar-text)'
+                  e.currentTarget.style.color = '#94A3B8'
                 }
               }}
             >
-              <Icon size={18} />
+              <Icon size={16} />
               <span style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem',
                 fontWeight: active ? 600 : 400,
               }}>
                 {item.label}
@@ -159,6 +169,66 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Link>
           )
         })}
+
+        {/* Superadmin section */}
+        {appUser.role === 'superadmin' && (
+          <>
+            <div style={{
+              height: 1, background: 'rgba(255,255,255,0.08)',
+              margin: '0.75rem 0.5rem',
+            }} />
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '0.375rem',
+              padding: '0.25rem 0.75rem', marginBottom: '0.25rem',
+            }}>
+              <Shield size={11} color="#FF6B4A" />
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '0.5625rem',
+                fontWeight: 700, textTransform: 'uppercase',
+                letterSpacing: '0.08em', color: '#FF6B4A',
+              }}>
+                Superadmin
+              </span>
+            </div>
+            {SUPERADMIN_NAV.map((item) => {
+              const active = isActive(item.href)
+              const Icon = item.icon
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+                    textDecoration: 'none', transition: 'all 0.15s ease',
+                    background: active ? 'var(--color-admin-sidebar-active)' : 'transparent',
+                    color: active ? '#fff' : '#94A3B8',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+                      e.currentTarget.style.color = '#F1F5F9'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = 'transparent'
+                      e.currentTarget.style.color = '#94A3B8'
+                    }
+                  }}
+                >
+                  <Icon size={16} />
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                    fontWeight: active ? 600 : 400,
+                  }}>
+                    {item.label}
+                  </span>
+                </Link>
+              )
+            })}
+          </>
+        )}
       </nav>
 
       {/* Bottom section */}
@@ -176,16 +246,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           marginBottom: '0.75rem',
         }}>
           <div style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
             fontWeight: 600, color: '#F1F5F9', marginBottom: '0.125rem',
           }}>
-            {demoUser.full_name}
+            {appUser.full_name}
           </div>
           <div style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
-            color: 'var(--color-admin-sidebar-text)', opacity: 0.7,
+            fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+            color: '#94A3B8', opacity: 0.7,
           }}>
-            {demoUser.email}
+            {appUser.email}
           </div>
         </div>
 
@@ -193,8 +263,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)',
           textDecoration: 'none', transition: 'color 0.15s',
-          color: 'var(--color-admin-sidebar-text)',
-          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+          color: '#94A3B8',
+          fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
           background: 'none', border: 'none', width: '100%',
           marginBottom: '0.25rem',
         }}>
@@ -208,12 +278,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: 'var(--color-admin-sidebar-text)',
-            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+            color: '#94A3B8',
+            fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
             width: '100%', textAlign: 'left', transition: 'color 0.15s',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = '#FCA5A5')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-admin-sidebar-text)')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
         >
           <LogOut size={14} />
           Cerrar sesión
@@ -223,6 +293,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   )
 
   return (
+    <SuperadminProvider>
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
       {/* Desktop sidebar */}
       <aside
@@ -259,7 +330,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <span style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '0.875rem', color: '#F1F5F9',
+            fontSize: '0.75rem', color: '#F1F5F9',
           }}>
             S4C Admin
           </span>
@@ -323,33 +394,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           <div style={{
             fontFamily: 'var(--font-heading)', fontWeight: 600,
-            fontSize: '0.9375rem', color: 'var(--color-text-primary)',
+            fontSize: '0.8125rem', color: 'var(--color-text-primary)',
           }}>
-            {demoUser.startup_name || 'Mi Organización'}
+            {appUser.startup_name || 'Mi Organización'}
           </div>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '1rem',
           }}>
             <span style={{
-              fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
               color: 'var(--color-text-secondary)',
             }}>
-              {demoUser.full_name}
+              {appUser.full_name}
             </span>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
               background: 'var(--color-accent-light)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700,
+              fontFamily: 'var(--font-heading)', fontSize: '0.625rem', fontWeight: 700,
               color: 'var(--color-accent-primary)',
             }}>
-              {demoUser.full_name.charAt(0).toUpperCase()}
+              {appUser.full_name.charAt(0).toUpperCase()}
             </div>
           </div>
         </div>
 
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </main>
     </div>
+    </SuperadminProvider>
   )
 }

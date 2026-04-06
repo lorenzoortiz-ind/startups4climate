@@ -154,7 +154,7 @@ export function generateToolReport(
   <div class="content">${formatContent(content, stageColor)}</div>
 
   <div class="disclaimer">
-    Este reporte fue generado automaticamente basado en la informacion ingresada. Valida los datos con tu equipo y asesores antes de compartirlo con inversores o stakeholders.
+    Este reporte fue generado automáticamente basado en la información ingresada. Valida los datos con tu equipo y asesores antes de compartirlo con inversores o stakeholders.
   </div>
 
   <div class="footer no-print">

@@ -1,18 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   FileBarChart,
   Download,
   ChevronDown,
+  Loader2,
 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
-const MOCK_COHORTS = [
-  { id: '1', name: 'Cohorte Climate 2026-I' },
-  { id: '2', name: 'Cohorte Impacto LATAM' },
-  { id: '3', name: 'Pre-incubación Q4 2025' },
-]
+interface CohortOption {
+  id: string
+  name: string
+}
 
 const REPORT_TYPES = [
   {
@@ -59,15 +61,66 @@ const labelStyle: React.CSSProperties = {
 }
 
 export default function ReportesPage() {
+  const { appUser } = useAuth()
+  const [cohorts, setCohorts] = useState<CohortOption[]>([])
+  const [loadingCohorts, setLoadingCohorts] = useState(true)
   const [selectedCohort, setSelectedCohort] = useState('')
   const [selectedType, setSelectedType] = useState('cohort')
   const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleGenerate = () => {
+  useEffect(() => {
+    if (!appUser?.org_id) return
+
+    async function loadCohorts() {
+      const { data } = await supabase
+        .from('cohorts')
+        .select('id, name')
+        .eq('org_id', appUser!.org_id!)
+        .order('created_at', { ascending: false })
+
+      setCohorts(data || [])
+      setLoadingCohorts(false)
+    }
+
+    loadCohorts()
+  }, [appUser?.org_id])
+
+  const handleGenerate = async () => {
     if (!selectedCohort) return
     setGenerating(true)
-    // Placeholder: will connect to real generation later
-    setTimeout(() => setGenerating(false), 2000)
+    setError(null)
+
+    try {
+      const res = await fetch('/api/reports/cohort', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cohortId: selectedCohort }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error || 'Error al generar el reporte')
+        setGenerating(false)
+        return
+      }
+
+      // Download the file
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const cohortName = cohorts.find((c) => c.id === selectedCohort)?.name || 'cohorte'
+      a.download = `reporte-${cohortName.replace(/\s+/g, '-').toLowerCase()}.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch {
+      setError('Error al generar el reporte. Intenta de nuevo.')
+    }
+
+    setGenerating(false)
   }
 
   const activeType = REPORT_TYPES.find((t) => t.value === selectedType)
@@ -95,6 +148,17 @@ export default function ReportesPage() {
         </p>
       </div>
 
+      {error && (
+        <div style={{
+          padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)',
+          background: '#FEF2F2', border: '1px solid #FECACA',
+          color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+          marginBottom: '1rem',
+        }}>
+          {error}
+        </div>
+      )}
+
       {/* Configuration card */}
       <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
         <h2 style={{
@@ -109,24 +173,35 @@ export default function ReportesPage() {
         <div style={{ marginBottom: '1.25rem' }}>
           <label style={labelStyle}>Seleccionar cohorte</label>
           <div style={{ position: 'relative' }}>
-            <select
-              value={selectedCohort}
-              onChange={(e) => setSelectedCohort(e.target.value)}
-              style={selectStyle}
-            >
-              <option value="">Selecciona una cohorte...</option>
-              {MOCK_COHORTS.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              color="var(--color-text-muted)"
-              style={{
-                position: 'absolute', right: 12, top: '50%',
-                transform: 'translateY(-50%)', pointerEvents: 'none',
-              }}
-            />
+            {loadingCohorts ? (
+              <div style={{ padding: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Loader2 size={16} color="var(--color-text-muted)" style={{ animation: 'spin 1s linear infinite' }} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+                  Cargando cohortes...
+                </span>
+              </div>
+            ) : (
+              <>
+                <select
+                  value={selectedCohort}
+                  onChange={(e) => setSelectedCohort(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="">Selecciona una cohorte...</option>
+                  {cohorts.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={16}
+                  color="var(--color-text-muted)"
+                  style={{
+                    position: 'absolute', right: 12, top: '50%',
+                    transform: 'translateY(-50%)', pointerEvents: 'none',
+                  }}
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -201,12 +276,17 @@ export default function ReportesPage() {
             opacity: generating ? 0.7 : 1,
           }}
         >
-          <Download size={16} />
-          {generating ? 'Generando...' : 'Generar reporte'}
+          {generating ? (
+            <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
+          ) : (
+            <Download size={16} />
+          )}
+          {generating ? 'Generando...' : 'Descargar reporte Excel'}
         </button>
+        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
       </div>
 
-      {/* Empty state */}
+      {/* Info */}
       <div style={{
         ...cardStyle,
         textAlign: 'center',
@@ -225,7 +305,7 @@ export default function ReportesPage() {
           fontSize: '1rem', color: 'var(--color-text-primary)',
           marginBottom: '0.5rem',
         }}>
-          Tus reportes aparecerán aquí
+          Reportes en formato Excel
         </h3>
         <p style={{
           fontFamily: 'var(--font-body)', fontSize: '0.875rem',
@@ -233,7 +313,7 @@ export default function ReportesPage() {
           margin: '0 auto', lineHeight: 1.6,
         }}>
           Los reportes incluyen métricas de avance, distribución por etapa, herramientas completadas,
-          scores diagnósticos y recomendaciones para cada startup del programa.
+          scores diagnósticos y datos de cada startup del programa.
         </p>
       </div>
     </motion.div>

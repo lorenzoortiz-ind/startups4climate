@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
 interface Milestone {
   id: string
@@ -58,7 +59,9 @@ const cardStyle: React.CSSProperties = {
 
 export default function NuevaCohorte() {
   const router = useRouter()
+  const { appUser } = useAuth()
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [startDate, setStartDate] = useState('')
@@ -85,10 +88,16 @@ export default function NuevaCohorte() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim() || !startDate || !endDate) return
+    if (!appUser?.org_id) {
+      setError('No se encontró la organización asociada a tu cuenta.')
+      return
+    }
 
     setSaving(true)
+    setError(null)
     try {
-      const { error } = await supabase.from('cohorts').insert({
+      const { error: insertError } = await supabase.from('cohorts').insert({
+        org_id: appUser.org_id,
         name: name.trim(),
         description: description.trim(),
         start_date: startDate,
@@ -99,11 +108,13 @@ export default function NuevaCohorte() {
         status: 'planned',
       })
 
-      if (!error) {
+      if (insertError) {
+        setError('Error al crear la cohorte. Intenta de nuevo.')
+      } else {
         router.push('/admin/cohortes')
       }
     } catch {
-      // handle silently for now
+      setError('Error inesperado. Intenta de nuevo.')
     } finally {
       setSaving(false)
     }
@@ -346,6 +357,18 @@ export default function NuevaCohorte() {
             </div>
           )}
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div style={{
+            padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)',
+            background: '#FEF2F2', border: '1px solid #FECACA',
+            color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+            marginBottom: '1rem',
+          }}>
+            {error}
+          </div>
+        )}
 
         {/* Actions */}
         <div style={{

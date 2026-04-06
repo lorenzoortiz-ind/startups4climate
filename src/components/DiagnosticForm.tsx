@@ -387,6 +387,21 @@ export default function DiagnosticForm() {
       insertLead()
       insertDiagnostic()
 
+      // Store diagnostic results in localStorage for users who are not yet registered.
+      // The AuthContext register() flow will pick this up and persist it to the profile.
+      try {
+        const stageTag = matched.tag
+        const pendingData = {
+          score: total,
+          stage: stageTag,
+          answers: { ...answers, scores: { ...scores } },
+          completedAt: new Date().toISOString(),
+        }
+        localStorage.setItem('s4c_diagnostic_pending', JSON.stringify(pendingData))
+      } catch {
+        // localStorage unavailable — ignore
+      }
+
       setTimeout(() => {
         setSubmitted(true)
         setStep(12)

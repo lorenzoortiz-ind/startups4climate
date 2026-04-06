@@ -43,17 +43,32 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
-  // Protected routes: /tools/* requires authentication
-  if (pathname.startsWith('/tools') && !user) {
+  // Protected routes: /tools/* and /admin/* require authentication
+  if ((pathname.startsWith('/tools') || pathname.startsWith('/admin')) && !user) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/'
     redirectUrl.searchParams.set('auth', 'login')
     return NextResponse.redirect(redirectUrl)
   }
 
+  // Admin routes: require admin_org or superadmin role
+  if (pathname.startsWith('/admin') && user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/tools'
+      return NextResponse.redirect(redirectUrl)
+    }
+  }
+
   return supabaseResponse
 }
 
 export const config = {
-  matcher: ['/tools/:path*'],
+  matcher: ['/tools/:path*', '/admin/:path*'],
 }

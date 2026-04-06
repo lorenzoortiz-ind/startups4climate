@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const messages = [
       {
         role: 'system',
-        content: `Eres un mentor experto en startups de impacto en Latinoamerica. Un founder acaba de completar una herramienta de la plataforma. Analiza los datos que ingreso y da retroalimentacion constructiva, especifica y accionable. Maximo 200 palabras. Responde en espanol. No uses emojis ni markdown con # headers. Usa texto plano con vinetas.`,
+        content: `Eres un mentor experto en startups de impacto en Latinoamérica. Un founder acaba de completar una herramienta de la plataforma. Analiza los datos que ingresó y da retroalimentación constructiva, específica y accionable. Máximo 200 palabras. Responde en español. No uses emojis ni markdown con # headers. Usa texto plano con viñetas.`,
       },
       {
         role: 'system',

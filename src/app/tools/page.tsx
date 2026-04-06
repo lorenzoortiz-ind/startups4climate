@@ -61,7 +61,7 @@ const springReveal = {
   transition: { type: 'spring', damping: 20, stiffness: 100 } as const,
 }
 
-/* ─── Tool card ─── */
+/* ─── Tool card (redesigned) ─── */
 function ToolCard({
   tool,
   done,
@@ -85,129 +85,145 @@ function ToolCard({
       onMouseLeave={() => setHovered(false)}
       style={{
         display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-        padding: '1.125rem 1.25rem',
+        flexDirection: 'column',
+        gap: '0.75rem',
+        padding: '1.25rem 1.375rem',
         borderRadius: 'var(--radius-md)',
-        background: done ? tool.stageBg : 'var(--color-paper)',
+        background: done ? `linear-gradient(135deg, ${tool.stageBg}, var(--color-paper))` : 'var(--color-paper)',
         border: `1px solid ${done ? tool.stageBorder : 'var(--color-border)'}`,
+        borderLeft: `4px solid ${locked ? 'var(--color-border)' : tool.stageColor}`,
         textDecoration: 'none',
-        transition: 'transform 0.2s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease',
+        transition: 'transform 0.25s var(--ease-spring), box-shadow 0.25s ease, border-color 0.2s ease',
         position: 'relative' as const,
-        overflow: 'visible',
+        overflow: 'hidden',
         opacity: locked ? 0.45 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
-        transform: hovered && !locked ? 'translateY(-3px)' : 'translateY(0)',
-        boxShadow: hovered && !locked ? 'var(--shadow-float)' : '0 1px 3px rgba(25,25,25,0.04)',
+        transform: hovered && !locked ? 'translateY(-4px)' : 'translateY(0)',
+        boxShadow: hovered && !locked ? '0 16px 32px -8px rgba(25,25,25,0.1)' : '0 2px 8px rgba(25,25,25,0.04)',
+        minHeight: 140,
       }}
     >
-      {done && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 3,
-            height: '100%',
-            background: tool.stageColor,
-            borderRadius: '3px 0 0 3px',
-          }}
-        />
+      {/* Subtle gradient corner */}
+      {!locked && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: 80,
+          height: 80,
+          background: `radial-gradient(circle at top right, ${tool.stageBg}, transparent)`,
+          pointerEvents: 'none',
+        }} />
       )}
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 'var(--radius-sm)',
-          background: tool.stageBg,
-          border: `1px solid ${tool.stageBorder}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}
-      >
-        {locked ? (
-          <Lock size={16} color="var(--color-text-muted)" strokeWidth={1.5} />
-        ) : done ? (
-          <CheckCircle2 size={18} color={tool.stageColor} />
-        ) : (
-          <div
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: tool.stageColor,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            {tool.stepNumber + 1}
-          </div>
-        )}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
+
+      {/* Top row: category badge + completion */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '0.5rem',
+      }}>
+        <span
           style={{
+            display: 'inline-block',
+            padding: '3px 10px',
+            borderRadius: 'var(--radius-full)',
             fontFamily: 'var(--font-body)',
-            fontSize: '0.9375rem',
-            fontWeight: 600,
-            color: locked ? 'var(--color-text-muted)' : 'var(--color-ink)',
-            marginBottom: '0.3rem',
-            letterSpacing: '-0.01em',
-            overflowWrap: 'break-word',
-            wordBreak: 'break-word',
+            fontSize: '0.5625rem',
+            fontWeight: 700,
+            color: catColor.color,
+            background: catColor.bg,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
           }}
         >
-          {tool.shortName}
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <span
-            style={{
-              display: 'inline-block',
+          {tool.category}
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {done && !locked && (
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
               padding: '2px 8px',
-              borderRadius: 'var(--radius-xs)',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(13,148,136,0.08)',
               fontFamily: 'var(--font-body)',
               fontSize: '0.5625rem',
               fontWeight: 700,
-              color: catColor.color,
-              background: catColor.bg,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-            }}
-          >
-            {tool.category}
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <Clock size={10} color="var(--color-text-muted)" />
-            <span
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
-                color: 'var(--color-text-muted)',
-              }}
-            >
-              {tool.estimatedTime}
+              color: 'var(--color-accent-secondary)',
+            }}>
+              <CheckCircle2 size={10} />
+              Completada
             </span>
-          </span>
+          )}
+          {locked && (
+            <Lock size={13} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
+          )}
         </div>
       </div>
-      {!locked && (
-        <ArrowRight
-          size={15}
-          color={done ? tool.stageColor : 'var(--color-text-muted)'}
-          style={{ flexShrink: 0, opacity: hovered ? 1 : 0.5, transition: 'opacity 0.2s' }}
-        />
-      )}
-      {locked && (
-        <Lock size={13} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
-      )}
+
+      {/* Tool name */}
+      <div
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '1.0625rem',
+          fontWeight: 700,
+          color: locked ? 'var(--color-text-muted)' : 'var(--color-ink)',
+          letterSpacing: '-0.02em',
+          lineHeight: 1.25,
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+        }}
+      >
+        {tool.shortName}
+      </div>
+
+      {/* Description */}
+      <p
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.8125rem',
+          lineHeight: 1.5,
+          color: 'var(--color-text-secondary)',
+          margin: 0,
+          flex: 1,
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical' as const,
+          overflow: 'hidden',
+        }}
+      >
+        {tool.description}
+      </p>
+
+      {/* Bottom row: time + arrow */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 'auto',
+      }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <Clock size={11} color="var(--color-text-muted)" />
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.6875rem',
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            {tool.estimatedTime}
+          </span>
+        </span>
+        {!locked && (
+          <ArrowRight
+            size={15}
+            color={done ? tool.stageColor : 'var(--color-text-muted)'}
+            style={{ flexShrink: 0, opacity: hovered ? 1 : 0.5, transition: 'opacity 0.2s' }}
+          />
+        )}
+      </div>
     </motion.div>
   )
 
@@ -286,7 +302,7 @@ export default function ToolsDashboard() {
     <div
       style={{
         padding: '2.5rem 1.75rem',
-        maxWidth: 960,
+        maxWidth: 1060,
         margin: '0 auto',
         overflowWrap: 'break-word',
         wordBreak: 'break-word',
@@ -621,7 +637,7 @@ export default function ToolsDashboard() {
                       marginBottom: '0.2rem',
                     }}
                   >
-                    Continúa donde lo dejaste
+                    Continua donde lo dejaste
                   </div>
                   <div
                     style={{
@@ -717,326 +733,324 @@ export default function ToolsDashboard() {
         })}
       </motion.div>
 
-      {/* ─── Roadmap: vertical journey ─── */}
-      <div style={{ position: 'relative' }}>
-        {/* Vertical connecting line */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 26,
-            top: 0,
-            bottom: 0,
-            width: 2,
-            background: 'linear-gradient(to bottom, var(--color-accent-primary), var(--color-accent-secondary), var(--color-text-muted), var(--color-accent-secondary))',
-            borderRadius: 2,
-            opacity: 0.15,
-            zIndex: 0,
-          }}
-        />
+      {/* ─── Roadmap: stage sections with 3-col grid ─── */}
+      {([1, 2, 3, 4] as const).map((stageNum, si) => {
+        const meta = STAGE_META[stageNum]
+        const Icon = STAGE_ICONS[stageNum]
+        const stageTools = filteredToolsByStage[stageNum]
+        const allStageTools = TOOLS_BY_STAGE[stageNum]
+        const stageDone = allStageTools.filter((t) => completedIds.has(t.id)).length
+        const stageTotal = allStageTools.length
+        const isLocked = stageNum > userStageNum
+        const isStageComplete = stageDone === stageTotal && stageTotal > 0
 
-        {([1, 2, 3, 4] as const).map((stageNum, si) => {
-          const meta = STAGE_META[stageNum]
-          const Icon = STAGE_ICONS[stageNum]
-          const stageTools = filteredToolsByStage[stageNum]
-          const allStageTools = TOOLS_BY_STAGE[stageNum]
-          const stageDone = allStageTools.filter((t) => completedIds.has(t.id)).length
-          const stageTotal = allStageTools.length
-          const isLocked = stageNum > userStageNum
-          const isStageComplete = stageDone === stageTotal && stageTotal > 0
+        if (stageTools.length === 0 && activeCategory !== 'Todos') return null
 
-          if (stageTools.length === 0 && activeCategory !== 'Todos') return null
-
-          return (
-            <motion.section
-              key={stageNum}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 + si * 0.08 }}
+        return (
+          <motion.section
+            key={stageNum}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 + si * 0.08 }}
+            style={{
+              marginBottom: si < 3 ? '2.5rem' : 0,
+            }}
+          >
+            {/* Stage header card */}
+            <div
               style={{
-                position: 'relative',
-                marginBottom: si < 3 ? '2.5rem' : 0,
-                paddingLeft: 60,
-                zIndex: 1,
+                background: isLocked ? 'rgba(0,0,0,0.015)' : meta.bg,
+                borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
+                border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
+                borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
+                borderBottom: 'none',
+                padding: '1.5rem 1.75rem 1.25rem',
+                opacity: isLocked ? 0.55 : 1,
+                transition: 'opacity 0.3s ease',
               }}
             >
-              {/* Stage node on the vertical line */}
               <div
                 style={{
-                  position: 'absolute',
-                  left: 8,
-                  top: 4,
-                  width: 38,
-                  height: 38,
-                  borderRadius: 'var(--radius-full)',
-                  background: isLocked ? 'var(--color-bg-primary)' : meta.bg,
-                  border: `2px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 2,
-                  boxShadow: isLocked ? 'none' : `0 0 0 4px ${meta.color}18`,
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem',
+                  marginBottom: '0.75rem',
                 }}
               >
-                {isLocked ? (
-                  <Lock size={14} color="var(--color-text-muted)" />
-                ) : (
-                  <Icon size={16} color={meta.color} strokeWidth={1.8} />
-                )}
-              </div>
-
-              {/* Stage card */}
-              <div
-                style={{
-                  background: 'var(--color-paper)',
-                  borderRadius: 'var(--radius-md)',
-                  border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                  borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
-                  overflow: 'hidden',
-                  boxShadow: isLocked ? 'none' : 'var(--shadow-float)',
-                  opacity: isLocked ? 0.55 : 1,
-                  transition: 'opacity 0.3s ease',
-                }}
-              >
-                {/* Stage top bar */}
-                <div
-                  style={{
-                    padding: '1.25rem 1.5rem 1rem',
-                    background: isLocked ? 'rgba(0,0,0,0.015)' : meta.bg,
-                    borderBottom: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                  }}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <div
                     style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 'var(--radius-sm)',
+                      background: isLocked ? 'var(--color-bg-primary)' : `${meta.color}18`,
+                      border: `1.5px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '0.625rem',
-                      flexWrap: 'wrap',
-                      gap: '0.5rem',
+                      justifyContent: 'center',
+                      flexShrink: 0,
                     }}
                   >
-                    <div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          marginBottom: '0.25rem',
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-body)',
-                            fontSize: '0.6875rem',
-                            fontWeight: 700,
-                            color: isLocked ? 'var(--color-text-muted)' : meta.color,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          Etapa {stageNum}
-                        </span>
-                        {isLocked && (
-                          <span
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.25rem',
-                              padding: '2px 8px',
-                              borderRadius: 'var(--radius-xs)',
-                              background: 'rgba(0,0,0,0.05)',
-                              fontFamily: 'var(--font-body)',
-                              fontSize: '0.5625rem',
-                              color: 'var(--color-text-muted)',
-                              fontWeight: 600,
-                            }}
-                          >
-                            <Lock size={9} />
-                            Bloqueada
-                          </span>
-                        )}
-                        {isStageComplete && !isLocked && (
-                          <span
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.25rem',
-                              padding: '2px 8px',
-                              borderRadius: 'var(--radius-xs)',
-                              background: 'rgba(13,148,136,0.08)',
-                              fontFamily: 'var(--font-body)',
-                              fontSize: '0.5625rem',
-                              fontWeight: 700,
-                              color: 'var(--color-accent-secondary)',
-                            }}
-                          >
-                            <CheckCircle2 size={10} />
-                            Completada
-                          </span>
-                        )}
-                      </div>
-                      <h2
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: 'var(--text-heading-md)',
-                          fontWeight: 700,
-                          color: isLocked ? 'var(--color-text-muted)' : 'var(--color-ink)',
-                          letterSpacing: '-0.03em',
-                        }}
-                      >
-                        {meta.name}
-                      </h2>
-                      <p
+                    {isLocked ? (
+                      <Lock size={16} color="var(--color-text-muted)" />
+                    ) : (
+                      <Icon size={18} color={meta.color} strokeWidth={1.8} />
+                    )}
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                      <span
                         style={{
                           fontFamily: 'var(--font-body)',
-                          fontSize: '0.875rem',
-                          color: 'var(--color-text-secondary)',
-                          marginTop: '0.2rem',
+                          fontSize: '0.6875rem',
+                          fontWeight: 700,
+                          color: isLocked ? 'var(--color-text-muted)' : meta.color,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
                         }}
                       >
-                        {meta.subtitle}
-                      </p>
+                        Etapa {stageNum}
+                      </span>
+                      {isLocked && (
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                            padding: '2px 8px',
+                            borderRadius: 'var(--radius-xs)',
+                            background: 'rgba(0,0,0,0.05)',
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '0.5625rem',
+                            color: 'var(--color-text-muted)',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <Lock size={9} />
+                          Bloqueada
+                        </span>
+                      )}
+                      {isStageComplete && !isLocked && (
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                            padding: '2px 8px',
+                            borderRadius: 'var(--radius-xs)',
+                            background: 'rgba(13,148,136,0.08)',
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '0.5625rem',
+                            fontWeight: 700,
+                            color: 'var(--color-accent-secondary)',
+                          }}
+                        >
+                          <CheckCircle2 size={10} />
+                          Completada
+                        </span>
+                      )}
                     </div>
-                    <div
+                    <h2
                       style={{
-                        padding: '0.25rem 0.875rem',
-                        borderRadius: 'var(--radius-full)',
-                        background: 'var(--color-paper)',
-                        border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
                         fontFamily: 'var(--font-heading)',
-                        fontSize: '0.875rem',
+                        fontSize: 'var(--text-heading-md)',
                         fontWeight: 700,
-                        color: isLocked ? 'var(--color-text-muted)' : meta.color,
-                        letterSpacing: '-0.02em',
+                        color: isLocked ? 'var(--color-text-muted)' : 'var(--color-ink)',
+                        letterSpacing: '-0.03em',
+                        margin: 0,
                       }}
                     >
-                      {stageDone}/{stageTotal}
-                    </div>
+                      {meta.name}
+                    </h2>
                   </div>
-                  {/* Stage progress bar */}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.8125rem',
+                      color: 'var(--color-text-secondary)',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {meta.subtitle}
+                  </span>
                   <div
                     style={{
-                      height: 3,
-                      borderRadius: 2,
-                      background: isLocked ? 'var(--color-border)' : 'rgba(255,255,255,0.5)',
+                      padding: '0.25rem 0.875rem',
+                      borderRadius: 'var(--radius-full)',
+                      background: 'var(--color-paper)',
+                      border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '0.875rem',
+                      fontWeight: 700,
+                      color: isLocked ? 'var(--color-text-muted)' : meta.color,
+                      letterSpacing: '-0.02em',
                     }}
                   >
-                    <div
-                      style={{
-                        height: '100%',
-                        borderRadius: 2,
-                        background: isLocked ? 'var(--color-text-muted)' : meta.color,
-                        width: `${stageTotal > 0 ? (stageDone / stageTotal) * 100 : 0}%`,
-                        transition: 'width 0.8s ease',
-                      }}
-                    />
+                    {stageDone}/{stageTotal}
                   </div>
                 </div>
+              </div>
 
-                {/* Tools grid */}
+              {/* Stage progress bar */}
+              <div
+                style={{
+                  height: 3,
+                  borderRadius: 2,
+                  background: isLocked ? 'var(--color-border)' : 'rgba(255,255,255,0.5)',
+                }}
+              >
                 <div
                   style={{
-                    padding: '1.125rem',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
-                    gap: '0.625rem',
+                    height: '100%',
+                    borderRadius: 2,
+                    background: isLocked ? 'var(--color-text-muted)' : meta.color,
+                    width: `${stageTotal > 0 ? (stageDone / stageTotal) * 100 : 0}%`,
+                    transition: 'width 0.8s ease',
                   }}
-                >
-                  {stageTools.length > 0 ? (
-                    stageTools.map((tool, i) => (
-                      <ToolCard
-                        key={tool.id}
-                        tool={tool}
-                        done={completedIds.has(tool.id)}
-                        locked={isLocked}
-                        idx={i}
-                      />
-                    ))
-                  ) : (
-                    <div
-                      style={{
-                        gridColumn: '1 / -1',
-                        padding: '1.5rem',
-                        textAlign: 'center',
-                        fontFamily: 'var(--font-body)',
-                        fontSize: '0.875rem',
-                        color: 'var(--color-text-muted)',
-                      }}
-                    >
-                      No hay herramientas en esta categoría para esta etapa.
-                    </div>
-                  )}
-                </div>
+                />
+              </div>
+            </div>
 
-                {/* Phase completion advice banner */}
-                {isStageComplete && !isLocked && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ duration: 0.4 }}
+            {/* Tools grid - 3 columns */}
+            <div
+              style={{
+                background: 'var(--color-paper)',
+                borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
+                border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
+                borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
+                borderTop: 'none',
+                padding: '1.25rem',
+                opacity: isLocked ? 0.55 : 1,
+                boxShadow: isLocked ? 'none' : 'var(--shadow-float)',
+              }}
+            >
+              <div
+                className="tools-dash-grid"
+                style={{
+                  display: 'grid',
+                  gap: '0.875rem',
+                }}
+              >
+                {stageTools.length > 0 ? (
+                  stageTools.map((tool, i) => (
+                    <ToolCard
+                      key={tool.id}
+                      tool={tool}
+                      done={completedIds.has(tool.id)}
+                      locked={isLocked}
+                      idx={i}
+                    />
+                  ))
+                ) : (
+                  <div
                     style={{
-                      borderTop: `1px solid ${meta.border}`,
+                      gridColumn: '1 / -1',
+                      padding: '1.5rem',
+                      textAlign: 'center',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.875rem',
+                      color: 'var(--color-text-muted)',
                     }}
                   >
-                    <div
-                      style={{
-                        padding: '1.25rem 1.5rem',
-                        background: `linear-gradient(135deg, ${meta.bg}, rgba(255,255,255,0.5))`,
-                        display: 'flex',
-                        gap: '1rem',
-                        alignItems: 'flex-start',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: 'var(--radius-sm)',
-                          background: meta.bg,
-                          border: `1px solid ${meta.border}`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexShrink: 0,
-                          marginTop: 2,
-                        }}
-                      >
-                        <Lightbulb size={16} color={meta.color} />
-                      </div>
-                      <div>
-                        <div
-                          style={{
-                            fontFamily: 'var(--font-body)',
-                            fontSize: '0.8125rem',
-                            fontWeight: 700,
-                            color: meta.color,
-                            marginBottom: '0.375rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.04em',
-                          }}
-                        >
-                          Consejo antes de avanzar
-                        </div>
-                        <p
-                          style={{
-                            fontFamily: 'var(--font-body)',
-                            fontSize: '0.875rem',
-                            color: 'var(--color-text-secondary)',
-                            lineHeight: 1.6,
-                            margin: 0,
-                          }}
-                        >
-                          {meta.phaseAdvice}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
+                    No hay herramientas en esta categoria para esta etapa.
+                  </div>
                 )}
               </div>
-            </motion.section>
-          )
-        })}
-      </div>
+            </div>
+
+            {/* Phase completion advice banner */}
+            {isStageComplete && !isLocked && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                transition={{ duration: 0.4 }}
+                style={{
+                  marginTop: '0.75rem',
+                  borderRadius: 'var(--radius-md)',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '1.25rem 1.5rem',
+                    background: `linear-gradient(135deg, ${meta.bg}, rgba(255,255,255,0.5))`,
+                    border: `1px solid ${meta.border}`,
+                    borderLeft: `4px solid ${meta.color}`,
+                    borderRadius: 'var(--radius-md)',
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'flex-start',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 'var(--radius-sm)',
+                      background: meta.bg,
+                      border: `1px solid ${meta.border}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: 2,
+                    }}
+                  >
+                    <Lightbulb size={16} color={meta.color} />
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        fontWeight: 700,
+                        color: meta.color,
+                        marginBottom: '0.375rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                      }}
+                    >
+                      Consejo antes de avanzar
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.875rem',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: 1.6,
+                        margin: 0,
+                      }}
+                    >
+                      {meta.phaseAdvice}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </motion.section>
+        )
+      })}
+
+      <style>{`
+        .tools-dash-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 900px) {
+          .tools-dash-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 600px) {
+          .tools-dash-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   )
 }

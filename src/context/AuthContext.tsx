@@ -276,6 +276,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 })
                 profile = await loadProfile(activeUser!.id)
               }
+
+              // Check for pending diagnostic results from the landing page quiz
+              try {
+                const pendingRaw = localStorage.getItem('s4c_diagnostic_pending')
+                if (pendingRaw) {
+                  const pending = JSON.parse(pendingRaw) as {
+                    score: number
+                    stage: string
+                    answers: Record<string, unknown>
+                    completedAt: string
+                  }
+                  // Update profile with diagnostic stage and score
+                  await supabase
+                    .from('profiles')
+                    .update({
+                      stage: pending.stage,
+                      diagnostic_score: pending.score,
+                    })
+                    .eq('id', activeUser!.id)
+
+                  // Also try to store the full answers (column may not exist yet)
+                  try {
+                    await supabase
+                      .from('profiles')
+                      .update({ diagnostic_data: pending.answers })
+                      .eq('id', activeUser!.id)
+                  } catch {
+                    // Column doesn't exist yet — that's fine
+                  }
+
+                  // Clear from localStorage
+                  localStorage.removeItem('s4c_diagnostic_pending')
+
+                  // Re-load profile so the UI reflects the new stage
+                  profile = await loadProfile(activeUser!.id)
+                }
+              } catch {
+                // localStorage or parse error — continue silently
+              }
+
+              // Ensure a startup row exists so the founder appears in cohorts/reports
+              await supabase.from('startups').upsert({
+                founder_id: activeUser!.id,
+                name: startup,
+                stage: null,
+                vertical: 'other',
+                country: null,
+              }, { onConflict: 'founder_id' })
               if (profile) {
                 setAppUser(profile)
               }
@@ -355,7 +403,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (profile?.role) role = profile.role
           if (profile?.org_id) orgId = profile.org_id
         } catch {
-          // Both methods failed — default to founder
+          // Method 2 failed
         }
       }
 

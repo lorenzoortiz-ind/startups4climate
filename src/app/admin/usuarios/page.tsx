@@ -468,7 +468,7 @@ export default function UsuariosPage() {
                                     fontWeight: 600, color: 'var(--color-text-primary)',
                                     marginBottom: '0.25rem', display: 'block',
                                   }}>
-                                    Asignar organizacion
+                                    Asignar organización
                                   </label>
                                   <select
                                     value={editOrgId || ''}

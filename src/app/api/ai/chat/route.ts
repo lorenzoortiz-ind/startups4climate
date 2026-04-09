@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (message.length > 4000) {
       return Response.json(
-        { error: 'El mensaje es demasiado largo. Maximo 4000 caracteres.' },
+        { error: 'El mensaje es demasiado largo. Máximo 4000 caracteres.' },
         { status: 400 }
       )
     }

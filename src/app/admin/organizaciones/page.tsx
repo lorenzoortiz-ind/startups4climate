@@ -160,7 +160,7 @@ export default function OrganizacionesPage() {
           onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-accent-primary)')}
         >
           <Plus size={16} />
-          Nueva organizacion
+          Nueva organización
         </Link>
       </div>
 

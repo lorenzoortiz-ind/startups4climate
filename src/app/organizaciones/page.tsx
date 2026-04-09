@@ -737,7 +737,7 @@ export default function OrganizacionesPage() {
               marginBottom: '1rem',
             }}
           >
-            Planes disenados para tu programa
+            Planes diseñados para tu programa
           </h2>
           <p
             style={{

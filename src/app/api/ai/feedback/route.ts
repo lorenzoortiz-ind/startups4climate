@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const toolDataStr = JSON.stringify(toolData)
     if (toolDataStr.length > 4000) {
       return Response.json(
-        { error: 'Los datos enviados son demasiado grandes. Maximo 4000 caracteres.' },
+        { error: 'Los datos enviados son demasiado grandes. Máximo 4000 caracteres.' },
         { status: 400 }
       )
     }

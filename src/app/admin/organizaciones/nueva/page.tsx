@@ -147,7 +147,7 @@ export default function NuevaOrganizacionPage() {
           fontFamily: 'var(--font-heading)', fontWeight: 700,
           fontSize: '1.25rem', color: 'var(--color-text-primary)',
         }}>
-          Nueva organizacion
+          Nueva organización
         </h1>
       </div>
 

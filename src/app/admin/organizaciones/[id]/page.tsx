@@ -726,7 +726,7 @@ export default function OrganizacionDetailPage() {
                 e.currentTarget.style.background = 'transparent'
               }}
             >
-              Desactivar organizacion
+              Desactivar organización
             </button>
           ) : (
             <div style={{

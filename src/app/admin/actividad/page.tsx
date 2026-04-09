@@ -394,7 +394,7 @@ export default function ActividadPage() {
                   ) : (
                     <>
                       <ChevronDown size={14} />
-                      Cargar mas
+                      Cargar más
                     </>
                   )}
                 </button>

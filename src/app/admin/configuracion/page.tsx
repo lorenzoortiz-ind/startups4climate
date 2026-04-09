@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Save, Building2, CreditCard, Globe, Loader2 } from 'lucide-react'
+import { Save, Building2, CreditCard, Globe, Loader2, Image as ImageIcon, Upload } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 
@@ -67,6 +67,8 @@ export default function ConfiguracionPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!appUser?.org_id) return
@@ -109,6 +111,43 @@ export default function ConfiguracionPage() {
 
     loadOrg()
   }, [appUser?.org_id])
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !appUser?.org_id) return
+
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/svg+xml']
+    if (!allowedTypes.includes(file.type)) {
+      setError('Solo se permiten archivos PNG, JPG o SVG.')
+      return
+    }
+
+    setUploading(true)
+    setError(null)
+
+    const fileExt = file.name.split('.').pop()
+    const filePath = `org-logos/${appUser.org_id}/${Date.now()}.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('logos')
+      .upload(filePath, file, { upsert: true })
+
+    if (uploadError) {
+      setError('Error al subir el logo. Intenta de nuevo.')
+      setUploading(false)
+      return
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('logos')
+      .getPublicUrl(filePath)
+
+    setLogoUrl(publicUrlData.publicUrl)
+    setUploading(false)
+
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -209,7 +248,71 @@ export default function ConfiguracionPage() {
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={labelStyle}>Logo URL</label>
+            <label style={labelStyle}>Logo</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
+              {/* Logo preview */}
+              <div style={{
+                width: 80, height: 80, borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-border)',
+                background: 'var(--color-bg-card)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                overflow: 'hidden', flexShrink: 0,
+              }}>
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt="Logo de la organización"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <Building2 size={32} color="var(--color-text-muted)" strokeWidth={1.5} />
+                )}
+              </div>
+
+              {/* Upload controls */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.svg"
+                  onChange={handleLogoUpload}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                    padding: '0.4rem 0.75rem', borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg-card)',
+                    color: 'var(--color-text-primary)',
+                    fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 500,
+                    cursor: uploading ? 'not-allowed' : 'pointer',
+                    transition: 'border-color 0.15s, background 0.15s',
+                    opacity: uploading ? 0.7 : 1,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent-primary)'; e.currentTarget.style.background = 'rgba(13,148,136,0.04)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-card)' }}
+                >
+                  {uploading ? (
+                    <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
+                  ) : (
+                    <Upload size={14} />
+                  )}
+                  {uploading ? 'Subiendo...' : 'Subir logo'}
+                </button>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  O ingresa una URL manualmente
+                </span>
+              </div>
+            </div>
+
+            {/* URL input */}
             <input
               type="url"
               value={logoUrl}
@@ -223,7 +326,7 @@ export default function ConfiguracionPage() {
               fontFamily: 'var(--font-body)', fontSize: '0.75rem',
               color: 'var(--color-text-muted)', marginTop: '0.25rem',
             }}>
-              URL directa a la imagen de tu logo (PNG o SVG recomendado)
+              PNG, JPG o SVG recomendado
             </p>
           </div>
 

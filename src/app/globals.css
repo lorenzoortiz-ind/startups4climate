@@ -186,10 +186,20 @@
     color: var(--color-ink);
   }
 
-  h1 { font-size: var(--text-display-xl); }
-  h2 { font-size: var(--text-display-lg); }
-  h3 { font-size: var(--text-display-md); }
-  h4 { font-size: var(--text-heading-lg); }
+  h1 { font-size: var(--text-display-xl); line-height: 1.1; }
+  h2 { font-size: var(--text-display-lg); line-height: 1.1; }
+  h3 { font-size: var(--text-display-md); line-height: 1.15; }
+  h4 { font-size: var(--text-heading-lg); line-height: 1.2; }
+
+  /* Override global heading sizes in app layouts */
+  [data-app-layout] h1,
+  [data-app-layout] h2,
+  [data-app-layout] h3,
+  [data-app-layout] h4 {
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
 
   /* Smooth Inputs Typeform Style */
   input, textarea, select {

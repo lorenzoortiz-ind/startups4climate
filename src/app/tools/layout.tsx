@@ -827,6 +827,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <div
+      data-app-layout
       style={{
         display: 'flex',
         minHeight: '100vh',

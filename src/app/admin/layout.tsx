@@ -28,6 +28,7 @@ import {
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useAuth } from '@/context/AuthContext'
 import { SuperadminProvider } from '@/context/SuperadminContext'
+import { supabase } from '@/lib/supabase'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -54,10 +55,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [orgLogo, setOrgLogo] = useState<string | null>(null)
+  const [orgName, setOrgName] = useState<string | null>(null)
 
   useEffect(() => {
     setMobileOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    if (!appUser?.org_id) return
+    supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single()
+      .then(({ data }) => {
+        if (data) {
+          setOrgLogo(data.logo_url)
+          setOrgName(data.name)
+        }
+      })
+  }, [appUser?.org_id])
 
 
   if (loading) {
@@ -103,23 +117,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Logo / Brand */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: '0.625rem',
-        padding: '0 0.5rem', marginBottom: '2rem',
+        padding: '0 0.5rem', marginBottom: '1.25rem',
       }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: 8,
-          background: 'var(--color-admin-sidebar-active)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0,
-        }}>
-          <LayoutDashboard size={16} color="#fff" />
-        </div>
-        <div>
+        {orgLogo ? (
+          <img
+            src={orgLogo}
+            alt={orgName || 'Logo'}
+            style={{
+              width: 36, height: 36, borderRadius: 8,
+              objectFit: 'contain', background: '#fff',
+              flexShrink: 0,
+            }}
+          />
+        ) : (
+          <div style={{
+            width: 32, height: 32, borderRadius: 8,
+            background: 'var(--color-admin-sidebar-active)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <LayoutDashboard size={16} color="#fff" />
+          </div>
+        )}
+        <div style={{ minWidth: 0 }}>
           <div style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: '0.75rem', color: '#F1F5F9',
             lineHeight: 1.2,
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
-            S4C Admin
+            {orgName || 'S4C Admin'}
           </div>
           <div style={{
             fontFamily: 'var(--font-body)', fontSize: '0.625rem',
@@ -308,7 +335,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SuperadminProvider>
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
+    <div data-app-layout style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
       {/* Desktop sidebar */}
       <aside
         className="hidden lg:flex"

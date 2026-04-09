@@ -64,6 +64,16 @@ export default function AdminDashboard() {
   const [startups, setStartups] = useState<StartupRow[]>([])
   const [cohorts, setCohorts] = useState<CohortRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [orgLogo, setOrgLogo] = useState<string | null>(null)
+  const [orgName, setOrgName] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!appUser?.org_id) return
+    supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single()
+      .then(({ data }) => {
+        if (data) { setOrgLogo(data.logo_url); setOrgName(data.name) }
+      })
+  }, [appUser?.org_id])
 
   useEffect(() => {
     async function loadData() {
@@ -246,33 +256,50 @@ export default function AdminDashboard() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '0.25rem',
+            gap: '0.75rem',
+            marginBottom: '0.5rem',
           }}
         >
-          <Building2 size={20} color="#0D9488" />
-          <h1
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 700,
-              fontSize: 'var(--text-xl)',
-              color: 'var(--color-text-primary)',
-            }}
-          >
-            {appUser?.full_name
-              ? `Bienvenido, ${appUser.full_name}`
-              : 'Dashboard'}
-          </h1>
+          {orgLogo ? (
+            <img
+              src={orgLogo}
+              alt={orgName || ''}
+              style={{
+                width: 44, height: 44, borderRadius: 10,
+                objectFit: 'contain', background: '#fff',
+                border: '1px solid var(--color-border)',
+                flexShrink: 0,
+              }}
+            />
+          ) : (
+            <Building2 size={20} color="#0D9488" />
+          )}
+          <div>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 700,
+                fontSize: 'var(--text-xl)',
+                color: 'var(--color-text-primary)',
+                margin: 0,
+              }}
+            >
+              {appUser?.full_name
+                ? `Bienvenido, ${appUser.full_name}`
+                : 'Dashboard'}
+            </h1>
+            <p
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-secondary)',
+                margin: 0,
+              }}
+            >
+              {orgName || 'Resumen general de tu programa de incubación'}
+            </p>
+          </div>
         </div>
-        <p
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-sm)',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Resumen general de tu programa de incubación
-        </p>
       </div>
 
       {/* Metric cards */}

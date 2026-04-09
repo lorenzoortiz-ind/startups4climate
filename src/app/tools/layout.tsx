@@ -25,7 +25,7 @@ import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
 import MentorWidget from '@/components/ai/MentorWidget'
 import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-data'
-import { getProgress } from '@/lib/progress'
+import { getProgress, hydrateProgressFromSupabase } from '@/lib/progress'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { supabase } from '@/lib/supabase'
 
@@ -342,6 +342,13 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     if (user) {
       const progress = getProgress(user.id)
       setCompletedIds(new Set(Object.entries(progress).filter(([, v]) => v.completed).map(([k]) => k)))
+      // Hydrate from Supabase on first load
+      hydrateProgressFromSupabase(user.id).then((changed) => {
+        if (changed) {
+          const updated = getProgress(user.id)
+          setCompletedIds(new Set(Object.entries(updated).filter(([, v]) => v.completed).map(([k]) => k)))
+        }
+      })
     }
   }, [user, pathname])
 

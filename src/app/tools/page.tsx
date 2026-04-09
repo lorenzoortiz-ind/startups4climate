@@ -26,7 +26,7 @@ import {
   type ToolDef,
   type ToolCategory,
 } from '@/lib/tools-data'
-import { getProgress, type ProgressMap } from '@/lib/progress'
+import { getProgress, hydrateProgressFromSupabase, type ProgressMap } from '@/lib/progress'
 import { generateGlobalReport as generateGlobalReportUtil } from '@/lib/global-report'
 
 /* ─── Stage icon mapping ─── */
@@ -247,7 +247,14 @@ export default function ToolsDashboard() {
 
   useEffect(() => {
     if (user) {
+      // Load local progress immediately
       setProgress(getProgress(user.id))
+      // Then hydrate from Supabase (merges remote data into localStorage)
+      hydrateProgressFromSupabase(user.id).then((changed) => {
+        if (changed) {
+          setProgress(getProgress(user.id))
+        }
+      })
     }
   }, [user])
 

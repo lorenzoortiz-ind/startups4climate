@@ -124,6 +124,48 @@ export async function loadToolDataFromSupabase(
 }
 
 /**
+ * Load ALL tool data from Supabase and merge into localStorage.
+ * Called once on dashboard load to hydrate local progress from DB.
+ */
+export async function hydrateProgressFromSupabase(userId: string): Promise<boolean> {
+  try {
+    const { data, error } = await supabase
+      .from('tool_data')
+      .select('tool_id, data, completed, report_generated, last_saved')
+      .eq('user_id', userId)
+
+    if (error || !data || data.length === 0) return false
+
+    const all = getAll()
+    if (!all[userId]) all[userId] = {}
+
+    let changed = false
+    for (const row of data) {
+      const existing = all[userId][row.tool_id]
+      const remoteTime = row.last_saved ? new Date(row.last_saved).getTime() : 0
+      const localTime = existing?.lastSaved ? new Date(existing.lastSaved).getTime() : 0
+
+      // Merge: use remote if newer or if local doesn't exist
+      if (!existing || remoteTime >= localTime) {
+        all[userId][row.tool_id] = {
+          completed: row.completed ?? false,
+          completedAt: row.completed ? (row.last_saved ?? new Date().toISOString()) : null,
+          data: (row.data as Record<string, unknown>) ?? {},
+          reportGenerated: row.report_generated ?? false,
+          lastSaved: row.last_saved ?? null,
+        }
+        changed = true
+      }
+    }
+
+    if (changed) saveAll(all)
+    return changed
+  } catch {
+    return false
+  }
+}
+
+/**
  * Sync completion status to Supabase `tool_data` table.
  */
 export async function syncProgressToSupabase(

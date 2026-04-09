@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRight, Eye, EyeOff, Lock, User, Building2, Mail } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { Button, Input } from '@/components/ui'
 
 export default function AuthModal() {
+  const router = useRouter()
   const { authModalOpen, authModalMode, closeAuthModal, login, register } = useAuth()
   const [mode, setMode] = useState<'login' | 'register'>(authModalMode)
   const [loading, setLoading] = useState(false)
@@ -61,23 +63,20 @@ export default function AuthModal() {
       setError(result.error)
     } else {
       setSuccess(true)
-      // Check if user is org admin - redirect to admin dashboard
       const isOrgAdmin = result.role === 'admin_org' || result.role === 'superadmin'
-      // Wait for auth state to fully propagate before redirecting
+      // Use client-side navigation to preserve in-memory auth session.
+      // Admin uses window.location.href because middleware still protects /admin.
       setTimeout(() => {
         closeAuthModal()
         setSuccess(false)
-        // Use full page navigation so the browser sends updated auth cookies
-        // to the server middleware. router.push() does a client-side navigation
-        // that skips cookie propagation, causing the middleware to reject the request.
         if (isOrgAdmin) {
           window.location.href = '/admin'
         } else if (mode === 'register') {
-          window.location.href = '/tools/completar-perfil'
+          router.push('/tools/completar-perfil')
         } else {
-          window.location.href = '/tools'
+          router.push('/tools')
         }
-      }, 800)
+      }, 600)
     }
   }
 

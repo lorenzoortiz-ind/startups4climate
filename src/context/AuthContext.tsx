@@ -383,101 +383,113 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const login = useCallback(async (email: string, password: string) => {
-    try {
-      // Prevent onAuthStateChange from overwriting user data we set here
-      loginInProgressRef.current = true
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.toLowerCase(),
-        password,
-      })
-
-      if (error) {
-        loginInProgressRef.current = false
-        return { error: mapSupabaseError(error.message) }
-      }
-
-      if (!data.user || !data.session) {
-        loginInProgressRef.current = false
-        return { error: 'No se pudo iniciar sesión.' }
-      }
-
-      // Get role via multiple methods for maximum reliability
-      let role: string = 'founder'
-      let orgId: string | null = null
-
-      // Method 1: Direct REST fetch (bypasses PostgREST cache issues)
+    // Wrap entire login in a race against a timeout so the UI never hangs
+    const loginPromise = (async () => {
       try {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const controller = new AbortController()
-        const timeout = setTimeout(() => controller.abort(), 5000)
-        const res = await fetch(
-          `${supabaseUrl}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
-          {
-            headers: {
-              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-              'Authorization': `Bearer ${data.session.access_token}`,
-              'Accept': 'application/json',
-            },
-            signal: controller.signal,
-          }
-        )
-        clearTimeout(timeout)
-        if (res.ok) {
-          const rows = await res.json()
-          if (rows?.[0]?.role) role = rows[0].role
-          if (rows?.[0]?.org_id) orgId = rows[0].org_id
-        }
-      } catch {
-        // Method 1 failed — try method 2
-      }
+        // Prevent onAuthStateChange from overwriting user data we set here
+        loginInProgressRef.current = true
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.toLowerCase(),
+          password,
+        })
 
-      // Method 2: Supabase client query (fallback if REST failed)
-      if (role === 'founder') {
+        if (error) {
+          loginInProgressRef.current = false
+          return { error: mapSupabaseError(error.message) }
+        }
+
+        if (!data.user || !data.session) {
+          loginInProgressRef.current = false
+          return { error: 'No se pudo iniciar sesión.' }
+        }
+
+        // Get role — try REST first, then Supabase client as fallback
+        let role: string = 'founder'
+        let orgId: string | null = null
+
         try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role, org_id')
-            .eq('id', data.user.id)
-            .single()
-          if (profile?.role) role = profile.role
-          if (profile?.org_id) orgId = profile.org_id
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+          const controller = new AbortController()
+          const fetchTimeout = setTimeout(() => controller.abort(), 4000)
+          const res = await fetch(
+            `${supabaseUrl}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
+            {
+              headers: {
+                'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                'Authorization': `Bearer ${data.session.access_token}`,
+                'Accept': 'application/json',
+              },
+              signal: controller.signal,
+            }
+          )
+          clearTimeout(fetchTimeout)
+          if (res.ok) {
+            const rows = await res.json()
+            if (rows?.[0]?.role) role = rows[0].role
+            if (rows?.[0]?.org_id) orgId = rows[0].org_id
+          }
         } catch {
-          // Method 2 failed
+          // REST failed — try Supabase client as fallback
+          try {
+            const { data: profile } = await Promise.race([
+              supabase
+                .from('profiles')
+                .select('role, org_id')
+                .eq('id', data.user.id)
+                .single(),
+              new Promise<{ data: null }>((resolve) =>
+                setTimeout(() => resolve({ data: null }), 3000)
+              ),
+            ])
+            if (profile?.role) role = profile.role
+            if (profile?.org_id) orgId = profile.org_id
+          } catch {
+            // Both methods failed — proceed with default role
+          }
         }
-      }
 
-      // Set a minimal user immediately so the UI is not blocked
-      const appUserData: AppUser = {
-        id: data.user.id,
-        email: data.user.email ?? '',
-        role: role as AppUser['role'],
-        org_id: orgId,
-        full_name: data.user.user_metadata?.full_name ?? data.user.email ?? '',
-        startup_name: data.user.user_metadata?.startup_name ?? null,
-        stage: null,
-        diagnosticScore: null,
-        created_at: data.user.created_at ?? new Date().toISOString(),
-      }
-      setAppUser(appUserData)
-
-      // Enrich with full profile in background (don't block login)
-      loadProfile(data.user.id).then((profile) => {
-        if (profile) {
-          // Preserve the role from direct fetch
-          profile.role = role as AppUser['role']
-          profile.org_id = orgId
-          setAppUser(profile)
+        // Set a minimal user immediately so the UI is not blocked
+        const appUserData: AppUser = {
+          id: data.user.id,
+          email: data.user.email ?? '',
+          role: role as AppUser['role'],
+          org_id: orgId,
+          full_name: data.user.user_metadata?.full_name ?? data.user.email ?? '',
+          startup_name: data.user.user_metadata?.startup_name ?? null,
+          stage: null,
+          diagnosticScore: null,
+          created_at: data.user.created_at ?? new Date().toISOString(),
         }
-      }).catch(() => {}).finally(() => {
-        // Allow onAuthStateChange to resume normal behavior
+        setAppUser(appUserData)
+
+        // Enrich with full profile in background (don't block login)
+        loadProfile(data.user.id).then((profile) => {
+          if (profile) {
+            profile.role = role as AppUser['role']
+            profile.org_id = orgId
+            setAppUser(profile)
+          }
+        }).catch(() => {}).finally(() => {
+          loginInProgressRef.current = false
+        })
+
+        return { role }
+      } catch {
         loginInProgressRef.current = false
-      })
+        return { error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' }
+      }
+    })()
 
-      return { role }
-    } catch {
-      loginInProgressRef.current = false
-      return { error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' }
-    }
+    // Hard timeout: if login takes more than 10s, return error
+    return Promise.race([
+      loginPromise,
+      new Promise<{ error: string }>((resolve) =>
+        setTimeout(() => {
+          loginInProgressRef.current = false
+          resolve({ error: 'La conexión tardó demasiado. Intenta de nuevo.' })
+        }, 10000)
+      ),
+    ])
   }, [])
 
   const logout = useCallback(async () => {

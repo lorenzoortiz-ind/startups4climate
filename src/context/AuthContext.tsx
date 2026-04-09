@@ -154,16 +154,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false
 
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    // Get initial user (getUser() validates with the server, unlike getSession())
+    supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
       if (cancelled) return
-      if (session?.user) {
-        // Set fallback immediately so the UI is never stuck loading
-        setAppUser(await fallbackAppUser(session))
+      if (authUser) {
+        // We still need a session object for fallbackAppUser, fetch it after verifying the user
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          // Set fallback immediately so the UI is never stuck loading
+          setAppUser(await fallbackAppUser(session))
+        }
         setLoading(false)
         // Then try to enrich with profile data in background
         try {
-          const profile = await loadProfile(session.user.id)
+          const profile = await loadProfile(authUser.id)
           if (!cancelled && profile) {
             setAppUser(profile)
           }

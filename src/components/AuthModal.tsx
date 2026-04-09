@@ -117,6 +117,8 @@ export default function AuthModal() {
           exit={{ opacity: 0, y: 16, scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
           style={{
             width: '100%',
             maxWidth: 480,
@@ -131,6 +133,7 @@ export default function AuthModal() {
           {/* Close button */}
           <button
             onClick={closeAuthModal}
+            aria-label="Cerrar"
             style={{
               position: 'absolute',
               top: 20,
@@ -365,7 +368,7 @@ export default function AuthModal() {
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                  <form onSubmit={handleSubmit} aria-label="Formulario de acceso" style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                     {mode === 'register' && (
                       <>
                         <Input
@@ -573,9 +576,6 @@ export default function AuthModal() {
             )}
           </AnimatePresence>
 
-          <style>{`
-            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-          `}</style>
         </motion.div>
       </motion.div>
     </AnimatePresence>

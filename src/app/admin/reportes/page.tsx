@@ -135,7 +135,7 @@ export default function ReportesPage() {
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,
-          fontSize: '1.5rem', color: 'var(--color-text-primary)',
+          fontSize: '1.25rem', color: 'var(--color-text-primary)',
           marginBottom: '0.25rem',
         }}>
           Reportes
@@ -283,7 +283,7 @@ export default function ReportesPage() {
           )}
           {generating ? 'Generando...' : 'Descargar reporte Excel'}
         </button>
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
 
       {/* Info */}

@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
           animation: 'spin 0.8s linear infinite',
         }} />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }
@@ -351,6 +351,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <button
           onClick={() => setMobileOpen((o) => !o)}
+          aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
             color: '#F1F5F9', display: 'flex',

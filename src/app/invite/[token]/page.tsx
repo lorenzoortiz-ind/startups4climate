@@ -230,7 +230,7 @@ export default function InvitePage() {
         background: 'var(--color-bg-primary)',
       }}>
         <Loader2 size={32} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }

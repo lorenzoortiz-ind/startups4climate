@@ -766,7 +766,7 @@ export default function DiagnosticForm() {
                   style={{ textAlign: 'center', padding: '3rem 0' }}
                 >
                   <Loader2 size={40} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
-                  <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
                     Analizando tu startup...
                   </h3>

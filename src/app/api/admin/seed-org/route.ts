@@ -1,9 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not available in production' }, { status: 404 })
+  }
+
   const authHeader = request.headers.get('x-seed-secret')
-  if (authHeader !== process.env.SEED_SECRET && authHeader !== 'S4C-seed-2026') {
+  if (!process.env.SEED_SECRET || authHeader !== process.env.SEED_SECRET) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

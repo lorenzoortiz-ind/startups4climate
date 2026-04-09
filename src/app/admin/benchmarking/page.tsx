@@ -135,7 +135,7 @@ export default function BenchmarkingPage() {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
         <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }
@@ -150,7 +150,7 @@ export default function BenchmarkingPage() {
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,
-          fontSize: '1.5rem', color: 'var(--color-text-primary)',
+          fontSize: '1.25rem', color: 'var(--color-text-primary)',
           marginBottom: '0.25rem',
         }}>
           Benchmarking

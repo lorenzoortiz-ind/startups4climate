@@ -121,6 +121,16 @@
   --space-10: 2.5rem;     /* 40px */
   --space-12: 3rem;       /* 48px */
 
+  /* Extra palette */
+  --color-plum:           #2A222B;
+  --color-purple:         #8B5CF6;
+  --color-pink:           #EC4899;
+  --color-indigo:         #6366F1;
+  --color-text-hover:     #F1F5F9;
+  --color-danger-hover:   #FCA5A5;
+  --color-danger-dark:    #B91C1C;
+  --color-success-dark:   #0F766E;
+
   /* Admin / Tools Sidebar */
   --color-admin-sidebar-bg:      #1A1521;
   --color-admin-sidebar-active:  #FF6B4A;

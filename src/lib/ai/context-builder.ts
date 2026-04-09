@@ -1,7 +1,40 @@
+interface StartupData {
+  name?: string
+  vertical?: string
+  country?: string
+  stage?: string
+  diagnostic_score?: number
+  team_size?: number
+  revenue_model?: string
+  monthly_revenue?: number
+  tam_usd?: number
+  has_paying_customers?: boolean
+  paying_customers_count?: number
+  description?: string
+  website?: string
+}
+
+interface ToolProgress {
+  tool_id: string
+  completed: boolean
+  data?: Record<string, unknown>
+}
+
+interface ProfileData {
+  id: string
+  email: string
+  role?: string
+  full_name?: string
+  org_id?: string | null
+  startup_name?: string
+  stage?: string
+  diagnostic_score?: number
+}
+
 export function buildStartupContext(
-  startup: any,
-  progress: any[] | null,
-  profile?: any,
+  startup: StartupData | null,
+  progress: ToolProgress[] | null,
+  profile?: ProfileData | null,
   userContext?: Record<string, unknown>
 ): string {
   const parts: string[] = []

@@ -145,7 +145,7 @@ export default function NuevaCohorte() {
 
       <h1 style={{
         fontFamily: 'var(--font-heading)', fontWeight: 700,
-        fontSize: '1.5rem', color: 'var(--color-text-primary)',
+        fontSize: '1.25rem', color: 'var(--color-text-primary)',
         marginBottom: '0.25rem',
       }}>
         Crear nueva cohorte

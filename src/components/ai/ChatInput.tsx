@@ -116,7 +116,7 @@ export default function ChatInput({ onSend, loading, placeholder }: ChatInputPro
           <Send size={16} />
         )}
       </button>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
     </div>
   )
 }

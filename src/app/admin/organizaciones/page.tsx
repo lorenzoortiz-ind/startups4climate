@@ -115,7 +115,7 @@ export default function OrganizacionesPage() {
         minHeight: '60vh',
       }}>
         <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }

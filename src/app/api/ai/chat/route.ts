@@ -39,6 +39,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (message.length > 4000) {
+      return Response.json(
+        { error: 'El mensaje es demasiado largo. Maximo 4000 caracteres.' },
+        { status: 400 }
+      )
+    }
+
     // Rate limit: max 30 conversations per day
     const today = new Date().toISOString().split('T')[0]
     const { count } = await supabase
@@ -84,6 +91,7 @@ export async function POST(request: NextRequest) {
         .from('ai_conversations')
         .select('messages')
         .eq('id', conversationId)
+        .eq('user_id', user.id)
         .single()
 
       if (prevConv?.messages && Array.isArray(prevConv.messages)) {
@@ -141,6 +149,7 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString(),
         })
         .eq('id', conversationId)
+        .eq('user_id', user.id)
     } else {
       // Create new conversation
       const { data: newConv } = await supabase

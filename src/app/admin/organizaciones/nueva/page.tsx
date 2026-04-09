@@ -312,7 +312,6 @@ export default function NuevaOrganizacionPage() {
         </div>
       </form>
 
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
     </motion.div>
   )
 }

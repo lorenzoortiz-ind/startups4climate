@@ -444,7 +444,6 @@ export default function PlataformaPage() {
         </motion.div>
       </div>
 
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
     </motion.div>
   )
 }

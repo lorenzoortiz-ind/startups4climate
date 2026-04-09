@@ -153,7 +153,7 @@ export default function ProgramasPage() {
           color="var(--color-text-muted)"
           style={{ animation: 'spin 1s linear infinite' }}
         />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }

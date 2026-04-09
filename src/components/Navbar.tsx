@@ -142,6 +142,7 @@ export default function Navbar() {
             <button
               className="md:hidden"
               onClick={() => setMobileOpen(true)}
+              aria-label="Abrir menú"
               style={{ background: 'none', border: 'none', color: 'var(--color-ink)', cursor: 'pointer' }}
             >
               <Menu size={28} />

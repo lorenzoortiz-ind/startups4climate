@@ -31,6 +31,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const toolDataStr = JSON.stringify(toolData)
+    if (toolDataStr.length > 4000) {
+      return Response.json(
+        { error: 'Los datos enviados son demasiado grandes. Maximo 4000 caracteres.' },
+        { status: 400 }
+      )
+    }
+
     // Load startup context
     const { data: startup } = await supabase
       .from('startups')

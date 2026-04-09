@@ -366,7 +366,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             animation: 'spin 0.8s linear infinite',
           }}
         />
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+
       </div>
     )
   }
@@ -894,6 +894,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </Link>
         <button
           onClick={() => setMobileOpen((o) => !o)}
+          aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
           style={{
             background: 'none',
             border: 'none',
@@ -969,7 +970,30 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--color-bg-primary)',
+          }}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              border: '2px solid #E8E4DF',
+              borderTopColor: '#0D9488',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+        </div>
+      }
+    >
       <ToolsLayoutInner>{children}</ToolsLayoutInner>
     </Suspense>
   )

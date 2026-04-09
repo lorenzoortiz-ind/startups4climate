@@ -608,14 +608,14 @@ export function getToolById(id: string): ToolDef | undefined {
   return TOOLS.find((t) => t.id === id)
 }
 
-export const TOOL_TO_PROFILE_MAP: Record<string, (data: any) => Partial<any>> = {
+export const TOOL_TO_PROFILE_MAP: Record<string, (data: Record<string, unknown>) => Record<string, unknown>> = {
   'tam-calculator': (data) => ({ tam_usd: data.totalTAM }),
   'ltv-unit-economics': (data) => ({ ltv: data.ltv, cac: data.cac }),
   'pricing-framework': (data) => ({ revenue_model: data.selectedModel }),
   'traction-validation': (data) => ({
-    has_paying_customers: (data.payingCustomers || 0) > 0,
-    paying_customers_count: data.payingCustomers || 0,
-    monthly_revenue: data.mrr || 0,
+    has_paying_customers: (Number(data.payingCustomers) || 0) > 0,
+    paying_customers_count: Number(data.payingCustomers) || 0,
+    monthly_revenue: Number(data.mrr) || 0,
   }),
-  'passion-purpose': (data) => ({ team_size: data.teamMembers?.length }),
+  'passion-purpose': (data) => ({ team_size: Array.isArray(data.teamMembers) ? data.teamMembers.length : undefined }),
 }

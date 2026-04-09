@@ -43,15 +43,14 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
-  // Protected routes: /tools/* and /admin/* require authentication
-  if ((pathname.startsWith('/tools') || pathname.startsWith('/admin')) && !user) {
+  // Admin routes: require authentication + admin role
+  if (pathname.startsWith('/admin') && !user) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/'
     redirectUrl.searchParams.set('auth', 'login')
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Admin routes: require admin_org or superadmin role
   if (pathname.startsWith('/admin') && user) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -66,6 +65,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /tools routes: auth handled client-side by AuthProvider
   return supabaseResponse
 }
 

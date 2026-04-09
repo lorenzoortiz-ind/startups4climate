@@ -166,18 +166,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
       if (cancelled) return
       if (authUser) {
-        // We still need a session object for fallbackAppUser, fetch it after verifying the user
+        // Set a minimal user IMMEDIATELY from authUser so we're never stuck
+        // with loading=false but appUser=null (which triggers redirect to /)
+        const minimalUser: AppUser = {
+          id: authUser.id,
+          email: authUser.email ?? '',
+          role: 'founder',
+          org_id: null,
+          full_name: authUser.user_metadata?.full_name ?? authUser.email ?? '',
+          startup_name: authUser.user_metadata?.startup_name ?? null,
+          stage: null,
+          diagnosticScore: null,
+          created_at: authUser.created_at ?? new Date().toISOString(),
+        }
+        setAppUser(minimalUser)
+
+        // Try to enrich with session-based profile (has role, org_id)
         try {
           const { data: { session } } = await supabase.auth.getSession()
           if (session) {
-            // Set fallback immediately so the UI is never stuck loading
-            setAppUser(await fallbackAppUser(session))
+            const enriched = await fallbackAppUser(session)
+            if (!cancelled) setAppUser(enriched)
           }
         } catch {
-          // Session fetch failed — continue without fallback
+          // Session fetch failed — minimal user already set
         }
         setLoading(false)
-        // Then try to enrich with profile data in background
+        // Then try to enrich with full profile data in background
         try {
           const profile = await loadProfile(authUser.id)
           if (!cancelled && profile) {

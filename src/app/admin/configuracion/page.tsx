@@ -23,12 +23,12 @@ const cardStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '0.625rem 0.875rem',
+  padding: '0.5rem 0.75rem',
   borderRadius: 'var(--radius-sm)',
   border: '1px solid var(--color-border)',
   background: 'var(--color-bg-card)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   color: 'var(--color-text-primary)',
   outline: 'none',
   transition: 'border-color 0.15s',
@@ -155,13 +155,13 @@ export default function ConfiguracionPage() {
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,
-          fontSize: '1.5rem', color: 'var(--color-text-primary)',
+          fontSize: '1.25rem', color: 'var(--color-text-primary)',
           marginBottom: '0.25rem',
         }}>
           Configuración
         </h1>
         <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
           color: 'var(--color-text-secondary)',
         }}>
           Administra los datos de tu organización y plan
@@ -172,7 +172,7 @@ export default function ConfiguracionPage() {
         <div style={{
           padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)',
           background: '#FEF2F2', border: '1px solid #FECACA',
-          color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+          color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
           marginBottom: '1rem',
         }}>
           {error}
@@ -189,7 +189,7 @@ export default function ConfiguracionPage() {
             <Building2 size={18} color="var(--color-accent-primary)" />
             <h2 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
-              fontSize: '1.0625rem', color: 'var(--color-text-primary)',
+              fontSize: '1rem', color: 'var(--color-text-primary)',
             }}>
               Organización
             </h2>
@@ -236,7 +236,7 @@ export default function ConfiguracionPage() {
               type="url"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              placeholder="https://miorganizacion.com"
+              placeholder="https://miorganización.com"
               style={inputStyle}
               onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
@@ -253,7 +253,7 @@ export default function ConfiguracionPage() {
             <CreditCard size={18} color="var(--color-accent-primary)" />
             <h2 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
-              fontSize: '1.0625rem', color: 'var(--color-text-primary)',
+              fontSize: '1rem', color: 'var(--color-text-primary)',
             }}>
               Plan y facturación
             </h2>
@@ -289,7 +289,7 @@ export default function ConfiguracionPage() {
               <span style={{
                 padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)',
                 background: 'rgba(13,148,136,0.08)', color: '#0D9488',
-                fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 500,
               }}>
                 Activo
               </span>
@@ -339,7 +339,7 @@ export default function ConfiguracionPage() {
               type="email"
               value={billingEmail}
               onChange={(e) => setBillingEmail(e.target.value)}
-              placeholder="facturacion@miorganizacion.com"
+              placeholder="facturación@miorganización.com"
               style={inputStyle}
               onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
@@ -369,10 +369,10 @@ export default function ConfiguracionPage() {
             disabled={saving}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.625rem 1.5rem', borderRadius: 'var(--radius-sm)',
+              padding: '0.5rem 1rem', borderRadius: 8,
               background: 'var(--color-accent-primary)',
               color: '#fff', border: 'none', cursor: 'pointer',
-              fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+              fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
               transition: 'background 0.15s',
               opacity: saving ? 0.7 : 1,
             }}

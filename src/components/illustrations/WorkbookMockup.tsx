@@ -117,7 +117,7 @@ export default function WorkbookMockup({
           fill="#fff"
           opacity="0.7"
         >
-          {'Gu\u00EDa completa para founders'}
+          {'Gu\u00EDa profesional para founders'}
         </text>
         <text
           x="193"
@@ -189,7 +189,7 @@ export default function WorkbookMockup({
           opacity="0.85"
           letterSpacing="1"
         >
-          DESCARGA GRATIS
+          USD $15
         </text>
       </g>
     </svg>

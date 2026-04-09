@@ -112,13 +112,13 @@ export default function CohortesPage() {
         <div>
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.5rem', color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
             marginBottom: '0.25rem',
           }}>
             Cohortes
           </h1>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
             color: 'var(--color-text-secondary)',
           }}>
             Gestiona los grupos de startups de tu programa
@@ -128,9 +128,9 @@ export default function CohortesPage() {
           href="/admin/cohortes/nueva"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',
+            padding: '0.5rem 1rem', borderRadius: 8,
             background: 'var(--color-accent-primary)', color: '#fff',
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+            fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
             textDecoration: 'none', transition: 'background 0.15s',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-accent-hover)')}
@@ -158,14 +158,14 @@ export default function CohortesPage() {
             <Users size={24} color="var(--color-text-muted)" />
           </div>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '1rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-base)',
             fontWeight: 600, color: 'var(--color-text-primary)',
             marginBottom: '0.5rem',
           }}>
             Aún no has creado ninguna cohorte
           </p>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
             color: 'var(--color-text-secondary)', marginBottom: '1.5rem',
             maxWidth: 400,
           }}>
@@ -175,9 +175,9 @@ export default function CohortesPage() {
             href="/admin/cohortes/nueva"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',
+              padding: '0.5rem 1rem', borderRadius: 8,
               background: 'var(--color-accent-primary)', color: '#fff',
-              fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+              fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
               textDecoration: 'none',
             }}
           >
@@ -223,7 +223,7 @@ export default function CohortesPage() {
                     }}>
                       <h3 style={{
                         fontFamily: 'var(--font-heading)', fontWeight: 600,
-                        fontSize: '1rem', color: 'var(--color-text-primary)',
+                        fontSize: 'var(--text-base)', color: 'var(--color-text-primary)',
                       }}>
                         {cohort.name}
                       </h3>
@@ -231,7 +231,7 @@ export default function CohortesPage() {
                         padding: '0.125rem 0.625rem', borderRadius: 'var(--radius-xl)',
                         background: status.bg, color: status.color,
                         fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
-                        fontWeight: 600,
+                        fontWeight: 500,
                       }}>
                         {status.label}
                       </span>
@@ -245,7 +245,7 @@ export default function CohortesPage() {
                       }}>
                         <Users size={14} color="var(--color-text-muted)" />
                         <span style={{
-                          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                           color: 'var(--color-text-secondary)',
                         }}>
                           {cohort.startupsCount} startups
@@ -257,7 +257,7 @@ export default function CohortesPage() {
                         }}>
                           <Calendar size={14} color="var(--color-text-muted)" />
                           <span style={{
-                            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                             color: 'var(--color-text-secondary)',
                           }}>
                             {new Date(cohort.start_date).toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}

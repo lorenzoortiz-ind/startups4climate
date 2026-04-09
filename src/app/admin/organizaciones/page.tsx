@@ -135,13 +135,13 @@ export default function OrganizacionesPage() {
         <div>
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.275rem', color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
             marginBottom: '0.25rem',
           }}>
             Organizaciones
           </h1>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
             color: 'var(--color-text-secondary)',
           }}>
             Gestiona todas las organizaciones de la plataforma
@@ -151,9 +151,9 @@ export default function OrganizacionesPage() {
           href="/admin/organizaciones/nueva"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',
+            padding: '0.5rem 1rem', borderRadius: 8,
             background: 'var(--color-accent-primary)', color: '#fff',
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+            fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
             textDecoration: 'none', transition: 'background 0.15s',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-accent-hover)')}
@@ -180,7 +180,7 @@ export default function OrganizacionesPage() {
             width: '100%', padding: '0.625rem 0.75rem 0.625rem 2.25rem',
             borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)',
             background: 'var(--color-bg-card)', color: 'var(--color-text-primary)',
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
             outline: 'none', transition: 'border-color 0.15s',
           }}
           onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
@@ -204,13 +204,13 @@ export default function OrganizacionesPage() {
             <Building2 size={24} color="var(--color-text-muted)" />
           </div>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', fontWeight: 600,
             color: 'var(--color-text-primary)', marginBottom: '0.5rem',
           }}>
             {search ? 'No se encontraron organizaciones' : 'No hay organizaciones registradas'}
           </p>
           <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
             color: 'var(--color-text-secondary)', maxWidth: 400,
           }}>
             {search
@@ -223,7 +223,7 @@ export default function OrganizacionesPage() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{
               width: '100%', borderCollapse: 'collapse',
-              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
             }}>
               <thead>
                 <tr>
@@ -232,8 +232,8 @@ export default function OrganizacionesPage() {
                       textAlign: 'left', padding: '0.75rem 1rem',
                       borderBottom: '1px solid var(--color-border)',
                       fontWeight: 600, color: 'var(--color-text-secondary)',
-                      fontSize: '0.625rem', textTransform: 'uppercase',
-                      letterSpacing: '0.03em', whiteSpace: 'nowrap',
+                      fontSize: 'var(--text-2xs)', textTransform: 'uppercase',
+                      letterSpacing: '0.04em', whiteSpace: 'nowrap',
                     }}>
                       {h}
                     </th>
@@ -270,7 +270,7 @@ export default function OrganizacionesPage() {
                             width: 28, height: 28, borderRadius: 'var(--radius-sm)',
                             background: 'rgba(13,148,136,0.08)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0, fontSize: '0.625rem', fontWeight: 700, color: '#0D9488',
+                            flexShrink: 0, fontSize: 'var(--text-2xs)', fontWeight: 700, color: '#0D9488',
                           }}>
                             {org.name.charAt(0).toUpperCase()}
                           </div>
@@ -296,7 +296,7 @@ export default function OrganizacionesPage() {
                         {org.plan ? (
                           <span style={{
                             padding: '0.1875rem 0.5rem', borderRadius: 999,
-                            fontSize: '0.6875rem', fontWeight: 500,
+                            fontSize: 'var(--text-xs)', fontWeight: 500,
                             background: 'rgba(59,130,246,0.08)', color: '#3B82F6',
                           }}>
                             {PLAN_LABELS[org.plan] || org.plan}
@@ -312,7 +312,7 @@ export default function OrganizacionesPage() {
                       <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                         <span style={{
                           padding: '0.1875rem 0.5rem', borderRadius: 999,
-                          fontSize: '0.6875rem', fontWeight: 500,
+                          fontSize: 'var(--text-xs)', fontWeight: 500,
                           background: statusBg, color: statusColor,
                         }}>
                           {statusLabel}

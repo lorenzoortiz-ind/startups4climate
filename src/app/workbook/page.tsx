@@ -1,40 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { BookOpen, Download, CheckCircle2, ArrowRight, ChevronRight } from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
+import { BookOpen, CheckCircle2 } from 'lucide-react'
 import Image from 'next/image'
-
-/* ─── Country data with flag emojis ─── */
-const COUNTRY_OPTIONS = [
-  { name: 'Argentina', flag: '\u{1F1E6}\u{1F1F7}', code: '+54' },
-  { name: 'Bolivia', flag: '\u{1F1E7}\u{1F1F4}', code: '+591' },
-  { name: 'Brasil', flag: '\u{1F1E7}\u{1F1F7}', code: '+55' },
-  { name: 'Chile', flag: '\u{1F1E8}\u{1F1F1}', code: '+56' },
-  { name: 'Colombia', flag: '\u{1F1E8}\u{1F1F4}', code: '+57' },
-  { name: 'Costa Rica', flag: '\u{1F1E8}\u{1F1F7}', code: '+506' },
-  { name: 'Cuba', flag: '\u{1F1E8}\u{1F1FA}', code: '+53' },
-  { name: 'Ecuador', flag: '\u{1F1EA}\u{1F1E8}', code: '+593' },
-  { name: 'El Salvador', flag: '\u{1F1F8}\u{1F1FB}', code: '+503' },
-  { name: 'Guatemala', flag: '\u{1F1EC}\u{1F1F9}', code: '+502' },
-  { name: 'Honduras', flag: '\u{1F1ED}\u{1F1F3}', code: '+504' },
-  { name: 'México', flag: '\u{1F1F2}\u{1F1FD}', code: '+52' },
-  { name: 'Nicaragua', flag: '\u{1F1F3}\u{1F1EE}', code: '+505' },
-  { name: 'Panamá', flag: '\u{1F1F5}\u{1F1E6}', code: '+507' },
-  { name: 'Paraguay', flag: '\u{1F1F5}\u{1F1FE}', code: '+595' },
-  { name: 'Perú', flag: '\u{1F1F5}\u{1F1EA}', code: '+51' },
-  { name: 'Puerto Rico', flag: '\u{1F1F5}\u{1F1F7}', code: '+1' },
-  { name: 'República Dominicana', flag: '\u{1F1E9}\u{1F1F4}', code: '+1' },
-  { name: 'Uruguay', flag: '\u{1F1FA}\u{1F1FE}', code: '+598' },
-  { name: 'Venezuela', flag: '\u{1F1FB}\u{1F1EA}', code: '+58' },
-]
-
-const VERTICAL_OPTIONS = [
-  'Fintech', 'Healthtech', 'Edtech', 'Agritech', 'Cleantech / Energía',
-  'Logística / Movilidad', 'Proptech', 'Biotech', 'Deep Tech', 'Otra',
-]
 
 const TOC_ITEMS = [
   { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#FF6B4A' },
@@ -53,152 +22,7 @@ const springReveal = {
   transition: { type: 'spring', damping: 20, stiffness: 100 } as const,
 }
 
-/* Typeform-style input field */
-function TFInput({
-  label,
-  type = 'text',
-  value,
-  onChange,
-  placeholder,
-  required = false,
-}: {
-  label: string
-  type?: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  required?: boolean
-}) {
-  const [focused, setFocused] = useState(false)
-  return (
-    <div>
-      <label
-        style={{
-          display: 'block',
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.75rem',
-          fontWeight: 700,
-          color: 'var(--color-text-muted)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          marginBottom: '0.125rem',
-        }}
-      >
-        {label}
-      </label>
-      <div
-        style={{
-          borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
-          transition: 'border-color 0.2s ease',
-        }}
-      >
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          required={required}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          style={{
-            width: '100%',
-            padding: '0.5rem 0 0.875rem',
-            border: 'none',
-            background: 'transparent',
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-heading-md)',
-            color: 'var(--color-ink)',
-            outline: 'none',
-            letterSpacing: '-0.01em',
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
-function TFSelect({
-  label,
-  value,
-  onChange,
-  options,
-  placeholder,
-  required = false,
-}: {
-  label: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  options: string[]
-  placeholder: string
-  required?: boolean
-}) {
-  const [focused, setFocused] = useState(false)
-  return (
-    <div>
-      <label
-        style={{
-          display: 'block',
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.75rem',
-          fontWeight: 700,
-          color: 'var(--color-text-muted)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          marginBottom: '0.125rem',
-        }}
-      >
-        {label}
-      </label>
-      <div
-        style={{
-          borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
-          transition: 'border-color 0.2s ease',
-        }}
-      >
-        <select
-          value={value}
-          onChange={onChange}
-          required={required}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          style={{
-            width: '100%',
-            padding: '0.5rem 2rem 0.875rem 0',
-            border: 'none',
-            background: 'transparent',
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-heading-md)',
-            color: value ? 'var(--color-ink)' : 'var(--color-text-muted)',
-            outline: 'none',
-            appearance: 'none',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%235E5E5E' d='M2 4l5 6 5-6'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'right 0.25rem center',
-            letterSpacing: '-0.01em',
-            cursor: 'pointer',
-          }}
-        >
-          <option value="">{placeholder}</option>
-          {options.map((o) => (
-            <option key={o} value={o}>{o}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-  )
-}
-
 export default function WorkbookPage() {
-  const { user } = useAuth()
-  const [nombre, setNombre] = useState('')
-  const [startupName, setStartupName] = useState('')
-  const [email, setEmail] = useState('')
-  const [vertical, setVertical] = useState('')
-  const [pais, setPais] = useState('')
-  const [phoneCountryCode, setPhoneCountryCode] = useState('+52')
-  const [telefono, setTelefono] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -207,15 +31,6 @@ export default function WorkbookPage() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!nombre || !email || !pais) return
-    setSubmitting(true)
-    await new Promise((r) => setTimeout(r, 1200))
-    setSubmitting(false)
-    setSubmitted(true)
-  }
 
   return (
     <div
@@ -269,7 +84,7 @@ export default function WorkbookPage() {
                   textTransform: 'uppercase',
                 }}
               >
-                Recurso gratuito
+                USD $15
               </span>
             </div>
 
@@ -284,7 +99,7 @@ export default function WorkbookPage() {
                 marginBottom: '1.5rem',
               }}
             >
-              Guía completa para{' '}
+              Guía profesional para{' '}
               <span style={{ color: 'var(--color-accent-primary)' }}>founders de impacto</span>
             </h1>
 
@@ -299,8 +114,9 @@ export default function WorkbookPage() {
                 letterSpacing: '-0.01em',
               }}
             >
-              Todo lo que necesitas saber para lanzar, validar y escalar tu startup de impacto
-              en América Latina. Desde la ideación hasta el fundraising, paso a paso.
+              Lleva tu startup de la idea al escalamiento con metodología profesional.
+              Profundiza el uso de las herramientas de la plataforma y aprende a validar,
+              construir y escalar paso a paso en América Latina.
             </p>
 
             {/* Stats row */}
@@ -483,7 +299,7 @@ export default function WorkbookPage() {
             </div>
           </motion.div>
 
-          {/* Right column: Download Form */}
+          {/* Right column: Purchase CTA */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
@@ -497,370 +313,168 @@ export default function WorkbookPage() {
               padding: '2.5rem',
               boxShadow: 'var(--shadow-float)',
             }}
-            id="descargar"
+            id="comprar"
           >
-            {user ? (
-              /* Logged-in user: direct download */
-              <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div
-                  style={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255,107,74,0.08)',
-                    border: '1px solid rgba(255,107,74,0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 1.5rem',
-                  }}
-                >
-                  <Download size={28} color="var(--color-accent-secondary)" />
-                </div>
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-display-md)',
-                    fontWeight: 700,
-                    color: 'var(--color-ink)',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  Descarga directa
-                </h2>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-body-lg)',
-                    color: 'var(--color-text-secondary)',
-                    marginBottom: '2rem',
-                    lineHeight: 1.5,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Ya tienes sesión como <strong style={{ color: 'var(--color-ink)' }}>{user.name}</strong>. Descarga tu copia gratuita.
-                </p>
-                <button
-                  onClick={() => alert('Descarga iniciada. Revisa tu carpeta de descargas.')}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.625rem',
-                    padding: '1rem 2.5rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'var(--color-ink)',
-                    color: 'var(--color-paper)',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-body-lg)',
-                    fontWeight: 700,
-                    border: 'none',
-                    cursor: 'pointer',
-                    letterSpacing: '-0.01em',
-                    transition: 'background 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)' }}
-                >
-                  <Download size={18} />
-                  Descargar Workbook (PDF)
-                </button>
-              </div>
-            ) : submitted ? (
-              /* Success state */
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-                style={{ textAlign: 'center', padding: '1rem 0' }}
+            {/* Purchase CTA */}
+            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.375rem 0.875rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(255,107,74,0.08)',
+                  border: '1px solid rgba(255,107,74,0.15)',
+                  marginBottom: '1.5rem',
+                }}
               >
-                <div
+                <BookOpen size={14} color="var(--color-accent-secondary)" />
+                <span
                   style={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255,107,74,0.08)',
-                    border: '1px solid rgba(255,107,74,0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 1.5rem',
-                  }}
-                >
-                  <CheckCircle2 size={32} color="var(--color-accent-secondary)" />
-                </div>
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-display-md)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.75rem',
                     fontWeight: 700,
-                    color: 'var(--color-ink)',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  ¡Revisa tu email!
-                </h2>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-body-lg)',
-                    color: 'var(--color-text-secondary)',
-                    lineHeight: 1.6,
-                    marginBottom: '2rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Te enviamos el workbook a <strong style={{ color: 'var(--color-ink)' }}>{email}</strong>.<br />
-                  Si no lo ves, revisa tu carpeta de spam.
-                </p>
-                <Link
-                  href="/"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.375rem',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-body-lg)',
                     color: 'var(--color-accent-secondary)',
-                    textDecoration: 'none',
-                    fontWeight: 700,
-                    letterSpacing: '-0.01em',
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
                   }}
                 >
-                  Volver al inicio
-                  <ArrowRight size={16} />
-                </Link>
-              </motion.div>
-            ) : (
-              /* Lead capture form */
-              <>
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-display-md)',
-                    fontWeight: 700,
-                    color: 'var(--color-ink)',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  Descarga gratis
-                </h2>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-body-lg)',
-                    color: 'var(--color-text-secondary)',
-                    marginBottom: '2.25rem',
-                    lineHeight: 1.5,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Ingresa tus datos y te lo enviamos al instante.
-                </p>
+                  Recurso profesional
+                </span>
+              </div>
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-                  <TFInput
-                    label="Nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder="Tu nombre completo"
-                    required
-                  />
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'var(--text-display-md)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.05,
+                  marginBottom: '0.75rem',
+                }}
+              >
+                Adquiere tu Workbook
+              </h2>
 
-                  <TFInput
-                    label="Nombre de tu startup"
-                    value={startupName}
-                    onChange={(e) => setStartupName(e.target.value)}
-                    placeholder="Nombre de tu startup"
-                  />
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'var(--text-display-lg)',
+                  fontWeight: 700,
+                  color: 'var(--color-accent-primary)',
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1,
+                  marginBottom: '1rem',
+                }}
+              >
+                USD $15
+              </div>
 
-                  <TFSelect
-                    label="Vertical"
-                    value={vertical}
-                    onChange={(e) => setVertical(e.target.value)}
-                    options={VERTICAL_OPTIONS}
-                    placeholder="Selecciona una vertical"
-                  />
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body-lg)',
+                  color: 'var(--color-text-secondary)',
+                  marginBottom: '1.5rem',
+                  lineHeight: 1.6,
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                Metodología profesional para llevar tu startup de la idea al escalamiento.
+                Saca el máximo provecho de las herramientas de la plataforma S4C.
+              </p>
 
-                  <TFInput
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tu@email.com"
-                    required
-                  />
-
-                  {/* Country + Phone */}
-                  <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-                    <div style={{ flex: '0 1 200px', minWidth: 160 }}>
-                      <label
-                        style={{
-                          display: 'block',
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          color: 'var(--color-text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.08em',
-                          marginBottom: '0.125rem',
-                        }}
-                      >
-                        País
-                      </label>
-                      <div style={{ borderBottom: '2px solid var(--color-border)' }}>
-                        <select
-                          value={pais}
-                          onChange={(e) => {
-                            setPais(e.target.value)
-                            const match = COUNTRY_OPTIONS.find((c) => c.name === e.target.value)
-                            if (match) setPhoneCountryCode(match.code)
-                          }}
-                          required
-                          style={{
-                            width: '100%',
-                            padding: '0.5rem 2rem 0.875rem 0',
-                            border: 'none',
-                            background: 'transparent',
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-heading-md)',
-                            color: pais ? 'var(--color-ink)' : 'var(--color-text-muted)',
-                            outline: 'none',
-                            appearance: 'none',
-                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%235E5E5E' d='M2 4l5 6 5-6'/%3E%3C/svg%3E")`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 0.25rem center',
-                            letterSpacing: '-0.01em',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <option value="">Selecciona</option>
-                          {COUNTRY_OPTIONS.map((c) => (
-                            <option key={c.name} value={c.name}>
-                              {c.flag} {c.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div style={{ flex: '1 1 160px', minWidth: 0 }}>
-                      <label
-                        style={{
-                          display: 'block',
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          color: 'var(--color-text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.08em',
-                          marginBottom: '0.125rem',
-                        }}
-                      >
-                        Teléfono
-                      </label>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end', borderBottom: '2px solid var(--color-border)' }}>
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-heading-md)',
-                            color: 'var(--color-text-muted)',
-                            paddingBottom: '0.875rem',
-                            flexShrink: 0,
-                            letterSpacing: '-0.01em',
-                          }}
-                        >
-                          {phoneCountryCode}
-                        </span>
-                        <input
-                          type="tel"
-                          value={telefono}
-                          onChange={(e) => setTelefono(e.target.value)}
-                          placeholder="55 1234 5678"
-                          style={{
-                            flex: 1,
-                            padding: '0.5rem 0 0.875rem',
-                            border: 'none',
-                            background: 'transparent',
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-heading-md)',
-                            color: 'var(--color-ink)',
-                            outline: 'none',
-                            letterSpacing: '-0.01em',
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={submitting}
+              {/* Benefits list */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  textAlign: 'left',
+                  marginBottom: '2rem',
+                }}
+              >
+                {[
+                  '8 capítulos con metodología paso a paso',
+                  'De la ideación al fundraising y escalamiento',
+                  'Complemento profesional de las herramientas S4C',
+                  'Enfocado en startups de impacto en LATAM',
+                ].map((benefit) => (
+                  <div
+                    key={benefit}
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: 'flex-start',
                       gap: '0.625rem',
-                      width: '100%',
-                      padding: '1.125rem 2rem',
-                      borderRadius: 'var(--radius-full)',
-                      background: submitting ? 'var(--color-text-secondary)' : 'var(--color-ink)',
-                      color: 'var(--color-paper)',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: 'var(--text-body-lg)',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: submitting ? 'wait' : 'pointer',
-                      letterSpacing: '-0.01em',
-                      marginTop: '0.25rem',
-                      transition: 'background 0.2s ease',
                     }}
-                    onMouseEnter={(e) => { if (!submitting) e.currentTarget.style.background = 'var(--color-accent-primary)' }}
-                    onMouseLeave={(e) => { if (!submitting) e.currentTarget.style.background = 'var(--color-ink)' }}
                   >
-                    {submitting ? (
-                      'Enviando...'
-                    ) : (
-                      <>
-                        Descargar workbook gratis
-                        <ArrowRight size={18} />
-                      </>
-                    )}
-                  </button>
-                </form>
+                    <CheckCircle2
+                      size={18}
+                      color="var(--color-accent-secondary)"
+                      style={{ flexShrink: 0, marginTop: '0.125rem' }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.9375rem',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: 1.4,
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {benefit}
+                    </span>
+                  </div>
+                ))}
+              </div>
 
-                <div
-                  style={{
-                    marginTop: '1.75rem',
-                    textAlign: 'center',
-                    borderTop: '1px solid var(--color-border)',
-                    paddingTop: '1.25rem',
-                  }}
-                >
-                  <Link
-                    href="/"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.375rem',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.9375rem',
-                      color: 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    ¿Ya tienes cuenta?{' '}
-                    <span style={{ color: 'var(--color-accent-secondary)', fontWeight: 700 }}>Inicia sesión</span>
-                    <ChevronRight size={14} color="var(--color-accent-secondary)" />
-                  </Link>
-                </div>
-              </>
-            )}
+              {/* WhatsApp CTA button */}
+              <a
+                href="https://wa.me/51989338401?text=Hola%2C%20me%20interesa%20adquirir%20el%20Workbook%20de%20Startups4Climate%20%F0%9F%9A%80"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.625rem',
+                  width: '100%',
+                  padding: '1.125rem 2rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: '#25D366',
+                  color: '#fff',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body-lg)',
+                  fontWeight: 700,
+                  border: 'none',
+                  cursor: 'pointer',
+                  letterSpacing: '-0.01em',
+                  textDecoration: 'none',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#1EB954' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#25D366' }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Comprar por WhatsApp
+              </a>
+
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.8125rem',
+                  color: 'var(--color-text-muted)',
+                  marginTop: '1rem',
+                  lineHeight: 1.5,
+                }}
+              >
+                Pago seguro. Recibes el PDF al instante.
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>

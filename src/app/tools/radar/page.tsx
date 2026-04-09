@@ -47,6 +47,13 @@ const CATEGORY_ICONS: Record<Category, typeof TrendingUp> = {
   Programa: Award,
 }
 
+const CATEGORY_ACCENT: Record<Category, string> = {
+  Inversión: '#0D9488',
+  Regulación: '#2A222B',
+  Tendencia: '#6366F1',
+  Programa: '#EC4899',
+}
+
 /* ─── Placeholder data ─── */
 const NEWS_ITEMS: NewsItem[] = [
   {
@@ -147,11 +154,11 @@ function CategoryPill({ category }: { category: Category }) {
         alignItems: 'center',
         gap: '0.25rem',
         padding: '0.125rem 0.5rem',
-        borderRadius: 8,
+        borderRadius: 999,
         background: style.bg,
         border: `1px solid ${style.border}`,
         fontFamily: 'var(--font-body)',
-        fontSize: '0.625rem',
+        fontSize: 'var(--text-2xs)',
         fontWeight: 600,
         color: style.color,
         whiteSpace: 'nowrap',
@@ -164,17 +171,19 @@ function CategoryPill({ category }: { category: Category }) {
 }
 
 function NewsCard({ item, index }: { item: NewsItem; index: number }) {
+  const accent = CATEGORY_ACCENT[item.category]
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.05 + index * 0.06, ease: 'easeOut' }}
       style={{
-        padding: '1.25rem 1.5rem',
-        borderRadius: 14,
+        padding: '1.25rem',
+        borderRadius: 12,
         background: 'var(--color-bg-card)',
         border: '1px solid var(--color-border)',
-        boxShadow: 'var(--shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+        borderLeft: `3px solid ${accent}`,
+        boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.5rem',
@@ -184,7 +193,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         wordBreak: 'break-word',
       }}
       whileHover={{
-        boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+        boxShadow: 'var(--shadow-card-hover)',
         y: -2,
       }}
     >
@@ -193,7 +202,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         <span
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.625rem',
+            fontSize: 'var(--text-2xs)',
             color: 'var(--color-text-muted)',
           }}
         >
@@ -203,9 +212,9 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       <h3
         style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '0.9375rem',
-          fontWeight: 700,
-          color: 'var(--color-text-primary)',
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          color: 'var(--color-ink)',
           lineHeight: 1.35,
           margin: 0,
         }}
@@ -217,7 +226,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
           fontFamily: 'var(--font-body)',
           fontSize: '0.8125rem',
           color: 'var(--color-text-secondary)',
-          lineHeight: 1.55,
+          lineHeight: 1.6,
           margin: 0,
         }}
       >
@@ -226,7 +235,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       <span
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '0.6875rem',
+          fontSize: 'var(--text-xs)',
           color: 'var(--color-text-muted)',
           fontStyle: 'italic',
         }}
@@ -244,11 +253,12 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.05 + index * 0.06, ease: 'easeOut' }}
       style={{
-        padding: '1.25rem 1.5rem',
-        borderRadius: 14,
+        padding: '1.25rem',
+        borderRadius: 12,
         background: 'var(--color-bg-card)',
         border: '1px solid var(--color-border)',
-        boxShadow: 'var(--shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+        borderLeft: '3px solid #0D9488',
+        boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.5rem',
@@ -258,7 +268,7 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
         wordBreak: 'break-word',
       }}
       whileHover={{
-        boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+        boxShadow: 'var(--shadow-card-hover)',
         y: -2,
       }}
     >
@@ -267,13 +277,13 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
           style={{
             display: 'inline-block',
             padding: '0.125rem 0.5rem',
-            borderRadius: 8,
-            background: 'rgba(42,34,43,0.08)',
-            border: '1px solid rgba(42,34,43,0.2)',
+            borderRadius: 999,
+            background: 'rgba(13,148,136,0.08)',
+            border: '1px solid rgba(13,148,136,0.2)',
             fontFamily: 'var(--font-body)',
-            fontSize: '0.625rem',
+            fontSize: 'var(--text-2xs)',
             fontWeight: 600,
-            color: '#2A222B',
+            color: '#0D9488',
             whiteSpace: 'nowrap',
           }}
         >
@@ -282,7 +292,7 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
         <span
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.625rem',
+            fontSize: 'var(--text-2xs)',
             color: 'var(--color-text-muted)',
           }}
         >
@@ -292,9 +302,9 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
       <h3
         style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '0.9375rem',
-          fontWeight: 700,
-          color: 'var(--color-text-primary)',
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          color: 'var(--color-ink)',
           lineHeight: 1.35,
           margin: 0,
         }}
@@ -304,7 +314,7 @@ function VerticalCard({ item, vertical, index }: { item: VerticalItem; vertical:
       <span
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '0.6875rem',
+          fontSize: 'var(--text-xs)',
           color: 'var(--color-text-muted)',
           fontStyle: 'italic',
         }}
@@ -338,11 +348,10 @@ export default function RadarPage() {
       style={{
         minHeight: '100vh',
         background: 'var(--color-bg-primary)',
-        padding: '3rem 1.5rem 4rem',
+        padding: '2rem',
       }}
     >
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        {/* AI Banner */}
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -355,9 +364,7 @@ export default function RadarPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              marginBottom: '0.75rem',
-              flexWrap: 'wrap' as const,
-              minHeight: 'auto',
+              marginBottom: '0.5rem',
             }}
           >
             <div
@@ -365,28 +372,26 @@ export default function RadarPage() {
                 width: 40,
                 height: 40,
                 borderRadius: 12,
-                background:
-                  'linear-gradient(135deg, rgba(42,34,43,0.12), rgba(42,34,43,0.04))',
-                border: '1px solid rgba(42,34,43,0.2)',
+                background: 'rgba(13,148,136,0.08)',
+                border: '1px solid rgba(13,148,136,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Radio size={20} color="#2A222B" />
+              <Radio size={20} color="#0D9488" />
             </div>
-            <div style={{ overflow: 'visible', minHeight: 'auto', flex: 1, minWidth: 0 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.5rem',
-                  fontWeight: 400,
-                  color: 'var(--color-text-primary)',
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.02em',
                   lineHeight: 1.3,
-                  overflow: 'visible',
-                  wordBreak: 'break-word',
-                  overflowWrap: 'break-word',
+                  margin: 0,
                 }}
               >
                 RADAR del ecosistema
@@ -394,9 +399,10 @@ export default function RadarPage() {
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
-                  color: 'var(--color-text-muted)',
-                  lineHeight: 1.4,
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.5,
+                  margin: 0,
                 }}
               >
                 Mantente informado sobre lo que pasa en el ecosistema de innovación en LATAM
@@ -411,13 +417,14 @@ export default function RadarPage() {
               alignItems: 'center',
               gap: '0.375rem',
               marginTop: '0.5rem',
+              marginLeft: 52,
             }}
           >
             <Clock size={12} color="var(--color-text-muted)" />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.6875rem',
+                fontSize: 'var(--text-xs)',
                 color: 'var(--color-text-muted)',
               }}
             >
@@ -451,15 +458,15 @@ export default function RadarPage() {
                   alignItems: 'center',
                   gap: '0.375rem',
                   padding: '0.5rem 1rem',
-                  borderRadius: 10,
+                  borderRadius: 999,
                   border: isActive
-                    ? '1px solid rgba(42,34,43,0.3)'
+                    ? '1px solid rgba(13,148,136,0.3)'
                     : '1px solid var(--color-border)',
-                  background: isActive ? 'rgba(42,34,43,0.08)' : 'var(--color-bg-card)',
+                  background: isActive ? 'rgba(13,148,136,0.08)' : 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
+                  fontSize: 'var(--text-sm)',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#2A222B' : 'var(--color-text-secondary)',
+                  color: isActive ? '#0D9488' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',
@@ -474,7 +481,13 @@ export default function RadarPage() {
 
         {/* Tab content */}
         {activeTab === 'noticias' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
+              gap: '1rem',
+            }}
+          >
             {NEWS_ITEMS.map((item, i) => (
               <NewsCard key={item.title} item={item} index={i} />
             ))}
@@ -492,25 +505,31 @@ export default function RadarPage() {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1rem',
-                borderRadius: 10,
-                background: 'rgba(42,34,43,0.04)',
-                border: '1px solid rgba(42,34,43,0.1)',
+                borderRadius: 12,
+                background: 'rgba(13,148,136,0.04)',
+                border: '1px solid rgba(13,148,136,0.1)',
                 marginBottom: '1rem',
               }}
             >
-              <Target size={14} color="#2A222B" />
+              <Target size={14} color="#0D9488" />
               <span
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
+                  fontSize: 'var(--text-sm)',
                   color: 'var(--color-text-secondary)',
                 }}
               >
                 Mostrando noticias relevantes para:{' '}
-                <strong style={{ color: '#2A222B' }}>{userVertical}</strong>
+                <strong style={{ color: '#0D9488' }}>{userVertical}</strong>
               </span>
             </motion.div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
+                gap: '1rem',
+              }}
+            >
               {VERTICAL_ITEMS.map((item, i) => (
                 <VerticalCard key={item.title} item={item} vertical={userVertical} index={i} />
               ))}

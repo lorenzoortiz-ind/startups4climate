@@ -27,8 +27,8 @@ import OrgDashboardMockup from '@/components/illustrations/OrgDashboardMockup'
 const FEATURES = [
   {
     icon: Users,
-    title: 'Gestion de cohorts',
-    description: 'Crea cohortes, invita founders por email y organiza tus programas sin hojas de calculo.',
+    title: 'Gestión de cohortes',
+    description: 'Crea cohortes, invita founders por email y organiza tus programas sin hojas de cálculo.',
     accent: '#0D9488',
     accentBg: 'rgba(13,148,136,0.06)',
   },
@@ -81,25 +81,25 @@ const PLANS = [
     name: 'Regional',
     price: 'Gratis',
     priceSub: null,
-    description: 'Para incubadoras y aceleradoras regionales (fuera de Lima)',
+    description: 'Para incubadoras y aceleradoras regionales (fuera de Lima) o en zonas con poblaciones vulnerables',
     accent: '#0D9488',
     accentBg: 'rgba(13,148,136,0.06)',
     features: [
       'Hasta 20 startups por programa',
       'Acceso a todas las herramientas',
       'Dashboard de seguimiento',
-      'Reportes basicos',
+      'Reportes básicos',
     ],
     cta: 'Aplica gratis',
     ctaLink: `https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa el plan Regional gratuito de S4C para mi incubadora.')}`,
     highlighted: false,
     badge: null,
-    ideal: 'Ideal para programas regionales de innovacion',
+    ideal: 'Ideal para programas regionales de innovación',
   },
   {
     name: 'Profesional',
     price: '$300',
-    priceSub: 'USD / ano',
+    priceSub: 'USD / año',
     description: 'Para incubadoras y aceleradoras en Lima',
     accent: '#FF6B4A',
     accentBg: 'rgba(255,107,74,0.06)',
@@ -107,7 +107,7 @@ const PLANS = [
       'Hasta 30 startups por programa',
       'Todo lo del plan Regional',
       'Reportes avanzados en Excel',
-      'Benchmarking de cohorts',
+      'Benchmarking de cohortes',
       'Soporte prioritario por WhatsApp',
     ],
     cta: 'Comenzar ahora',
@@ -116,37 +116,8 @@ const PLANS = [
     badge: 'Mas popular',
     ideal: null,
   },
-  {
-    name: 'Enterprise',
-    price: 'Personalizado',
-    priceSub: null,
-    description: 'Para universidades y gobiernos',
-    accent: '#3B82F6',
-    accentBg: 'rgba(59,130,246,0.06)',
-    features: [
-      'Startups ilimitadas',
-      'Todo lo del plan Profesional',
-      'API de integracion',
-      'Onboarding personalizado',
-      'Branding personalizado',
-      'SLA garantizado',
-    ],
-    cta: 'Contactar ventas',
-    ctaLink: `https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa el plan Enterprise de S4C para mi organización.')}`,
-    highlighted: false,
-    badge: null,
-    ideal: null,
-  },
 ]
 
-const SOCIAL_PROOF = [
-  'Universidad Nacional de Ingenieria',
-  'StartUp Peru',
-  'UTEC Ventures',
-  'Emprende UP',
-  'NeSst',
-  'Wayra',
-]
 
 /* ------------------------------------------------------------------ */
 /*  ANIMATION HELPERS                                                  */
@@ -522,7 +493,7 @@ export default function OrganizacionesPage() {
               }}
             >
               Gestiona tu{' '}
-              <span style={{ color: 'var(--color-accent-primary)' }}>programa de innovacion</span>{' '}
+              <span style={{ color: 'var(--color-accent-primary)' }}>programa de innovación</span>{' '}
               con datos reales
             </h1>
 
@@ -578,7 +549,7 @@ export default function OrganizacionesPage() {
             {/* Hero CTA buttons */}
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <a
-                href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa S4C para mi programa de innovacion.')}`}
+                href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa S4C para mi programa de innovación.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -839,7 +810,7 @@ export default function OrganizacionesPage() {
                   color: 'var(--color-text-secondary)',
                 }}
               >
-                Aplica al plan gratuito y potencia tu programa de innovacion sin costo.
+                Aplica al plan gratuito y potencia tu programa de innovación sin costo.
               </p>
             </div>
           </div>
@@ -873,107 +844,6 @@ export default function OrganizacionesPage() {
             <ArrowRight size={18} strokeWidth={2.5} />
           </a>
         </motion.div>
-      </section>
-
-      {/* ============================================================ */}
-      {/*  SOCIAL PROOF                                                 */}
-      {/* ============================================================ */}
-      <section
-        style={{
-          padding: 'clamp(3rem, 6vw, 5rem) var(--container-px)',
-          maxWidth: 'var(--container-max)',
-          margin: '0 auto',
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          style={{ textAlign: 'center', marginBottom: '2.5rem' }}
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent-primary)',
-              marginBottom: '1rem',
-            }}
-          >
-            Confianza
-          </span>
-          <h2
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-display-md)',
-              fontWeight: 700,
-              color: 'var(--color-ink)',
-              letterSpacing: '-0.04em',
-              lineHeight: 1.05,
-            }}
-          >
-            Universidades e incubadoras que confian en nosotros
-          </h2>
-        </motion.div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '1.5rem',
-          }}
-        >
-          {SOCIAL_PROOF.map((name, i) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.06 }}
-              style={{
-                background: 'var(--color-paper)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '1.5rem 2rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: 180,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '0.9375rem',
-                  fontWeight: 600,
-                  color: 'var(--color-text-muted)',
-                  letterSpacing: '-0.02em',
-                  textAlign: 'center',
-                }}
-              >
-                {name}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-
-        <p
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            color: 'var(--color-text-muted)',
-            textAlign: 'center',
-            marginTop: '1.5rem',
-            fontStyle: 'italic',
-          }}
-        >
-          Organizaciones en proceso de onboarding y pilotos activos
-        </p>
       </section>
 
       {/* ============================================================ */}
@@ -1111,7 +981,7 @@ export default function OrganizacionesPage() {
             </a>
 
             <a
-              href="mailto:hello@redesignlab.org?subject=Interes en S4C para organizaciones"
+              href="mailto:hello@redesignlab.org?subject=Interés en S4C para organizaciones"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

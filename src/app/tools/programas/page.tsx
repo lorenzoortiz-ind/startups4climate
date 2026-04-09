@@ -203,7 +203,7 @@ export default function ProgramasPage() {
             maxWidth: 560,
           }}
         >
-          Explora las cohortes abiertas de incubadoras y programas de innovacion.
+          Explora las cohortes abiertas de incubadoras y programas de innovación.
           Solicita tu ingreso y lleva tu startup al siguiente nivel.
         </p>
       </div>
@@ -244,7 +244,7 @@ export default function ProgramasPage() {
                 color: 'var(--color-text-secondary)',
               }}
             >
-              Tu startup esta vinculada a este programa. Puedes explorar otras cohortes abiertas a continuacion.
+              Tu startup está vinculada a este programa. Puedes explorar otras cohortes abiertas a continuación.
             </div>
           </div>
         </motion.div>

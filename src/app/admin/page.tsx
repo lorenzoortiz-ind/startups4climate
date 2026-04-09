@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { Card } from '@/components/ui'
 
 interface OrgMetrics {
   totalStartups: number
@@ -38,13 +39,7 @@ interface CohortRow {
   startup_count: number
 }
 
-const cardStyle: React.CSSProperties = {
-  background: 'var(--color-bg-card)',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-md)',
-  padding: '1.5rem',
-  boxShadow: 'var(--shadow-card)',
-}
+// Card styling handled by <Card> component from @/components/ui
 
 const fadeUp = {
   initial: { opacity: 0, y: 16 },
@@ -260,7 +255,7 @@ export default function AdminDashboard() {
             style={{
               fontFamily: 'var(--font-heading)',
               fontWeight: 700,
-              fontSize: '1.275rem',
+              fontSize: 'var(--text-xl)',
               color: 'var(--color-text-primary)',
             }}
           >
@@ -272,7 +267,7 @@ export default function AdminDashboard() {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
+            fontSize: 'var(--text-sm)',
             color: 'var(--color-text-secondary)',
           }}
         >
@@ -296,52 +291,53 @@ export default function AdminDashboard() {
               key={m.label}
               {...fadeUp}
               transition={{ ...fadeUp.transition, delay: i * 0.06 }}
-              style={cardStyle}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  marginBottom: '1rem',
-                }}
-              >
+              <Card padding="none" style={{ padding: '1.5rem' }}>
                 <div
                   style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 'var(--radius-sm)',
-                    background: m.bg,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
+                    gap: '0.75rem',
+                    marginBottom: '1rem',
                   }}
                 >
-                  <Icon size={20} color={m.color} />
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 'var(--radius-sm)',
+                      background: m.bg,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={20} color={m.color} />
+                  </div>
                 </div>
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  fontSize: '1.5rem',
-                  color: 'var(--color-text-primary)',
-                  lineHeight: 1,
-                  marginBottom: '0.25rem',
-                }}
-              >
-                {m.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.6875rem',
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
-                {m.label}
-              </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 700,
+                    fontSize: 'var(--text-2xl)',
+                    color: 'var(--color-text-primary)',
+                    lineHeight: 1,
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  {m.value}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--color-text-secondary)',
+                  }}
+                >
+                  {m.label}
+                </div>
+              </Card>
             </motion.div>
           )
         })}
@@ -351,8 +347,9 @@ export default function AdminDashboard() {
       <motion.div
         {...fadeUp}
         transition={{ ...fadeUp.transition, delay: 0.25 }}
-        style={{ ...cardStyle, marginBottom: '1.5rem' }}
+        style={{ marginBottom: '1.5rem' }}
       >
+        <Card padding="none" style={{ padding: '1.5rem' }}>
         <div
           style={{
             display: 'flex',
@@ -367,7 +364,7 @@ export default function AdminDashboard() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
-                fontSize: '0.75rem',
+                fontSize: 'var(--text-md)',
                 color: 'var(--color-text-primary)',
               }}
             >
@@ -381,7 +378,7 @@ export default function AdminDashboard() {
               alignItems: 'center',
               gap: '0.375rem',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.6875rem',
+              fontSize: 'var(--text-xs)',
               color: '#0D9488',
               textDecoration: 'none',
               fontWeight: 500,
@@ -421,17 +418,17 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
+                fontSize: 'var(--text-sm)',
                 color: 'var(--color-text-muted)',
                 marginBottom: '0.25rem',
               }}
             >
-              No hay cohortes aun
+              No hay cohortes aún
             </p>
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
+                fontSize: 'var(--text-2xs)',
                 color: 'var(--color-text-muted)',
               }}
             >
@@ -460,7 +457,7 @@ export default function AdminDashboard() {
                       style={{
                         fontFamily: 'var(--font-heading)',
                         fontWeight: 600,
-                        fontSize: '0.75rem',
+                        fontSize: 'var(--text-base)',
                         color: 'var(--color-text-primary)',
                         marginBottom: '0.125rem',
                       }}
@@ -473,7 +470,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         gap: '0.75rem',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.625rem',
+                        fontSize: 'var(--text-2xs)',
                         color: 'var(--color-text-secondary)',
                       }}
                     >
@@ -497,7 +494,7 @@ export default function AdminDashboard() {
                       style={{
                         padding: '0.25rem 0.625rem',
                         borderRadius: 999,
-                        fontSize: '0.6875rem',
+                        fontSize: 'var(--text-xs)',
                         fontFamily: 'var(--font-body)',
                         fontWeight: 500,
                         background: statusStyle.bg,
@@ -517,14 +514,16 @@ export default function AdminDashboard() {
             })}
           </div>
         )}
+        </Card>
       </motion.div>
 
       {/* Startups table */}
       <motion.div
         {...fadeUp}
         transition={{ ...fadeUp.transition, delay: 0.3 }}
-        style={{ ...cardStyle, marginBottom: '1.5rem' }}
+        style={{ marginBottom: '1.5rem' }}
       >
+        <Card padding="none" style={{ padding: '1.5rem' }}>
         <div
           style={{
             display: 'flex',
@@ -539,7 +538,7 @@ export default function AdminDashboard() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 600,
-                fontSize: '0.75rem',
+                fontSize: 'var(--text-md)',
                 color: 'var(--color-text-primary)',
               }}
             >
@@ -550,7 +549,7 @@ export default function AdminDashboard() {
             <span
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
+                fontSize: 'var(--text-2xs)',
                 color: 'var(--color-text-secondary)',
               }}
             >
@@ -588,21 +587,21 @@ export default function AdminDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.75rem',
+                fontSize: 'var(--text-sm)',
                 color: 'var(--color-text-muted)',
                 marginBottom: '0.25rem',
               }}
             >
-              No hay startups registradas aun
+              No hay startups registradas aún
             </p>
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
+                fontSize: 'var(--text-2xs)',
                 color: 'var(--color-text-muted)',
               }}
             >
-              Las startups apareceran aqui cuando se unan a una cohorte
+              Las startups aparecerán aquí cuando se unan a una cohorte
             </p>
           </div>
         ) : (
@@ -612,7 +611,7 @@ export default function AdminDashboard() {
                 width: '100%',
                 borderCollapse: 'collapse',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.6875rem',
+                fontSize: 'var(--text-xs)',
               }}
             >
               <thead>
@@ -627,9 +626,9 @@ export default function AdminDashboard() {
                           borderBottom: '1px solid var(--color-border)',
                           fontWeight: 600,
                           color: 'var(--color-text-secondary)',
-                          fontSize: '0.625rem',
+                          fontSize: 'var(--text-xs)',
                           textTransform: 'uppercase',
-                          letterSpacing: '0.03em',
+                          letterSpacing: '0.04em',
                         }}
                       >
                         {header}
@@ -663,7 +662,7 @@ export default function AdminDashboard() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
-                            fontSize: '0.625rem',
+                            fontSize: 'var(--text-2xs)',
                             fontWeight: 700,
                             color: '#0D9488',
                           }}
@@ -701,7 +700,7 @@ export default function AdminDashboard() {
                         style={{
                           padding: '0.1875rem 0.5rem',
                           borderRadius: 999,
-                          fontSize: '0.6875rem',
+                          fontSize: 'var(--text-xs)',
                           fontWeight: 500,
                           background: 'rgba(13,148,136,0.08)',
                           color: '#0D9488',
@@ -739,62 +738,64 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
+        </Card>
       </motion.div>
 
       {/* Quick actions */}
       <motion.div
         {...fadeUp}
         transition={{ ...fadeUp.transition, delay: 0.35 }}
-        style={cardStyle}
       >
-        <h3
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontWeight: 600,
-            fontSize: '0.75rem',
-            color: 'var(--color-text-primary)',
-            marginBottom: '1rem',
-          }}
-        >
-          Acciones rapidas
-        </h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-          {QUICK_ACTIONS.map((action) => {
-            const Icon = action.icon
-            return (
-              <Link
-                key={action.label}
-                href={action.href}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.625rem 1.25rem',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--color-border)',
-                  background: 'var(--color-bg-card)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  color: 'var(--color-text-primary)',
-                  textDecoration: 'none',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = action.color
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${action.color}22`
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--color-border)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                <Icon size={16} color={action.color} />
-                {action.label}
-              </Link>
-            )
-          })}
-        </div>
+        <Card padding="none" style={{ padding: '1.5rem' }}>
+          <h3
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              fontSize: 'var(--text-md)',
+              color: 'var(--color-text-primary)',
+              marginBottom: '1rem',
+            }}
+          >
+            Acciones rápidas
+          </h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {QUICK_ACTIONS.map((action) => {
+              const Icon = action.icon
+              return (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg-card)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    textDecoration: 'none',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = action.color
+                    e.currentTarget.style.boxShadow = `0 0 0 1px ${action.color}22`
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)'
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
+                >
+                  <Icon size={16} color={action.color} />
+                  {action.label}
+                </Link>
+              )
+            })}
+          </div>
+        </Card>
       </motion.div>
     </motion.div>
   )

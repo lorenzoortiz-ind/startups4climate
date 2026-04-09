@@ -42,7 +42,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid var(--color-border)',
   background: 'var(--color-bg-card)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.6875rem',
+  fontSize: 'var(--text-xs)',
   color: 'var(--color-text-primary)',
   outline: 'none',
   transition: 'border-color 0.15s',
@@ -213,7 +213,7 @@ export default function UsuariosPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         minHeight: '60vh', fontFamily: 'var(--font-body)',
-        color: 'var(--color-text-secondary)', fontSize: '0.75rem',
+        color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)',
       }}>
         No tienes acceso a esta sección.
       </div>
@@ -233,13 +233,13 @@ export default function UsuariosPage() {
           <Users size={20} color="#0D9488" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.275rem', color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
           }}>
             Usuarios
           </h1>
         </div>
         <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
           color: 'var(--color-text-secondary)',
         }}>
           Gestiona todos los usuarios de la plataforma
@@ -283,7 +283,7 @@ export default function UsuariosPage() {
           </div>
 
           <span style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
             color: 'var(--color-text-secondary)', fontWeight: 500,
           }}>
             {totalCount} usuario{totalCount !== 1 ? 's' : ''}
@@ -320,7 +320,7 @@ export default function UsuariosPage() {
           }}>
             <Users size={24} color="var(--color-text-muted)" style={{ marginBottom: '0.75rem' }} />
             <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
               color: 'var(--color-text-muted)',
             }}>
               No se encontraron usuarios
@@ -330,17 +330,17 @@ export default function UsuariosPage() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{
               width: '100%', borderCollapse: 'collapse',
-              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
             }}>
               <thead>
                 <tr>
-                  {['Nombre', 'Email', 'Rol', 'Organizacion', 'Startup', 'Etapa', 'Registrado'].map((h) => (
+                  {['Nombre', 'Email', 'Rol', 'Organización', 'Startup', 'Etapa', 'Registrado'].map((h) => (
                     <th key={h} style={{
                       textAlign: 'left', padding: '0.75rem 1rem',
                       borderBottom: '1px solid var(--color-border)',
                       fontWeight: 600, color: 'var(--color-text-secondary)',
-                      fontSize: '0.6875rem', textTransform: 'uppercase',
-                      letterSpacing: '0.03em', whiteSpace: 'nowrap',
+                      fontSize: 'var(--text-2xs)', textTransform: 'uppercase',
+                      letterSpacing: '0.04em', whiteSpace: 'nowrap',
                     }}>
                       {h}
                     </th>
@@ -382,7 +382,7 @@ export default function UsuariosPage() {
                         <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                           <span style={{
                             padding: '0.1875rem 0.5rem', borderRadius: 999,
-                            fontSize: '0.6875rem', fontWeight: 500,
+                            fontSize: 'var(--text-xs)', fontWeight: 500,
                             background: badge.bg, color: badge.text,
                           }}>
                             {badge.label}
@@ -443,7 +443,7 @@ export default function UsuariosPage() {
                                 {/* Change role */}
                                 <div>
                                   <label style={{
-                                    fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+                                    fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
                                     fontWeight: 600, color: 'var(--color-text-primary)',
                                     marginBottom: '0.25rem', display: 'block',
                                   }}>
@@ -464,7 +464,7 @@ export default function UsuariosPage() {
                                 {/* Assign org */}
                                 <div>
                                   <label style={{
-                                    fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+                                    fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
                                     fontWeight: 600, color: 'var(--color-text-primary)',
                                     marginBottom: '0.25rem', display: 'block',
                                   }}>
@@ -491,10 +491,10 @@ export default function UsuariosPage() {
                                   disabled={saving}
                                   style={{
                                     display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-                                    padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-sm)',
+                                    padding: '0.5rem 1rem', borderRadius: 8,
                                     background: 'var(--color-accent-primary)',
                                     color: '#fff', border: 'none', cursor: 'pointer',
-                                    fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                                    fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                                     fontWeight: 600, transition: 'background 0.15s',
                                     opacity: saving ? 0.7 : 1,
                                   }}
@@ -512,7 +512,7 @@ export default function UsuariosPage() {
                                     initial={{ opacity: 0, x: 8 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     style={{
-                                      fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                                      fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                                       fontWeight: 500, color: '#0D9488',
                                     }}
                                   >
@@ -522,7 +522,7 @@ export default function UsuariosPage() {
 
                                 {saveSuccess === 'error' && (
                                   <span style={{
-                                    fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                                    fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                                     color: '#DC2626',
                                   }}>
                                     Error al guardar
@@ -550,10 +550,10 @@ export default function UsuariosPage() {
             <button
               onClick={handleLoadMore}
               style={{
-                padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)',
+                padding: '0.375rem 0.75rem', borderRadius: 6,
                 border: '1px solid var(--color-border)',
                 background: 'var(--color-bg-card)',
-                fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem',
                 fontWeight: 500, color: 'var(--color-text-primary)',
                 cursor: 'pointer', transition: 'all 0.15s',
               }}

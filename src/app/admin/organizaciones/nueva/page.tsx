@@ -49,7 +49,7 @@ const inputStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
   color: 'var(--color-text-primary)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   outline: 'none',
   transition: 'border-color 0.15s',
 }
@@ -145,7 +145,7 @@ export default function NuevaOrganizacionPage() {
         <Building2 size={20} color="var(--color-accent-primary)" />
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,
-          fontSize: '1.5rem', color: 'var(--color-text-primary)',
+          fontSize: '1.25rem', color: 'var(--color-text-primary)',
         }}>
           Nueva organizacion
         </h1>
@@ -238,7 +238,7 @@ export default function NuevaOrganizacionPage() {
                 type="email"
                 value={form.billing_email}
                 onChange={(e) => updateField('billing_email', e.target.value)}
-                placeholder="facturacion@org.com"
+                placeholder="facturación@org.com"
                 style={inputStyle}
                 onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
@@ -282,10 +282,10 @@ export default function NuevaOrganizacionPage() {
             <Link
               href="/admin/organizaciones"
               style={{
-                padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',
+                padding: '0.375rem 0.75rem', borderRadius: 6,
                 border: '1px solid var(--color-border)',
                 background: 'var(--color-bg-card)', color: 'var(--color-text-primary)',
-                fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 500,
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 500,
                 textDecoration: 'none', transition: 'border-color 0.15s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-text-muted)')}
@@ -298,10 +298,10 @@ export default function NuevaOrganizacionPage() {
               disabled={submitting}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                padding: '0.625rem 1.5rem', borderRadius: 'var(--radius-sm)',
+                padding: '0.5rem 1rem', borderRadius: 8,
                 background: submitting ? 'var(--color-text-muted)' : 'var(--color-accent-primary)',
                 color: '#fff', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer',
-                fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
                 transition: 'background 0.15s',
               }}
             >

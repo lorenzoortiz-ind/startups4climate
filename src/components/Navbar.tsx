@@ -13,6 +13,7 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
   { label: 'Diagnóstico', href: '/#diagnostico' },
   { label: 'Quiénes somos', href: '/#about' },
   { label: 'Workbook', href: '/workbook', isPage: true },
+  { label: 'Organizaciones', href: '/organizaciones', isPage: true },
 ]
 
 export default function Navbar() {

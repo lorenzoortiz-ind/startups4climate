@@ -18,7 +18,6 @@ import {
   FileText,
   BookOpen,
   User,
-  Search,
   Building2,
   Users,
 } from 'lucide-react'
@@ -46,7 +45,6 @@ const SB = {
   textMuted: 'rgba(255,255,255,0.35)',
   divider: 'rgba(255,255,255,0.06)',
   hoverBg: 'rgba(255,255,255,0.06)',
-  inputBg: 'rgba(255,255,255,0.05)',
   cardBg: 'rgba(255,255,255,0.03)',
 }
 
@@ -156,8 +154,7 @@ function StageSidebarSection({
                       gap: '0.5rem',
                       padding: '0.375rem 0.625rem',
                       borderRadius: 6,
-                      background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
-                      borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
+                      background: active ? 'rgba(255,107,74,0.12)' : 'transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
@@ -213,8 +210,7 @@ function StageSidebarSection({
                       gap: '0.5rem',
                       padding: '0.375rem 0.625rem',
                       borderRadius: 6,
-                      background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
-                      borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
+                      background: active ? 'rgba(255,107,74,0.12)' : 'transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
@@ -289,7 +285,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
   const [profileIncomplete, setProfileIncomplete] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
   const [orgName, setOrgName] = useState<string | null>(null)
 
   useEffect(() => {
@@ -417,40 +412,21 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         </span>
       </Link>
 
-      {/* Search input */}
-      <div style={{ position: 'relative', marginBottom: '0.875rem' }}>
-        <Search
-          size={13}
-          color={SB.textMuted}
-          style={{
-            position: 'absolute',
-            left: 10,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Buscar herramienta..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.4375rem 0.75rem 0.4375rem 1.875rem',
-            borderRadius: 8,
-            background: SB.inputBg,
-            border: '1px solid rgba(255,255,255,0.04)',
-            outline: 'none',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.6875rem',
-            color: '#FFFFFF',
-            boxSizing: 'border-box',
-            transition: 'border-color 0.15s',
-          }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)' }}
-          onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)' }}
-        />
+      {/* Role badge */}
+      <div style={{
+        display: 'inline-block',
+        background: 'rgba(13,148,136,0.15)',
+        color: '#0D9488',
+        fontFamily: 'var(--font-body)',
+        fontSize: '0.5625rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        padding: '0.2rem 0.5rem',
+        borderRadius: 4,
+        letterSpacing: '0.06em',
+        marginBottom: '0.5rem',
+      }}>
+        Founder
       </div>
 
       {/* User card + progress */}
@@ -654,10 +630,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.4375rem 0.75rem',
-          borderRadius: 8,
-          background: pathname === '/tools' ? 'rgba(255,107,74,0.08)' : 'transparent',
-          borderLeft: pathname === '/tools' ? '2px solid #FF6B4A' : '2px solid transparent',
+          padding: '0.5rem 0.75rem',
+          borderRadius: 9999,
+          background: pathname === '/tools' ? '#FF6B4A' : 'transparent',
           textDecoration: 'none',
           marginBottom: '0.25rem',
           transition: 'all 0.15s',
@@ -669,7 +644,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           if (pathname !== '/tools') e.currentTarget.style.background = 'transparent'
         }}
       >
-        <LayoutDashboard size={14} color={pathname === '/tools' ? '#FFFFFF' : SB.text} />
+        <LayoutDashboard size={18} color={pathname === '/tools' ? '#FFFFFF' : SB.text} />
         <span
           style={{
             fontFamily: 'var(--font-body)',
@@ -700,10 +675,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.4375rem 0.75rem',
-              borderRadius: 8,
-              background: active ? 'rgba(255,107,74,0.08)' : 'transparent',
-              borderLeft: active ? '2px solid #FF6B4A' : '2px solid transparent',
+              padding: '0.5rem 0.75rem',
+              borderRadius: 9999,
+              background: active ? '#FF6B4A' : 'transparent',
               textDecoration: 'none',
               marginBottom: '0.0625rem',
               transition: 'all 0.15s',
@@ -715,7 +689,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
               if (!active) e.currentTarget.style.background = 'transparent'
             }}
           >
-            <IconComp size={14} color={active ? '#FFFFFF' : SB.text} />
+            <IconComp size={18} color={active ? '#FFFFFF' : SB.text} />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
@@ -738,12 +712,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.4375rem 0.75rem',
-          borderRadius: 8,
-          background: pathname === '/tools/recursos' ? 'rgba(255,107,74,0.08)' : 'transparent',
-          borderLeft: pathname === '/tools/recursos' ? '2px solid #FF6B4A' : '2px solid transparent',
+          padding: '0.5rem 0.75rem',
+          borderRadius: 9999,
+          background: pathname === '/tools/recursos' ? '#FF6B4A' : 'transparent',
           textDecoration: 'none',
-          color: pathname === '/tools/recursos' ? SB.textActive : SB.text,
+          color: pathname === '/tools/recursos' ? '#FFFFFF' : SB.text,
           fontFamily: 'var(--font-body)',
           fontSize: '0.6875rem',
           fontWeight: pathname === '/tools/recursos' ? 600 : 400,
@@ -757,7 +730,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           if (pathname !== '/tools/recursos') e.currentTarget.style.background = 'transparent'
         }}
       >
-        <BookOpen size={13} />
+        <BookOpen size={18} />
         Recursos
       </Link>
 
@@ -797,42 +770,16 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
         {/* Perfil */}
         <Link
-          href="/admin"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.4375rem 0.75rem',
-            borderRadius: 8,
-            background: 'transparent',
-            borderLeft: '2px solid transparent',
-            textDecoration: 'none',
-            color: SB.text,
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.6875rem',
-            fontWeight: 400,
-            transition: 'all 0.15s',
-            marginBottom: '0.125rem',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = SB.hoverBg }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
-        >
-          <Building2 size={13} />
-          Vista organizacion
-        </Link>
-
-        <Link
           href="/tools/perfil"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.4375rem 0.75rem',
-            borderRadius: 8,
-            background: pathname === '/tools/perfil' ? 'rgba(255,107,74,0.08)' : 'transparent',
-            borderLeft: pathname === '/tools/perfil' ? '2px solid #FF6B4A' : '2px solid transparent',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 9999,
+            background: pathname === '/tools/perfil' ? '#FF6B4A' : 'transparent',
             textDecoration: 'none',
-            color: pathname === '/tools/perfil' ? SB.textActive : SB.text,
+            color: pathname === '/tools/perfil' ? '#FFFFFF' : SB.text,
             fontFamily: 'var(--font-body)',
             fontSize: '0.6875rem',
             fontWeight: pathname === '/tools/perfil' ? 600 : 400,
@@ -846,7 +793,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             if (pathname !== '/tools/perfil') e.currentTarget.style.background = 'transparent'
           }}
         >
-          <User size={13} />
+          <User size={16} />
           Perfil
         </Link>
 
@@ -856,8 +803,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.4375rem 0.75rem',
-            borderRadius: 8,
+            padding: '0.5rem 0.75rem',
+            borderRadius: 9999,
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -868,11 +815,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
             textAlign: 'left',
             transition: 'color 0.15s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#DC2626')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#FCA5A5')}
           onMouseLeave={(e) => (e.currentTarget.style.color = SB.text)}
         >
-          <LogOut size={13} />
-          Cerrar sesion
+          <LogOut size={16} />
+          Cerrar sesión
         </button>
       </div>
     </div>

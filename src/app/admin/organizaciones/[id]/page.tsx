@@ -84,7 +84,7 @@ const inputStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
   color: 'var(--color-text-primary)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   outline: 'none',
   transition: 'border-color 0.15s',
 }
@@ -281,7 +281,7 @@ export default function OrganizacionDetailPage() {
     } else {
       setOrg((prev) => prev ? { ...prev, is_active: false } : prev)
       setShowDeactivate(false)
-      setMessage({ type: 'success', text: 'Organizacion desactivada.' })
+      setMessage({ type: 'success', text: 'Organización desactivada.' })
     }
   }
 
@@ -303,7 +303,7 @@ export default function OrganizacionDetailPage() {
         padding: '4rem 2rem', textAlign: 'center',
         fontFamily: 'var(--font-body)', color: 'var(--color-text-secondary)',
       }}>
-        Organizacion no encontrada.
+        Organización no encontrada.
       </div>
     )
   }
@@ -354,7 +354,7 @@ export default function OrganizacionDetailPage() {
         <div>
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.5rem', color: 'var(--color-text-primary)',
+            fontSize: '1.25rem', color: 'var(--color-text-primary)',
           }}>
             {org.name}
           </h1>
@@ -434,7 +434,7 @@ export default function OrganizacionDetailPage() {
             fontSize: '1rem', color: 'var(--color-text-primary)',
             marginBottom: '1.25rem',
           }}>
-            Informacion de la organizacion
+            Información de la organización
           </h2>
 
           <div style={{
@@ -511,10 +511,10 @@ export default function OrganizacionDetailPage() {
               type="submit" disabled={saving}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                padding: '0.625rem 1.5rem', borderRadius: 'var(--radius-sm)',
+                padding: '0.5rem 1rem', borderRadius: 8,
                 background: saving ? 'var(--color-text-muted)' : 'var(--color-accent-primary)',
                 color: '#fff', border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
-                fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
                 transition: 'background 0.15s',
               }}
             >

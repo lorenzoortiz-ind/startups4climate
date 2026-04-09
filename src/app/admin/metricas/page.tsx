@@ -171,7 +171,7 @@ export default function MetricasPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         minHeight: '60vh', fontFamily: 'var(--font-body)',
-        color: 'var(--color-text-secondary)', fontSize: '0.75rem',
+        color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)',
       }}>
         No tienes acceso a esta sección.
       </div>
@@ -234,16 +234,16 @@ export default function MetricasPage() {
           <BarChart3 size={20} color="#0D9488" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '1.275rem', color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
           }}>
-            Metricas globales
+            Métricas globales
           </h1>
         </div>
         <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
           color: 'var(--color-text-secondary)',
         }}>
-          Vision general de la plataforma Startups4Climate
+          Visión general de la plataforma Startups4Climate
         </p>
       </div>
 
@@ -275,13 +275,13 @@ export default function MetricasPage() {
               </div>
               <div style={{
                 fontFamily: 'var(--font-heading)', fontWeight: 700,
-                fontSize: '1.5rem', color: 'var(--color-text-primary)',
+                fontSize: 'var(--text-2xl)', color: 'var(--color-text-primary)',
                 lineHeight: 1, marginBottom: '0.25rem',
               }}>
                 {m.value}
               </div>
               <div style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                 color: 'var(--color-text-secondary)',
               }}>
                 {m.label}
@@ -319,13 +319,13 @@ export default function MetricasPage() {
               </div>
               <div style={{
                 fontFamily: 'var(--font-heading)', fontWeight: 700,
-                fontSize: '1.5rem', color: 'var(--color-text-primary)',
+                fontSize: 'var(--text-2xl)', color: 'var(--color-text-primary)',
                 lineHeight: 1, marginBottom: '0.25rem',
               }}>
                 {m.value}
               </div>
               <div style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                 color: 'var(--color-text-secondary)',
               }}>
                 {m.label}
@@ -353,7 +353,7 @@ export default function MetricasPage() {
             <PieChart size={18} color="var(--color-text-muted)" />
             <h3 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
-              fontSize: '0.875rem', color: 'var(--color-text-primary)',
+              fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
             }}>
               Organizaciones por plan
             </h3>
@@ -361,7 +361,7 @@ export default function MetricasPage() {
 
           {orgsByPlan.length === 0 ? (
             <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
               color: 'var(--color-text-muted)', textAlign: 'center', padding: '1rem 0',
             }}>
               Sin datos
@@ -378,13 +378,13 @@ export default function MetricasPage() {
                       marginBottom: '0.25rem',
                     }}>
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                        fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                         color: 'var(--color-text-primary)', fontWeight: 500,
                       }}>
                         {PLAN_LABELS[item.label] || item.label}
                       </span>
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                        fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                         color: 'var(--color-text-secondary)',
                         fontVariantNumeric: 'tabular-nums',
                       }}>
@@ -426,7 +426,7 @@ export default function MetricasPage() {
             <TrendingUp size={18} color="var(--color-text-muted)" />
             <h3 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
-              fontSize: '0.875rem', color: 'var(--color-text-primary)',
+              fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
             }}>
               Founders por etapa
             </h3>
@@ -434,7 +434,7 @@ export default function MetricasPage() {
 
           {foundersByStage.length === 0 ? (
             <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
               color: 'var(--color-text-muted)', textAlign: 'center', padding: '1rem 0',
             }}>
               Sin datos
@@ -451,13 +451,13 @@ export default function MetricasPage() {
                       marginBottom: '0.25rem',
                     }}>
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                        fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                         color: 'var(--color-text-primary)', fontWeight: 500,
                       }}>
                         {item.label}
                       </span>
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                        fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
                         color: 'var(--color-text-secondary)',
                         fontVariantNumeric: 'tabular-nums',
                       }}>
@@ -501,13 +501,13 @@ export default function MetricasPage() {
             <Users size={18} color="var(--color-text-muted)" />
             <h3 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
-              fontSize: '0.875rem', color: 'var(--color-text-primary)',
+              fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
             }}>
-              Registros ultimos 30 dias
+              Registros últimos 30 días
             </h3>
           </div>
           <span style={{
-            fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
             color: 'var(--color-text-secondary)',
           }}>
             Total: {dailyRegistrations.reduce((s, d) => s + d.count, 0)}
@@ -552,7 +552,7 @@ export default function MetricasPage() {
             if (!day) return null
             return (
               <span key={idx} style={{
-                fontFamily: 'var(--font-body)', fontSize: '0.625rem',
+                fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
                 color: 'var(--color-text-muted)',
               }}>
                 {new Date(day.date).toLocaleDateString('es-CL', {

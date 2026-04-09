@@ -55,7 +55,7 @@ const PRIORITY_CONFIG: Record<string, { bg: string; text: string; label: string 
 
 const CATEGORIES = [
   { value: 'account', label: 'Cuenta' },
-  { value: 'billing', label: 'Facturacion' },
+  { value: 'billing', label: 'Facturación' },
   { value: 'bug', label: 'Bug' },
   { value: 'feature_request', label: 'Solicitud de funcionalidad' },
   { value: 'other', label: 'Otro' },
@@ -76,7 +76,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid var(--color-border)',
   background: 'var(--color-bg-card)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   color: 'var(--color-text-primary)',
   outline: 'none',
 }
@@ -95,13 +95,13 @@ const btnPrimary: React.CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: '0.5rem',
-  padding: '0.625rem 1.25rem',
-  borderRadius: 'var(--radius-md)',
+  padding: '0.5rem 1rem',
+  borderRadius: 8,
   border: 'none',
   background: 'var(--color-accent-primary)',
   color: '#fff',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   fontWeight: 600,
   cursor: 'pointer',
   transition: 'opacity 0.15s',
@@ -372,11 +372,11 @@ export default function IncidenciasPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             <LifeBuoy size={20} color="#0D9488" />
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.5rem', color: 'var(--color-text-primary)' }}>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
               Incidencias
             </h1>
           </div>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
             Gestiona tickets de soporte y reportes de problemas
           </p>
         </div>
@@ -399,13 +399,13 @@ export default function IncidenciasPage() {
             style={{ overflow: 'hidden', marginBottom: '1.5rem' }}
           >
             <div style={cardStyle}>
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: '1rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '0.9375rem', color: 'var(--color-text-primary)', marginBottom: '1rem' }}>
                 Nueva incidencia
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
-                    Titulo *
+                    Título *
                   </label>
                   <input
                     type="text"
@@ -417,7 +417,7 @@ export default function IncidenciasPage() {
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
-                    Descripcion
+                    Descripción
                   </label>
                   <textarea
                     value={newDesc}
@@ -440,7 +440,7 @@ export default function IncidenciasPage() {
                 </div>
                 <div>
                   <label style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.375rem' }}>
-                    Categoria
+                    Categoría
                   </label>
                   <select value={newCategory} onChange={(e) => setNewCategory(e.target.value)} style={selectStyle}>
                     {CATEGORIES.map((c) => (
@@ -516,7 +516,7 @@ export default function IncidenciasPage() {
             <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--color-bg-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
               <LifeBuoy size={20} color="var(--color-text-muted)" />
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>
               No hay incidencias registradas
             </p>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
@@ -528,14 +528,14 @@ export default function IncidenciasPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-body)', fontSize: '0.8125rem' }}>
               <thead>
                 <tr>
-                  {['Titulo', 'Reportado por', 'Organizacion', 'Prioridad', 'Estado', 'Fecha'].map((header) => (
+                  {['Título', 'Reportado por', 'Organización', 'Prioridad', 'Estado', 'Fecha'].map((header) => (
                     <th
                       key={header}
                       style={{
                         textAlign: 'left', padding: '0.625rem 0.75rem',
                         borderBottom: '1px solid var(--color-border)',
                         fontWeight: 600, color: 'var(--color-text-secondary)',
-                        fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.03em',
+                        fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.04em',
                       }}
                     >
                       {header}
@@ -615,7 +615,7 @@ export default function IncidenciasPage() {
                               {ticket.description && (
                                 <div style={{ marginBottom: '1.25rem' }}>
                                   <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
-                                    Descripcion
+                                    Descripción
                                   </h4>
                                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                                     {ticket.description}
@@ -665,7 +665,7 @@ export default function IncidenciasPage() {
                                   </p>
                                 ) : messages.length === 0 ? (
                                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginBottom: '1rem' }}>
-                                    No hay mensajes aun.
+                                    No hay mensajes aún.
                                   </p>
                                 ) : (
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginBottom: '1rem' }}>

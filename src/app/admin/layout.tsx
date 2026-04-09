@@ -34,9 +34,9 @@ const NAV_ITEMS = [
   { href: '/admin/cohortes', label: 'Cohortes', icon: Users },
   { href: '/admin/reportes', label: 'Reportes', icon: FileBarChart },
   { href: '/admin/benchmarking', label: 'Benchmarking', icon: BarChart3 },
-  { href: '/tools/radar', label: 'RADAR', icon: Radar },
-  { href: '/tools/oportunidades', label: 'Oportunidades', icon: Lightbulb },
-  { href: '/tools/recursos', label: 'Recursos', icon: BookOpen },
+  { href: '/admin/radar', label: 'RADAR', icon: Radar },
+  { href: '/admin/oportunidades', label: 'Oportunidades', icon: Lightbulb },
+  { href: '/admin/recursos', label: 'Recursos', icon: BookOpen },
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ] as const
 
@@ -130,9 +130,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </div>
 
+      {/* Role badge */}
+      <div style={{
+        display: 'inline-block',
+        background: appUser.role === 'superadmin' ? 'rgba(255,107,74,0.15)' : 'rgba(13,148,136,0.15)',
+        color: appUser.role === 'superadmin' ? '#FF6B4A' : '#0D9488',
+        fontFamily: 'var(--font-body)',
+        fontSize: '0.5625rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        padding: '0.2rem 0.5rem',
+        borderRadius: 4,
+        letterSpacing: '0.06em',
+        marginBottom: '0.75rem',
+      }}>
+        {appUser.role === 'superadmin' ? 'Super Administrador' : 'Organizaci\u00f3n'}
+      </div>
+
       {/* Navigation */}
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
-        {NAV_ITEMS.map((item) => {
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', flex: 1 }}>
+        {/* Org admin navigation — only for admin_org */}
+        {appUser.role === 'admin_org' && NAV_ITEMS.map((item) => {
           const active = isActive(item.href)
           const Icon = item.icon
           return (
@@ -141,7 +159,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               href={item.href}
               style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
-                padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+                padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-full)',
                 textDecoration: 'none', transition: 'all 0.15s ease',
                 background: active ? 'var(--color-admin-sidebar-active)' : 'transparent',
                 color: active ? '#fff' : '#94A3B8',
@@ -159,7 +177,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }
               }}
             >
-              <Icon size={16} />
+              <Icon size={18} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.75rem',
                 fontWeight: active ? 600 : 400,
@@ -170,13 +188,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )
         })}
 
-        {/* Superadmin section */}
+        {/* Superadmin navigation — only for superadmin */}
         {appUser.role === 'superadmin' && (
           <>
-            <div style={{
-              height: 1, background: 'rgba(255,255,255,0.08)',
-              margin: '0.75rem 0.5rem',
-            }} />
             <div style={{
               display: 'flex', alignItems: 'center', gap: '0.375rem',
               padding: '0.25rem 0.75rem', marginBottom: '0.25rem',
@@ -199,7 +213,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.href}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+                    padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-full)',
                     textDecoration: 'none', transition: 'all 0.15s ease',
                     background: active ? 'var(--color-admin-sidebar-active)' : 'transparent',
                     color: active ? '#fff' : '#94A3B8',
@@ -217,7 +231,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     }
                   }}
                 >
-                  <Icon size={16} />
+                  <Icon size={18} />
                   <span style={{
                     fontFamily: 'var(--font-body)', fontSize: '0.75rem',
                     fontWeight: active ? 600 : 400,
@@ -268,7 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           background: 'none', border: 'none', width: '100%',
           marginBottom: '0.25rem',
         }}>
-          <ChevronLeft size={14} />
+          <ChevronLeft size={16} />
           Ir a la plataforma
         </Link>
 
@@ -285,7 +299,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           onMouseEnter={(e) => (e.currentTarget.style.color = '#FCA5A5')}
           onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
         >
-          <LogOut size={14} />
+          <LogOut size={16} />
           Cerrar sesión
         </button>
       </div>

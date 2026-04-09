@@ -219,7 +219,7 @@ ${data.planned_rounds.length > 0 ? data.planned_rounds.map((r, i) => `  ${i + 1}
 MÉTRICAS CLAVE:
   Burn rate mensual (mes 1): ${data.currency} ${fmt(summaryMetrics.burnRate)}
   Runway estimado: ${summaryMetrics.runway >= 999 ? 'Indefinido' : summaryMetrics.runway + ' meses'}
-  Mes de break-even: ${summaryMetrics.breakEvenMonth ? 'Mes ' + summaryMetrics.breakEvenMonth : 'No alcanzado en el periodo'}
+  Mes de break-even: ${summaryMetrics.breakEvenMonth ? 'Mes ' + summaryMetrics.breakEvenMonth : 'No alcanzado en el período'}
 
 PROYECCIÓN MENSUAL (primeros 12 meses):
 ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} ${fmt(p.revenue)} | Costos ${data.currency} ${fmt(p.costs)} | Neto ${data.currency} ${fmt(p.net)}`).join('\n')}

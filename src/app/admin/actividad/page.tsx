@@ -38,11 +38,11 @@ const ACTION_COLORS: Record<string, string> = {
 
 const ENTITY_TYPES = [
   { value: 'all', label: 'Todos' },
-  { value: 'organization', label: 'Organizacion' },
+  { value: 'organization', label: 'Organización' },
   { value: 'profile', label: 'Perfil' },
   { value: 'cohort', label: 'Cohorte' },
   { value: 'startup', label: 'Startup' },
-  { value: 'invitation', label: 'Invitacion' },
+  { value: 'invitation', label: 'Invitación' },
 ]
 
 const cardStyle: React.CSSProperties = {
@@ -54,12 +54,12 @@ const cardStyle: React.CSSProperties = {
 }
 
 const selectStyle: React.CSSProperties = {
-  padding: '0.625rem 0.75rem',
+  padding: '0.5rem 0.75rem',
   borderRadius: 'var(--radius-md)',
   border: '1px solid var(--color-border)',
   background: 'var(--color-bg-card)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   color: 'var(--color-text-primary)',
   outline: 'none',
   cursor: 'pointer',
@@ -71,12 +71,12 @@ const selectStyle: React.CSSProperties = {
 }
 
 const inputStyle: React.CSSProperties = {
-  padding: '0.625rem 0.75rem',
+  padding: '0.5rem 0.75rem',
   borderRadius: 'var(--radius-md)',
   border: '1px solid var(--color-border)',
   background: 'var(--color-bg-card)',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   color: 'var(--color-text-primary)',
   outline: 'none',
 }
@@ -252,12 +252,12 @@ export default function ActividadPage() {
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
           <ScrollText size={20} color="#0D9488" />
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.5rem', color: 'var(--color-text-primary)' }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
             Actividad
           </h1>
         </div>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-          Registro de actividad y auditoria de la plataforma
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+          Registro de actividad y auditoría de la plataforma
         </p>
       </div>
 
@@ -306,8 +306,8 @@ export default function ActividadPage() {
             <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--color-bg-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
               <ScrollText size={20} color="var(--color-text-muted)" />
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-              No hay actividad registrada aun
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>
+              No hay actividad registrada aún
             </p>
           </div>
         ) : (
@@ -378,9 +378,9 @@ export default function ActividadPage() {
                   disabled={loadingMore}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                    padding: '0.625rem 1.5rem', borderRadius: 'var(--radius-md)',
+                    padding: '0.375rem 0.75rem', borderRadius: 6,
                     border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-                    fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 500,
+                    fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 500,
                     color: 'var(--color-text-primary)', cursor: 'pointer',
                     transition: 'all 0.15s ease',
                     opacity: loadingMore ? 0.6 : 1,

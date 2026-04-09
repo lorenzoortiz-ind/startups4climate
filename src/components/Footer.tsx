@@ -8,7 +8,7 @@ const footerLinks = {
     { label: 'Diagnóstico gratuito', href: '#diagnostico' },
     { label: 'Herramientas', href: '#plataforma' },
     { label: 'Workbook', href: '/workbook', isPage: true },
-    { label: 'Acceder a la plataforma', href: '/tools' },
+    { label: 'Acceder a la plataforma', href: '/tools', isPage: true },
   ],
   organizaciones: [
     { label: 'Para organizaciones', href: '/organizaciones', isPage: true },

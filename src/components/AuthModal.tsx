@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ArrowRight, Eye, EyeOff, Loader2, Lock, User, Building2, Mail } from 'lucide-react'
+import { X, ArrowRight, Eye, EyeOff, Lock, User, Building2, Mail } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { Button, Input } from '@/components/ui'
 
 export default function AuthModal() {
   const { authModalOpen, authModalMode, closeAuthModal, login, register } = useAuth()
@@ -34,7 +35,7 @@ export default function AuthModal() {
       return
     }
     if (form.password.length < 6) {
-      setError('La contrasena debe tener al menos 6 caracteres.')
+      setError('La contraseña debe tener al menos 6 caracteres.')
       return
     }
     if (mode === 'register' && (!form.name || !form.startup)) {
@@ -367,59 +368,67 @@ export default function AuthModal() {
                   <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                     {mode === 'register' && (
                       <>
-                        <TypeformInput
-                          icon={<User size={16} color="var(--color-text-muted)" />}
+                        <Input
+                          variant="underline"
+                          inputSize="lg"
+                          leftIcon={<User size={16} />}
                           placeholder="Tu nombre completo"
                           value={form.name}
                           onChange={set('name')}
                           autoComplete="name"
+                          style={{ marginBottom: '1.25rem' }}
                         />
-                        <TypeformInput
-                          icon={<Building2 size={16} color="var(--color-text-muted)" />}
+                        <Input
+                          variant="underline"
+                          inputSize="lg"
+                          leftIcon={<Building2 size={16} />}
                           placeholder="Nombre de tu startup"
                           value={form.startup}
                           onChange={set('startup')}
                           autoComplete="organization"
+                          style={{ marginBottom: '1.25rem' }}
                         />
                       </>
                     )}
-                    <TypeformInput
-                      icon={<Mail size={16} color="var(--color-text-muted)" />}
+                    <Input
+                      variant="underline"
+                      inputSize="lg"
+                      leftIcon={<Mail size={16} />}
                       type="email"
                       placeholder="Email"
                       value={form.email}
                       onChange={set('email')}
                       autoComplete="email"
+                      style={{ marginBottom: '1.25rem' }}
                     />
-                    <div style={{ position: 'relative' }}>
-                      <TypeformInput
-                        icon={<Lock size={16} color="var(--color-text-muted)" />}
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Contraseña (min. 6 caracteres)"
-                        value={form.password}
-                        onChange={set('password')}
-                        autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                        paddingRight={44}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((p) => !p)}
-                        style={{
-                          position: 'absolute',
-                          right: 0,
-                          bottom: 16,
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          color: 'var(--color-text-muted)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          padding: 4,
-                        }}
-                      >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                    </div>
+                    <Input
+                      variant="underline"
+                      inputSize="lg"
+                      leftIcon={<Lock size={16} />}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Contraseña (min. 6 caracteres)"
+                      value={form.password}
+                      onChange={set('password')}
+                      autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                      rightIcon={
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((p) => !p)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: 'var(--color-text-muted)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0,
+                          }}
+                        >
+                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
+                      }
+                      style={{ marginBottom: '1.25rem' }}
+                    />
 
                     {error && (
                       <motion.p
@@ -440,38 +449,24 @@ export default function AuthModal() {
                       </motion.p>
                     )}
 
-                    <button
+                    <Button
                       type="submit"
-                      disabled={loading}
-                      className="auth-cta-btn"
+                      variant="primary"
+                      size="lg"
+                      fullWidth
+                      loading={loading}
+                      icon={!loading ? <ArrowRight size={18} /> : undefined}
+                      iconPosition="right"
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem',
-                        width: '100%',
                         padding: '1rem 2rem',
                         borderRadius: 'var(--radius-full)',
-                        background: loading ? 'var(--color-text-secondary)' : 'var(--color-ink)',
-                        color: 'var(--color-paper)',
-                        fontFamily: 'var(--font-body)',
                         fontSize: 'var(--text-body-lg)',
                         fontWeight: 700,
-                        border: 'none',
-                        cursor: loading ? 'not-allowed' : 'pointer',
                         marginTop: '1.75rem',
-                        letterSpacing: '-0.01em',
                       }}
                     >
-                      {loading ? (
-                        <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />
-                      ) : (
-                        <>
-                          {mode === 'login' ? 'Acceder a la plataforma' : 'Crear cuenta gratis'}
-                          <ArrowRight size={18} />
-                        </>
-                      )}
-                    </button>
+                      {mode === 'login' ? 'Acceder a la plataforma' : 'Crear cuenta gratis'}
+                    </Button>
                   </form>
 
                   {/* Footer links */}
@@ -580,9 +575,6 @@ export default function AuthModal() {
 
           <style>{`
             @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-            .auth-cta-btn:hover:not(:disabled) {
-              background: var(--color-accent-primary) !important;
-            }
           `}</style>
         </motion.div>
       </motion.div>
@@ -590,61 +582,3 @@ export default function AuthModal() {
   )
 }
 
-function TypeformInput({
-  icon,
-  type = 'text',
-  placeholder,
-  value,
-  onChange,
-  autoComplete,
-  paddingRight,
-}: {
-  icon: React.ReactNode
-  type?: string
-  placeholder: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  autoComplete?: string
-  paddingRight?: number
-}) {
-  const [focused, setFocused] = useState(false)
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'flex-end',
-        gap: '0.75rem',
-        borderBottom: `2px solid ${focused ? 'var(--color-ink)' : 'var(--color-border)'}`,
-        paddingBottom: '0.125rem',
-        marginBottom: '1.25rem',
-        transition: 'border-color 0.2s ease',
-      }}
-    >
-      <span style={{ flexShrink: 0, display: 'flex', paddingBottom: '0.875rem', opacity: focused ? 1 : 0.5, transition: 'opacity 0.2s' }}>
-        {icon}
-      </span>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        autoComplete={autoComplete}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        style={{
-          flex: 1,
-          padding: '0.5rem 0 0.875rem',
-          paddingRight: paddingRight ? `${paddingRight}px` : undefined,
-          border: 'none',
-          background: 'transparent',
-          fontFamily: 'var(--font-body)',
-          fontSize: 'var(--text-heading-md)',
-          color: 'var(--color-ink)',
-          outline: 'none',
-          letterSpacing: '-0.01em',
-        }}
-      />
-    </div>
-  )
-}

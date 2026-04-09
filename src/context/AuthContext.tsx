@@ -154,15 +154,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false
 
+    // Safety: never stay stuck on loading spinner for more than 8 seconds
+    const safetyTimeout = setTimeout(() => {
+      setLoading((prev) => {
+        if (prev) console.warn('[S4C Auth] Safety timeout — forcing loading=false')
+        return false
+      })
+    }, 8000)
+
     // Get initial user (getUser() validates with the server, unlike getSession())
     supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
       if (cancelled) return
       if (authUser) {
         // We still need a session object for fallbackAppUser, fetch it after verifying the user
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session) {
-          // Set fallback immediately so the UI is never stuck loading
-          setAppUser(await fallbackAppUser(session))
+        try {
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session) {
+            // Set fallback immediately so the UI is never stuck loading
+            setAppUser(await fallbackAppUser(session))
+          }
+        } catch {
+          // Session fetch failed — continue without fallback
         }
         setLoading(false)
         // Then try to enrich with profile data in background
@@ -177,6 +189,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setLoading(false)
       }
+    }).catch(() => {
+      // getUser() itself failed — ensure we never stay stuck loading
+      if (!cancelled) setLoading(false)
     })
 
     // Listen for auth state changes
@@ -189,7 +204,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (loginInProgressRef.current) return
       if (session?.user) {
         // Set fallback immediately, then enrich
-        setAppUser(await fallbackAppUser(session))
+        try {
+          setAppUser(await fallbackAppUser(session))
+        } catch {
+          // Fallback failed — set minimal user
+          setAppUser({
+            id: session.user.id,
+            email: session.user.email ?? '',
+            role: 'founder',
+            org_id: null,
+            full_name: session.user.email ?? '',
+            startup_name: null,
+            stage: null,
+            diagnosticScore: null,
+            created_at: session.user.created_at ?? new Date().toISOString(),
+          })
+        }
         try {
           const profile = await loadProfile(session.user.id)
           if (!cancelled && profile) {
@@ -205,6 +235,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       cancelled = true
+      clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
   }, [])
@@ -377,6 +408,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Method 1: Direct REST fetch (bypasses PostgREST cache issues)
       try {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 5000)
         const res = await fetch(
           `${supabaseUrl}/rest/v1/profiles?select=role,org_id&id=eq.${data.user.id}`,
           {
@@ -385,8 +418,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               'Authorization': `Bearer ${data.session.access_token}`,
               'Accept': 'application/json',
             },
+            signal: controller.signal,
           }
         )
+        clearTimeout(timeout)
         if (res.ok) {
           const rows = await res.json()
           if (rows?.[0]?.role) role = rows[0].role

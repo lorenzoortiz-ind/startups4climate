@@ -302,7 +302,7 @@ export default function ToolsDashboard() {
   return (
     <div
       style={{
-        padding: '2rem',
+        padding: '2.5rem 2rem',
         maxWidth: 1060,
         margin: '0 auto',
         overflowWrap: 'break-word',
@@ -314,8 +314,8 @@ export default function ToolsDashboard() {
         {...springReveal}
         style={{
           display: 'flex',
-          gap: '0.25rem',
-          marginBottom: '2.5rem',
+          gap: '0.375rem',
+          marginBottom: '2.75rem',
           background: 'var(--color-paper)',
           borderRadius: 'var(--radius-md)',
           border: '1px solid var(--color-border)',
@@ -333,10 +333,10 @@ export default function ToolsDashboard() {
             key={tab.href}
             href={tab.href}
             style={{
-              padding: '0.5625rem 1.25rem',
+              padding: '0.625rem 1.375rem',
               borderRadius: 'var(--radius-sm)',
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-sm)',
+              fontSize: 'var(--text-base)',
               fontWeight: tab.active ? 700 : 500,
               color: tab.active ? 'var(--color-paper)' : 'var(--color-text-secondary)',
               background: tab.active ? 'var(--color-ink)' : 'transparent',
@@ -356,7 +356,7 @@ export default function ToolsDashboard() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.05 }}
-        style={{ marginBottom: '2rem' }}
+        style={{ marginBottom: '2.5rem' }}
       >
         <div
           style={{
@@ -364,19 +364,19 @@ export default function ToolsDashboard() {
             alignItems: 'flex-end',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '1.5rem',
+            gap: '2rem',
           }}
         >
           <div>
             <div
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-sm)',
+                fontSize: 'var(--text-xs)',
                 fontWeight: 700,
-                color: 'var(--color-accent-secondary)',
-                letterSpacing: '0.08em',
+                color: 'var(--color-accent-primary)',
+                letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                marginBottom: '0.5rem',
+                marginBottom: '0.625rem',
               }}
             >
               Bienvenido de vuelta
@@ -384,12 +384,12 @@ export default function ToolsDashboard() {
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-xl)',
+                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                 fontWeight: 700,
                 color: 'var(--color-ink)',
                 letterSpacing: '-0.02em',
-                lineHeight: 1.3,
-                marginBottom: '0.375rem',
+                lineHeight: 1.2,
+                marginBottom: '0.5rem',
               }}
             >
               Hola, {user.name?.split(' ')[0] || user.name}
@@ -397,12 +397,12 @@ export default function ToolsDashboard() {
             <p
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-sm)',
+                fontSize: 'var(--text-base)',
                 color: 'var(--color-text-secondary)',
                 lineHeight: 1.5,
               }}
             >
-              {user.startup} · Roadmap de impacto
+              {user.startup || 'Tu startup'} · Roadmap de impacto
             </p>
           </div>
 
@@ -511,7 +511,7 @@ export default function ToolsDashboard() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 }}
-        style={{ marginBottom: '1.5rem' }}
+        style={{ marginBottom: '2rem' }}
       >
         <Card
           variant="flat"
@@ -520,10 +520,10 @@ export default function ToolsDashboard() {
           style={{
             background: STAGE_META[userStageNum as 1 | 2 | 3 | 4].bg,
             border: `1px solid ${STAGE_META[userStageNum as 1 | 2 | 3 | 4].border}`,
-            padding: '1rem 1.5rem',
+            padding: '1.25rem 1.75rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.875rem',
+            gap: '1rem',
           }}
         >
           {(() => {
@@ -582,26 +582,26 @@ export default function ToolsDashboard() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
-            style={{ marginBottom: '1.5rem' }}
+            style={{ marginBottom: '2.5rem' }}
           >
             <Card
               variant="elevated"
               accent="var(--color-accent-secondary)"
               padding="none"
               style={{
-                padding: '1.25rem 1.5rem',
+                padding: '1.5rem 1.75rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
-                gap: '0.875rem',
+                gap: '1.25rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.125rem' }}>
                 <div
                   style={{
-                    width: 44,
-                    height: 44,
+                    width: 48,
+                    height: 48,
                     borderRadius: 'var(--radius-sm)',
                     background: 'rgba(13,148,136,0.08)',
                     display: 'flex',
@@ -616,12 +616,12 @@ export default function ToolsDashboard() {
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: 'var(--text-sm)',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 700,
                       color: 'var(--color-accent-secondary)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
-                      marginBottom: '0.2rem',
+                      letterSpacing: '0.08em',
+                      marginBottom: '0.375rem',
                     }}
                   >
                     Continua donde lo dejaste
@@ -633,15 +633,16 @@ export default function ToolsDashboard() {
                       fontWeight: 700,
                       color: 'var(--color-ink)',
                       letterSpacing: '-0.02em',
+                      lineHeight: 1.3,
                     }}
                   >
                     {nextTool.shortName}
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-xs)',
+                        fontSize: 'var(--text-sm)',
                         color: 'var(--color-text-muted)',
-                        marginLeft: '0.625rem',
+                        marginLeft: '0.75rem',
                         fontWeight: 400,
                         letterSpacing: 'normal',
                       }}
@@ -656,21 +657,22 @@ export default function ToolsDashboard() {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.5rem',
+                  gap: '0.625rem',
+                  padding: '0.875rem 2rem',
                   borderRadius: 'var(--radius-full)',
                   background: 'var(--color-ink)',
                   color: 'var(--color-paper)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-sm)',
+                  fontSize: 'var(--text-base)',
                   fontWeight: 700,
                   textDecoration: 'none',
                   letterSpacing: '-0.01em',
                   whiteSpace: 'nowrap',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                 }}
               >
                 Comenzar
-                <ArrowRight size={16} />
+                <ArrowRight size={17} />
               </Link>
             </Card>
           </motion.div>

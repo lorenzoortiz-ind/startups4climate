@@ -287,6 +287,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const [profileIncomplete, setProfileIncomplete] = useState(false)
   const [orgName, setOrgName] = useState<string | null>(null)
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   useEffect(() => {
     if (!loading && !user) {
       router.replace('/')
@@ -958,7 +963,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         style={{
           flex: 1,
           marginLeft: 0,
-          paddingTop: 0,
           minHeight: '100vh',
           minWidth: 0,
           overflowX: 'hidden',

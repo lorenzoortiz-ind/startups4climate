@@ -1,7 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
+  ArrowLeft,
   Layers,
   FlaskConical,
   Rocket,
@@ -303,14 +305,25 @@ function ToolCard({
 
 export default function RecursosPage() {
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: 'var(--color-bg-primary)',
-        padding: '2rem',
-      }}
-    >
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
+        {/* Back link */}
+        <Link
+          href="/tools"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.375rem',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--color-text-muted)',
+            textDecoration: 'none',
+            marginBottom: '1.5rem',
+          }}
+        >
+          <ArrowLeft size={14} />
+          Volver al dashboard
+        </Link>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -515,7 +528,6 @@ export default function RecursosPage() {
             .
           </p>
         </motion.div>
-      </div>
     </div>
   )
 }

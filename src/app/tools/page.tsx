@@ -37,14 +37,6 @@ const STAGE_ICONS = {
   4: TrendingUp,
 } as const
 
-/* ─── Navigation tabs ─── */
-const NAV_TABS = [
-  { label: 'Herramientas', href: '/tools', active: true },
-  { label: 'Recursos', href: '/tools/recursos', active: false },
-  { label: 'RADAR', href: '/tools/radar', active: false },
-  { label: 'Oportunidades', href: '/tools/oportunidades', active: false },
-]
-
 /* ─── Category color mapping ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
   Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
@@ -316,48 +308,6 @@ export default function ToolsDashboard() {
         wordBreak: 'break-word',
       }}
     >
-      {/* ─── Navigation tabs ─── */}
-      <motion.nav
-        {...springReveal}
-        style={{
-          display: 'flex',
-          gap: '0.375rem',
-          marginBottom: '2.75rem',
-          background: 'var(--color-paper)',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-border)',
-          padding: '0.375rem',
-          overflowX: 'auto',
-          flexWrap: 'nowrap',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          boxShadow: '0 1px 3px rgba(25,25,25,0.04)',
-        }}
-      >
-        {NAV_TABS.map((tab) => (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            style={{
-              padding: '0.625rem 1.375rem',
-              borderRadius: 'var(--radius-sm)',
-              fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-base)',
-              fontWeight: tab.active ? 700 : 500,
-              color: tab.active ? 'var(--color-paper)' : 'var(--color-text-secondary)',
-              background: tab.active ? 'var(--color-ink)' : 'transparent',
-              textDecoration: 'none',
-              transition: 'all 0.15s ease',
-              whiteSpace: 'nowrap',
-              letterSpacing: tab.active ? '-0.01em' : 'normal',
-            }}
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </motion.nav>
-
       {/* ─── Hero greeting ─── */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}

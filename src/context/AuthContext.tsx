@@ -212,11 +212,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (cancelled) return
       // If login() or register() already set the user with accurate role data,
       // skip re-fetching here to avoid overwriting with stale/fallback data.
       if (loginInProgressRef.current) return
+
+      // On token refresh, just keep the current user — don't re-fetch
+      if (event === 'TOKEN_REFRESHED') {
+        // Session is still valid, no action needed — user stays logged in
+        return
+      }
+
       if (session?.user) {
         // Set fallback immediately, then enrich
         try {
@@ -243,9 +250,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch {
           // Fallback already set — ignore
         }
-      } else {
+      } else if (event === 'SIGNED_OUT') {
         setAppUser(null)
       }
+      // For other events with no session (e.g. TOKEN_REFRESHED failure),
+      // keep the existing user rather than logging out
     })
 
     return () => {

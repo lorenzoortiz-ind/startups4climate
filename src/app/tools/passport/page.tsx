@@ -315,7 +315,7 @@ export default function PassportPage() {
 
     // Load passport data from localStorage profile extras + tool data
     try {
-      const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
+      const extra = JSON.parse(localStorage.getItem(`s4c_${user.id}_profile_extra`) || localStorage.getItem('s4c_profile_extra') || '{}')
       const progress = getProgress(user.id)
 
       // Try to pull metrics from completed tool data

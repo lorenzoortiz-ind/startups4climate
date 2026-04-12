@@ -5,16 +5,18 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRight, Eye, EyeOff, Lock, User, Building2, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { supabase } from '@/lib/supabase'
 import { Button, Input } from '@/components/ui'
 
 export default function AuthModal() {
   const router = useRouter()
   const { authModalOpen, authModalMode, closeAuthModal, login, register } = useAuth()
-  const [mode, setMode] = useState<'login' | 'register'>(authModalMode)
+  const [mode, setMode] = useState<'login' | 'register' | 'reset'>(authModalMode)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [resetSent, setResetSent] = useState(false)
   const [orgMode, setOrgMode] = useState(false)
 
   const [form, setForm] = useState({ email: '', password: '', name: '', startup: '' })
@@ -24,6 +26,7 @@ export default function AuthModal() {
       setMode(authModalMode)
       setError('')
       setSuccess(false)
+      setResetSent(false)
       setForm({ email: '', password: '', name: '', startup: '' })
       setOrgMode(false)
     }
@@ -32,6 +35,29 @@ export default function AuthModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (mode === 'reset') {
+      if (!form.email) {
+        setError('Por favor ingresa tu email.')
+        return
+      }
+      setLoading(true)
+      try {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(form.email, {
+          redirectTo: window.location.origin + '/tools',
+        })
+        if (resetError) {
+          setError(resetError.message)
+        } else {
+          setResetSent(true)
+        }
+      } catch {
+        setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+      }
+      setLoading(false)
+      return
+    }
+
     if (!form.email || !form.password) {
       setError('Por favor completa todos los campos requeridos.')
       return
@@ -293,7 +319,7 @@ export default function AuthModal() {
                 </div>
 
                 {/* Tabs: Login / Registro */}
-                {!orgMode && (
+                {!orgMode && mode !== 'reset' && (
                   <div
                     style={{
                       display: 'flex',
@@ -347,9 +373,11 @@ export default function AuthModal() {
                         marginBottom: '0.625rem',
                       }}
                     >
-                      {mode === 'login'
-                        ? (orgMode ? 'Acceso organizaciones' : 'Accede a tus herramientas')
-                        : 'Crea tu cuenta gratis'}
+                      {mode === 'reset'
+                        ? 'Recupera tu contraseña'
+                        : mode === 'login'
+                          ? (orgMode ? 'Acceso organizaciones' : 'Accede a tus herramientas')
+                          : 'Crea tu cuenta gratis'}
                     </h2>
                     <p
                       style={{
@@ -359,11 +387,13 @@ export default function AuthModal() {
                         lineHeight: 1.5,
                       }}
                     >
-                      {mode === 'login'
-                        ? (orgMode
-                          ? 'Ingresa las credenciales proporcionadas por S4C.'
-                          : '+30 herramientas operativas para startups de impacto.')
-                        : <>Accede a la Plataforma <span style={{ color: 'var(--color-accent-primary)', fontWeight: 700 }}>S4C</span> sin costo.</>}
+                      {mode === 'reset'
+                        ? 'Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.'
+                        : mode === 'login'
+                          ? (orgMode
+                            ? 'Ingresa las credenciales proporcionadas por S4C.'
+                            : '+30 herramientas operativas para startups de impacto.')
+                          : <>Accede a la Plataforma <span style={{ color: 'var(--color-accent-primary)', fontWeight: 700 }}>S4C</span> sin costo.</>}
                     </p>
                   </div>
 
@@ -403,34 +433,82 @@ export default function AuthModal() {
                       autoComplete="email"
                       style={{ marginBottom: '1.25rem' }}
                     />
-                    <Input
-                      variant="underline"
-                      inputSize="lg"
-                      leftIcon={<Lock size={16} />}
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Contraseña (min. 6 caracteres)"
-                      value={form.password}
-                      onChange={set('password')}
-                      autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                      rightIcon={
+                    {mode !== 'reset' && (
+                      <Input
+                        variant="underline"
+                        inputSize="lg"
+                        leftIcon={<Lock size={16} />}
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Contraseña (min. 6 caracteres)"
+                        value={form.password}
+                        onChange={set('password')}
+                        autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                        rightIcon={
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((p) => !p)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              color: 'var(--color-text-muted)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              padding: 0,
+                            }}
+                          >
+                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        }
+                        style={{ marginBottom: '1.25rem' }}
+                      />
+                    )}
+
+                    {mode === 'login' && (
+                      <div style={{ textAlign: 'right', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
                         <button
                           type="button"
-                          onClick={() => setShowPassword((p) => !p)}
+                          onClick={() => {
+                            setMode('reset')
+                            setError('')
+                            setResetSent(false)
+                          }}
                           style={{
                             background: 'none',
                             border: 'none',
-                            cursor: 'pointer',
+                            fontFamily: 'var(--font-body)',
+                            fontSize: '0.8125rem',
+                            fontWeight: 500,
                             color: 'var(--color-text-muted)',
-                            display: 'flex',
-                            alignItems: 'center',
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            textUnderlineOffset: '3px',
                             padding: 0,
                           }}
                         >
-                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          ¿Olvidaste tu contraseña?
                         </button>
-                      }
-                      style={{ marginBottom: '1.25rem' }}
-                    />
+                      </div>
+                    )}
+
+                    {resetSent && mode === 'reset' && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        style={{
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.875rem',
+                          color: '#16A34A',
+                          background: 'rgba(22,163,74,0.04)',
+                          border: '1px solid rgba(22,163,74,0.12)',
+                          borderRadius: 'var(--radius-sm)',
+                          padding: '0.625rem 0.875rem',
+                          marginTop: '1rem',
+                        }}
+                      >
+                        Te enviamos un enlace de recuperación a tu email.
+                      </motion.p>
+                    )}
 
                     {error && (
                       <motion.p
@@ -451,24 +529,30 @@ export default function AuthModal() {
                       </motion.p>
                     )}
 
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="lg"
-                      fullWidth
-                      loading={loading}
-                      icon={!loading ? <ArrowRight size={18} /> : undefined}
-                      iconPosition="right"
-                      style={{
-                        padding: '1rem 2rem',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: 'var(--text-body-lg)',
-                        fontWeight: 700,
-                        marginTop: '1.75rem',
-                      }}
-                    >
-                      {mode === 'login' ? 'Acceder a la plataforma' : 'Crear cuenta gratis'}
-                    </Button>
+                    {!(resetSent && mode === 'reset') && (
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        size="lg"
+                        fullWidth
+                        loading={loading}
+                        icon={!loading ? <ArrowRight size={18} /> : undefined}
+                        iconPosition="right"
+                        style={{
+                          padding: '1rem 2rem',
+                          borderRadius: 'var(--radius-full)',
+                          fontSize: 'var(--text-body-lg)',
+                          fontWeight: 700,
+                          marginTop: '1.75rem',
+                        }}
+                      >
+                        {mode === 'reset'
+                          ? 'Enviar enlace de recuperación'
+                          : mode === 'login'
+                            ? 'Acceder a la plataforma'
+                            : 'Crear cuenta gratis'}
+                      </Button>
+                    )}
                   </form>
 
                   {/* Footer links */}
@@ -480,7 +564,29 @@ export default function AuthModal() {
                       textAlign: 'center',
                     }}
                   >
-                    {orgMode ? (
+                    {mode === 'reset' ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('login')
+                          setError('')
+                          setResetSent(false)
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.875rem',
+                          fontWeight: 700,
+                          color: 'var(--color-ink)',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          textUnderlineOffset: '3px',
+                        }}
+                      >
+                        Volver al login
+                      </button>
+                    ) : orgMode ? (
                       <button
                         type="button"
                         onClick={() => {

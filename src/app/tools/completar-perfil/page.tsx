@@ -104,8 +104,9 @@ export default function CompletarPerfilPage() {
       completedAt: new Date().toISOString(),
     }
 
-    // Save to localStorage
-    localStorage.setItem('s4c_profile_extra', JSON.stringify(profileData))
+    // Save to localStorage (namespaced by userId)
+    const extraKey = user?.id ? `s4c_${user.id}_profile_extra` : 's4c_profile_extra'
+    localStorage.setItem(extraKey, JSON.stringify(profileData))
 
     // Best-effort upsert to Supabase startups table
     try {

@@ -236,7 +236,8 @@ export default function PerfilPage() {
           if (startup.team_size) setTeamSize(String(startup.team_size))
           if (typeof window !== 'undefined') {
             try {
-              const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
+              const extraKey = appUser ? `s4c_${appUser.id}_profile_extra` : 's4c_profile_extra'
+              const extra = JSON.parse(localStorage.getItem(extraKey) || localStorage.getItem('s4c_profile_extra') || '{}')
               if (extra.role) setRole(extra.role)
               if (extra.linkedin) setLinkedin(extra.linkedin)
               if (extra.phone) setPhone(extra.phone)
@@ -250,7 +251,8 @@ export default function PerfilPage() {
 
       if (typeof window !== 'undefined') {
         try {
-          const extra = JSON.parse(localStorage.getItem('s4c_profile_extra') || '{}')
+          const extraKey = appUser ? `s4c_${appUser.id}_profile_extra` : 's4c_profile_extra'
+          const extra = JSON.parse(localStorage.getItem(extraKey) || localStorage.getItem('s4c_profile_extra') || '{}')
           if (extra.role) setRole(extra.role)
           if (extra.linkedin) setLinkedin(extra.linkedin)
           if (extra.descripcion) setDescripcion(extra.descripcion)
@@ -275,7 +277,8 @@ export default function PerfilPage() {
     await updateProfile({ full_name: nombre, startup_name: startupName })
 
     const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize, radarNewsletter, oppsNewsletter }
-    localStorage.setItem('s4c_profile_extra', JSON.stringify(extraData))
+    const extraKey = appUser ? `s4c_${appUser.id}_profile_extra` : 's4c_profile_extra'
+    localStorage.setItem(extraKey, JSON.stringify(extraData))
 
     if (appUser) {
       try {

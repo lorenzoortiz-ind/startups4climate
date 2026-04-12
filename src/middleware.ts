@@ -52,11 +52,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith('/admin') && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    const { data: profile } = await Promise.race([
+      supabase.from('profiles').select('role').eq('id', user.id).single(),
+      new Promise<{ data: null; error: { message: string } }>((resolve) =>
+        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+      ),
+    ])
 
     if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
       const redirectUrl = request.nextUrl.clone()

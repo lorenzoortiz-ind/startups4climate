@@ -389,6 +389,7 @@ export default function DiagnosticForm() {
 
       // Store diagnostic results in localStorage for users who are not yet registered.
       // The AuthContext register() flow will pick this up and persist it to the profile.
+      // NOTE: Cannot namespace by userId because user is not authenticated at this point.
       try {
         const stageTag = matched.tag
         const pendingData = {

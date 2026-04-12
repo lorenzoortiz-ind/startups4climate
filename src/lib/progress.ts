@@ -1,7 +1,5 @@
 import { supabase } from './supabase'
 
-const PROGRESS_KEY = 's4c_tool_progress'
-
 export interface ToolProgressEntry {
   completed: boolean
   completedAt: string | null
@@ -12,63 +10,206 @@ export interface ToolProgressEntry {
 
 export type ProgressMap = Record<string, ToolProgressEntry>
 
-function getAll(): Record<string, ProgressMap> {
+/* ─── localStorage helpers (namespaced by userId) ─── */
+
+function cacheKey(userId: string): string {
+  return `s4c_${userId}_tool_progress`
+}
+
+function getLocalProgress(userId: string): ProgressMap {
   if (typeof window === 'undefined') return {}
   try {
-    return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}')
+    return JSON.parse(localStorage.getItem(cacheKey(userId)) || '{}')
   } catch {
     return {}
   }
 }
 
-function saveAll(all: Record<string, ProgressMap>) {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(all))
+function saveLocalProgress(userId: string, progress: ProgressMap) {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(cacheKey(userId), JSON.stringify(progress))
+  } catch {
+    console.error('[S4C Sync] Failed to write localStorage cache')
+  }
 }
 
+/* ─── Public read API (Supabase-first, localStorage fallback) ─── */
+
+/**
+ * Get all tool progress for a user.
+ * This is the SYNCHRONOUS version that reads from the localStorage cache.
+ * For the async Supabase-first version, use `getProgressAsync()`.
+ */
 export function getProgress(userId: string): ProgressMap {
-  return getAll()[userId] || {}
+  return getLocalProgress(userId)
 }
 
-export function saveToolData(userId: string, toolId: string, data: Record<string, unknown>) {
-  const all = getAll()
-  if (!all[userId]) all[userId] = {}
-  const existing = all[userId][toolId]
-  all[userId][toolId] = {
+/**
+ * Get all tool progress from Supabase first, falling back to localStorage.
+ */
+export async function getProgressAsync(userId: string): Promise<ProgressMap> {
+  try {
+    const { data, error } = await supabase
+      .from('tool_data')
+      .select('tool_id, data, completed, report_generated, last_saved')
+      .eq('user_id', userId)
+
+    if (error) throw error
+    if (!data || data.length === 0) {
+      // No remote data — return local cache
+      console.warn('[S4C Sync] No remote data found, using localStorage cache')
+      return getLocalProgress(userId)
+    }
+
+    const progress: ProgressMap = {}
+    for (const row of data) {
+      progress[row.tool_id] = {
+        completed: row.completed ?? false,
+        completedAt: row.completed ? (row.last_saved ?? new Date().toISOString()) : null,
+        data: (row.data as Record<string, unknown>) ?? {},
+        reportGenerated: row.report_generated ?? false,
+        lastSaved: row.last_saved ?? null,
+      }
+    }
+
+    // Update localStorage cache
+    saveLocalProgress(userId, progress)
+    return progress
+  } catch {
+    console.warn('[S4C Sync] Offline mode — reading from localStorage cache')
+    return getLocalProgress(userId)
+  }
+}
+
+/* ─── Public write API (Supabase-first, localStorage cache) ─── */
+
+export async function saveToolData(userId: string, toolId: string, data: Record<string, unknown>) {
+  const now = new Date().toISOString()
+
+  // Build the entry for local cache
+  const localProgress = getLocalProgress(userId)
+  const existing = localProgress[toolId]
+  const entry: ToolProgressEntry = {
+    completed: existing?.completed ?? false,
+    completedAt: existing?.completedAt ?? null,
+    reportGenerated: existing?.reportGenerated ?? false,
+    data,
+    lastSaved: now,
+  }
+
+  // Try Supabase first
+  try {
+    const { error } = await supabase
+      .from('tool_data')
+      .upsert(
+        {
+          user_id: userId,
+          tool_id: toolId,
+          data,
+          last_saved: now,
+        },
+        { onConflict: 'user_id,tool_id' }
+      )
+    if (error) throw error
+  } catch (err) {
+    console.error('[S4C Sync] Failed to save tool data to Supabase:', err)
+  }
+
+  // Always update localStorage cache
+  localProgress[toolId] = entry
+  saveLocalProgress(userId, localProgress)
+}
+
+/**
+ * Synchronous localStorage-only save for use in unmount handlers
+ * where async is not reliable.
+ */
+export function saveToolDataSync(userId: string, toolId: string, data: Record<string, unknown>) {
+  const localProgress = getLocalProgress(userId)
+  const existing = localProgress[toolId]
+  localProgress[toolId] = {
     completed: existing?.completed ?? false,
     completedAt: existing?.completedAt ?? null,
     reportGenerated: existing?.reportGenerated ?? false,
     data,
     lastSaved: new Date().toISOString(),
   }
-  saveAll(all)
+  saveLocalProgress(userId, localProgress)
 }
 
-export function markToolCompleted(userId: string, toolId: string) {
-  const all = getAll()
-  if (!all[userId]) all[userId] = {}
-  const existing = all[userId][toolId]
-  all[userId][toolId] = {
+export async function markToolCompleted(userId: string, toolId: string) {
+  const now = new Date().toISOString()
+  const localProgress = getLocalProgress(userId)
+  const existing = localProgress[toolId]
+
+  const entry: ToolProgressEntry = {
     data: existing?.data ?? {},
     reportGenerated: existing?.reportGenerated ?? false,
-    lastSaved: existing?.lastSaved ?? new Date().toISOString(),
+    lastSaved: existing?.lastSaved ?? now,
     completed: true,
-    completedAt: new Date().toISOString(),
+    completedAt: now,
   }
-  saveAll(all)
+
+  // Supabase first
+  try {
+    const { error } = await supabase
+      .from('tool_data')
+      .upsert(
+        {
+          user_id: userId,
+          tool_id: toolId,
+          completed: true,
+          report_generated: existing?.reportGenerated ?? false,
+          last_saved: now,
+        },
+        { onConflict: 'user_id,tool_id' }
+      )
+    if (error) throw error
+  } catch (err) {
+    console.error('[S4C Sync] Failed to mark tool completed in Supabase:', err)
+  }
+
+  // Update local cache
+  localProgress[toolId] = entry
+  saveLocalProgress(userId, localProgress)
 }
 
-export function markReportGenerated(userId: string, toolId: string) {
-  const all = getAll()
-  if (!all[userId]) all[userId] = {}
-  const existing = all[userId][toolId]
-  all[userId][toolId] = {
+export async function markReportGenerated(userId: string, toolId: string) {
+  const now = new Date().toISOString()
+  const localProgress = getLocalProgress(userId)
+  const existing = localProgress[toolId]
+
+  const entry: ToolProgressEntry = {
     data: existing?.data ?? {},
     completed: existing?.completed ?? false,
     completedAt: existing?.completedAt ?? null,
     lastSaved: existing?.lastSaved ?? null,
     reportGenerated: true,
   }
-  saveAll(all)
+
+  // Supabase first
+  try {
+    const { error } = await supabase
+      .from('tool_data')
+      .upsert(
+        {
+          user_id: userId,
+          tool_id: toolId,
+          completed: existing?.completed ?? false,
+          report_generated: true,
+          last_saved: now,
+        },
+        { onConflict: 'user_id,tool_id' }
+      )
+    if (error) throw error
+  } catch (err) {
+    console.error('[S4C Sync] Failed to mark report generated in Supabase:', err)
+  }
+
+  // Update local cache
+  localProgress[toolId] = entry
+  saveLocalProgress(userId, localProgress)
 }
 
 export function getToolData(userId: string, toolId: string): Record<string, unknown> {
@@ -84,7 +225,7 @@ export function countCompleted(userId: string): number {
 
 /**
  * Upsert tool data to Supabase `tool_data` table.
- * Fires in background — callers should `.catch(() => {})`.
+ * Kept for backward compatibility — callers can use saveToolData() instead.
  */
 export async function syncToolDataToSupabase(
   userId: string,
@@ -102,7 +243,10 @@ export async function syncToolDataToSupabase(
       },
       { onConflict: 'user_id,tool_id' }
     )
-  if (error) throw error
+  if (error) {
+    console.error('[S4C Sync] syncToolDataToSupabase failed:', error)
+    throw error
+  }
 }
 
 /**
@@ -124,8 +268,9 @@ export async function loadToolDataFromSupabase(
 }
 
 /**
- * Load ALL tool data from Supabase and merge into localStorage.
- * Called once on dashboard load to hydrate local progress from DB.
+ * Hydrate localStorage cache from Supabase.
+ * Since Supabase is now the primary source, this simply refreshes the local cache.
+ * Called on dashboard load to ensure localStorage is in sync.
  */
 export async function hydrateProgressFromSupabase(userId: string): Promise<boolean> {
   try {
@@ -136,31 +281,36 @@ export async function hydrateProgressFromSupabase(userId: string): Promise<boole
 
     if (error || !data || data.length === 0) return false
 
-    const all = getAll()
-    if (!all[userId]) all[userId] = {}
+    const progress: ProgressMap = {}
 
-    let changed = false
     for (const row of data) {
-      const existing = all[userId][row.tool_id]
-      const remoteTime = row.last_saved ? new Date(row.last_saved).getTime() : 0
-      const localTime = existing?.lastSaved ? new Date(existing.lastSaved).getTime() : 0
-
-      // Merge: use remote if newer or if local doesn't exist
-      if (!existing || remoteTime >= localTime) {
-        all[userId][row.tool_id] = {
-          completed: row.completed ?? false,
-          completedAt: row.completed ? (row.last_saved ?? new Date().toISOString()) : null,
-          data: (row.data as Record<string, unknown>) ?? {},
-          reportGenerated: row.report_generated ?? false,
-          lastSaved: row.last_saved ?? null,
-        }
-        changed = true
+      progress[row.tool_id] = {
+        completed: row.completed ?? false,
+        completedAt: row.completed ? (row.last_saved ?? new Date().toISOString()) : null,
+        data: (row.data as Record<string, unknown>) ?? {},
+        reportGenerated: row.report_generated ?? false,
+        lastSaved: row.last_saved ?? null,
       }
     }
 
-    if (changed) saveAll(all)
-    return changed
+    // Also merge any local-only entries (saved offline) and push them to Supabase
+    const localProgress = getLocalProgress(userId)
+    let hadLocalOnly = false
+    for (const [toolId, localEntry] of Object.entries(localProgress)) {
+      if (!progress[toolId] && localEntry.lastSaved) {
+        // This entry exists only locally — push to Supabase
+        progress[toolId] = localEntry
+        hadLocalOnly = true
+        syncToolDataToSupabase(userId, toolId, localEntry.data).catch((err) => {
+          console.error('[S4C Sync] Failed to push local-only entry to Supabase:', err)
+        })
+      }
+    }
+
+    saveLocalProgress(userId, progress)
+    return true
   } catch {
+    console.warn('[S4C Sync] Hydration failed — keeping localStorage cache')
     return false
   }
 }
@@ -186,5 +336,8 @@ export async function syncProgressToSupabase(
       },
       { onConflict: 'user_id,tool_id' }
     )
-  if (error) throw error
+  if (error) {
+    console.error('[S4C Sync] syncProgressToSupabase failed:', error)
+    throw error
+  }
 }

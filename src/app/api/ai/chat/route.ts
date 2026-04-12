@@ -120,16 +120,21 @@ export async function POST(request: NextRequest) {
     ]
 
     // Call AI
-    const completion = await chatCompletion(messages, {
-      stream: false,
-      max_tokens: 1000,
-    })
+    let aiResponse: string
+    try {
+      const completion = await chatCompletion(messages, {
+        stream: false,
+        max_tokens: 1000,
+      })
 
-    // Extract response (non-streaming)
-    const aiResponse =
-      'choices' in completion
-        ? completion.choices[0]?.message?.content || 'Sin respuesta.'
-        : 'Sin respuesta.'
+      aiResponse =
+        'choices' in completion
+          ? completion.choices[0]?.message?.content || 'No pude generar una respuesta. Intenta de nuevo.'
+          : 'No pude generar una respuesta. Intenta de nuevo.'
+    } catch (apiError) {
+      console.error('[S4C AI] Gemini API error:', apiError)
+      aiResponse = 'El servicio de AI no está disponible en este momento. Por favor intenta de nuevo en unos minutos.'
+    }
 
     // Save conversation - use the messages jsonb column
     const newMessages = [

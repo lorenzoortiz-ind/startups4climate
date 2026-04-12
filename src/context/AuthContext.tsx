@@ -85,7 +85,7 @@ async function fallbackAppUser(session: Session): Promise<AppUser> {
       .from('profiles')
       .select('role, org_id')
       .eq('id', session.user.id)
-      .single()
+      .maybeSingle()
     if (data?.role) role = data.role as typeof role
     if (data?.org_id) org_id = data.org_id
   } catch {
@@ -113,7 +113,7 @@ async function loadProfile(userId: string): Promise<AppUser | null> {
         .from('profiles')
         .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score, created_at')
         .eq('id', userId)
-        .single(),
+        .maybeSingle(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>
         setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 5000)
       ),
@@ -460,7 +460,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .from('profiles')
                 .select('role, org_id')
                 .eq('id', data.user.id)
-                .single(),
+                .maybeSingle(),
               new Promise<{ data: null }>((resolve) =>
                 setTimeout(() => resolve({ data: null }), 3000)
               ),
@@ -517,9 +517,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const logout = useCallback(async () => {
+    const userId = appUser?.id
     await supabase.auth.signOut()
     setAppUser(null)
-  }, [])
+    // Clear user-specific localStorage data
+    if (userId) {
+      try {
+        localStorage.removeItem(`s4c_${userId}_tool_progress`)
+        localStorage.removeItem(`s4c_${userId}_profile_extra`)
+        localStorage.removeItem(`s4c_${userId}_profile`)
+        localStorage.removeItem(`s4c_${userId}_startup`)
+      } catch { /* ignore */ }
+    }
+    // Also clear non-namespaced legacy keys
+    try {
+      localStorage.removeItem('s4c_tool_progress')
+      localStorage.removeItem('s4c_profile_extra')
+      localStorage.removeItem('s4c_profile')
+      localStorage.removeItem('s4c_startup')
+      localStorage.removeItem('s4c_diagnostic_pending')
+      sessionStorage.removeItem('s4c_profile_checked')
+    } catch { /* ignore */ }
+  }, [appUser])
 
   const updateProfile = useCallback(
     async (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => {

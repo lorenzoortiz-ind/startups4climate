@@ -19,9 +19,27 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { user, openAuthModal } = useAuth()
+  const { user, login, openAuthModal } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const [demoLoading, setDemoLoading] = useState<string | null>(null)
+  const isDev = process.env.NODE_ENV === 'development'
+
+  const handleDemoLogin = async (email: string, password: string, redirect: string, key: string) => {
+    setDemoLoading(key)
+    try {
+      // Clear any previous session first
+      const { supabase } = await import('@/lib/supabase')
+      await supabase.auth.signOut()
+      await login(email, password)
+      // Full page reload so middleware sets auth cookies cleanly
+      window.location.href = redirect
+    } catch {
+      // fallback
+    } finally {
+      setDemoLoading(null)
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -120,7 +138,47 @@ export default function Navbar() {
             </div>
 
             {/* Desktop CTAs */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '1rem' }}>
+            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
+              {isDev && !user && (
+                <>
+                  <button
+                    onClick={() => handleDemoLogin('admin@bioinnova.pe', 'S4c2026demo!', '/admin', 'bio')}
+                    disabled={demoLoading !== null}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'rgba(13,148,136,0.1)',
+                      color: '#0D9488',
+                      border: '1px solid rgba(13,148,136,0.25)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      cursor: demoLoading ? 'wait' : 'pointer',
+                      opacity: demoLoading && demoLoading !== 'bio' ? 0.5 : 1,
+                    }}
+                  >
+                    {demoLoading === 'bio' ? 'Cargando...' : 'Demo BioInnova'}
+                  </button>
+                  <button
+                    onClick={() => handleDemoLogin('ana.quispe@demo.pe', 'S4c2026demo!', '/tools', 'ana')}
+                    disabled={demoLoading !== null}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'rgba(255,107,74,0.1)',
+                      color: '#FF6B4A',
+                      border: '1px solid rgba(255,107,74,0.25)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      cursor: demoLoading ? 'wait' : 'pointer',
+                      opacity: demoLoading && demoLoading !== 'ana' ? 0.5 : 1,
+                    }}
+                  >
+                    {demoLoading === 'ana' ? 'Cargando...' : 'Demo Founder'}
+                  </button>
+                </>
+              )}
               {user ? (
                 <button
                   onClick={() => { window.location.href = '/tools' }}

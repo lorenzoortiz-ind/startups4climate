@@ -304,7 +304,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       if (checked) return
       sessionStorage.setItem('s4c_profile_checked', '1')
       try {
-        const extra = localStorage.getItem('s4c_profile_extra')
+        const extra = localStorage.getItem(`s4c_${user.id}_profile_extra`)
+          || localStorage.getItem('s4c_profile_extra') // legacy fallback
         if (!extra || extra === '{}') {
           router.replace('/tools/completar-perfil')
         }
@@ -315,8 +316,10 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   }, [user, loading, pathname, router])
 
   useEffect(() => {
+    if (!user) return
     try {
-      const extra = localStorage.getItem('s4c_profile_extra')
+      const extra = localStorage.getItem(`s4c_${user.id}_profile_extra`)
+        || localStorage.getItem('s4c_profile_extra') // legacy fallback
       if (!extra || extra === '{}') {
         setProfileIncomplete(true)
       } else {
@@ -327,7 +330,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     } catch {
       setProfileIncomplete(true)
     }
-  }, [])
+  }, [user])
 
   // Load org name if founder belongs to one
   useEffect(() => {

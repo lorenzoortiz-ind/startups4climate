@@ -41,24 +41,26 @@ interface StartupContextType {
 
 const StartupContext = createContext<StartupContextType | null>(null)
 
-const STARTUP_CACHE_KEY = 's4c_startup'
+function startupCacheKey(userId: string): string {
+  return `s4c_${userId}_startup`
+}
 
-function getCachedStartup(): StartupProfile | null {
+function getCachedStartup(userId: string): StartupProfile | null {
   if (typeof window === 'undefined') return null
   try {
-    const cached = localStorage.getItem(STARTUP_CACHE_KEY)
+    const cached = localStorage.getItem(startupCacheKey(userId))
     return cached ? JSON.parse(cached) : null
   } catch {
     return null
   }
 }
 
-function cacheStartup(startup: StartupProfile | null) {
+function cacheStartup(userId: string, startup: StartupProfile | null) {
   if (typeof window === 'undefined') return
   if (startup) {
-    localStorage.setItem(STARTUP_CACHE_KEY, JSON.stringify(startup))
+    localStorage.setItem(startupCacheKey(userId), JSON.stringify(startup))
   } else {
-    localStorage.removeItem(STARTUP_CACHE_KEY)
+    localStorage.removeItem(startupCacheKey(userId))
   }
 }
 
@@ -70,7 +72,6 @@ export function StartupProvider({ children }: { children: ReactNode }) {
   const fetchStartup = useCallback(async () => {
     if (!user) {
       setStartup(null)
-      cacheStartup(null)
       setLoading(false)
       return
     }
@@ -81,7 +82,7 @@ export function StartupProvider({ children }: { children: ReactNode }) {
       const { data, error } = await supabase
         .from('startups')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('founder_id', user.id)
         .single()
 
       if (error) throw error
@@ -108,10 +109,10 @@ export function StartupProvider({ children }: { children: ReactNode }) {
       }
 
       setStartup(profile)
-      cacheStartup(profile)
+      cacheStartup(user.id, profile)
     } catch {
       // Supabase unreachable or no startup row — fall back to cache
-      const cached = getCachedStartup()
+      const cached = getCachedStartup(user.id)
       if (cached) {
         setStartup(cached)
       } else {
@@ -131,7 +132,7 @@ export function StartupProvider({ children }: { children: ReactNode }) {
       setStartup(prev => {
         if (!prev) return prev
         const updated = { ...prev, ...data }
-        cacheStartup(updated)
+        if (user) cacheStartup(user.id, updated)
         
         // Sync to Supabase in background
         supabase
@@ -145,7 +146,7 @@ export function StartupProvider({ children }: { children: ReactNode }) {
         return updated
       })
     },
-    []
+    [user]
   )
 
   const refreshStartup = useCallback(async () => {

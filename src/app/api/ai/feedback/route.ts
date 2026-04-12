@@ -43,11 +43,11 @@ export async function POST(request: NextRequest) {
     const { data: startup } = await supabase
       .from('startups')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('founder_id', user.id)
       .single()
 
     const { data: progress } = await supabase
-      .from('tool_progress')
+      .from('tool_data')
       .select('*')
       .eq('user_id', user.id)
 
@@ -68,15 +68,21 @@ export async function POST(request: NextRequest) {
       },
     ]
 
-    const completion = await chatCompletion(messages, {
-      stream: false,
-      max_tokens: 600,
-    })
+    let feedback: string
+    try {
+      const completion = await chatCompletion(messages, {
+        stream: false,
+        max_tokens: 600,
+      })
 
-    const feedback =
-      'choices' in completion
-        ? completion.choices[0]?.message?.content || 'Sin retroalimentacion disponible.'
-        : 'Sin retroalimentacion disponible.'
+      feedback =
+        'choices' in completion
+          ? completion.choices[0]?.message?.content || 'Sin retroalimentacion disponible.'
+          : 'Sin retroalimentacion disponible.'
+    } catch (apiError) {
+      console.error('[S4C AI] Gemini API error:', apiError)
+      feedback = 'El servicio de AI no está disponible en este momento. Por favor intenta de nuevo en unos minutos.'
+    }
 
     return Response.json({ feedback })
   } catch (err) {

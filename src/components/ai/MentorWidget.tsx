@@ -25,7 +25,7 @@ export default function MentorWidget() {
     }
     if (typeof window !== 'undefined') {
       try {
-        const extra = localStorage.getItem('s4c_profile_extra')
+        const extra = localStorage.getItem(user ? `s4c_${user.id}_profile_extra` : 's4c_profile_extra')
         if (extra) {
           const parsed = JSON.parse(extra)
           Object.assign(ctx, parsed)

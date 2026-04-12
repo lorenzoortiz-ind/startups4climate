@@ -104,14 +104,18 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
 
   const handleComplete = useCallback(() => {
     if (!user) return
-    markToolCompleted(user.id, storageId)
+    markToolCompleted(user.id, storageId).catch((err) => {
+      console.error('[S4C Sync] Failed to mark tool completed:', err)
+    })
     setCompleted(true)
   }, [user, storageId])
 
   const handleGenerateReport = useCallback(
     (content: string) => {
       if (!user || !tool) return
-      markReportGenerated(user.id, storageId)
+      markReportGenerated(user.id, storageId).catch((err) => {
+        console.error('[S4C Sync] Failed to mark report generated:', err)
+      })
       setReportGenerated(true)
       generateToolReport(tool, user, storageId, content)
     },

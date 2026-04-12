@@ -332,6 +332,9 @@ export default function RadarPage() {
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
 
   // Try to read user vertical from localStorage
+  // NOTE: s4c_profile key is legacy and not currently written anywhere.
+  // Cannot namespace by userId here because useAuth is not available in this component.
+  // TODO: Migrate to read vertical from StartupContext instead.
   let userVertical = 'Cleantech / Climatech'
   if (typeof window !== 'undefined') {
     try {

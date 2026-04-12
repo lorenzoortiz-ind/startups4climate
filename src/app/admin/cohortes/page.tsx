@@ -41,45 +41,55 @@ export default function CohortesPage() {
   const { appUser } = useAuth()
   const [cohorts, setCohorts] = useState<(CohortRow & { startupsCount: number })[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!appUser?.org_id) return
 
     async function loadCohorts() {
       setLoading(true)
+      setError(null)
 
-      // Fetch cohorts for this org
-      const { data: cohortsData } = await supabase
-        .from('cohorts')
-        .select('*')
-        .eq('org_id', appUser!.org_id!)
-        .order('created_at', { ascending: false })
+      try {
+        // Fetch cohorts for this org
+        const { data: cohortsData, error: cohortErr } = await supabase
+          .from('cohorts')
+          .select('*')
+          .eq('org_id', appUser!.org_id!)
+          .order('created_at', { ascending: false })
 
-      if (!cohortsData || cohortsData.length === 0) {
-        setCohorts([])
+        if (cohortErr) throw cohortErr
+
+        if (!cohortsData || cohortsData.length === 0) {
+          setCohorts([])
+          setLoading(false)
+          return
+        }
+
+        // Get startup counts per cohort
+        const cohortIds = cohortsData.map((c) => c.id)
+        const { data: assignments } = await supabase
+          .from('cohort_startups')
+          .select('cohort_id')
+          .in('cohort_id', cohortIds)
+
+        const countMap: Record<string, number> = {}
+        assignments?.forEach((a) => {
+          countMap[a.cohort_id] = (countMap[a.cohort_id] || 0) + 1
+        })
+
+        setCohorts(
+          cohortsData.map((c) => ({
+            ...c,
+            startupsCount: countMap[c.id] || 0,
+          }))
+        )
+      } catch (err) {
+        console.error('[S4C Admin] Error loading cohorts:', err)
+        setError('No se pudieron cargar las cohortes. Intenta recargar la página.')
+      } finally {
         setLoading(false)
-        return
       }
-
-      // Get startup counts per cohort
-      const cohortIds = cohortsData.map((c) => c.id)
-      const { data: assignments } = await supabase
-        .from('cohort_startups')
-        .select('cohort_id')
-        .in('cohort_id', cohortIds)
-
-      const countMap: Record<string, number> = {}
-      assignments?.forEach((a) => {
-        countMap[a.cohort_id] = (countMap[a.cohort_id] || 0) + 1
-      })
-
-      setCohorts(
-        cohortsData.map((c) => ({
-          ...c,
-          startupsCount: countMap[c.id] || 0,
-        }))
-      )
-      setLoading(false)
     }
 
     loadCohorts()
@@ -92,7 +102,47 @@ export default function CohortesPage() {
         minHeight: '60vh',
       }}>
         <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+      </div>
+    )
+  }
 
+  if (error) {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        justifyContent: 'center', minHeight: '60vh', padding: '2rem',
+        textAlign: 'center',
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: '#FEF2F2', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', marginBottom: '1rem',
+        }}>
+          <span style={{ fontSize: '1.25rem' }}>⚠</span>
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-base)',
+          fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.5rem',
+        }}>
+          Error al cargar cohortes
+        </p>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+          color: 'var(--color-text-secondary)', marginBottom: '1.5rem', maxWidth: 400,
+        }}>
+          {error}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)',
+            background: 'var(--color-accent-primary)', color: '#fff',
+            border: 'none', fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+            fontWeight: 600, cursor: 'pointer',
+          }}
+        >
+          Reintentar
+        </button>
       </div>
     )
   }

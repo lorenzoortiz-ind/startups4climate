@@ -64,16 +64,9 @@ export default function AdminDashboard() {
   const [startups, setStartups] = useState<StartupRow[]>([])
   const [cohorts, setCohorts] = useState<CohortRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [orgLogo, setOrgLogo] = useState<string | null>(null)
   const [orgName, setOrgName] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!appUser?.org_id) return
-    supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single()
-      .then(({ data }) => {
-        if (data) { setOrgLogo(data.logo_url); setOrgName(data.name) }
-      })
-  }, [appUser?.org_id])
 
   useEffect(() => {
     async function loadData() {
@@ -82,86 +75,102 @@ export default function AdminDashboard() {
         return
       }
 
-      // Load cohorts for this org
-      const { data: cohortData } = await supabase
-        .from('cohorts')
-        .select('id, name, status, start_date, end_date')
-        .eq('org_id', appUser.org_id)
+      try {
+        // Load org info and cohorts in parallel
+        const [orgRes, cohortRes] = await Promise.all([
+          supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single(),
+          supabase.from('cohorts').select('id, name, status, start_date, end_date').eq('org_id', appUser.org_id),
+        ])
 
-      // Load startups linked to this org's cohorts via cohort_startups
-      let startupList: StartupRow[] = []
-      const cohortIds = (cohortData || []).map((c) => c.id)
-
-      if (cohortIds.length > 0) {
-        const { data: csData } = await supabase
-          .from('cohort_startups')
-          .select('startup_id')
-          .in('cohort_id', cohortIds)
-
-        const startupIds = (csData || []).map((cs: { startup_id: string }) => cs.startup_id)
-
-        if (startupIds.length > 0) {
-          const { data: startupData } = await supabase
-            .from('startups')
-            .select('id, name, vertical, stage, diagnostic_score, tools_completed, country, founder_id')
-            .in('id', startupIds)
-
-          // Load founder profiles for these startups
-          const founderIds = (startupData || []).map((s) => s.founder_id).filter(Boolean)
-          const { data: profileData } = founderIds.length > 0
-            ? await supabase.from('profiles').select('id, full_name').in('id', founderIds)
-            : { data: [] }
-
-          startupList = (startupData || []).map((s) => ({
-            ...s,
-            founder_name:
-              profileData?.find((p) => p.id === s.founder_id)?.full_name || 'Sin nombre',
-          })) as StartupRow[]
+        if (orgRes.data) {
+          setOrgLogo(orgRes.data.logo_url)
+          setOrgName(orgRes.data.name)
         }
+
+        const cohortData = cohortRes.data || []
+        const cohortIds = cohortData.map((c) => c.id)
+
+        // Load ALL cohort_startups in one batch query (fixes N+1)
+        let startupList: StartupRow[] = []
+        let cohortList: CohortRow[] = []
+
+        if (cohortIds.length > 0) {
+          const { data: csData } = await supabase
+            .from('cohort_startups')
+            .select('cohort_id, startup_id')
+            .in('cohort_id', cohortIds)
+
+          // Count startups per cohort from the batch result
+          const countMap: Record<string, number> = {}
+          const startupIds = new Set<string>()
+          ;(csData || []).forEach((cs) => {
+            countMap[cs.cohort_id] = (countMap[cs.cohort_id] || 0) + 1
+            startupIds.add(cs.startup_id)
+          })
+
+          cohortList = cohortData.map((c) => ({
+            ...c,
+            startup_count: countMap[c.id] || 0,
+          }))
+
+          if (startupIds.size > 0) {
+            // Load startups and founder profiles in parallel
+            const { data: startupData } = await supabase
+              .from('startups')
+              .select('id, name, vertical, stage, diagnostic_score, tools_completed, country, founder_id')
+              .in('id', Array.from(startupIds))
+
+            const founderIds = (startupData || []).map((s) => s.founder_id).filter(Boolean)
+            const { data: profileData } = founderIds.length > 0
+              ? await supabase.from('profiles').select('id, full_name').in('id', founderIds)
+              : { data: [] }
+
+            startupList = (startupData || []).map((s) => ({
+              ...s,
+              founder_name:
+                profileData?.find((p) => p.id === s.founder_id)?.full_name || 'Sin nombre',
+            })) as StartupRow[]
+          }
+        } else {
+          cohortList = cohortData.map((c) => ({ ...c, startup_count: 0 }))
+        }
+
+        setCohorts(cohortList)
+        setStartups(startupList)
+        setMetrics({
+          totalStartups: startupList.length,
+          activeCohorts: cohortList.filter(
+            (c) => c.status === 'active' || c.status === 'planned'
+          ).length,
+          avgScore:
+            startupList.length > 0
+              ? Math.round(
+                  (startupList.reduce(
+                    (sum, s) => sum + (s.diagnostic_score || 0),
+                    0
+                  ) /
+                    startupList.length) *
+                    10
+                ) / 10
+              : 0,
+          avgToolsCompleted:
+            startupList.length > 0
+              ? Math.round(
+                  (startupList.reduce(
+                    (sum, s) => sum + (s.tools_completed || 0),
+                    0
+                  ) /
+                    startupList.length) *
+                    10
+                ) / 10
+              : 0,
+        })
+      } catch (err) {
+        console.error('[S4C Admin] Error loading dashboard:', err)
+        setError('No se pudieron cargar los datos. Intenta recargar la página.')
+      } finally {
+        setLoading(false)
       }
-
-      // Build cohort list with startup counts
-      const cohortList: CohortRow[] = []
-      for (const c of cohortData || []) {
-        const { count } = await supabase
-          .from('cohort_startups')
-          .select('*', { count: 'exact', head: true })
-          .eq('cohort_id', c.id)
-        cohortList.push({ ...c, startup_count: count || 0 })
-      }
-
-      setCohorts(cohortList)
-      setStartups(startupList)
-      setMetrics({
-        totalStartups: startupList.length,
-        activeCohorts: cohortList.filter(
-          (c) => c.status === 'active' || c.status === 'planned'
-        ).length,
-        avgScore:
-          startupList.length > 0
-            ? Math.round(
-                (startupList.reduce(
-                  (sum, s) => sum + (s.diagnostic_score || 0),
-                  0
-                ) /
-                  startupList.length) *
-                  10
-              ) / 10
-            : 0,
-        avgToolsCompleted:
-          startupList.length > 0
-            ? Math.round(
-                (startupList.reduce(
-                  (sum, s) => sum + (s.tools_completed || 0),
-                  0
-                ) /
-                  startupList.length) *
-                  10
-              ) / 10
-            : 0,
-      })
-
-      setLoading(false)
     }
     loadData()
   }, [appUser])
@@ -239,6 +248,47 @@ export default function AdminDashboard() {
             borderRadius: '50%',
           }}
         />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        justifyContent: 'center', minHeight: '60vh', padding: '2rem',
+        textAlign: 'center',
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: '#FEF2F2', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', marginBottom: '1rem',
+        }}>
+          <span style={{ fontSize: '1.25rem' }}>⚠</span>
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-base)',
+          fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.5rem',
+        }}>
+          Error al cargar el dashboard
+        </p>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+          color: 'var(--color-text-secondary)', marginBottom: '1.5rem', maxWidth: 400,
+        }}>
+          {error}
+        </p>
+        <button
+          onClick={() => { setError(null); setLoading(true); window.location.reload() }}
+          style={{
+            padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)',
+            background: 'var(--color-accent-primary)', color: '#fff',
+            border: 'none', fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+            fontWeight: 600, cursor: 'pointer',
+          }}
+        >
+          Reintentar
+        </button>
       </div>
     )
   }

@@ -75,38 +75,47 @@ export default function ConfiguracionPage() {
 
     async function loadOrg() {
       setLoading(true)
-      const { data: org } = await supabase
-        .from('organizations')
-        .select('*')
-        .eq('id', appUser!.org_id!)
-        .single()
+      setError(null)
 
-      if (org) {
-        setOrgName(org.name || '')
-        setWebsite(org.website || '')
-        setLogoUrl(org.logo_url || '')
-        setBillingEmail(org.billing_email || '')
-        setPlan(org.plan || 'starter')
-        setMaxStartups(org.max_startups || 25)
-        setContractEnd(org.contract_end)
+      try {
+        const { data: org, error: orgErr } = await supabase
+          .from('organizations')
+          .select('*')
+          .eq('id', appUser!.org_id!)
+          .single()
+
+        if (orgErr) throw orgErr
+
+        if (org) {
+          setOrgName(org.name || '')
+          setWebsite(org.website || '')
+          setLogoUrl(org.logo_url || '')
+          setBillingEmail(org.billing_email || '')
+          setPlan(org.plan || 'starter')
+          setMaxStartups(org.max_startups || 25)
+          setContractEnd(org.contract_end)
+        }
+
+        // Count startups in org's cohorts
+        const { data: cohorts } = await supabase
+          .from('cohorts')
+          .select('id')
+          .eq('org_id', appUser!.org_id!)
+
+        if (cohorts && cohorts.length > 0) {
+          const { count } = await supabase
+            .from('cohort_startups')
+            .select('id', { count: 'exact', head: true })
+            .in('cohort_id', cohorts.map((c) => c.id))
+
+          setStartupCount(count || 0)
+        }
+      } catch (err) {
+        console.error('[S4C Admin] Error loading org settings:', err)
+        setError('No se pudieron cargar los datos de la organización.')
+      } finally {
+        setLoading(false)
       }
-
-      // Count startups in org's cohorts
-      const { data: cohorts } = await supabase
-        .from('cohorts')
-        .select('id')
-        .eq('org_id', appUser!.org_id!)
-
-      if (cohorts && cohorts.length > 0) {
-        const { count } = await supabase
-          .from('cohort_startups')
-          .select('id', { count: 'exact', head: true })
-          .in('cohort_id', cohorts.map((c) => c.id))
-
-        setStartupCount(count || 0)
-      }
-
-      setLoading(false)
     }
 
     loadOrg()

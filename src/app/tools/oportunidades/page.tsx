@@ -490,6 +490,14 @@ export default function OportunidadesPage() {
                 }}
               >
                 Oportunidades para tu startup
+                <span style={{
+                  display: 'inline-block', marginLeft: '0.5rem', padding: '0.125rem 0.5rem',
+                  borderRadius: 999, background: 'rgba(255,107,74,0.1)', color: '#FF6B4A',
+                  fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 600,
+                  verticalAlign: 'middle', letterSpacing: '0.02em',
+                }}>
+                  Preview
+                </span>
               </h1>
               <p
                 style={{

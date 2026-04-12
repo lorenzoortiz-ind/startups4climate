@@ -1,5 +1,19 @@
 import { supabase } from './supabase'
 
+/* ─── Retry helper for Supabase writes ─── */
+async function withRetry<T>(fn: () => Promise<T>, retries = 2, delayMs = 500): Promise<T> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fn()
+    } catch (err) {
+      if (attempt === retries) throw err
+      console.warn(`[S4C Sync] Retry ${attempt + 1}/${retries} after error:`, err)
+      await new Promise((r) => setTimeout(r, delayMs * (attempt + 1)))
+    }
+  }
+  throw new Error('withRetry exhausted') // unreachable
+}
+
 export interface ToolProgressEntry {
   completed: boolean
   completedAt: string | null
@@ -98,22 +112,24 @@ export async function saveToolData(userId: string, toolId: string, data: Record<
     lastSaved: now,
   }
 
-  // Try Supabase first
+  // Try Supabase first with retry
   try {
-    const { error } = await supabase
-      .from('tool_data')
-      .upsert(
-        {
-          user_id: userId,
-          tool_id: toolId,
-          data,
-          last_saved: now,
-        },
-        { onConflict: 'user_id,tool_id' }
-      )
-    if (error) throw error
+    await withRetry(async () => {
+      const { error } = await supabase
+        .from('tool_data')
+        .upsert(
+          {
+            user_id: userId,
+            tool_id: toolId,
+            data,
+            last_saved: now,
+          },
+          { onConflict: 'user_id,tool_id' }
+        )
+      if (error) throw error
+    })
   } catch (err) {
-    console.error('[S4C Sync] Failed to save tool data to Supabase:', err)
+    console.error('[S4C Sync] Failed to save tool data to Supabase after retries:', err)
   }
 
   // Always update localStorage cache
@@ -151,23 +167,25 @@ export async function markToolCompleted(userId: string, toolId: string) {
     completedAt: now,
   }
 
-  // Supabase first
+  // Supabase first with retry
   try {
-    const { error } = await supabase
-      .from('tool_data')
-      .upsert(
-        {
-          user_id: userId,
-          tool_id: toolId,
-          completed: true,
-          report_generated: existing?.reportGenerated ?? false,
-          last_saved: now,
-        },
-        { onConflict: 'user_id,tool_id' }
-      )
-    if (error) throw error
+    await withRetry(async () => {
+      const { error } = await supabase
+        .from('tool_data')
+        .upsert(
+          {
+            user_id: userId,
+            tool_id: toolId,
+            completed: true,
+            report_generated: existing?.reportGenerated ?? false,
+            last_saved: now,
+          },
+          { onConflict: 'user_id,tool_id' }
+        )
+      if (error) throw error
+    })
   } catch (err) {
-    console.error('[S4C Sync] Failed to mark tool completed in Supabase:', err)
+    console.error('[S4C Sync] Failed to mark tool completed in Supabase after retries:', err)
   }
 
   // Update local cache
@@ -188,23 +206,25 @@ export async function markReportGenerated(userId: string, toolId: string) {
     reportGenerated: true,
   }
 
-  // Supabase first
+  // Supabase first with retry
   try {
-    const { error } = await supabase
-      .from('tool_data')
-      .upsert(
-        {
-          user_id: userId,
-          tool_id: toolId,
-          completed: existing?.completed ?? false,
-          report_generated: true,
-          last_saved: now,
-        },
-        { onConflict: 'user_id,tool_id' }
-      )
-    if (error) throw error
+    await withRetry(async () => {
+      const { error } = await supabase
+        .from('tool_data')
+        .upsert(
+          {
+            user_id: userId,
+            tool_id: toolId,
+            completed: existing?.completed ?? false,
+            report_generated: true,
+            last_saved: now,
+          },
+          { onConflict: 'user_id,tool_id' }
+        )
+      if (error) throw error
+    })
   } catch (err) {
-    console.error('[S4C Sync] Failed to mark report generated in Supabase:', err)
+    console.error('[S4C Sync] Failed to mark report generated in Supabase after retries:', err)
   }
 
   // Update local cache
@@ -261,7 +281,7 @@ export async function loadToolDataFromSupabase(
     .select('data')
     .eq('user_id', userId)
     .eq('tool_id', toolId)
-    .single()
+    .maybeSingle()
 
   if (error || !data) return null
   return (data.data as Record<string, unknown>) ?? null

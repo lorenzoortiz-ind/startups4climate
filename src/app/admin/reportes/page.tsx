@@ -73,14 +73,21 @@ export default function ReportesPage() {
     if (!appUser?.org_id) return
 
     async function loadCohorts() {
-      const { data } = await supabase
-        .from('cohorts')
-        .select('id, name')
-        .eq('org_id', appUser!.org_id!)
-        .order('created_at', { ascending: false })
+      try {
+        const { data, error: err } = await supabase
+          .from('cohorts')
+          .select('id, name')
+          .eq('org_id', appUser!.org_id!)
+          .order('created_at', { ascending: false })
 
-      setCohorts(data || [])
-      setLoadingCohorts(false)
+        if (err) throw err
+        setCohorts(data || [])
+      } catch (err) {
+        console.error('[S4C Admin] Error loading cohorts for reports:', err)
+        setError('No se pudieron cargar las cohortes.')
+      } finally {
+        setLoadingCohorts(false)
+      }
     }
 
     loadCohorts()
@@ -92,11 +99,15 @@ export default function ReportesPage() {
     setError(null)
 
     try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 30000) // 30s timeout
       const res = await fetch('/api/reports/cohort', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cohortId: selectedCohort }),
+        signal: controller.signal,
       })
+      clearTimeout(timeout)
 
       if (!res.ok) {
         const data = await res.json()

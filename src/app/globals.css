@@ -153,6 +153,10 @@
   --font-heading: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
   --font-body: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
   --font-display: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
+  /* Override Tailwind's default sans/serif/mono so any utility class also uses Mluvka */
+  --font-sans: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
+  --font-serif: var(--font-mluvka), 'Mluvka', Georgia, serif;
+  --font-mono: var(--font-mluvka), 'Mluvka', ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
@@ -165,6 +169,11 @@
   html {
     scroll-behavior: smooth;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Every element inherits the Mluvka stack — prevents stray font-family from third-party components. */
+  * {
+    font-family: var(--font-body);
   }
 
   body {

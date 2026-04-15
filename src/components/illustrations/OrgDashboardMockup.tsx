@@ -33,7 +33,7 @@ export default function OrgDashboardMockup({
 
       {/* URL bar */}
       <rect x="100" y="22" width="240" height="16" rx="4" fill="#f0f0f0" />
-      <text x="140" y="33" fontFamily="system-ui, sans-serif" fontSize="8" fill="#9ca3af" fontWeight="500">
+      <text x="140" y="33" fontFamily="Mluvka, system-ui, sans-serif" fontSize="8" fill="#9ca3af" fontWeight="500">
         startups4climate.vercel.app/admin
       </text>
 
@@ -42,10 +42,10 @@ export default function OrgDashboardMockup({
       <rect x="20" y="280" width="90" height="12" rx="0 0 12 0" fill="#191919" />
 
       {/* Sidebar logo */}
-      <text x="32" y="72" fontFamily="system-ui, sans-serif" fontSize="9" fontWeight="700" fill="#fff">
+      <text x="32" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="9" fontWeight="700" fill="#fff">
         S<tspan fill="#FF6B4A">4</tspan>C
       </text>
-      <text x="52" y="72" fontFamily="system-ui, sans-serif" fontSize="6" fontWeight="500" fill="#666">
+      <text x="52" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="6" fontWeight="500" fill="#666">
         Admin
       </text>
 
@@ -62,7 +62,7 @@ export default function OrgDashboardMockup({
           <text
             x="32"
             y={item.y}
-            fontFamily="system-ui, sans-serif"
+            fontFamily="Mluvka, system-ui, sans-serif"
             fontSize="7.5"
             fontWeight={item.active ? '700' : '500'}
             fill={item.active ? '#FF6B4A' : '#888'}
@@ -74,10 +74,10 @@ export default function OrgDashboardMockup({
 
       {/* Main content area */}
       {/* Header */}
-      <text x="126" y="72" fontFamily="system-ui, sans-serif" fontSize="12" fontWeight="700" fill="#191919" letterSpacing="-0.5">
+      <text x="126" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="12" fontWeight="700" fill="#191919" letterSpacing="-0.5">
         Panel de Portafolio
       </text>
-      <text x="126" y="86" fontFamily="system-ui, sans-serif" fontSize="7" fill="#9ca3af" fontWeight="500">
+      <text x="126" y="86" fontFamily="Mluvka, system-ui, sans-serif" fontSize="7" fill="#9ca3af" fontWeight="500">
         12 startups activas en 2 cohortes
       </text>
 
@@ -91,10 +91,10 @@ export default function OrgDashboardMockup({
         <g key={stat.label}>
           <rect x={stat.x} y="96" width="68" height="42" rx="6" fill="#fff" stroke="#e5e7eb" strokeWidth="1" />
           <circle cx={stat.x + 12} cy={108} r="3" fill={stat.color} opacity="0.3" />
-          <text x={stat.x + 10} y="118" fontFamily="system-ui, sans-serif" fontSize="14" fontWeight="700" fill="#191919" letterSpacing="-0.5">
+          <text x={stat.x + 10} y="118" fontFamily="Mluvka, system-ui, sans-serif" fontSize="14" fontWeight="700" fill="#191919" letterSpacing="-0.5">
             {stat.value}
           </text>
-          <text x={stat.x + 10} y="130" fontFamily="system-ui, sans-serif" fontSize="6" fill="#9ca3af" fontWeight="500">
+          <text x={stat.x + 10} y="130" fontFamily="Mluvka, system-ui, sans-serif" fontSize="6" fill="#9ca3af" fontWeight="500">
             {stat.label}
           </text>
         </g>
@@ -102,7 +102,7 @@ export default function OrgDashboardMockup({
 
       {/* Mini chart area */}
       <rect x="126" y="150" width="148" height="90" rx="6" fill="#fff" stroke="#e5e7eb" strokeWidth="1" />
-      <text x="136" y="166" fontFamily="system-ui, sans-serif" fontSize="7" fontWeight="600" fill="#191919">
+      <text x="136" y="166" fontFamily="Mluvka, system-ui, sans-serif" fontSize="7" fontWeight="600" fill="#191919">
         Progreso por etapa
       </text>
 
@@ -127,7 +127,7 @@ export default function OrgDashboardMockup({
             x={bar.x + 9}
             y="238"
             textAnchor="middle"
-            fontFamily="system-ui, sans-serif"
+            fontFamily="Mluvka, system-ui, sans-serif"
             fontSize="5.5"
             fill="#9ca3af"
             fontWeight="500"
@@ -139,7 +139,7 @@ export default function OrgDashboardMockup({
 
       {/* Table area */}
       <rect x="284" y="150" width="126" height="90" rx="6" fill="#fff" stroke="#e5e7eb" strokeWidth="1" />
-      <text x="294" y="166" fontFamily="system-ui, sans-serif" fontSize="7" fontWeight="600" fill="#191919">
+      <text x="294" y="166" fontFamily="Mluvka, system-ui, sans-serif" fontSize="7" fontWeight="600" fill="#191919">
         Startups recientes
       </text>
 
@@ -153,10 +153,10 @@ export default function OrgDashboardMockup({
         <g key={row.name}>
           <line x1="294" y1={178 + i * 16} x2="400" y2={178 + i * 16} stroke="#f0f0f0" strokeWidth="0.5" />
           <circle cx="300" cy={186 + i * 16} r="3" fill={row.color} opacity="0.2" />
-          <text x="308" y={188 + i * 16} fontFamily="system-ui, sans-serif" fontSize="6.5" fill="#191919" fontWeight="500">
+          <text x="308" y={188 + i * 16} fontFamily="Mluvka, system-ui, sans-serif" fontSize="6.5" fill="#191919" fontWeight="500">
             {row.name}
           </text>
-          <text x="380" y={188 + i * 16} fontFamily="system-ui, sans-serif" fontSize="6.5" fill={row.color} fontWeight="700">
+          <text x="380" y={188 + i * 16} fontFamily="Mluvka, system-ui, sans-serif" fontSize="6.5" fill={row.color} fontWeight="700">
             {row.score}
           </text>
         </g>
@@ -165,7 +165,7 @@ export default function OrgDashboardMockup({
       {/* Bottom status bar */}
       <rect x="126" y="252" width="284" height="24" rx="6" fill="#f9fafb" stroke="#e5e7eb" strokeWidth="0.5" />
       <circle cx="138" cy="264" r="3" fill="#28C840" />
-      <text x="146" y="267" fontFamily="system-ui, sans-serif" fontSize="6" fill="#9ca3af" fontWeight="500">
+      <text x="146" y="267" fontFamily="Mluvka, system-ui, sans-serif" fontSize="6" fill="#9ca3af" fontWeight="500">
         Datos actualizados en tiempo real
       </text>
     </svg>

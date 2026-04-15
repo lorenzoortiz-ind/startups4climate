@@ -58,11 +58,16 @@ export function generateToolReport(
 <head>
 <meta charset="UTF-8">
 <title>Reporte: ${tool.name} — ${user.startup}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  @font-face { font-family: 'Mluvka'; font-weight: 200; font-style: normal; src: url('/mluvka/Mluvka-ExtraLight-BF65518ac7eb0fe.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 300; font-style: normal; src: url('/mluvka/Mluvka-Light-BF65518ac849790.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 400; font-style: normal; src: url('/mluvka/Mluvka-Regular-BF65518ac8463f5.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 500; font-style: normal; src: url('/mluvka/Mluvka-Medium-BF65518ac864edb.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 600; font-style: normal; src: url('/mluvka/Mluvka-SemiBold-BF65518ac864155.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 700; font-style: normal; src: url('/mluvka/Mluvka-Bold-BF65518ac8cff8c.otf') format('opentype'); font-display: swap; }
+  @font-face { font-family: 'Mluvka'; font-weight: 800; font-style: normal; src: url('/mluvka/Mluvka-ExtraBold-BF65518ac86bc69.otf') format('opentype'); font-display: swap; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', system-ui, sans-serif; color: #111827; background: #F8F7F4; padding: 0; }
+  body { font-family: 'Mluvka', system-ui, sans-serif; color: #111827; background: #F8F7F4; padding: 0; }
   .page { max-width: 800px; margin: 0 auto; padding: 2rem; }
 
   .header {
@@ -71,17 +76,17 @@ export function generateToolReport(
     position: relative; overflow: hidden;
   }
   .header::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); }
-  .header .logo { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
-  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 8px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'Inter', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
-  .header h1 { font-family: 'Inter', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
+  .header .logo { font-family: 'Mluvka', sans-serif; font-weight: 800; font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; margin-bottom: 1rem; }
+  .header .badge { display: inline-block; padding: 0.3rem 0.875rem; border-radius: 8px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); font-family: 'Mluvka', monospace; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.875rem; letter-spacing: 0.03em; }
+  .header h1 { font-family: 'Mluvka', sans-serif; font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 0.625rem; }
   .header .subtitle { font-size: 0.9375rem; opacity: 0.85; line-height: 1.5; }
   .header .meta { display: flex; gap: 2rem; margin-top: 1.25rem; font-size: 0.8125rem; opacity: 0.75; flex-wrap: wrap; }
   .header .meta span { display: flex; align-items: center; gap: 0.375rem; }
 
   .info-bar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .info-card { flex: 1; min-width: 140px; background: white; border-radius: 12px; border: 1px solid #E5E7EB; padding: 1rem; text-align: center; }
-  .info-card .label { font-family: 'Inter', monospace; font-size: 0.625rem; text-transform: uppercase; color: #9CA3AF; font-weight: 600; letter-spacing: 0.05em; }
-  .info-card .value { font-family: 'Inter', sans-serif; font-size: 1.125rem; font-weight: 700; color: ${stageColor}; margin-top: 0.25rem; }
+  .info-card .label { font-family: 'Mluvka', monospace; font-size: 0.625rem; text-transform: uppercase; color: #9CA3AF; font-weight: 600; letter-spacing: 0.05em; }
+  .info-card .value { font-family: 'Mluvka', sans-serif; font-size: 1.125rem; font-weight: 700; color: ${stageColor}; margin-top: 0.25rem; }
 
   .content {
     background: white; padding: 2.5rem; border-radius: 16px; border: 1px solid #E5E7EB;
@@ -89,12 +94,12 @@ export function generateToolReport(
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .content h2.section-title {
-    font-family: 'Inter', sans-serif; font-size: 1.0625rem; font-weight: 700;
+    font-family: 'Mluvka', sans-serif; font-size: 1.0625rem; font-weight: 700;
     color: ${stageColor}; margin: 2rem 0 0.875rem; padding-bottom: 0.5rem;
     border-bottom: 2px solid ${stageColor}20; text-transform: none;
   }
   .content h2.section-title:first-child { margin-top: 0; }
-  .content h3.question { font-family: 'Inter', sans-serif; font-size: 0.9375rem; font-weight: 600; color: #374151; margin: 1.25rem 0 0.5rem; }
+  .content h3.question { font-family: 'Mluvka', sans-serif; font-size: 0.9375rem; font-weight: 600; color: #374151; margin: 1.25rem 0 0.5rem; }
   .content .list-item { padding: 0.25rem 0 0.25rem 0.5rem; font-size: 0.875rem; }
   .content .list-item.bullet::before { content: '-> '; color: ${stageColor}; font-weight: 600; }
   .content hr { border: none; border-top: 1px solid #F3F4F6; margin: 1.5rem 0; }
@@ -105,7 +110,7 @@ export function generateToolReport(
   }
   .footer p { font-size: 0.75rem; color: #9CA3AF; margin-bottom: 0.75rem; }
   .footer .actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-  .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.5rem; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.15s; text-decoration: none; }
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.5rem; border-radius: 10px; font-family: 'Mluvka', sans-serif; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.15s; text-decoration: none; }
   .btn-primary { background: ${stageColor}; color: white; box-shadow: 0 2px 8px ${stageColor}40; }
   .btn-primary:hover { filter: brightness(0.9); transform: translateY(-1px); }
   .btn-secondary { background: white; color: #374151; border: 1px solid #E5E7EB; }

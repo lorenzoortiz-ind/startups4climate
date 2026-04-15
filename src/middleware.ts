@@ -42,16 +42,17 @@ export async function middleware(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname
+  const demoRole = request.cookies.get('s4c_demo')?.value as 'founder' | 'admin_org' | undefined
 
-  // Admin routes: require authentication + admin role
-  if (pathname.startsWith('/admin') && !user) {
+  // Admin routes: require authentication + admin role (or demo admin cookie)
+  if (pathname.startsWith('/admin') && !user && demoRole !== 'admin_org') {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/'
     redirectUrl.searchParams.set('auth', 'login')
     return NextResponse.redirect(redirectUrl)
   }
 
-  if (pathname.startsWith('/admin') && user) {
+  if (pathname.startsWith('/admin') && user && demoRole !== 'admin_org') {
     const { data: profile } = await Promise.race([
       supabase.from('profiles').select('role').eq('id', user.id).single(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>

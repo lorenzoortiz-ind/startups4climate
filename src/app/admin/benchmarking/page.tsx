@@ -49,13 +49,32 @@ const fadeUp = {
   transition: { duration: 0.4, ease: 'easeOut' as const },
 }
 
+const MOCK_DEMO_BENCHMARK: BenchmarkMetric[] = [
+  { metric: 'Herramientas completadas', org: 4.8, platform: 3.2 },
+  { metric: 'Avance de etapa (%)', org: 68, platform: 54 },
+  { metric: 'Score diagnóstico', org: 6.8, platform: 5.4 },
+]
+
+const MOCK_DEMO_CHART: { name: string; tuOrg: number; promedio: number }[] = [
+  { name: 'Herramientas', tuOrg: 4.8, promedio: 3.2 },
+  { name: 'Avance (%)', tuOrg: 68, promedio: 54 },
+  { name: 'Score diag.', tuOrg: 6.8, promedio: 5.4 },
+]
+
 export default function BenchmarkingPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
   const [benchmarkData, setBenchmarkData] = useState<BenchmarkMetric[]>([])
   const [chartData, setChartData] = useState<{ name: string; tuOrg: number; promedio: number }[]>([])
 
   useEffect(() => {
+    if (isDemo) {
+      setBenchmarkData(MOCK_DEMO_BENCHMARK)
+      setChartData(MOCK_DEMO_CHART)
+      setLoading(false)
+      return
+    }
+
     if (!appUser?.org_id) return
 
     async function loadBenchmark() {
@@ -129,7 +148,7 @@ export default function BenchmarkingPage() {
     }
 
     loadBenchmark()
-  }, [appUser?.org_id])
+  }, [appUser?.org_id, isDemo])
 
   if (loading) {
     return (
@@ -147,6 +166,27 @@ export default function BenchmarkingPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       style={{ padding: '2rem 1.5rem', maxWidth: 1200, margin: '0 auto' }}
     >
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.375rem 0.75rem',
+            borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 500,
+            marginBottom: '1rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
+
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,

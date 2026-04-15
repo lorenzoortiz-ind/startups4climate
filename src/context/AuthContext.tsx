@@ -41,6 +41,7 @@ interface AuthContextType {
   user: User | null
   appUser: AppUser | null
   loading: boolean
+  isDemo: boolean
   login: (email: string, password: string) => Promise<{ error?: string; role?: string }>
   register: (
     email: string,
@@ -55,6 +56,108 @@ interface AuthContextType {
   authModalOpen: boolean
   authModalMode: 'login' | 'register'
   updateUserStage: (stage: string, score: number) => void
+  enterDemoMode: (role: 'founder' | 'admin_org') => void
+}
+
+/* ─── Demo user fixtures ─── */
+export const DEMO_FOUNDER_ID = 'demo-founder-0000-0000-0000-000000000001'
+export const DEMO_ADMIN_ID = 'demo-admin-0000-0000-0000-000000000002'
+export const DEMO_ORG_ID = 'demo-org-0000-0000-0000-000000000003'
+
+const DEMO_FOUNDER_USER: AppUser = {
+  id: DEMO_FOUNDER_ID,
+  email: 'demo.founder@s4c.demo',
+  role: 'founder',
+  org_id: null,
+  full_name: 'Ana Quispe (Demo)',
+  startup_name: 'EcoBio Perú',
+  stage: 'mvp',
+  diagnosticScore: 72,
+  created_at: new Date().toISOString(),
+}
+
+const DEMO_ADMIN_USER: AppUser = {
+  id: DEMO_ADMIN_ID,
+  email: 'demo.admin@s4c.demo',
+  role: 'admin_org',
+  org_id: DEMO_ORG_ID,
+  full_name: 'Universidad Demo',
+  startup_name: null,
+  stage: null,
+  diagnosticScore: null,
+  created_at: new Date().toISOString(),
+}
+
+/** True if a user id belongs to one of our demo fixtures. */
+export function isDemoUserId(id: string | null | undefined): boolean {
+  return id === DEMO_FOUNDER_ID || id === DEMO_ADMIN_ID
+}
+
+/** Seed some example tool progress into localStorage so demo founder has content. */
+function seedDemoFounderData() {
+  if (typeof window === 'undefined') return
+  const key = `s4c_${DEMO_FOUNDER_ID}_tool_progress`
+  // Only seed if empty
+  try {
+    const existing = localStorage.getItem(key)
+    if (existing && existing !== '{}') return
+  } catch { /* ignore */ }
+
+  const now = new Date().toISOString()
+  const seeded = {
+    'passion-purpose': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        pasion: 'Reducir la contaminación plástica en el Amazonas mediante biomateriales locales.',
+        proposito: 'Empoderar a comunidades amazónicas con bioeconomía circular.',
+        problemaReal: 'Cada año ingresan 30 millones de toneladas de plástico al Amazonas.',
+      },
+    },
+    'market-segmentation': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: false,
+      lastSaved: now,
+      data: { segmentos: 'Restaurantes sostenibles LATAM, hoteles eco, retail orgánico.' },
+    },
+    'beachhead-market': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: false,
+      lastSaved: now,
+      data: { mercado: 'Restaurantes boutique en Lima y Cusco (800 locales estimados).' },
+    },
+    'lean-canvas': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        problem: '1. Plástico de un solo uso.\n2. Falta de alternativas locales.\n3. Costos de importación.',
+        customerSegments: 'Restaurantes premium LATAM, hoteles boutique, retail orgánico.',
+        uvp: 'Empaques compostables hechos con fibras amazónicas, 40% más económicos que la importación europea.',
+        solution: 'Línea de empaques: vasos, platos y cubiertos compostables.',
+      },
+    },
+    'tam-calculator': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        tam: '45000000',
+        sam: '12000000',
+        som: '800000',
+        metodologia: 'Restaurantes premium LATAM × consumo empaque/mes × precio.',
+      },
+    },
+  }
+  try {
+    localStorage.setItem(key, JSON.stringify(seeded))
+  } catch { /* ignore */ }
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -145,6 +248,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login')
+  const [isDemo, setIsDemo] = useState(false)
   // Flag to prevent onAuthStateChange from overwriting the user
   // that login/register already set with accurate role data.
   const loginInProgressRef = React.useRef(false)
@@ -516,8 +620,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ])
   }, [])
 
+  const enterDemoMode = useCallback((role: 'founder' | 'admin_org') => {
+    // Rehydrate demo user from fixtures (force re-render) and seed localStorage.
+    setIsDemo(true)
+    if (role === 'founder') {
+      seedDemoFounderData()
+      setAppUser({ ...DEMO_FOUNDER_USER })
+    } else {
+      setAppUser({ ...DEMO_ADMIN_USER })
+    }
+    setLoading(false)
+    // Set a cookie so middleware lets demo users through (24h lifetime).
+    if (typeof document !== 'undefined') {
+      document.cookie = `s4c_demo=${role}; path=/; max-age=86400; SameSite=Lax`
+    }
+  }, [])
+
   const logout = useCallback(async () => {
     const userId = appUser?.id
+    // Demo mode doesn't have a real Supabase session
+    if (isDemo) {
+      setIsDemo(false)
+      setAppUser(null)
+      try {
+        if (userId) localStorage.removeItem(`s4c_${userId}_tool_progress`)
+      } catch { /* ignore */ }
+      if (typeof document !== 'undefined') {
+        document.cookie = 's4c_demo=; path=/; max-age=0; SameSite=Lax'
+      }
+      return
+    }
     await supabase.auth.signOut()
     setAppUser(null)
     // Clear user-specific localStorage data
@@ -596,6 +728,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         appUser,
         loading,
+        isDemo,
         login,
         register,
         logout,
@@ -605,6 +738,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authModalOpen,
         authModalMode,
         updateUserStage,
+        enterDemoMode,
       }}
     >
       {children}

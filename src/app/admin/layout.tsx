@@ -51,7 +51,7 @@ const SUPERADMIN_NAV = [
 ] as const
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { appUser, loading, logout } = useAuth()
+  const { appUser, loading, logout, isDemo } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -64,6 +64,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (!appUser?.org_id) return
+    // Demo org — hardcode display info without hitting Supabase
+    if (isDemo) {
+      setOrgLogo(null)
+      setOrgName('Universidad Demo')
+      return
+    }
     supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single()
       .then(({ data }) => {
         if (data) {
@@ -71,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setOrgName(data.name)
         }
       })
-  }, [appUser?.org_id])
+  }, [appUser?.org_id, isDemo])
 
 
   if (loading) {

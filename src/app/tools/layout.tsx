@@ -276,7 +276,7 @@ function StageSidebarSection({
 }
 
 function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
-  const { user, appUser, loading, logout } = useAuth()
+  const { user, appUser, loading, logout, isDemo } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -299,7 +299,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   }, [user, loading, router])
 
   useEffect(() => {
-    if (!loading && user && pathname === '/tools') {
+    if (!loading && user && pathname === '/tools' && !isDemo) {
       const checked = sessionStorage.getItem('s4c_profile_checked')
       if (checked) return
       sessionStorage.setItem('s4c_profile_checked', '1')
@@ -313,7 +313,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
-  }, [user, loading, pathname, router])
+  }, [user, loading, pathname, router, isDemo])
 
   useEffect(() => {
     if (!user) return

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
@@ -12,13 +12,21 @@ import {
   ChevronRight,
   ChevronDown,
   BookOpen,
-  Lightbulb,
+  Target,
+  Save,
+  Share2,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { ToolCategoryIcon } from '../illustrations/ToolCategoryIcons'
-import { getToolById, getTransversalPreambulo, STAGE_META } from '@/lib/tools-data'
+import {
+  getToolById,
+  getTransversalPreambulo,
+  STAGE_META,
+  TOOLS_BY_STAGE,
+} from '@/lib/tools-data'
 import { markToolCompleted, markReportGenerated, getProgress } from '@/lib/progress'
 import { generateToolReport } from '@/lib/pdf-generator'
+import { Callout, InsightBox, SectionHeader } from '@/components/ui'
 
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
 // Note: New tools will show "en construcción" until their components are created
@@ -90,6 +98,21 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
     ? STAGE_META[transversalStage].border
     : tool?.stageBorder
 
+  // Compute step X of Y within the current stage (for the top bar indicator)
+  const stageProgress = useMemo(() => {
+    if (!tool) return null
+    const stageKey: 1 | 2 | 3 | 4 = isTransversalView && transversalStage
+      ? transversalStage
+      : (tool.stage as 1 | 2 | 3 | 4)
+    const siblings = TOOLS_BY_STAGE[stageKey] ?? []
+    const total = siblings.length
+    // Find by id — when transversal, it may not belong to this stage list; fallback to stepNumber
+    const idx = siblings.findIndex((t) => t.id === tool.id)
+    const position = idx >= 0 ? idx + 1 : null
+    if (!position || total === 0) return null
+    return { position, total }
+  }, [tool, isTransversalView, transversalStage])
+
   const [preambOpen, setPreambOpen] = useState(true)
   const [completed, setCompleted] = useState(() => {
     if (!user) return false
@@ -125,6 +148,11 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
   if (!tool || !user) return null
 
   const ToolComponent = TOOL_COMPONENTS[toolId]
+
+  // "Contexto estratégico" sentence used in the Callout — derived from guidingQuestion
+  const strategicContext = tool.guidingQuestion
+    ? `Responder bien a esta pregunta te acerca al siguiente hito de ${displayStageName?.toLowerCase() ?? 'tu etapa'}: ${tool.guidingQuestion}`
+    : `Esta herramienta es clave para avanzar en ${displayStageName?.toLowerCase() ?? 'tu etapa actual'}. Tómate el tiempo para responder con datos reales, no con suposiciones.`
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
@@ -166,12 +194,52 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
             Dashboard
           </Link>
           <ChevronRight size={12} color="var(--color-border)" />
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              color: 'var(--color-text-muted)',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              flexShrink: 0,
+            }}
+          >
+            {displayStageName}
+          </span>
+          <ChevronRight size={12} color="var(--color-border)" />
           <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
             {tool.shortName}
           </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexShrink: 0 }}>
+          {stageProgress && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.3rem 0.75rem',
+                borderRadius: 8,
+                background: 'var(--color-bg-muted)',
+                border: '1px solid var(--color-border)',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.625rem',
+                fontWeight: 600,
+                color: 'var(--color-text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+              }}
+              aria-label={`Paso ${stageProgress.position} de ${stageProgress.total}`}
+            >
+              <span style={{ color: displayStageColor, fontWeight: 700 }}>
+                {stageProgress.position.toString().padStart(2, '0')}
+              </span>
+              <span style={{ opacity: 0.5 }}>/</span>
+              <span>{stageProgress.total.toString().padStart(2, '0')}</span>
+            </div>
+          )}
           {reportGenerated && (
             <div
               style={{
@@ -218,7 +286,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
       </div>
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 1.5rem', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
-        {/* Tool header */}
+        {/* Tool header — two-column: metadata left, "Lo que producirás" checklist right */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -236,6 +304,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
               overflow: 'visible',
             }}
           >
+            {/* thin gradient bar at the top */}
             <div
               style={{
                 position: 'absolute',
@@ -245,130 +314,214 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 height: 4,
                 background: `linear-gradient(90deg, ${displayStageColor}, ${displayStageColor}88)`,
                 pointerEvents: 'none',
+                borderRadius: '20px 20px 0 0',
               }}
             />
+
             <div
               style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '1.25rem',
-                flexWrap: 'wrap',
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
+                gap: '1.75rem',
+                alignItems: 'start',
               }}
+              className="tool-header-grid"
             >
-              <div
-                style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: 14,
-                  background: displayStageBg,
-                  border: `1px solid ${displayStageBorder}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.125rem', color: displayStageColor, fontWeight: 700 }}>
-                  {(tool.stepNumber + 1).toString().padStart(2, '0')}
-                </span>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+              {/* LEFT — metadata */}
+              <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', minWidth: 0 }}>
+                <div
+                  style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: 14,
+                    background: displayStageBg,
+                    border: `1px solid ${displayStageBorder}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    flexDirection: 'column',
+                    lineHeight: 1,
+                  }}
+                  aria-hidden
+                >
                   <span
                     style={{
-                      padding: '0.2rem 0.625rem',
-                      borderRadius: 8,
-                      background: displayStageBg,
-                      border: `1px solid ${displayStageBorder}`,
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      fontWeight: 700,
+                      fontSize: '0.5rem',
                       color: displayStageColor,
+                      fontWeight: 700,
                       textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      opacity: 0.75,
+                      marginBottom: 1,
                     }}
                   >
-                    {displayStageName}{isTransversalView && ' · Transversal'}
+                    Paso
                   </span>
                   <span
                     style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                      padding: '0.2rem 0.625rem',
-                      borderRadius: 8,
-                      background: 'var(--color-bg-muted)',
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      color: 'var(--color-text-muted)',
-                      textTransform: 'uppercase',
+                      fontSize: '1.125rem',
+                      color: displayStageColor,
+                      fontWeight: 700,
                     }}
                   >
-                    <ToolCategoryIcon category={tool.category} width={11} height={11} color="var(--color-text-muted)" />
-                    {tool.category}
-                  </span>
-                  <span
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      color: 'var(--color-text-muted)',
-                    }}
-                  >
-                    <Clock size={10} />
-                    {tool.estimatedTime}
+                    {(tool.stepNumber + 1).toString().padStart(2, '0')}
                   </span>
                 </div>
-                <h1
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)',
-                    fontWeight: 400,
-                    color: 'var(--color-text-primary)',
-                    letterSpacing: '-0.02em',
-                    marginBottom: '0.25rem',
-                  }}
-                >
-                  {tool.shortName}
-                </h1>
-                {tool.guidingQuestion && (
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '1rem',
-                      fontStyle: 'italic',
-                      color: displayStageColor,
-                      marginBottom: '0.5rem',
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {tool.guidingQuestion}
-                  </p>
-                )}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
-                  {tool.outputs.map((out) => (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <span
-                      key={out}
+                      style={{
+                        padding: '0.2rem 0.625rem',
+                        borderRadius: 8,
+                        background: displayStageBg,
+                        border: `1px solid ${displayStageBorder}`,
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.625rem',
+                        fontWeight: 700,
+                        color: displayStageColor,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      {displayStageName}{isTransversalView && ' · Transversal'}
+                    </span>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.2rem 0.625rem',
+                        borderRadius: 8,
+                        background: 'var(--color-bg-muted)',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.625rem',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      <ToolCategoryIcon category={tool.category} width={11} height={11} color="var(--color-text-muted)" />
+                      {tool.category}
+                    </span>
+                    <span
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.3rem',
-                        padding: '0.25rem 0.625rem',
-                        borderRadius: 6,
-                        background: 'var(--color-bg-muted)',
+                        gap: '0.25rem',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.75rem',
-                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.625rem',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
                       }}
                     >
-                      <CheckCircle2 size={11} color={displayStageColor} />
-                      {out}
+                      <Clock size={10} />
+                      {tool.estimatedTime}
                     </span>
-                  ))}
+                  </div>
+                  <h1
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)',
+                      fontWeight: 400,
+                      color: 'var(--color-text-primary)',
+                      letterSpacing: '-0.02em',
+                      marginBottom: '0.5rem',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {tool.shortName}
+                  </h1>
+                  {tool.guidingQuestion && (
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '1rem',
+                        fontStyle: 'italic',
+                        color: displayStageColor,
+                        marginBottom: 0,
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {tool.guidingQuestion}
+                    </p>
+                  )}
                 </div>
               </div>
+
+              {/* RIGHT — "Lo que producirás" checklist */}
+              <div
+                className="tool-header-outputs"
+                style={{
+                  background: 'var(--color-bg-muted)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 14,
+                  padding: '1rem 1.125rem',
+                  minWidth: 0,
+                  position: 'relative',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    marginBottom: '0.625rem',
+                  }}
+                >
+                  <Target size={12} color={displayStageColor} strokeWidth={2.25} />
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.625rem',
+                      fontWeight: 700,
+                      color: 'var(--color-text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                    }}
+                  >
+                    Lo que producirás
+                  </span>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {tool.outputs.map((out) => (
+                    <li
+                      key={out}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.5rem',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      <CheckCircle2
+                        size={13}
+                        color={displayStageColor}
+                        strokeWidth={2.25}
+                        style={{ flexShrink: 0, marginTop: 2 }}
+                      />
+                      <span>{out}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
+
+            {/* Responsive stack on narrow viewports */}
+            <style>{`
+              @media (max-width: 720px) {
+                .tool-header-grid {
+                  grid-template-columns: 1fr !important;
+                  gap: 1.25rem !important;
+                }
+              }
+            `}</style>
           </div>
         </motion.div>
 
@@ -437,25 +590,130 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
               />
             </button>
             {preambOpen && (
-              <div style={{
-                padding: '1.25rem 1.5rem',
-                background: 'var(--color-bg-card)',
-                border: '1px solid var(--color-border)',
-                borderTop: 'none',
-                borderRadius: '0 0 14px 14px',
-              }}>
+              <div
+                style={{
+                  padding: '1.25rem 1.5rem',
+                  background: 'var(--color-bg-card)',
+                  border: '1px solid var(--color-border)',
+                  borderTop: 'none',
+                  borderRadius: '0 0 14px 14px',
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
+                  gap: '1.5rem',
+                  alignItems: 'start',
+                }}
+                className="tool-preamb-grid"
+              >
                 <p style={{
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.9375rem',
                   lineHeight: 1.8,
                   color: 'var(--color-text-secondary)',
+                  margin: 0,
                 }}>
                   {preambulo}
                 </p>
+                <div
+                  style={{
+                    background: displayStageBg,
+                    border: `1px solid ${displayStageBorder}`,
+                    borderRadius: 12,
+                    padding: '0.125rem 0',
+                  }}
+                >
+                  <Callout type="important" title="Contexto estratégico">
+                    {strategicContext}
+                  </Callout>
+                </div>
+                <style>{`
+                  @media (max-width: 720px) {
+                    .tool-preamb-grid {
+                      grid-template-columns: 1fr !important;
+                    }
+                  }
+                `}</style>
               </div>
             )}
           </motion.div>
         )}
+
+        {/* "Cómo usar esta herramienta" — 3 inline tips */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.12 }}
+          style={{
+            marginBottom: '1.5rem',
+            background: 'var(--color-bg-card)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 14,
+            padding: '0.875rem 1.125rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '0.75rem 1.25rem',
+          }}
+          aria-label="Cómo usar esta herramienta"
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              color: 'var(--color-text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Cómo usar
+          </span>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.625rem 1rem',
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            {[
+              { icon: Target, text: 'Completa los campos con tu realidad actual' },
+              { icon: Save, text: 'Guarda tu progreso — se sincroniza automáticamente' },
+              { icon: Share2, text: 'Genera un reporte al terminar para compartirlo' },
+            ].map(({ icon: Icon, text }, i) => (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.8125rem',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.4,
+                }}
+              >
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 22,
+                    height: 22,
+                    borderRadius: 6,
+                    background: `${displayStageColor}12`,
+                    color: displayStageColor,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon size={12} strokeWidth={2.25} />
+                </span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Tool content */}
         <motion.div
@@ -487,40 +745,29 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
           )}
           {/* Recommendations after completion */}
           {completed && (
-            <div style={{
-              marginTop: '1.5rem',
-              padding: '1.25rem 1.5rem',
-              borderRadius: 14,
-              background: `${displayStageColor}08`,
-              border: `1px solid ${displayStageColor}18`,
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <Lightbulb size={20} color={displayStageColor} style={{ marginTop: 2, flexShrink: 0 }} />
-                <div>
-                  <h4 style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '0.9375rem',
-                    fontWeight: 700,
-                    color: 'var(--color-text-primary)',
-                    marginBottom: '0.5rem',
-                  }}>
-                    Recomendaciones para mejorar
-                  </h4>
-                  <ul style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.875rem',
-                    lineHeight: 1.7,
-                    color: 'var(--color-text-secondary)',
-                    paddingLeft: '1rem',
+            <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <SectionHeader
+                kicker="Siguiente paso"
+                title="Recomendaciones para mejorar"
+                description="Cuatro acciones simples para sacar el máximo valor de lo que acabas de completar."
+              />
+              <InsightBox variant="tip" title="Itera con datos reales, no con suposiciones">
+                <ul
+                  style={{
                     margin: 0,
-                  }}>
-                    <li>Revisa tus respuestas con tu equipo cofundador y busca puntos ciegos.</li>
-                    <li>Valida la información con datos reales de tu mercado, no suposiciones.</li>
-                    <li>Genera el reporte y compártelo con un mentor o advisor para feedback externo.</li>
-                    <li>Itera: esta herramienta no se llena una sola vez. Vuelve a ella conforme avances.</li>
-                  </ul>
-                </div>
-              </div>
+                    paddingLeft: '1.1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.4rem',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  <li>Revisa tus respuestas con tu equipo cofundador y busca puntos ciegos.</li>
+                  <li>Valida la información con datos reales de tu mercado, no suposiciones.</li>
+                  <li>Genera el reporte y compártelo con un mentor o advisor para feedback externo.</li>
+                  <li>Itera: esta herramienta no se llena una sola vez. Vuelve a ella conforme avances.</li>
+                </ul>
+              </InsightBox>
             </div>
           )}
         </motion.div>

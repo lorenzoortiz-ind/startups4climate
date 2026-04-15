@@ -19,25 +19,20 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { user, login, openAuthModal } = useAuth()
+  const { user, openAuthModal, enterDemoMode } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const [demoLoading, setDemoLoading] = useState<string | null>(null)
-  const isDev = process.env.NODE_ENV === 'development'
 
-  const handleDemoLogin = async (email: string, password: string, redirect: string, key: string) => {
+  const handleDemoEnter = (role: 'founder' | 'admin_org', redirect: string, key: string) => {
     setDemoLoading(key)
     try {
-      // Clear any previous session first
-      const { supabase } = await import('@/lib/supabase')
-      await supabase.auth.signOut()
-      await login(email, password)
-      // Full page reload so middleware sets auth cookies cleanly
-      window.location.href = redirect
-    } catch {
-      // fallback
+      enterDemoMode(role)
+      // Soft navigation keeps the React context alive (no cookie/session required).
+      router.push(redirect)
     } finally {
-      setDemoLoading(null)
+      // Small delay so the button shows state during nav
+      setTimeout(() => setDemoLoading(null), 400)
     }
   }
 
@@ -139,10 +134,10 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
-              {isDev && !user && (
+              {!user && (
                 <>
                   <button
-                    onClick={() => handleDemoLogin('admin@bioinnova.pe', 'S4c2026demo!', '/admin', 'bio')}
+                    onClick={() => handleDemoEnter('admin_org', '/admin', 'bio')}
                     disabled={demoLoading !== null}
                     style={{
                       padding: '8px 14px',
@@ -157,10 +152,10 @@ export default function Navbar() {
                       opacity: demoLoading && demoLoading !== 'bio' ? 0.5 : 1,
                     }}
                   >
-                    {demoLoading === 'bio' ? 'Cargando...' : 'Demo BioInnova'}
+                    {demoLoading === 'bio' ? 'Cargando...' : 'Demo Organización'}
                   </button>
                   <button
-                    onClick={() => handleDemoLogin('ana.quispe@demo.pe', 'S4c2026demo!', '/tools', 'ana')}
+                    onClick={() => handleDemoEnter('founder', '/tools', 'ana')}
                     disabled={demoLoading !== null}
                     style={{
                       padding: '8px 14px',

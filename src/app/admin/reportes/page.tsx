@@ -60,8 +60,14 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
 }
 
+const MOCK_DEMO_COHORTS: CohortOption[] = [
+  { id: 'demo-cohort-primavera-2026', name: 'Cohorte Primavera 2026' },
+  { id: 'demo-cohort-otono-2025', name: 'Cohorte Otoño 2025' },
+  { id: 'demo-cohort-verano-2025', name: 'Cohorte Verano 2025' },
+]
+
 export default function ReportesPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [cohorts, setCohorts] = useState<CohortOption[]>([])
   const [loadingCohorts, setLoadingCohorts] = useState(true)
   const [selectedCohort, setSelectedCohort] = useState('')
@@ -70,6 +76,12 @@ export default function ReportesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (isDemo) {
+      setCohorts(MOCK_DEMO_COHORTS)
+      setLoadingCohorts(false)
+      return
+    }
+
     if (!appUser?.org_id) return
 
     async function loadCohorts() {
@@ -91,10 +103,16 @@ export default function ReportesPage() {
     }
 
     loadCohorts()
-  }, [appUser?.org_id])
+  }, [appUser?.org_id, isDemo])
 
   const handleGenerate = async () => {
     if (!selectedCohort) return
+
+    if (isDemo) {
+      setError('La generación de reportes está deshabilitada en modo demo.')
+      return
+    }
+
     setGenerating(true)
     setError(null)
 
@@ -143,6 +161,27 @@ export default function ReportesPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       style={{ padding: '2rem 1.5rem', maxWidth: 800, margin: '0 auto' }}
     >
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.375rem 0.75rem',
+            borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 500,
+            marginBottom: '1rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
+
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,

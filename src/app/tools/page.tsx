@@ -15,9 +15,23 @@ import {
   Lock,
   Lightbulb,
   Filter,
+  X,
+  Layers,
+  Award,
+  FileText,
+  Target,
+  Sparkles,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { Button, Card } from '@/components/ui'
+import {
+  Button,
+  Card,
+  ProgressRing,
+  MetricCard,
+  SectionHeader,
+  InsightBox,
+  Chip,
+} from '@/components/ui'
 import {
   TOOLS,
   TOOLS_BY_STAGE,
@@ -37,7 +51,7 @@ const STAGE_ICONS = {
   4: TrendingUp,
 } as const
 
-/* ─── Category color mapping ─── */
+/* ─── Category color mapping (kept for ToolCard) ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
   Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
   Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
@@ -54,7 +68,7 @@ const springReveal = {
   transition: { type: 'spring', damping: 20, stiffness: 100 } as const,
 }
 
-/* ─── Tool card (redesigned) ─── */
+/* ─── Tool card (unchanged from original) ─── */
 function ToolCard({
   tool,
   done,
@@ -96,7 +110,6 @@ function ToolCard({
         minHeight: 130,
       }}
     >
-      {/* Subtle gradient corner */}
       {!locked && (
         <div style={{
           position: 'absolute',
@@ -109,7 +122,6 @@ function ToolCard({
         }} />
       )}
 
-      {/* Top row: category badge + completion */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -156,7 +168,6 @@ function ToolCard({
         </div>
       </div>
 
-      {/* Tool name */}
       <div
         style={{
           fontFamily: 'var(--font-heading)',
@@ -172,7 +183,6 @@ function ToolCard({
         {tool.shortName}
       </div>
 
-      {/* Description */}
       <p
         style={{
           fontFamily: 'var(--font-body)',
@@ -190,7 +200,6 @@ function ToolCard({
         {tool.description}
       </p>
 
-      {/* Bottom row: time + arrow */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -233,25 +242,30 @@ function ToolCard({
 
 /* ─── Main dashboard ─── */
 export default function ToolsDashboard() {
-  const { user } = useAuth()
+  const { user, isDemo } = useAuth()
   const [progress, setProgress] = useState<ProgressMap>({})
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'Todos'>('Todos')
+  const [demoBannerDismissed, setDemoBannerDismissed] = useState(false)
 
   useEffect(() => {
     if (user) {
-      // Load local progress immediately
       setProgress(getProgress(user.id))
-      // Then hydrate from Supabase (merges remote data into localStorage)
+      if (isDemo) return
       hydrateProgressFromSupabase(user.id).then((changed) => {
         if (changed) {
           setProgress(getProgress(user.id))
         }
       })
     }
-  }, [user])
+  }, [user, isDemo])
 
   const completedIds = useMemo(
     () => new Set(Object.entries(progress).filter(([, v]) => v.completed).map(([k]) => k)),
+    [progress]
+  )
+
+  const reportsGeneratedCount = useMemo(
+    () => Object.values(progress).filter((v) => v.reportGenerated).length,
     [progress]
   )
 
@@ -298,354 +312,477 @@ export default function ToolsDashboard() {
 
   if (!user) return null
 
+  const firstName = user.name?.split(' ')[0] || user.name
+  const startupName = user.startup || 'Tu startup'
+  const currentStageMeta = STAGE_META[userStageNum as 1 | 2 | 3 | 4]
+  const CurrentStageIcon = STAGE_ICONS[userStageNum as 1 | 2 | 3 | 4]
+  const diagnosticScore = user.diagnosticScore ?? null
+
   return (
     <div
       style={{
-        padding: '2.5rem 2rem',
-        maxWidth: 1060,
+        padding: '2.5rem 2rem 4rem',
+        maxWidth: 1200,
         margin: '0 auto',
         overflowWrap: 'break-word',
         wordBreak: 'break-word',
       }}
     >
-      {/* ─── Hero greeting ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.05 }}
-        style={{ marginBottom: '2.5rem' }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '2rem',
-          }}
-        >
-          <div>
-            <div
+      {/* ─── Demo banner ─── */}
+      <AnimatePresence>
+        {isDemo && !demoBannerDismissed && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -8, height: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ marginBottom: '1.5rem', position: 'relative' }}
+          >
+            <InsightBox variant="warning" title="Estás viendo S4C en modo demo" icon={Sparkles}>
+              Los datos mostrados son de ejemplo para explorar la plataforma. Inicia sesión con tu cuenta
+              real para guardar tu progreso.
+            </InsightBox>
+            <button
+              type="button"
+              onClick={() => setDemoBannerDismissed(true)}
+              aria-label="Cerrar banner demo"
               style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 700,
-                color: 'var(--color-accent-primary)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                marginBottom: '0.625rem',
-              }}
-            >
-              Bienvenido de vuelta
-            </div>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                fontWeight: 700,
-                color: 'var(--color-ink)',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.2,
-                marginBottom: '0.5rem',
-              }}
-            >
-              Hola, {user.name?.split(' ')[0] || user.name}
-            </h1>
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-base)',
-                color: 'var(--color-text-secondary)',
-                lineHeight: 1.5,
-              }}
-            >
-              {user.startup || 'Tu startup'} · Roadmap de impacto
-            </p>
-          </div>
-
-          {/* Progress stats */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            {/* Progress ring card */}
-            <Card
-              variant="elevated"
-              padding="none"
-              style={{
-                padding: '1.25rem 1.5rem',
-                display: 'flex',
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                background: 'transparent',
+                border: 'none',
+                padding: 4,
+                cursor: 'pointer',
+                color: 'var(--color-text-muted)',
+                borderRadius: 'var(--radius-full)',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '1rem',
-                minWidth: 200,
               }}
             >
-              <div style={{ position: 'relative', width: 60, height: 60, flexShrink: 0 }}>
-                <svg width="60" height="60" style={{ transform: 'rotate(-90deg)' }}>
-                  <circle cx="30" cy="30" r="25" fill="none" stroke="var(--color-border)" strokeWidth="5" />
-                  <circle
-                    cx="30"
-                    cy="30"
-                    r="25"
-                    fill="none"
-                    stroke="var(--color-accent-secondary)"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 25}`}
-                    strokeDashoffset={`${2 * Math.PI * 25 * (1 - pct / 100)}`}
-                    style={{ transition: 'stroke-dashoffset 1s ease' }}
-                  />
-                </svg>
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-base)',
-                    fontWeight: 700,
-                    color: 'var(--color-accent-secondary)',
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  {pct}%
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-xl)',
-                    fontWeight: 700,
-                    color: 'var(--color-ink)',
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1,
-                  }}
-                >
-                  {totalCompleted}
-                  <span
-                    style={{
-                      fontSize: 'var(--text-sm)',
-                      color: 'var(--color-text-muted)',
-                      fontWeight: 400,
-                    }}
-                  >
-                    /{total}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-secondary)',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  herramientas completadas
-                </div>
-              </div>
-            </Card>
+              <X size={16} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Global report button */}
-            {totalCompleted >= 3 && (
-              <Button
-                variant="success"
-                size="lg"
-                icon={<Download size={15} />}
-                onClick={generateGlobalReport}
-                style={{
-                  borderRadius: 'var(--radius-full)',
-                }}
-              >
-                Reporte Global
-              </Button>
-            )}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ─── Stage indicator banner ─── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 }}
+      {/* ─── Hero section ─── */}
+      <motion.section
+        {...springReveal}
+        transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.05 }}
         style={{ marginBottom: '2rem' }}
       >
         <Card
-          variant="flat"
-          accent={STAGE_META[userStageNum as 1 | 2 | 3 | 4].color}
+          variant="elevated"
           padding="none"
           style={{
-            background: STAGE_META[userStageNum as 1 | 2 | 3 | 4].bg,
-            border: `1px solid ${STAGE_META[userStageNum as 1 | 2 | 3 | 4].border}`,
-            padding: '1.25rem 1.75rem',
-            display: 'flex',
-            alignItems: 'center',
+            padding: 'clamp(1.5rem, 3vw, 2.5rem)',
+            background:
+              'linear-gradient(135deg, var(--color-paper) 0%, var(--color-cream) 100%)',
+            border: '1px solid var(--color-border)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Decorative corner accent */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              top: -60,
+              right: -60,
+              width: 240,
+              height: 240,
+              background:
+                'radial-gradient(circle, rgba(255,107,74,0.12), transparent 70%)',
+              pointerEvents: 'none',
+            }}
+          />
+
+          <div
+            className="hero-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1fr) auto',
+              gap: 'clamp(1.5rem, 4vw, 3rem)',
+              alignItems: 'center',
+              position: 'relative',
+            }}
+          >
+            {/* Left: greeting + identity */}
+            <div style={{ minWidth: 0 }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-2xs)',
+                  fontWeight: 700,
+                  color: 'var(--color-accent-primary)',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.875rem',
+                }}
+              >
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    background: 'var(--color-accent-primary)',
+                  }}
+                />
+                Founder Dashboard
+              </div>
+
+              <h1
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.035em',
+                  lineHeight: 1.1,
+                  marginBottom: '0.625rem',
+                }}
+              >
+                Bienvenida, {firstName}
+                <span
+                  style={{
+                    color: 'var(--color-text-muted)',
+                    fontWeight: 400,
+                    margin: '0 0.5rem',
+                  }}
+                >
+                  ·
+                </span>
+                <span style={{ color: 'var(--color-accent-primary)' }}>{startupName}</span>
+              </h1>
+
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-md)',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.55,
+                  maxWidth: '52ch',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                Tu roadmap de impacto en {currentStageMeta.name.toLowerCase()}. Cada herramienta que
+                completas fortalece tu startup y desbloquea la siguiente fase.
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <Chip
+                  variant={
+                    userStageNum === 1
+                      ? 'stage-1'
+                      : userStageNum === 2
+                      ? 'stage-2'
+                      : userStageNum === 3
+                      ? 'stage-3'
+                      : 'stage-4'
+                  }
+                  icon={CurrentStageIcon}
+                  size="md"
+                >
+                  Etapa {userStageNum}: {currentStageMeta.name}
+                </Chip>
+                {diagnosticScore !== null && (
+                  <Chip variant="info" icon={Award} size="md">
+                    Diagnóstico {diagnosticScore}/100
+                  </Chip>
+                )}
+              </div>
+            </div>
+
+            {/* Right: ProgressRing */}
+            <div
+              className="hero-ring"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.5rem',
+                flexShrink: 0,
+              }}
+            >
+              <ProgressRing
+                value={pct}
+                size={156}
+                strokeWidth={12}
+                color="var(--color-accent-primary)"
+                trackColor="var(--color-border)"
+                showPercentage
+              />
+              <div
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--color-text-secondary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: 600,
+                  textAlign: 'center',
+                }}
+              >
+                {totalCompleted} de {total} completadas
+              </div>
+            </div>
+          </div>
+        </Card>
+      </motion.section>
+
+      {/* ─── StatGrid of MetricCards ─── */}
+      <motion.section
+        {...springReveal}
+        transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 }}
+        style={{ marginBottom: '2rem' }}
+      >
+        <div
+          className="metrics-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
             gap: '1rem',
           }}
         >
-          {(() => {
-            const StageIcon = STAGE_ICONS[userStageNum as 1 | 2 | 3 | 4]
-            return (
+          <MetricCard
+            label="Herramientas"
+            value={totalCompleted}
+            unit={`/ ${total}`}
+            icon={Layers}
+            accent="primary"
+            size="md"
+            description="Completadas"
+          />
+          <MetricCard
+            label="Etapa actual"
+            value={`E${userStageNum}`}
+            icon={CurrentStageIcon}
+            accent={
+              userStageNum === 2 ? 'success' : userStageNum === 3 ? 'warning' : userStageNum === 4 ? 'info' : 'primary'
+            }
+            size="md"
+            description={currentStageMeta.name}
+          />
+          <MetricCard
+            label="Diagnóstico"
+            value={diagnosticScore ?? '—'}
+            unit={diagnosticScore !== null ? '/100' : undefined}
+            icon={Award}
+            accent="info"
+            size="md"
+            description={diagnosticScore !== null ? 'Readiness score' : 'Sin diagnóstico'}
+          />
+          <MetricCard
+            label="Reportes"
+            value={reportsGeneratedCount}
+            icon={FileText}
+            accent="neutral"
+            size="md"
+            description="Generados"
+          />
+        </div>
+      </motion.section>
+
+      {/* ─── Passport + Continue row ─── */}
+      <motion.section
+        {...springReveal}
+        transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
+        style={{ marginBottom: '2.5rem' }}
+      >
+        <div
+          className="passport-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: nextTool ? '1.1fr 1fr' : '1fr',
+            gap: '1rem',
+          }}
+        >
+          {/* Passport card */}
+          <Card
+            variant="default"
+            accent="var(--color-ink)"
+            padding="none"
+            style={{
+              padding: '1.5rem 1.75rem',
+              background: 'var(--color-paper)',
+              border: '1px solid var(--color-border)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
               <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   borderRadius: 'var(--radius-sm)',
-                  background: `${STAGE_META[userStageNum as 1 | 2 | 3 | 4].color}18`,
+                  background: 'var(--color-ink)',
+                  color: 'var(--color-paper)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
-                <StageIcon size={20} color={STAGE_META[userStageNum as 1 | 2 | 3 | 4].color} />
+                <Target size={20} strokeWidth={2} />
               </div>
-            )
-          })()}
-          <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 700,
+                    color: 'var(--color-accent-primary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Tu Passport
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 700,
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.25,
+                    marginBottom: '0.375rem',
+                  }}
+                >
+                  {startupName}
+                </div>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.5,
+                    margin: 0,
+                  }}
+                >
+                  Tu perfil consolidado con diagnóstico, herramientas completadas y score de impacto.
+                  {totalCompleted >= 3
+                    ? ' Genera un reporte ejecutivo listo para compartir con inversores.'
+                    : ' Completa 3 herramientas para desbloquear el reporte global.'}
+                </p>
+              </div>
+            </div>
+
             <div
               style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 700,
-                color: STAGE_META[userStageNum as 1 | 2 | 3 | 4].color,
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                marginBottom: '0.125rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.625rem',
+                flexWrap: 'wrap',
+                paddingTop: '0.75rem',
+                borderTop: '1px solid var(--color-border)',
               }}
             >
-              Tu etapa actual
+              <Link href="/tools/passport" style={{ textDecoration: 'none' }}>
+                <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />}>
+                  Ver Passport
+                </Button>
+              </Link>
+              <Button
+                variant={totalCompleted >= 3 ? 'success' : 'secondary'}
+                size="sm"
+                icon={<Download size={14} />}
+                onClick={generateGlobalReport}
+                disabled={totalCompleted < 3}
+              >
+                Generar reporte global
+              </Button>
             </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-lg)',
-                fontWeight: 700,
-                color: STAGE_META[userStageNum as 1 | 2 | 3 | 4].color,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {STAGE_META[userStageNum as 1 | 2 | 3 | 4].name}
-            </span>
-          </div>
-        </Card>
-      </motion.div>
+          </Card>
 
-      {/* ─── Continue CTA ─── */}
-      <AnimatePresence>
-        {nextTool && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
-            style={{ marginBottom: '2.5rem' }}
-          >
+          {/* Continue CTA */}
+          {nextTool && (
             <Card
               variant="elevated"
-              accent="var(--color-accent-secondary)"
+              accent="var(--color-accent-primary)"
               padding="none"
               style={{
                 padding: '1.5rem 1.75rem',
+                background:
+                  'linear-gradient(135deg, rgba(255,107,74,0.06), var(--color-paper))',
+                border: '1px solid rgba(255,107,74,0.2)',
                 display: 'flex',
-                alignItems: 'center',
+                flexDirection: 'column',
                 justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '1.25rem',
+                gap: '1rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.125rem' }}>
+              <div>
                 <div
                   style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(13,148,136,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 700,
+                    color: 'var(--color-accent-primary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    marginBottom: '0.5rem',
                   }}
                 >
-                  <TrendingUp size={20} color="var(--color-accent-secondary)" />
+                  Continúa donde lo dejaste
                 </div>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: 'var(--text-xs)',
-                      fontWeight: 700,
-                      color: 'var(--color-accent-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      marginBottom: '0.375rem',
-                    }}
-                  >
-                    Continua donde lo dejaste
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-lg)',
-                      fontWeight: 700,
-                      color: 'var(--color-ink)',
-                      letterSpacing: '-0.02em',
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {nextTool.shortName}
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-sm)',
-                        color: 'var(--color-text-muted)',
-                        marginLeft: '0.75rem',
-                        fontWeight: 400,
-                        letterSpacing: 'normal',
-                      }}
-                    >
-                      {nextTool.stageName}
-                    </span>
-                  </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 700,
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.25,
+                    marginBottom: '0.375rem',
+                  }}
+                >
+                  {nextTool.shortName}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.625rem',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <Chip variant="default" size="xs" icon={Clock}>
+                    {nextTool.estimatedTime}
+                  </Chip>
+                  <Chip variant="default" size="xs">
+                    {nextTool.stageName}
+                  </Chip>
                 </div>
               </div>
-              <Link
-                href={`/tools/${nextTool.id}`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.625rem',
-                  padding: '0.875rem 2rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'var(--color-ink)',
-                  color: 'var(--color-paper)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  letterSpacing: '-0.01em',
-                  whiteSpace: 'nowrap',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                }}
-              >
-                Comenzar
-                <ArrowRight size={17} />
+
+              <Link href={`/tools/${nextTool.id}`} style={{ textDecoration: 'none' }}>
+                <Button variant="primary" size="md" icon={<ArrowRight size={16} />}>
+                  Comenzar herramienta
+                </Button>
               </Link>
             </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      </motion.section>
 
-      {/* ─── Category filter bar ─── */}
+      {/* ─── Category filter ─── */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...springReveal}
         transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.18 }}
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          marginBottom: '2rem',
+          marginBottom: '1.75rem',
           overflowX: 'auto',
           paddingBottom: '0.25rem',
         }}
@@ -654,32 +791,19 @@ export default function ToolsDashboard() {
         {(['Todos', ...CATEGORIES] as const).map((cat) => {
           const isActive = activeCategory === cat
           return (
-            <button
+            <Chip
               key={cat}
+              variant={isActive ? 'primary' : 'default'}
+              size="sm"
               onClick={() => setActiveCategory(cat as ToolCategory | 'Todos')}
-              style={{
-                padding: '0.4375rem 1rem',
-                borderRadius: 'var(--radius-full)',
-                fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: isActive ? 700 : 500,
-                color: isActive ? 'var(--color-paper)' : 'var(--color-text-secondary)',
-                background: isActive ? 'var(--color-ink)' : 'var(--color-paper)',
-                border: `1px solid ${isActive ? 'var(--color-ink)' : 'var(--color-border)'}`,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-                letterSpacing: isActive ? '-0.01em' : 'normal',
-              }}
             >
               {cat}
-            </button>
+            </Chip>
           )
         })}
       </motion.div>
 
-      {/* ─── Roadmap: stage sections with 3-col grid ─── */}
+      {/* ─── Stage sections ─── */}
       {([1, 2, 3, 4] as const).map((stageNum, si) => {
         const meta = STAGE_META[stageNum]
         const Icon = STAGE_ICONS[stageNum]
@@ -687,6 +811,7 @@ export default function ToolsDashboard() {
         const allStageTools = TOOLS_BY_STAGE[stageNum]
         const stageDone = allStageTools.filter((t) => completedIds.has(t.id)).length
         const stageTotal = allStageTools.length
+        const stagePct = stageTotal > 0 ? Math.round((stageDone / stageTotal) * 100) : 0
         const isLocked = stageNum > userStageNum
         const isStageComplete = stageDone === stageTotal && stageTotal > 0
 
@@ -702,177 +827,151 @@ export default function ToolsDashboard() {
               marginBottom: si < 3 ? '2.5rem' : 0,
             }}
           >
-            {/* Stage header card */}
+            {/* SectionHeader */}
+            <div style={{ marginBottom: '1rem' }}>
+              <SectionHeader
+                kicker={`Etapa ${stageNum} · ${meta.subtitle}`}
+                title={meta.name}
+                description={meta.description}
+                action={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    {isLocked ? (
+                      <Chip variant="default" size="sm" icon={Lock}>
+                        Bloqueada
+                      </Chip>
+                    ) : isStageComplete ? (
+                      <Chip variant="success" size="sm" icon={CheckCircle2}>
+                        Completada
+                      </Chip>
+                    ) : null}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-end',
+                        gap: '0.375rem',
+                        minWidth: 160,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'baseline',
+                          gap: '0.375rem',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: 'var(--text-xl)',
+                            fontWeight: 700,
+                            color: isLocked ? 'var(--color-text-muted)' : meta.color,
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1,
+                          }}
+                        >
+                          {stageDone}
+                          <span
+                            style={{
+                              fontSize: 'var(--text-sm)',
+                              color: 'var(--color-text-muted)',
+                              fontWeight: 400,
+                            }}
+                          >
+                            /{stageTotal}
+                          </span>
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-body)',
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--color-text-muted)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.08em',
+                            fontWeight: 600,
+                          }}
+                        >
+                          completadas
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          width: 160,
+                          height: 4,
+                          borderRadius: 'var(--radius-full)',
+                          background: 'var(--color-border)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${stagePct}%` }}
+                          transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+                          style={{
+                            height: '100%',
+                            background: isLocked ? 'var(--color-text-muted)' : meta.color,
+                            borderRadius: 'var(--radius-full)',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                }
+              />
+            </div>
+
+            {/* Stage icon strip — visual anchor */}
             <div
               style={{
-                background: isLocked ? 'rgba(0,0,0,0.015)' : meta.bg,
-                borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-                border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
-                borderBottom: 'none',
-                padding: '1.5rem 1.75rem 1.25rem',
-                opacity: isLocked ? 0.55 : 1,
-                transition: 'opacity 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                marginBottom: '1rem',
+                paddingLeft: '0.25rem',
               }}
             >
               <div
                 style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 'var(--radius-sm)',
+                  background: isLocked ? 'var(--color-cream)' : `${meta.color}15`,
+                  border: `1px solid ${isLocked ? 'var(--color-border)' : `${meta.color}40`}`,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '0.75rem',
-                  marginBottom: '0.75rem',
+                  justifyContent: 'center',
+                  flexShrink: 0,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div
-                    style={{
-                      width: 42,
-                      height: 42,
-                      borderRadius: 'var(--radius-sm)',
-                      background: isLocked ? 'var(--color-bg-primary)' : `${meta.color}18`,
-                      border: `1.5px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {isLocked ? (
-                      <Lock size={16} color="var(--color-text-muted)" />
-                    ) : (
-                      <Icon size={18} color={meta.color} strokeWidth={1.8} />
-                    )}
-                  </div>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 700,
-                          color: isLocked ? 'var(--color-text-muted)' : meta.color,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.08em',
-                        }}
-                      >
-                        Etapa {stageNum}
-                      </span>
-                      {isLocked && (
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.25rem',
-                            padding: '2px 8px',
-                            borderRadius: 'var(--radius-xs)',
-                            background: 'rgba(0,0,0,0.05)',
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-2xs)',
-                            color: 'var(--color-text-muted)',
-                            fontWeight: 600,
-                          }}
-                        >
-                          <Lock size={9} />
-                          Bloqueada
-                        </span>
-                      )}
-                      {isStageComplete && !isLocked && (
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.25rem',
-                            padding: '2px 8px',
-                            borderRadius: 'var(--radius-xs)',
-                            background: 'rgba(13,148,136,0.08)',
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-2xs)',
-                            fontWeight: 700,
-                            color: 'var(--color-accent-secondary)',
-                          }}
-                        >
-                          <CheckCircle2 size={10} />
-                          Completada
-                        </span>
-                      )}
-                    </div>
-                    <h2
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 700,
-                        color: isLocked ? 'var(--color-text-muted)' : 'var(--color-ink)',
-                        letterSpacing: '-0.02em',
-                        margin: 0,
-                      }}
-                    >
-                      {meta.name}
-                    </h2>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--color-text-secondary)',
-                      fontStyle: 'italic',
-                    }}
-                  >
-                    {meta.subtitle}
-                  </span>
-                  <div
-                    style={{
-                      padding: '0.25rem 0.875rem',
-                      borderRadius: 'var(--radius-full)',
-                      background: 'var(--color-paper)',
-                      border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-sm)',
-                      fontWeight: 700,
-                      color: isLocked ? 'var(--color-text-muted)' : meta.color,
-                      letterSpacing: '-0.02em',
-                    }}
-                  >
-                    {stageDone}/{stageTotal}
-                  </div>
-                </div>
+                {isLocked ? (
+                  <Lock size={14} color="var(--color-text-muted)" />
+                ) : (
+                  <Icon size={16} color={meta.color} strokeWidth={2} />
+                )}
               </div>
-
-              {/* Stage progress bar */}
               <div
                 style={{
-                  height: 3,
-                  borderRadius: 2,
-                  background: isLocked ? 'var(--color-border)' : 'rgba(255,255,255,0.5)',
+                  flex: 1,
+                  height: 1,
+                  background:
+                    'linear-gradient(to right, var(--color-border), transparent)',
                 }}
-              >
-                <div
-                  style={{
-                    height: '100%',
-                    borderRadius: 2,
-                    background: isLocked ? 'var(--color-text-muted)' : meta.color,
-                    width: `${stageTotal > 0 ? (stageDone / stageTotal) * 100 : 0}%`,
-                    transition: 'width 0.8s ease',
-                  }}
-                />
-              </div>
+              />
             </div>
 
-            {/* Tools grid - 3 columns */}
+            {/* Tools grid */}
             <div
               style={{
-                background: 'var(--color-paper)',
-                borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
-                border: `1px solid ${isLocked ? 'var(--color-border)' : meta.border}`,
-                borderLeft: `4px solid ${isLocked ? 'var(--color-border)' : meta.color}`,
-                borderTop: 'none',
-                padding: '1.25rem',
-                opacity: isLocked ? 0.55 : 1,
-                boxShadow: isLocked ? 'none' : 'var(--shadow-float)',
+                opacity: isLocked ? 0.5 : 1,
+                transition: 'opacity 0.3s ease',
               }}
             >
               <div
@@ -909,74 +1008,17 @@ export default function ToolsDashboard() {
               </div>
             </div>
 
-            {/* Phase completion advice banner */}
+            {/* Phase completion advice */}
             {isStageComplete && !isLocked && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                style={{
-                  marginTop: '0.75rem',
-                  borderRadius: 'var(--radius-md)',
-                  overflow: 'hidden',
-                }}
+                style={{ marginTop: '1rem' }}
               >
-                <Card
-                  variant="flat"
-                  accent={meta.color}
-                  padding="none"
-                  style={{
-                    padding: '1.25rem 1.5rem',
-                    background: `linear-gradient(135deg, ${meta.bg}, rgba(255,255,255,0.5))`,
-                    border: `1px solid ${meta.border}`,
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 'var(--radius-sm)',
-                      background: meta.bg,
-                      border: `1px solid ${meta.border}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      marginTop: 2,
-                    }}
-                  >
-                    <Lightbulb size={16} color={meta.color} />
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-sm)',
-                        fontWeight: 700,
-                        color: meta.color,
-                        marginBottom: '0.375rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.04em',
-                      }}
-                    >
-                      Consejo antes de avanzar
-                    </div>
-                    <p
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-sm)',
-                        color: 'var(--color-text-secondary)',
-                        lineHeight: 1.6,
-                        margin: 0,
-                      }}
-                    >
-                      {meta.phaseAdvice}
-                    </p>
-                  </div>
-                </Card>
+                <InsightBox variant="tip" title="Consejo antes de avanzar" icon={Lightbulb}>
+                  {meta.phaseAdvice}
+                </InsightBox>
               </motion.div>
             )}
           </motion.section>
@@ -991,10 +1033,25 @@ export default function ToolsDashboard() {
           .tools-dash-grid {
             grid-template-columns: repeat(2, 1fr);
           }
+          .metrics-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+          .passport-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .hero-ring {
+            justify-self: center;
+          }
         }
         @media (max-width: 600px) {
           .tools-dash-grid {
             grid-template-columns: 1fr;
+          }
+          .metrics-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>

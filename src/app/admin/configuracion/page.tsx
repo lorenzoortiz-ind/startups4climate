@@ -53,8 +53,19 @@ interface OrgData {
   contract_end: string | null
 }
 
+const MOCK_DEMO_ORG: OrgData & { startup_count: number } = {
+  name: 'Universidad Demo',
+  website: 'https://universidad-demo.edu',
+  logo_url: null,
+  billing_email: 'facturacion@universidad-demo.edu',
+  plan: 'professional',
+  max_startups: 50,
+  contract_end: '2026-12-31',
+  startup_count: 30,
+}
+
 export default function ConfiguracionPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
   const [orgName, setOrgName] = useState('')
   const [website, setWebsite] = useState('')
@@ -71,6 +82,20 @@ export default function ConfiguracionPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    if (isDemo) {
+      setOrgName(MOCK_DEMO_ORG.name)
+      setWebsite(MOCK_DEMO_ORG.website || '')
+      setLogoUrl(MOCK_DEMO_ORG.logo_url || '')
+      setBillingEmail(MOCK_DEMO_ORG.billing_email || '')
+      setPlan(MOCK_DEMO_ORG.plan)
+      setMaxStartups(MOCK_DEMO_ORG.max_startups)
+      setContractEnd(MOCK_DEMO_ORG.contract_end)
+      setStartupCount(MOCK_DEMO_ORG.startup_count)
+      setLoading(false)
+      setError(null)
+      return
+    }
+
     if (!appUser?.org_id) return
 
     async function loadOrg() {
@@ -119,11 +144,17 @@ export default function ConfiguracionPage() {
     }
 
     loadOrg()
-  }, [appUser?.org_id])
+  }, [appUser?.org_id, isDemo])
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !appUser?.org_id) return
+
+    if (isDemo) {
+      setError('La subida de logos está deshabilitada en modo demo.')
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
 
     const allowedTypes = ['image/png', 'image/jpeg', 'image/svg+xml']
     if (!allowedTypes.includes(file.type)) {
@@ -161,6 +192,12 @@ export default function ConfiguracionPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!appUser?.org_id) return
+
+    if (isDemo) {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+      return
+    }
 
     setSaving(true)
     setError(null)
@@ -200,6 +237,27 @@ export default function ConfiguracionPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       style={{ padding: '2rem 1.5rem', maxWidth: 720, margin: '0 auto' }}
     >
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.375rem 0.75rem',
+            borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 500,
+            marginBottom: '1rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
+
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-heading)', fontWeight: 700,

@@ -7,7 +7,7 @@ const S = {
   card: 'background:#FAF8F5;border-radius:10px;padding:14px 16px;margin-bottom:8px',
   grid2: 'display:grid;grid-template-columns:1fr 1fr;gap:8px',
   grid3: 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px',
-  sectionTitle: 'font-family:"DM Serif Display",serif;font-size:0.9375rem;font-weight:700;color:#111827;margin:16px 0 8px 0',
+  sectionTitle: 'font-family:"Mluvka",system-ui,sans-serif;font-size:0.9375rem;font-weight:700;color:#111827;margin:16px 0 8px 0',
   badge: (color: string) => `display:inline-block;padding:2px 10px;border-radius:8px;font-size:0.6875rem;font-weight:600;color:${color};background:${color}15`,
   status: (s: string) => {
     const m: Record<string, string> = { done: '#0D9488', partial: '#2A222B', 'in-progress': '#2A222B', pending: '#9CA3AF', missing: '#EF4444', na: '#9CA3AF', identified: '#6B7280', applying: '#3B82F6', secured: '#0D9488', rejected: '#EF4444' }

@@ -37,13 +37,53 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
+const MOCK_DEMO_COHORTS: (CohortRow & { startupsCount: number })[] = [
+  {
+    id: 'demo-cohort-otono-2025',
+    name: 'Cohorte Otoño 2025',
+    description: 'Cohorte enfocada en startups de impacto ambiental en fase MVP.',
+    start_date: '2025-09-01',
+    end_date: '2025-12-15',
+    status: 'active',
+    created_at: '2025-08-15T10:00:00Z',
+    startupsCount: 12,
+  },
+  {
+    id: 'demo-cohort-primavera-2026',
+    name: 'Cohorte Primavera 2026',
+    description: 'Nueva generación de founders con foco en agritech y biotech.',
+    start_date: '2026-03-01',
+    end_date: '2026-06-30',
+    status: 'active',
+    created_at: '2026-02-10T10:00:00Z',
+    startupsCount: 8,
+  },
+  {
+    id: 'demo-cohort-verano-2025',
+    name: 'Cohorte Verano 2025',
+    description: 'Cohorte piloto completada con éxito.',
+    start_date: '2025-06-01',
+    end_date: '2025-08-31',
+    status: 'completed',
+    created_at: '2025-05-10T10:00:00Z',
+    startupsCount: 10,
+  },
+]
+
 export default function CohortesPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [cohorts, setCohorts] = useState<(CohortRow & { startupsCount: number })[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (isDemo) {
+      setCohorts(MOCK_DEMO_COHORTS)
+      setLoading(false)
+      setError(null)
+      return
+    }
+
     if (!appUser?.org_id) return
 
     async function loadCohorts() {
@@ -93,7 +133,7 @@ export default function CohortesPage() {
     }
 
     loadCohorts()
-  }, [appUser?.org_id])
+  }, [appUser?.org_id, isDemo])
 
   if (loading) {
     return (
@@ -154,6 +194,27 @@ export default function CohortesPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       style={{ padding: '2rem 1.5rem', maxWidth: 1200, margin: '0 auto' }}
     >
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.375rem 0.75rem',
+            borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 500,
+            marginBottom: '1rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
+
       {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',

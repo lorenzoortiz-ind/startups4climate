@@ -53,8 +53,95 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   completed: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' },
 }
 
+const MOCK_DEMO_COHORTS: CohortRow[] = [
+  {
+    id: 'demo-cohort-otono-2025',
+    name: 'Cohorte Otoño 2025',
+    status: 'active',
+    start_date: '2025-09-01',
+    end_date: '2025-12-15',
+    startup_count: 12,
+  },
+  {
+    id: 'demo-cohort-primavera-2026',
+    name: 'Cohorte Primavera 2026',
+    status: 'active',
+    start_date: '2026-03-01',
+    end_date: '2026-06-30',
+    startup_count: 8,
+  },
+  {
+    id: 'demo-cohort-verano-2025',
+    name: 'Cohorte Verano 2025',
+    status: 'completed',
+    start_date: '2025-06-01',
+    end_date: '2025-08-31',
+    startup_count: 10,
+  },
+]
+
+const MOCK_DEMO_STARTUPS: StartupRow[] = [
+  {
+    id: 'demo-startup-1',
+    name: 'EcoAgro Perú',
+    vertical: 'agritech',
+    stage: 'mvp',
+    diagnostic_score: 7.4,
+    tools_completed: 5,
+    founder_name: 'Ana Quispe',
+    country: 'Perú',
+  },
+  {
+    id: 'demo-startup-2',
+    name: 'BioCultiva',
+    vertical: 'biotech',
+    stage: 'growth',
+    diagnostic_score: 8.1,
+    tools_completed: 7,
+    founder_name: 'Luis Torres',
+    country: 'Perú',
+  },
+  {
+    id: 'demo-startup-3',
+    name: 'SolarAndes',
+    vertical: 'cleantech',
+    stage: 'ideation',
+    diagnostic_score: 5.8,
+    tools_completed: 2,
+    founder_name: 'María Paredes',
+    country: 'Perú',
+  },
+  {
+    id: 'demo-startup-4',
+    name: 'HidroVerde',
+    vertical: 'cleantech',
+    stage: 'mvp',
+    diagnostic_score: 6.9,
+    tools_completed: 4,
+    founder_name: 'Carlos Mendoza',
+    country: 'Perú',
+  },
+  {
+    id: 'demo-startup-5',
+    name: 'AgroSmart LATAM',
+    vertical: 'agritech',
+    stage: 'growth',
+    diagnostic_score: 7.8,
+    tools_completed: 6,
+    founder_name: 'Rosa Huamán',
+    country: 'Perú',
+  },
+]
+
+const MOCK_DEMO_METRICS: OrgMetrics = {
+  totalStartups: MOCK_DEMO_STARTUPS.length,
+  activeCohorts: MOCK_DEMO_COHORTS.filter((c) => c.status === 'active' || c.status === 'planned').length,
+  avgScore: Math.round((MOCK_DEMO_STARTUPS.reduce((sum, s) => sum + (s.diagnostic_score || 0), 0) / MOCK_DEMO_STARTUPS.length) * 10) / 10,
+  avgToolsCompleted: Math.round((MOCK_DEMO_STARTUPS.reduce((sum, s) => sum + (s.tools_completed || 0), 0) / MOCK_DEMO_STARTUPS.length) * 10) / 10,
+}
+
 export default function AdminDashboard() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [metrics, setMetrics] = useState<OrgMetrics>({
     totalStartups: 0,
     activeCohorts: 0,
@@ -69,6 +156,16 @@ export default function AdminDashboard() {
   const [orgName, setOrgName] = useState<string | null>(null)
 
   useEffect(() => {
+    if (isDemo) {
+      setOrgName('Universidad Demo')
+      setOrgLogo(null)
+      setCohorts(MOCK_DEMO_COHORTS)
+      setStartups(MOCK_DEMO_STARTUPS)
+      setMetrics(MOCK_DEMO_METRICS)
+      setLoading(false)
+      return
+    }
+
     async function loadData() {
       if (!appUser?.org_id) {
         setLoading(false)
@@ -173,7 +270,7 @@ export default function AdminDashboard() {
       }
     }
     loadData()
-  }, [appUser])
+  }, [appUser, isDemo])
 
   const METRIC_CARDS = [
     {
@@ -300,6 +397,27 @@ export default function AdminDashboard() {
       transition={{ duration: 0.35 }}
       style={{ padding: '2rem 1.5rem', maxWidth: 1200, margin: '0 auto' }}
     >
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.375rem 0.75rem',
+            borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            fontWeight: 500,
+            marginBottom: '1rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
+
       {/* Welcome header */}
       <div style={{ marginBottom: '2rem' }}>
         <div

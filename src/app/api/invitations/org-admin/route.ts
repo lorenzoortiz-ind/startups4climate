@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       to: email.toLowerCase().trim(),
       subject: `Has sido invitado como administrador de ${escapeHtml(orgName)} en Startups4Climate`,
       html: `
-        <div style="font-family: 'DM Sans', Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px;">
+        <div style="font-family: 'Mluvka', Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px;">
           <div style="text-align: center; margin-bottom: 32px;">
             <h1 style="font-size: 24px; font-weight: 700; color: #191919; margin: 0 0 8px;">
               Startups4Climate

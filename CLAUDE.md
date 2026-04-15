@@ -8,12 +8,15 @@ Dos tipos de usuario:
 - Founders: acceso gratuito a herramientas y diagnóstico
 - Organizaciones: incubadoras, gobiernos, programas de innovación (modelo B2B)
 
+Estado actual: en producción. 3 universidades cerradas (UNAMAD, Wiener, BioInnova). Escalando a 200 founders + 30 universidades en 30 días.
+
 ## Stack
 
 - Framework: Next.js 15 (App Router)
 - Estilos: Tailwind CSS v4
-- Base de datos + Auth: Supabase
+- Base de datos + Auth: Supabase (proyecto `mvawsorasuqqlzlayhrx`, plan Free por ahora)
 - Email: Resend
+- Motor AI: **Gemini 2.5 Flash** (vía endpoint OpenAI-compatible)
 - Iconos: lucide-react
 - Lenguaje: TypeScript
 - Deploy: Vercel
@@ -24,8 +27,16 @@ Dos tipos de usuario:
 - `/` — Landing principal con hero, diagnóstico, plataforma, about, alianzas
 - `/workbook` — Workbook interactivo para founders
 - `/organizaciones` — Landing B2B para incubadoras y gobiernos
-- `/tools` — Plataforma de herramientas (requiere auth)
-- `/admin` — Panel de administración (acceso restringido)
+- `/tools` — Plataforma de herramientas para founders (requiere auth)
+  - `/tools/passport` — Startup Passport (datos + scoring)
+  - `/tools/radar` — RADAR del ecosistema (Preview, datos curados)
+  - `/tools/oportunidades` — Oportunidades (Preview, datos curados)
+  - `/tools/recursos` — Recursos descargables
+  - `/tools/perfil`, `/tools/completar-perfil` — Gestión de perfil
+- `/admin` — Panel de administración (acceso por rol)
+  - `/admin/cohortes` — Gestión de cohortes
+  - `/admin/reportes` — Generación de reportes Excel
+  - `/admin/configuracion` — Config de organización
 
 ## Convenciones
 
@@ -35,6 +46,16 @@ Dos tipos de usuario:
 - Nombres de archivos: kebab-case para páginas y componentes
 - Clases Tailwind directamente en JSX, sin CSS externo salvo globals.css
 - Imágenes en `/public`
+- Logging de errores de sync con prefijo `[S4C Sync]`, errores admin con `[S4C Admin]`, errores AI con `[S4C AI]`
+
+## Arquitectura de datos
+
+**Supabase-first**: La DB es la fuente de verdad. localStorage actúa como caché namespaceado por userId (`s4c_${userId}_*`) para soportar computadoras compartidas.
+
+- Escrituras: Supabase primero → localStorage cache
+- Lecturas: Supabase primero → fallback a localStorage
+- Retry con backoff exponencial (2 reintentos) en escrituras críticas a `tool_data`
+- `saveToolDataSync()` para cleanup/unmount handlers (solo localStorage)
 
 ## Variables de entorno requeridas
 
@@ -42,13 +63,54 @@ Dos tipos de usuario:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 RESEND_API_KEY=
+GEMINI_API_KEY=              # Gemini 2.5 Flash para motor AI
 ```
+
+Todas configuradas en Vercel (Production, Preview, Development).
 
 ## Supabase
 
-- Auth habilitado (email/password)
-- [COMPLETAR: tablas principales del schema]
-- [COMPLETAR: políticas RLS relevantes]
+### Tablas principales
+- `profiles` — Datos de usuario (`id`, `full_name`, `role`, `org_id`). Roles: `founder`, `admin_org`, `superadmin`
+- `organizations` — Incubadoras/universidades (`id`, `name`, `logo_url`, `plan`, `max_startups`, `contract_end`)
+- `startups` — Startups de founders (`founder_id`, `name`, `vertical`, `stage`, `diagnostic_score`, `tools_completed`)
+- `cohorts` — Cohortes por organización (`org_id`, `name`, `status`, `start_date`, `end_date`)
+- `cohort_startups` — Relación many-to-many cohortes ↔ startups
+- `tool_data` — Progreso de herramientas por founder (`user_id`, `tool_id`, `data`, `completed`, `report_generated`)
+- `diagnostics` — Respuestas del diagnóstico de readiness
+- `workbook_downloads`, `invitations`, `cohort_requests`, `support_tickets`, `ticket_messages`
+
+### Seguridad (RLS)
+- Todas las tablas con RLS habilitado
+- Políticas scoped por `user_id` / `founder_id` / `org_id`
+- `handle_new_user()` con `search_path` fijo (previene hijacking)
+- Indexes en todas las foreign keys críticas
+
+### Auth
+- `email/password` habilitado
+- `autoRefreshToken: true`, `persistSession: true`
+- Password reset flow via `supabase.auth.resetPasswordForEmail()`
+- Middleware con timeout 3s para admin role check (redirect a `/tools` si timeout)
+- ⚠️ Leaked Password Protection: requiere Plan Pro (pendiente)
+
+## Motor AI
+
+- Endpoint: `https://generativelanguage.googleapis.com/v1beta/openai/`
+- Modelo: `gemini-2.5-flash`
+- Rutas:
+  - `/api/ai/chat` — Chat con mentor AI (requiere auth)
+  - `/api/ai/feedback` — Feedback de herramientas completadas (requiere auth)
+- Fallback en español si la API falla
+- Costo estimado: ~$27/mes a escala de 200 founders
+
+## Usuarios actuales (demo)
+
+Password universal de demo: `S4c2026demo!`
+
+- **Superadmin**: lorenzo.ortiz@redesignlab.org
+- **Admins org**: admin@bioinnova.pe, admin@unamad.edu.pe, admin@wiener.edu.pe, admin@demo-incubadora.org
+- **Founders demo**: 17 founders distribuidos entre las 3 universidades (UNAMAD, Wiener, BioInnova)
+- **Botones demo en navbar (solo dev)**: "Demo BioInnova" (→ admin), "Demo Founder" (Ana Quispe → tools)
 
 ## Identidad visual
 
@@ -64,6 +126,9 @@ RESEND_API_KEY=
 - No usar `any` en TypeScript
 - No instalar dependencias nuevas sin preguntar primero
 - No commitear archivos `.env`
+- No usar `.single()` para lecturas opcionales — usar `.maybeSingle()`
+- No usar localStorage sin namespacear por userId (clave: `s4c_${userId}_*`)
+- No escribir a localStorage sin escribir primero a Supabase (excepto en unmount handlers)
 
 ## Contacto y contexto
 

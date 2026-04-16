@@ -11,15 +11,21 @@ import {
   DollarSign,
   Target,
   TrendingUp,
-  UserCheck,
   CheckCircle2,
-  Globe,
-  Briefcase,
   Printer,
+  Share2,
+  Leaf,
+  BarChart3,
+  Calendar,
+  Link2,
+  FileText,
+  Zap,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { TOOLS, STAGE_META } from '@/lib/tools-data'
 import { getProgress } from '@/lib/progress'
+
+/* ─── Constants ─── */
 
 const LATAM_VERTICALS: Record<string, string> = {
   fintech: 'Fintech',
@@ -28,32 +34,89 @@ const LATAM_VERTICALS: Record<string, string> = {
   agritech_foodtech: 'Agritech / Foodtech',
   cleantech_climatech: 'Cleantech / Climatech',
   biotech_deeptech: 'Biotech / Deeptech',
-  logistics_mobility: 'Logística / Movilidad',
+  logistics_mobility: 'Logistica / Movilidad',
   saas_enterprise: 'SaaS / Enterprise',
   social_impact: 'Impacto Social',
   other: 'Otro',
 }
 
 const STAGE_NAMES: Record<number, string> = {
-  1: 'Pre-incubación',
-  2: 'Incubación',
-  3: 'Aceleración',
+  1: 'Pre-incubacion',
+  2: 'Incubacion',
+  3: 'Aceleracion',
   4: 'Escalamiento',
 }
 
+const COUNTRY_FLAGS: Record<string, string> = {
+  peru: '🇵🇪', pe: '🇵🇪', 'Peru': '🇵🇪',
+  colombia: '🇨🇴', co: '🇨🇴', 'Colombia': '🇨🇴',
+  mexico: '🇲🇽', mx: '🇲🇽', 'Mexico': '🇲🇽', 'México': '🇲🇽',
+  chile: '🇨🇱', cl: '🇨🇱', 'Chile': '🇨🇱',
+  argentina: '🇦🇷', ar: '🇦🇷', 'Argentina': '🇦🇷',
+  brasil: '🇧🇷', br: '🇧🇷', 'Brasil': '🇧🇷', 'Brazil': '🇧🇷',
+  ecuador: '🇪🇨', ec: '🇪🇨', 'Ecuador': '🇪🇨',
+  bolivia: '🇧🇴', bo: '🇧🇴', 'Bolivia': '🇧🇴',
+  uruguay: '🇺🇾', uy: '🇺🇾', 'Uruguay': '🇺🇾',
+  paraguay: '🇵🇾', py: '🇵🇾', 'Paraguay': '🇵🇾',
+  'costa rica': '🇨🇷', 'Costa Rica': '🇨🇷',
+  panama: '🇵🇦', 'Panama': '🇵🇦', 'Panamá': '🇵🇦',
+  guatemala: '🇬🇹', 'Guatemala': '🇬🇹',
+  'republica dominicana': '🇩🇴', 'Republica Dominicana': '🇩🇴',
+  venezuela: '🇻🇪', 'Venezuela': '🇻🇪',
+}
+
+const SDG_COLORS: Record<number, string> = {
+  1: '#E5243B', 2: '#DDA63A', 3: '#4C9F38', 4: '#C5192D', 5: '#FF3A21',
+  6: '#26BDE2', 7: '#FCC30B', 8: '#A21942', 9: '#FD6925', 10: '#DD1367',
+  11: '#FD9D24', 12: '#BF8B2E', 13: '#3F7E44', 14: '#0A97D9', 15: '#56C02B',
+  16: '#00689D', 17: '#19486A',
+}
+
+/* ─── Interfaces ─── */
+
 interface PassportData {
+  // Identity
   startupName: string
   vertical: string
   country: string
   founderName: string
+  founderRole: string
   teamSize: number
+  foundedYear: string
+  website: string
+  description: string
+
+  // Market
   tam: string
+  sam: string
+  som: string
+
+  // Unit Economics
   ltv: string
   cac: string
+  ltvCacRatio: string
+  paybackMonths: string
+
+  // Traction
   mrr: string
   payingCustomers: number
-  unitEconomics: string
+  momGrowth: string
+  grossMargin: string
+
+  // Financial
+  burnRate: string
   runway: string
+  totalRaised: string
+  lastRound: string
+
+  // Impact
+  co2Avoided: string
+  beneficiaries: string
+  sdgAlignment: number[]
+
+  // Readiness
+  unitEconomics: string
+  elevatorPitch: string
 }
 
 interface StageProgress {
@@ -64,14 +127,78 @@ interface StageProgress {
   completed: number
 }
 
-/* ─── Circular Progress ─── */
+/* ─── Utility Functions ─── */
 
-function CircularProgress({ score, size = 110 }: { score: number; size?: number }) {
-  const strokeWidth = 9
+function formatCurrency(val: string | number | undefined): string {
+  if (!val) return '—'
+  const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.-]/g, '')) : val
+  if (isNaN(num)) return String(val)
+  if (num >= 1_000_000_000) return `$${(num / 1_000_000_000).toFixed(1)}B`
+  if (num >= 1_000_000) return `$${(num / 1_000_000).toFixed(1)}M`
+  if (num >= 1_000) return `$${(num / 1_000).toFixed(0)}K`
+  return `$${num.toLocaleString('es-419')}`
+}
+
+function formatPercent(val: string | number | undefined): string {
+  if (!val) return '—'
+  const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.-]/g, '')) : val
+  if (isNaN(num)) return String(val)
+  return `${num.toFixed(1)}%`
+}
+
+function formatRatio(val: string | number | undefined): string {
+  if (!val) return '—'
+  const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.-]/g, '')) : val
+  if (isNaN(num)) return String(val)
+  return `${num.toFixed(1)}x`
+}
+
+function getFlag(country: string): string {
+  if (!country) return ''
+  return COUNTRY_FLAGS[country] || COUNTRY_FLAGS[country.toLowerCase()] || ''
+}
+
+function getLetterGrade(score: number): string {
+  if (score >= 90) return 'A+'
+  if (score >= 80) return 'A'
+  if (score >= 70) return 'B+'
+  if (score >= 60) return 'B'
+  if (score >= 50) return 'C+'
+  if (score >= 40) return 'C'
+  if (score >= 30) return 'D'
+  return 'F'
+}
+
+function getGradeColor(score: number): string {
+  if (score >= 70) return '#0D9488'
+  if (score >= 50) return '#D97706'
+  if (score >= 30) return '#FF6B4A'
+  return '#DC2626'
+}
+
+function generatePassportId(userId: string): string {
+  const hash = userId.slice(0, 8).toUpperCase()
+  return `S4C-${hash}`
+}
+
+/* ─── CircularProgress (Enhanced) ─── */
+
+function CircularProgress({
+  score,
+  size = 140,
+  label,
+  grade,
+}: {
+  score: number
+  size?: number
+  label?: string
+  grade?: string
+}) {
+  const strokeWidth = 10
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (score / 100) * circumference
-  const color = score >= 70 ? '#0D9488' : score >= 40 ? '#2A222B' : '#DC2626'
+  const color = getGradeColor(score)
 
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
@@ -95,7 +222,7 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          transition={{ duration: 1.4, ease: 'easeOut' }}
         />
       </svg>
       <div
@@ -108,127 +235,307 @@ function CircularProgress({ score, size = 110 }: { score: number; size?: number 
           justifyContent: 'center',
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: size * 0.28,
-            fontWeight: 400,
-            color: 'var(--color-text-primary)',
-            lineHeight: 1,
-          }}
-        >
-          {score}
-        </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: size * 0.1,
-            color: 'var(--color-text-muted)',
-            marginTop: 2,
-          }}
-        >
-          /100
-        </span>
+        {grade ? (
+          <>
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: size * 0.28,
+                fontWeight: 700,
+                color,
+                lineHeight: 1,
+              }}
+            >
+              {grade}
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: size * 0.12,
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                marginTop: 2,
+              }}
+            >
+              {score}/100
+            </span>
+          </>
+        ) : (
+          <>
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: size * 0.28,
+                fontWeight: 400,
+                color: 'var(--color-text-primary)',
+                lineHeight: 1,
+              }}
+            >
+              {score}
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: size * 0.1,
+                color: 'var(--color-text-muted)',
+                marginTop: 2,
+              }}
+            >
+              {label || '/100'}
+            </span>
+          </>
+        )}
       </div>
     </div>
   )
 }
 
-/* ─── Metric Card ─── */
+/* ─── Section Header ─── */
 
-function MetricCard({
+function SectionHeader({
+  title,
   icon: Icon,
-  label,
-  value,
-  color,
+  color = 'var(--color-ink)',
+  badge,
 }: {
+  title: string
   icon: React.ElementType
-  label: string
-  value: string | number
-  color: string
+  color?: string
+  badge?: string
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35 }}
+    <div
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.75rem',
-        padding: '1.25rem',
-        borderRadius: 12,
-        background: 'var(--color-bg-primary)',
-        border: '1px solid var(--color-border)',
+        justifyContent: 'space-between',
+        marginBottom: '1rem',
       }}
     >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 7,
+            background: `${color}12`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <Icon size={14} color={color} />
+        </div>
+        <h2
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'var(--text-base)',
+            fontWeight: 700,
+            color: 'var(--color-ink)',
+            margin: 0,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {title}
+        </h2>
+      </div>
+      {badge && (
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-2xs)',
+            fontWeight: 700,
+            color,
+            padding: '0.125rem 0.5rem',
+            borderRadius: 6,
+            background: `${color}10`,
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+          }}
+        >
+          {badge}
+        </span>
+      )}
+    </div>
+  )
+}
+
+/* ─── KPI Cell ─── */
+
+function KpiCell({
+  label,
+  value,
+  subtext,
+  color,
+  health,
+}: {
+  label: string
+  value: string | number
+  subtext?: string
+  color?: string
+  health?: 'green' | 'yellow' | 'red'
+}) {
+  const healthColors = {
+    green: '#0D9488',
+    yellow: '#D97706',
+    red: '#DC2626',
+  }
+  const healthColor = health ? healthColors[health] : undefined
+
+  return (
+    <div
+      style={{
+        padding: '1rem',
+        borderRadius: 10,
+        background: 'var(--color-bg-primary)',
+        border: '1px solid var(--color-border)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {healthColor && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            background: healthColor,
+          }}
+        />
+      )}
       <div
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: 9,
-          background: `${color}12`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-2xs)',
+          color: 'var(--color-text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          marginBottom: 6,
         }}
       >
-        <Icon size={17} color={color} />
+        {label}
       </div>
-      <div style={{ flex: 1, minWidth: 0, overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <div
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: 'var(--text-lg)',
+          fontWeight: 700,
+          color: color || healthColor || 'var(--color-text-primary)',
+          lineHeight: 1.2,
+        }}
+      >
+        {value || '—'}
+      </div>
+      {subtext && (
         <div
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: 'var(--text-2xs)',
-            color: 'var(--color-text-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            marginBottom: 2,
+            color: healthColor || 'var(--color-text-muted)',
+            marginTop: 4,
           }}
         >
-          {label}
+          {subtext}
         </div>
-        <div
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-md)',
-            fontWeight: 700,
-            color: 'var(--color-text-primary)',
-            overflowWrap: 'break-word',
-          }}
-        >
-          {value || '—'}
-        </div>
-      </div>
-    </motion.div>
+      )}
+    </div>
   )
 }
 
-/* ─── Stage Progress Bar ─── */
+/* ─── Score Component Bar ─── */
+
+function ScoreBar({
+  label,
+  score,
+  maxScore,
+  color,
+}: {
+  label: string
+  score: number
+  maxScore: number
+  color: string
+}) {
+  const pct = maxScore > 0 ? (score / maxScore) * 100 : 0
+
+  return (
+    <div style={{ marginBottom: '0.625rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 4,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-2xs)',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          {label}
+        </span>
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-2xs)',
+            fontWeight: 700,
+            color: 'var(--color-text-primary)',
+          }}
+        >
+          {score}/{maxScore}
+        </span>
+      </div>
+      <div
+        style={{
+          height: 5,
+          borderRadius: 3,
+          background: `${color}15`,
+          overflow: 'hidden',
+        }}
+      >
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          style={{
+            height: '100%',
+            borderRadius: 3,
+            background: color,
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+/* ─── Stage Progress Bar (Compact) ─── */
 
 function StageProgressBar({ stage }: { stage: StageProgress }) {
   const pct = stage.total > 0 ? (stage.completed / stage.total) * 100 : 0
   const isComplete = stage.completed === stage.total && stage.total > 0
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
+    <div style={{ marginBottom: '0.5rem' }}>
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '0.375rem',
+          marginBottom: 3,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
           {isComplete ? (
-            <CheckCircle2 size={14} color={stage.color} />
+            <CheckCircle2 size={12} color={stage.color} />
           ) : (
             <div
               style={{
-                width: 14,
-                height: 14,
+                width: 12,
+                height: 12,
                 borderRadius: '50%',
                 border: `2px solid ${stage.color}50`,
               }}
@@ -237,7 +544,7 @@ function StageProgressBar({ stage }: { stage: StageProgress }) {
           <span
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-sm)',
+              fontSize: 'var(--text-xs)',
               fontWeight: 600,
               color: 'var(--color-text-primary)',
             }}
@@ -248,7 +555,7 @@ function StageProgressBar({ stage }: { stage: StageProgress }) {
         <span
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-xs)',
+            fontSize: 'var(--text-2xs)',
             fontWeight: 700,
             color: isComplete ? stage.color : 'var(--color-text-muted)',
           }}
@@ -258,20 +565,20 @@ function StageProgressBar({ stage }: { stage: StageProgress }) {
       </div>
       <div
         style={{
-          height: 6,
-          borderRadius: 3,
-          background: `${stage.color}15`,
+          height: 4,
+          borderRadius: 2,
+          background: `${stage.color}12`,
           overflow: 'hidden',
         }}
       >
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.8, ease: 'easeOut', delay: stage.stage * 0.1 }}
+          transition={{ duration: 0.8, ease: 'easeOut', delay: stage.stage * 0.05 }}
           style={{
             height: '100%',
-            borderRadius: 3,
-            background: `linear-gradient(90deg, ${stage.color}, ${stage.color}BB)`,
+            borderRadius: 2,
+            background: stage.color,
           }}
         />
       </div>
@@ -279,7 +586,85 @@ function StageProgressBar({ stage }: { stage: StageProgress }) {
   )
 }
 
-/* ─── Print styles ─── */
+/* ─── Market Concentric Visualization ─── */
+
+function MarketCircles({
+  tam,
+  sam,
+  som,
+}: {
+  tam: string
+  sam: string
+  som: string
+}) {
+  if (!tam && !sam && !som) return null
+
+  const items = [
+    { label: 'TAM', value: tam, color: '#3B82F620', border: '#3B82F640', size: 140 },
+    { label: 'SAM', value: sam, color: '#0D948820', border: '#0D948840', size: 100 },
+    { label: 'SOM', value: som, color: '#FF6B4A25', border: '#FF6B4A50', size: 60 },
+  ]
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        height: 160,
+      }}
+    >
+      {items.map((item, i) => (
+        <motion.div
+          key={item.label}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: i * 0.15 }}
+          style={{
+            position: 'absolute',
+            width: item.size,
+            height: item.size,
+            borderRadius: '50%',
+            background: item.color,
+            border: `2px solid ${item.border}`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-2xs)',
+              fontWeight: 700,
+              color: 'var(--color-text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            {item.label}
+          </span>
+          {item.value && (
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: i === 0 ? 'var(--text-sm)' : 'var(--text-xs)',
+                fontWeight: 700,
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {formatCurrency(item.value)}
+            </span>
+          )}
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+/* ─── Print Styles ─── */
 
 const PRINT_STYLE = `
 @media print {
@@ -308,52 +693,152 @@ export default function PassportPage() {
   const [completedCount, setCompletedCount] = useState(0)
   const [stageCertificates, setStageCertificates] = useState<number[]>([])
   const [stageProgressList, setStageProgressList] = useState<StageProgress[]>([])
+  const [readinessScore, setReadinessScore] = useState(0)
+  const [scoreBreakdown, setScoreBreakdown] = useState({
+    diagnostic: 0,
+    tools: 0,
+    unitEcon: 0,
+    traction: 0,
+    team: 0,
+  })
   const printRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!user) return
 
-    // Load passport data from localStorage profile extras + tool data
     try {
-      const extra = JSON.parse(localStorage.getItem(`s4c_${user.id}_profile_extra`) || localStorage.getItem('s4c_profile_extra') || '{}')
+      const extra = JSON.parse(
+        localStorage.getItem(`s4c_${user.id}_profile_extra`) ||
+        localStorage.getItem('s4c_profile_extra') ||
+        '{}'
+      )
       const progress = getProgress(user.id)
 
-      // Try to pull metrics from completed tool data
+      // Pull data from completed tools
       const tamData = progress['tam-calculator']?.data
-      const ltvData = progress['ltv-calculator']?.data || progress['unit-economics']?.data
-      const cacData = progress['unit-economics']?.data
-      const mrrData = progress['financial-projections']?.data || progress['unit-economics']?.data
+      const ltvData = progress['ltv-unit-economics']?.data || progress['ltv-calculator']?.data || progress['unit-economics']?.data
+      const finData = progress['financial-model-builder']?.data || progress['financial-projections']?.data
+      const impactData = progress['impact-metrics']?.data
+      const capData = progress['cap-table-fundraising']?.data
+      const pitchData = progress['pitch-deck-builder']?.data
+      const custData = progress['first-10-customers']?.data
 
       const hasData = user.startup || extra.vertical || extra.country
 
       if (hasData || Object.keys(progress).length > 0) {
-        setPassportData({
-          startupName: user.startup || '',
+        // Parse SDG alignment
+        let sdgs: number[] = []
+        const rawSdgs = impactData?.sdgs || impactData?.sdgAlignment || extra.sdgs
+        if (Array.isArray(rawSdgs)) {
+          sdgs = rawSdgs.map((s: unknown) => Number(s)).filter((n: number) => !isNaN(n) && n >= 1 && n <= 17)
+        }
+
+        // Parse LTV/CAC ratio
+        let ltvCacRatio = ''
+        const ltvNum = parseFloat(String(ltvData?.ltv || extra.ltv || '0').replace(/[^0-9.-]/g, ''))
+        const cacNum = parseFloat(String(ltvData?.cac || extra.cac || '0').replace(/[^0-9.-]/g, ''))
+        if (ltvNum > 0 && cacNum > 0) {
+          ltvCacRatio = (ltvNum / cacNum).toFixed(1)
+        } else if (ltvData?.ltvCacRatio) {
+          ltvCacRatio = String(ltvData.ltvCacRatio)
+        }
+
+        const data: PassportData = {
+          startupName: user.startup || extra.startupName || '',
           vertical: extra.vertical || '',
           country: extra.country || '',
           founderName: user.name || '',
+          founderRole: extra.role || extra.founderRole || 'CEO / Founder',
           teamSize: extra.teamSize ? Number(extra.teamSize) : 0,
-          tam: (tamData?.tam as string) || extra.tam || '',
-          ltv: (ltvData?.ltv as string) || extra.ltv || '',
-          cac: (cacData?.cac as string) || extra.cac || '',
-          mrr: (mrrData?.mrr as string) || extra.mrr || '',
-          payingCustomers: extra.payingCustomers ? Number(extra.payingCustomers) : 0,
-          unitEconomics: (cacData?.unitEconomics as string) || extra.unitEconomics || '',
-          runway: (mrrData?.runway as string) || extra.runway || '',
+          foundedYear: extra.foundedYear || extra.founded || '',
+          website: extra.website || '',
+          description: extra.description || extra.bio || '',
+
+          tam: String(tamData?.tam || extra.tam || ''),
+          sam: String(tamData?.sam || extra.sam || ''),
+          som: String(tamData?.som || extra.som || ''),
+
+          ltv: String(ltvData?.ltv || extra.ltv || ''),
+          cac: String(ltvData?.cac || extra.cac || ''),
+          ltvCacRatio,
+          paybackMonths: String(ltvData?.paybackMonths || ltvData?.payback || extra.paybackMonths || ''),
+
+          mrr: String(finData?.mrr || extra.mrr || ''),
+          payingCustomers: Number(custData?.payingCustomers || custData?.totalCustomers || extra.payingCustomers || 0),
+          momGrowth: String(finData?.momGrowth || finData?.growthRate || extra.momGrowth || ''),
+          grossMargin: String(finData?.grossMargin || extra.grossMargin || ''),
+
+          burnRate: String(finData?.burnRate || extra.burnRate || ''),
+          runway: String(finData?.runway || extra.runway || ''),
+          totalRaised: String(capData?.totalRaised || extra.totalRaised || ''),
+          lastRound: String(capData?.lastRound || capData?.roundType || extra.lastRound || ''),
+
+          co2Avoided: String(impactData?.co2Avoided || impactData?.co2 || extra.co2Avoided || ''),
+          beneficiaries: String(impactData?.beneficiaries || extra.beneficiaries || ''),
+          sdgAlignment: sdgs,
+
+          unitEconomics: String(ltvData?.unitEconomics || extra.unitEconomics || ''),
+          elevatorPitch: String(pitchData?.elevatorPitch || pitchData?.oneLiner || extra.elevatorPitch || ''),
+        }
+
+        setPassportData(data)
+
+        // ─── Compute Investment Readiness Score ───
+        const diagScore = user.diagnosticScore ?? 0
+
+        // Tools completion
+        const completedTools = Object.values(progress).filter((v) => v.completed)
+        const totalT = TOOLS.length
+        const toolsPct = totalT > 0 ? (completedTools.length / totalT) * 100 : 0
+
+        // Unit economics health: LTV/CAC > 3 is ideal
+        const ratioNum = parseFloat(data.ltvCacRatio || '0')
+        let unitEconScore = 0
+        if (ratioNum >= 3) unitEconScore = 100
+        else if (ratioNum >= 2) unitEconScore = 75
+        else if (ratioNum >= 1) unitEconScore = 50
+        else if (ratioNum > 0) unitEconScore = 25
+
+        // Traction: MRR > 0 and customers > 0
+        const mrrNum = parseFloat(String(data.mrr).replace(/[^0-9.-]/g, '') || '0')
+        let tractionScore = 0
+        if (mrrNum > 0) tractionScore += 50
+        if (data.payingCustomers > 0) tractionScore += 50
+
+        // Team: > 3 is ideal
+        let teamScore = 0
+        if (data.teamSize >= 4) teamScore = 100
+        else if (data.teamSize >= 3) teamScore = 75
+        else if (data.teamSize >= 2) teamScore = 50
+        else if (data.teamSize >= 1) teamScore = 25
+
+        // Weighted composite
+        const diagComponent = Math.round(diagScore * 0.25)
+        const toolsComponent = Math.round(toolsPct * 0.20)
+        const unitEconComponent = Math.round(unitEconScore * 0.20)
+        const tractionComponent = Math.round(tractionScore * 0.20)
+        const teamComponent = Math.round(teamScore * 0.15)
+        const composite = diagComponent + toolsComponent + unitEconComponent + tractionComponent + teamComponent
+
+        setReadinessScore(Math.min(100, composite))
+        setScoreBreakdown({
+          diagnostic: diagComponent,
+          tools: toolsComponent,
+          unitEcon: unitEconComponent,
+          traction: tractionComponent,
+          team: teamComponent,
         })
+
+        setCompletedCount(completedTools.length)
       }
 
-      // Calculate tool progress per stage
-      const completed = Object.values(progress).filter((v) => v.completed)
-      setCompletedCount(completed.length)
-
+      // Stage progress
       const completedIds = new Set(
         Object.entries(progress)
           .filter(([, v]) => v.completed)
           .map(([k]) => k)
       )
 
-      // Stage progress
       const stageList: StageProgress[] = []
       const certs: number[] = []
 
@@ -392,8 +877,26 @@ export default function PassportPage() {
   const stageNum = user.stage ? Number(user.stage) : 1
   const stageMeta = STAGE_META[stageNum as 1 | 2 | 3 | 4] || STAGE_META[1]
   const totalTools = TOOLS.length
+  const passportId = generatePassportId(user.id)
 
-  // Empty state
+  // Derived health indicators
+  const ltvCacNum = parseFloat(passportData?.ltvCacRatio || '0')
+  const ltvCacHealth: 'green' | 'yellow' | 'red' = ltvCacNum >= 3 ? 'green' : ltvCacNum >= 1 ? 'yellow' : 'red'
+
+  const runwayNum = parseFloat(String(passportData?.runway || '0').replace(/[^0-9.-]/g, ''))
+  const runwayHealth: 'green' | 'yellow' | 'red' = runwayNum >= 12 ? 'green' : runwayNum >= 6 ? 'yellow' : 'red'
+
+  // Card style helper
+  const cardStyle: React.CSSProperties = {
+    borderRadius: 12,
+    background: 'var(--color-bg-card)',
+    border: '1px solid var(--color-border)',
+    padding: '1.25rem',
+    marginBottom: '1rem',
+    boxShadow: 'var(--shadow-card)',
+  }
+
+  // ─── Empty State ───
   if (!passportData && !diagnosticScore) {
     return (
       <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
@@ -414,32 +917,19 @@ export default function PassportPage() {
           Volver al dashboard
         </Link>
 
-        {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
           style={{ marginBottom: '2rem' }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              marginBottom: '0.5rem',
-            }}
-          >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
             <div
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 12,
+                width: 40, height: 40, borderRadius: 12,
                 background: 'rgba(59,130,246,0.08)',
                 border: '1px solid rgba(59,130,246,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}
             >
               <Award size={20} color="#3B82F6" />
@@ -467,7 +957,7 @@ export default function PassportPage() {
                   margin: 0,
                 }}
               >
-                Tu perfil de startup con métricas clave y progreso
+                Tu instrumento de identidad de startup para inversores
               </p>
             </div>
           </div>
@@ -488,13 +978,9 @@ export default function PassportPage() {
         >
           <div
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 12,
+              width: 64, height: 64, borderRadius: 12,
               background: 'rgba(59,130,246,0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto 1.5rem',
             }}
           >
@@ -510,7 +996,7 @@ export default function PassportPage() {
               lineHeight: 1.6,
             }}
           >
-            Completa el diagnóstico para generar tu Startup Passport
+            Completa el diagnostico y las herramientas para generar tu Startup Passport con metricas de inversion
           </p>
           <Link
             href="/tools"
@@ -530,7 +1016,7 @@ export default function PassportPage() {
               boxShadow: '0 2px 10px rgba(59,130,246,0.25)',
             }}
           >
-            Ir al diagnóstico
+            Ir al diagnostico
           </Link>
         </motion.div>
       </div>
@@ -539,7 +1025,6 @@ export default function PassportPage() {
 
   return (
     <>
-      {/* Print styles injected */}
       <style dangerouslySetInnerHTML={{ __html: PRINT_STYLE }} />
 
       <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
@@ -568,30 +1053,18 @@ export default function PassportPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          style={{ marginBottom: '2rem' }}
+          style={{ marginBottom: '1.5rem' }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              marginBottom: '0.5rem',
-            }}
-          >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
             <div
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 12,
-                background: 'rgba(59,130,246,0.08)',
-                border: '1px solid rgba(59,130,246,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+                width: 40, height: 40, borderRadius: 12,
+                background: `${stageMeta.color}12`,
+                border: `1px solid ${stageMeta.color}30`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}
             >
-              <Award size={20} color="#3B82F6" />
+              <Award size={20} color={stageMeta.color} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
@@ -616,7 +1089,7 @@ export default function PassportPage() {
                   margin: 0,
                 }}
               >
-                Tu perfil de startup con métricas clave y progreso
+                Instrumento de identidad para evaluacion de inversion
               </p>
             </div>
           </div>
@@ -624,30 +1097,31 @@ export default function PassportPage() {
 
         {/* ═══ Printable Passport Area ═══ */}
         <div id="passport-printable" ref={printRef}>
-          {/* ── Passport Card ── */}
+
+          {/* ──────────── 1. HEADER CARD ──────────── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             style={{
-              borderRadius: 12,
+              borderRadius: 14,
               background: 'var(--color-bg-card)',
-              border: `2px solid ${stageMeta.color}30`,
+              border: `2px solid ${stageMeta.color}25`,
               overflow: 'hidden',
-              boxShadow: 'var(--shadow-card)',
-              marginBottom: '1.5rem',
+              boxShadow: 'var(--shadow-float)',
+              marginBottom: '1rem',
             }}
           >
-            {/* Header band */}
+            {/* Top band */}
             <div
               style={{
                 background: `linear-gradient(135deg, ${stageMeta.color}, ${stageMeta.color}CC)`,
-                padding: '1.5rem clamp(1.25rem, 3vw, 2rem)',
+                padding: '1.25rem clamp(1.25rem, 3vw, 2rem)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
-                gap: '1rem',
+                gap: '0.75rem',
               }}
             >
               <div>
@@ -656,276 +1130,729 @@ export default function PassportPage() {
                     fontFamily: 'var(--font-body)',
                     fontSize: 'var(--text-2xs)',
                     fontWeight: 700,
-                    color: 'rgba(255,255,255,0.7)',
+                    color: 'rgba(255,255,255,0.6)',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    marginBottom: '0.25rem',
+                    letterSpacing: '0.12em',
+                    marginBottom: 4,
                   }}
                 >
                   Startup Passport
                 </div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-xl)',
-                    fontWeight: 700,
-                    color: 'white',
-                  }}
-                >
-                  {passportData?.startupName || user.startup || 'Mi Startup'}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-2xl)',
+                      fontWeight: 700,
+                      color: 'white',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {passportData?.startupName || user.startup || 'Mi Startup'}
+                  </span>
+                  {passportData?.vertical && (
+                    <span
+                      style={{
+                        padding: '0.125rem 0.5rem',
+                        borderRadius: 6,
+                        background: 'rgba(255,255,255,0.2)',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        fontWeight: 600,
+                        color: 'white',
+                      }}
+                    >
+                      {LATAM_VERTICALS[passportData.vertical] || passportData.vertical}
+                    </span>
+                  )}
                 </div>
-                {passportData?.vertical && (
+                {passportData?.country && (
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
                       fontSize: 'var(--text-sm)',
                       color: 'rgba(255,255,255,0.8)',
-                      marginTop: '0.25rem',
+                      marginTop: 4,
                     }}
                   >
-                    {LATAM_VERTICALS[passportData.vertical] || passportData.vertical}
+                    {getFlag(passportData.country)} {passportData.country}
                   </div>
                 )}
               </div>
-              <div
-                style={{
-                  padding: '0.375rem 0.875rem',
-                  borderRadius: 8,
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(8px)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 700,
-                  color: 'white',
-                }}
-              >
-                {stageMeta.name}
+
+              {/* ID Badge */}
+              <div style={{ textAlign: 'right' }}>
+                <div
+                  style={{
+                    padding: '0.375rem 0.875rem',
+                    borderRadius: 8,
+                    background: 'rgba(255,255,255,0.15)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    marginBottom: 6,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-2xs)',
+                      color: 'rgba(255,255,255,0.6)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                    }}
+                  >
+                    {stageMeta.name}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 700,
+                    color: 'rgba(255,255,255,0.5)',
+                    letterSpacing: '0.15em',
+                  }}
+                >
+                  {passportId}
+                </div>
               </div>
             </div>
 
-            {/* Body */}
-            <div style={{ padding: '2rem' }}>
-              {/* Top section: info + score */}
+            {/* Body: Founder info */}
+            <div style={{ padding: '1.25rem 1.5rem' }}>
               <div
                 style={{
-                  display: 'flex',
-                  gap: '2rem',
-                  alignItems: 'flex-start',
-                  flexWrap: 'wrap',
-                  marginBottom: '2rem',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(min(140px, 100%), 1fr))',
+                  gap: '1rem',
                 }}
               >
-                {/* Left: founder info */}
-                <div style={{ flex: 1, minWidth: 200 }}>
-                  <div style={{ marginBottom: '1rem' }}>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-2xs)',
-                        color: 'var(--color-text-muted)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        marginBottom: 4,
-                      }}
-                    >
-                      Founder
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'var(--text-xl)',
-                        fontWeight: 700,
-                        color: 'var(--color-text-primary)',
-                      }}
-                    >
-                      {passportData?.founderName || user.name}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: '0.75rem',
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-2xs)',
-                          color: 'var(--color-text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                          marginBottom: 4,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.25rem',
-                        }}
-                      >
-                        <Briefcase size={10} />
-                        Vertical
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-sm)',
-                          fontWeight: 600,
-                          color: 'var(--color-text-primary)',
-                        }}
-                      >
-                        {LATAM_VERTICALS[passportData?.vertical || ''] || passportData?.vertical || '—'}
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-2xs)',
-                          color: 'var(--color-text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                          marginBottom: 4,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.25rem',
-                        }}
-                      >
-                        <Globe size={10} />
-                        País
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-sm)',
-                          fontWeight: 600,
-                          color: 'var(--color-text-primary)',
-                        }}
-                      >
-                        {passportData?.country || '—'}
-                      </div>
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontFamily: 'var(--font-body)',
-                          fontSize: 'var(--text-2xs)',
-                          color: 'var(--color-text-muted)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                          marginBottom: 4,
-                        }}
-                      >
-                        Etapa actual
-                      </div>
-                      <div
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.375rem',
-                          padding: '0.125rem 0.625rem',
-                          borderRadius: 8,
-                          background: `${stageMeta.color}15`,
-                          border: `1px solid ${stageMeta.color}30`,
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: '50%',
-                            background: stageMeta.color,
-                          }}
-                        />
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-body)',
-                            fontSize: 'var(--text-sm)',
-                            fontWeight: 700,
-                            color: stageMeta.color,
-                          }}
-                        >
-                          {stageMeta.name}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right: diagnostic score */}
-                <div style={{ textAlign: 'center' }}>
+                <div>
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
                       fontSize: 'var(--text-2xs)',
                       color: 'var(--color-text-muted)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      marginBottom: '0.75rem',
+                      letterSpacing: '0.06em',
+                      marginBottom: 3,
                     }}
                   >
-                    Puntaje diagnóstico
+                    Founder
                   </div>
-                  <CircularProgress score={diagnosticScore} size={110} />
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'var(--text-md)',
+                      fontWeight: 700,
+                      color: 'var(--color-text-primary)',
+                    }}
+                  >
+                    {passportData?.founderName || user.name}
+                  </div>
+                  {passportData?.founderRole && (
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
+                      {passportData.founderRole}
+                    </div>
+                  )}
                 </div>
+
+                {passportData?.foundedYear && (
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                        marginBottom: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                      }}
+                    >
+                      <Calendar size={9} />
+                      Fundada
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'var(--text-md)',
+                        fontWeight: 700,
+                        color: 'var(--color-text-primary)',
+                      }}
+                    >
+                      {passportData.foundedYear}
+                    </div>
+                  </div>
+                )}
+
+                {(passportData?.teamSize ?? 0) > 0 && (
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                        marginBottom: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                      }}
+                    >
+                      <Users size={9} />
+                      Equipo
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'var(--text-md)',
+                        fontWeight: 700,
+                        color: 'var(--color-text-primary)',
+                      }}
+                    >
+                      {passportData?.teamSize} personas
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-2xs)',
+                      color: 'var(--color-text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                      marginBottom: 3,
+                    }}
+                  >
+                    Etapa
+                  </div>
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      padding: '0.125rem 0.5rem',
+                      borderRadius: 6,
+                      background: `${stageMeta.color}12`,
+                      border: `1px solid ${stageMeta.color}25`,
+                    }}
+                  >
+                    <div
+                      style={{ width: 5, height: 5, borderRadius: '50%', background: stageMeta.color }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-xs)',
+                        fontWeight: 700,
+                        color: stageMeta.color,
+                      }}
+                    >
+                      {stageMeta.name}
+                    </span>
+                  </div>
+                </div>
+
+                {passportData?.website && (
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.06em',
+                        marginBottom: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                      }}
+                    >
+                      <Link2 size={9} />
+                      Web
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-sm)',
+                        fontWeight: 600,
+                        color: 'var(--color-text-primary)',
+                        wordBreak: 'break-all',
+                      }}
+                    >
+                      {passportData.website}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
 
-          {/* ── Tools Progress by Stage ── */}
+          {/* ──────────── 2. INVESTMENT READINESS SCORE ──────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            style={cardStyle}
+          >
+            <SectionHeader
+              title="Investment Readiness Score"
+              icon={Zap}
+              color={getGradeColor(readinessScore)}
+              badge={getLetterGrade(readinessScore)}
+            />
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '2rem',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              {/* Circular score */}
+              <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress
+                  score={readinessScore}
+                  size={140}
+                  grade={getLetterGrade(readinessScore)}
+                />
+              </div>
+
+              {/* Breakdown bars */}
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <ScoreBar
+                  label="Diagnostico (25%)"
+                  score={scoreBreakdown.diagnostic}
+                  maxScore={25}
+                  color="#3B82F6"
+                />
+                <ScoreBar
+                  label="Herramientas completadas (20%)"
+                  score={scoreBreakdown.tools}
+                  maxScore={20}
+                  color="#0D9488"
+                />
+                <ScoreBar
+                  label="Unit Economics (20%)"
+                  score={scoreBreakdown.unitEcon}
+                  maxScore={20}
+                  color="#D97706"
+                />
+                <ScoreBar
+                  label="Traccion (20%)"
+                  score={scoreBreakdown.traction}
+                  maxScore={20}
+                  color="#FF6B4A"
+                />
+                <ScoreBar
+                  label="Equipo (15%)"
+                  score={scoreBreakdown.team}
+                  maxScore={15}
+                  color="#8B5CF6"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ──────────── 3. UNIT ECONOMICS DASHBOARD ──────────── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              borderRadius: 12,
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              padding: '1.25rem',
-              marginBottom: '1.5rem',
-              boxShadow: 'var(--shadow-card)',
-            }}
+            style={cardStyle}
           >
+            <SectionHeader title="Unit Economics" icon={BarChart3} color="#0D9488" />
+
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '1.25rem',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 100%), 1fr))',
+                gap: '0.625rem',
+                marginBottom: '0.75rem',
               }}
             >
-              <h2
+              <KpiCell
+                label="LTV"
+                value={formatCurrency(passportData?.ltv)}
+              />
+              <KpiCell
+                label="CAC"
+                value={formatCurrency(passportData?.cac)}
+              />
+              <KpiCell
+                label="LTV / CAC"
+                value={passportData?.ltvCacRatio ? formatRatio(passportData.ltvCacRatio) : '—'}
+                health={passportData?.ltvCacRatio ? ltvCacHealth : undefined}
+                subtext={
+                  passportData?.ltvCacRatio
+                    ? ltvCacHealth === 'green'
+                      ? 'Saludable'
+                      : ltvCacHealth === 'yellow'
+                      ? 'Mejorable'
+                      : 'Critico'
+                    : undefined
+                }
+              />
+              <KpiCell
+                label="Payback"
+                value={passportData?.paybackMonths ? `${passportData.paybackMonths} meses` : '—'}
+              />
+            </div>
+
+            {/* Unit Economics Health Bar */}
+            {passportData?.ltvCacRatio && (
+              <div
                 style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-md)',
-                  fontWeight: 600,
-                  color: 'var(--color-ink)',
-                  margin: 0,
+                  padding: '0.625rem 0.75rem',
+                  borderRadius: 8,
+                  background: `${ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626'}08`,
+                  border: `1px solid ${ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626'}20`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
                 }}
               >
-                Progreso por etapa
-              </h2>
-              <span
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626',
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 600,
+                    color: ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626',
+                  }}
+                >
+                  {ltvCacHealth === 'green'
+                    ? 'Unit Economics saludable — LTV/CAC >= 3x'
+                    : ltvCacHealth === 'yellow'
+                    ? 'Unit Economics mejorable — LTV/CAC entre 1x y 3x'
+                    : 'Unit Economics critico — LTV/CAC < 1x'}
+                </span>
+              </div>
+            )}
+          </motion.div>
+
+          {/* ──────────── 4. TRACTION SCORECARD ──────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            style={cardStyle}
+          >
+            <SectionHeader title="Traccion" icon={TrendingUp} color="#FF6B4A" />
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 100%), 1fr))',
+                gap: '0.625rem',
+              }}
+            >
+              <KpiCell
+                label="MRR"
+                value={formatCurrency(passportData?.mrr)}
+                color={parseFloat(String(passportData?.mrr || '0').replace(/[^0-9.-]/g, '')) > 0 ? '#0D9488' : undefined}
+              />
+              <KpiCell
+                label="Clientes pagando"
+                value={passportData?.payingCustomers || '—'}
+                color={
+                  (passportData?.payingCustomers ?? 0) > 0 ? '#0D9488' : undefined
+                }
+              />
+              <KpiCell
+                label="Crecimiento MoM"
+                value={formatPercent(passportData?.momGrowth)}
+              />
+              <KpiCell
+                label="Margen bruto"
+                value={formatPercent(passportData?.grossMargin)}
+              />
+            </div>
+          </motion.div>
+
+          {/* ──────────── 5. MARKET OPPORTUNITY ──────────── */}
+          {(passportData?.tam || passportData?.sam || passportData?.som) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={cardStyle}
+            >
+              <SectionHeader title="Oportunidad de mercado" icon={Target} color="#3B82F6" />
+
+              <MarketCircles
+                tam={passportData?.tam || ''}
+                sam={passportData?.sam || ''}
+                som={passportData?.som || ''}
+              />
+
+              {/* Legend below */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '1.5rem',
+                  marginTop: '0.75rem',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {[
+                  { label: 'TAM', value: passportData?.tam, desc: 'Total Addressable Market' },
+                  { label: 'SAM', value: passportData?.sam, desc: 'Serviceable Addressable Market' },
+                  { label: 'SOM', value: passportData?.som, desc: 'Serviceable Obtainable Market' },
+                ].filter(i => i.value).map((item) => (
+                  <div key={item.label} style={{ textAlign: 'center' }}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'var(--text-base)',
+                        fontWeight: 700,
+                        color: 'var(--color-text-primary)',
+                      }}
+                    >
+                      {formatCurrency(item.value)}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-2xs)',
+                        color: 'var(--color-text-muted)',
+                      }}
+                    >
+                      {item.desc}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* ──────────── 6. FINANCIAL POSITION ──────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            style={cardStyle}
+          >
+            <SectionHeader title="Posicion financiera" icon={DollarSign} color="#2A222B" />
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 100%), 1fr))',
+                gap: '0.625rem',
+              }}
+            >
+              <KpiCell
+                label="Burn rate mensual"
+                value={formatCurrency(passportData?.burnRate)}
+              />
+              <KpiCell
+                label="Runway"
+                value={passportData?.runway ? `${passportData.runway} meses` : '—'}
+                health={passportData?.runway ? runwayHealth : undefined}
+                subtext={
+                  passportData?.runway
+                    ? runwayHealth === 'green'
+                      ? '+12 meses'
+                      : runwayHealth === 'yellow'
+                      ? '6-12 meses'
+                      : '<6 meses'
+                    : undefined
+                }
+              />
+              <KpiCell
+                label="Capital levantado"
+                value={formatCurrency(passportData?.totalRaised)}
+              />
+              <KpiCell
+                label="Ultima ronda"
+                value={passportData?.lastRound || '—'}
+              />
+            </div>
+          </motion.div>
+
+          {/* ──────────── 7. IMPACT & ESG ──────────── */}
+          {(passportData?.co2Avoided || passportData?.beneficiaries || (passportData?.sdgAlignment && passportData.sdgAlignment.length > 0)) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              style={cardStyle}
+            >
+              <SectionHeader title="Impacto & ESG" icon={Leaf} color="#0D9488" />
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(min(180px, 100%), 1fr))',
+                  gap: '0.625rem',
+                  marginBottom: passportData?.sdgAlignment && passportData.sdgAlignment.length > 0 ? '1rem' : 0,
+                }}
+              >
+                {passportData?.co2Avoided && (
+                  <KpiCell
+                    label="CO2 evitado"
+                    value={passportData.co2Avoided}
+                    color="#0D9488"
+                  />
+                )}
+                {passportData?.beneficiaries && (
+                  <KpiCell
+                    label="Beneficiarios"
+                    value={passportData.beneficiaries}
+                    color="#0D9488"
+                  />
+                )}
+              </div>
+
+              {/* SDG Badges */}
+              {passportData?.sdgAlignment && passportData.sdgAlignment.length > 0 && (
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-2xs)',
+                      color: 'var(--color-text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                      marginBottom: 8,
+                    }}
+                  >
+                    Alineacion con ODS
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                    {passportData.sdgAlignment.map((sdg) => (
+                      <motion.div
+                        key={sdg}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.3, delay: sdg * 0.03 }}
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 6,
+                          background: SDG_COLORS[sdg] || '#666',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 700,
+                          color: 'white',
+                        }}
+                      >
+                        {sdg}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* ──────────── 8. STARTUP DESCRIPTION ──────────── */}
+          {passportData?.description && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              style={cardStyle}
+            >
+              <SectionHeader title="Descripcion" icon={FileText} color="var(--color-ink)" />
+              <p
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontSize: 'var(--text-sm)',
-                  fontWeight: 700,
-                  color: '#0D9488',
-                  padding: '0.25rem 0.625rem',
-                  borderRadius: 8,
-                  background: 'rgba(13,148,136,0.08)',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.7,
+                  margin: 0,
                 }}
               >
-                {completedCount}/{totalTools} herramientas
-              </span>
-            </div>
+                {passportData.description}
+              </p>
+              {passportData?.elevatorPitch && (
+                <div
+                  style={{
+                    marginTop: '0.75rem',
+                    padding: '0.75rem',
+                    borderRadius: 8,
+                    background: 'var(--color-bg-primary)',
+                    border: '1px solid var(--color-border)',
+                    borderLeft: `3px solid ${stageMeta.color}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-2xs)',
+                      fontWeight: 700,
+                      color: 'var(--color-text-muted)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                      marginBottom: 4,
+                    }}
+                  >
+                    Elevator Pitch
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--color-text-primary)',
+                      fontWeight: 500,
+                      fontStyle: 'italic',
+                      lineHeight: 1.6,
+                      margin: 0,
+                    }}
+                  >
+                    &ldquo;{passportData.elevatorPitch}&rdquo;
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
 
-            {/* Overall progress bar */}
-            <div style={{ marginBottom: '1.5rem' }}>
+          {/* ──────────── 9. TOOLS PROGRESS BY STAGE ──────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            style={cardStyle}
+          >
+            <SectionHeader
+              title="Progreso por etapa"
+              icon={BarChart3}
+              color="#0D9488"
+              badge={`${completedCount}/${totalTools}`}
+            />
+
+            {/* Overall progress */}
+            <div style={{ marginBottom: '1rem' }}>
               <div
                 style={{
-                  height: 8,
-                  borderRadius: 4,
+                  height: 6,
+                  borderRadius: 3,
                   background: 'rgba(13,148,136,0.10)',
                   overflow: 'hidden',
                 }}
@@ -936,112 +1863,34 @@ export default function PassportPage() {
                   transition={{ duration: 1, ease: 'easeOut' }}
                   style={{
                     height: '100%',
-                    borderRadius: 4,
-                    background: 'linear-gradient(90deg, #0D9488, #0D9488)',
+                    borderRadius: 3,
+                    background: '#0D9488',
                   }}
                 />
               </div>
             </div>
 
-            {/* Per-stage progress */}
             {stageProgressList.map((sp) => (
               <StageProgressBar key={sp.stage} stage={sp} />
             ))}
           </motion.div>
 
-          {/* ── Key Metrics ── */}
+          {/* ──────────── 10. STAGE CERTIFICATES ──────────── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            style={{
-              borderRadius: 12,
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              padding: '1.25rem',
-              marginBottom: '1.5rem',
-              boxShadow: 'var(--shadow-card)',
-            }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+            style={cardStyle}
           >
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-md)',
-                fontWeight: 600,
-                color: 'var(--color-ink)',
-                margin: '0 0 1rem 0',
-              }}
-            >
-              Métricas clave
-            </h2>
+            <SectionHeader title="Certificados de etapa" icon={Award} color="#3B82F6" />
+
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
-                gap: '0.75rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(140px, 100%), 1fr))',
+                gap: '0.625rem',
               }}
             >
-              <MetricCard icon={Target} label="TAM" value={passportData?.tam || '—'} color="#2A222B" />
-              <MetricCard icon={DollarSign} label="LTV" value={passportData?.ltv || '—'} color="#0D9488" />
-              <MetricCard icon={DollarSign} label="CAC" value={passportData?.cac || '—'} color="#2A222B" />
-              <MetricCard icon={TrendingUp} label="MRR" value={passportData?.mrr || '—'} color="#0D9488"  />
-              <MetricCard
-                icon={Users}
-                label="Equipo"
-                value={passportData?.teamSize ? `${passportData.teamSize} personas` : '—'}
-                color="#FF6B4A"
-              />
-              <MetricCard
-                icon={UserCheck}
-                label="Clientes pagando"
-                value={passportData?.payingCustomers || '—'}
-                color="#DC2626"
-              />
-              {passportData?.unitEconomics && (
-                <MetricCard
-                  icon={TrendingUp}
-                  label="Unit Economics"
-                  value={passportData.unitEconomics}
-                  color="#0D9488"
-                />
-              )}
-              {passportData?.runway && (
-                <MetricCard
-                  icon={DollarSign}
-                  label="Runway"
-                  value={passportData.runway}
-                  color="#2A222B"
-                />
-              )}
-            </div>
-          </motion.div>
-
-          {/* ── Stage Certificates ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            style={{
-              borderRadius: 12,
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              padding: '1.25rem',
-              marginBottom: '1.5rem',
-              boxShadow: 'var(--shadow-card)',
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-md)',
-                fontWeight: 600,
-                color: 'var(--color-ink)',
-                margin: '0 0 1rem 0',
-              }}
-            >
-              Certificados de etapa
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(180px, 100%), 1fr))', gap: '0.75rem' }}>
               {([1, 2, 3, 4] as const).map((s) => {
                 const meta = STAGE_META[s]
                 const earned = stageCertificates.includes(s)
@@ -1055,41 +1904,40 @@ export default function PassportPage() {
                     key={s}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.3 + s * 0.1 }}
+                    transition={{ delay: 0.45 + s * 0.08 }}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '1.25rem 1rem',
-                      borderRadius: 12,
+                      gap: '0.375rem',
+                      padding: '1rem 0.75rem',
+                      borderRadius: 10,
                       background: earned ? `${meta.color}08` : 'var(--color-bg-primary)',
-                      border: `2px solid ${earned ? meta.color : 'var(--color-border)'}`,
+                      border: `1.5px solid ${earned ? meta.color : 'var(--color-border)'}`,
                       opacity: earned ? 1 : 0.5,
                       position: 'relative',
                       overflow: 'hidden',
                     }}
                   >
-                    {/* Badge glow for earned */}
                     {earned && (
                       <div
                         style={{
                           position: 'absolute',
-                          top: -20,
-                          right: -20,
-                          width: 60,
-                          height: 60,
+                          top: -15,
+                          right: -15,
+                          width: 40,
+                          height: 40,
                           borderRadius: '50%',
-                          background: `${meta.color}15`,
-                          filter: 'blur(20px)',
+                          background: `${meta.color}12`,
+                          filter: 'blur(15px)',
                         }}
                       />
                     )}
                     <div
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 12,
+                        width: 36,
+                        height: 36,
+                        borderRadius: 10,
                         background: earned ? `${meta.color}15` : 'var(--color-bg-primary)',
                         border: `1.5px solid ${earned ? meta.color + '40' : 'var(--color-border)'}`,
                         display: 'flex',
@@ -1098,7 +1946,7 @@ export default function PassportPage() {
                       }}
                     >
                       <Award
-                        size={22}
+                        size={18}
                         color={earned ? meta.color : 'var(--color-text-muted)'}
                         strokeWidth={earned ? 2.5 : 1.5}
                       />
@@ -1106,7 +1954,7 @@ export default function PassportPage() {
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'var(--text-sm)',
+                        fontSize: 'var(--text-2xs)',
                         fontWeight: 700,
                         color: earned ? meta.color : 'var(--color-text-muted)',
                         textAlign: 'center',
@@ -1128,18 +1976,59 @@ export default function PassportPage() {
               })}
             </div>
           </motion.div>
+
+          {/* ──────────── DIAGNOSTIC SCORE (compact) ──────────── */}
+          {diagnosticScore > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              style={{
+                ...cardStyle,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.25rem',
+                flexWrap: 'wrap',
+              }}
+            >
+              <CircularProgress score={diagnosticScore} size={80} label="Diagnostico" />
+              <div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'var(--text-base)',
+                    fontWeight: 700,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: 2,
+                  }}
+                >
+                  Puntaje de diagnostico
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--color-text-muted)',
+                  }}
+                >
+                  Evaluacion inicial de startup readiness
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
-        {/* ── Download / Print Button ── */}
+        {/* ──────────── 11. ACTIONS BAR ──────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.55 }}
           className="no-print"
           style={{
             display: 'flex',
-            gap: '0.75rem',
+            gap: '0.625rem',
             flexWrap: 'wrap',
+            marginTop: '0.5rem',
           }}
         >
           <button
@@ -1150,18 +2039,18 @@ export default function PassportPage() {
               gap: '0.5rem',
               padding: '0.5rem 1rem',
               borderRadius: 8,
-              background: '#3B82F6',
+              background: stageMeta.color,
               color: 'white',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.8125rem',
+              fontSize: 'var(--text-sm)',
               fontWeight: 600,
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 2px 12px rgba(59,130,246,0.25)',
+              boxShadow: `0 2px 12px ${stageMeta.color}40`,
               transition: 'all 0.2s',
             }}
           >
-            <Printer size={16} />
+            <Printer size={15} />
             Descargar Passport
           </button>
           <button
@@ -1175,15 +2064,35 @@ export default function PassportPage() {
               background: 'var(--color-bg-primary)',
               color: 'var(--color-ink)',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.8125rem',
+              fontSize: 'var(--text-sm)',
               fontWeight: 600,
               border: '1px solid var(--color-border)',
               cursor: 'pointer',
               transition: 'all 0.2s',
             }}
           >
-            <Download size={16} />
+            <Download size={15} />
             Imprimir
+          </button>
+          <button
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: 8,
+              background: 'var(--color-bg-primary)',
+              color: 'var(--color-text-secondary)',
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 600,
+              border: '1px solid var(--color-border)',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            <Share2 size={15} />
+            Compartir
           </button>
         </motion.div>
       </div>

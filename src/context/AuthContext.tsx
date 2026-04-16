@@ -71,8 +71,8 @@ const DEMO_FOUNDER_USER: AppUser = {
   org_id: null,
   full_name: 'Ana Quispe (Demo)',
   startup_name: 'EcoBio Perú',
-  stage: 'mvp',
-  diagnosticScore: 72,
+  stage: '3',
+  diagnosticScore: 84,
   created_at: new Date().toISOString(),
 }
 
@@ -105,58 +105,489 @@ function seedDemoFounderData() {
 
   const now = new Date().toISOString()
   const seeded = {
+    // ─── Stage 1: Descubrimiento (all completed) ───
     'passion-purpose': {
       completed: true,
       completedAt: now,
       reportGenerated: true,
       lastSaved: now,
       data: {
-        pasion: 'Reducir la contaminación plástica en el Amazonas mediante biomateriales locales.',
-        proposito: 'Empoderar a comunidades amazónicas con bioeconomía circular.',
-        problemaReal: 'Cada año ingresan 30 millones de toneladas de plástico al Amazonas.',
+        pasion: 'Reducir la contaminación plástica en la Amazonía peruana mediante biomateriales innovadores derivados de residuos agroindustriales locales.',
+        proposito: 'Crear una economía circular que empodere a comunidades amazónicas, transformando residuos en empaques de alta performance que compitan con el plástico convencional.',
+        problemaReal: 'América Latina genera 541,000 toneladas de plástico de un solo uso al año en el sector food service. El 91% termina en vertederos o ecosistemas naturales. Las alternativas importadas cuestan 3-4x más.',
+        motivacionPersonal: 'Crecí en Puerto Maldonado viendo cómo la contaminación plástica afectaba los ríos amazónicos. Mi tesis en la PUCP fue sobre biomateriales con fibra de coco.',
       },
     },
     'market-segmentation': {
       completed: true,
       completedAt: now,
-      reportGenerated: false,
+      reportGenerated: true,
       lastSaved: now,
-      data: { segmentos: 'Restaurantes sostenibles LATAM, hoteles eco, retail orgánico.' },
+      data: {
+        segmentos: 'Restaurantes sostenibles premium, cadenas de hoteles eco-certificados, retail orgánico y supermercados con línea verde, servicios de catering corporativo, foodservice institucional (universidades, hospitales).',
+        criteriosSegmentacion: 'Volumen de compra mensual de empaques, compromiso con sostenibilidad (certificaciones), capacidad de pago premium (15-20% sobre convencional), ubicación geográfica (Lima, Cusco, Arequipa).',
+        segmentoPrioritario: 'Restaurantes premium y cadenas de hoteles en Lima con certificación o compromiso ESG — 800+ establecimientos identificados, ticket promedio alto, decisión de compra rápida.',
+      },
     },
     'beachhead-market': {
       completed: true,
       completedAt: now,
-      reportGenerated: false,
-      lastSaved: now,
-      data: { mercado: 'Restaurantes boutique en Lima y Cusco (800 locales estimados).' },
-    },
-    'lean-canvas': {
-      completed: false,
-      completedAt: null,
-      reportGenerated: false,
+      reportGenerated: true,
       lastSaved: now,
       data: {
-        problem: '1. Plástico de un solo uso.\n2. Falta de alternativas locales.\n3. Costos de importación.',
-        customerSegments: 'Restaurantes premium LATAM, hoteles boutique, retail orgánico.',
-        uvp: 'Empaques compostables hechos con fibras amazónicas, 40% más económicos que la importación europea.',
-        solution: 'Línea de empaques: vasos, platos y cubiertos compostables.',
+        mercado: 'Restaurantes boutique y cadenas gastronómicas premium en Lima Metropolitana (Miraflores, Barranco, San Isidro). 800 locales estimados, con gasto promedio en empaques de $1,200/mes.',
+        tamanoMercado: '800 restaurantes × $1,200/mes × 12 = $11.5M/año en Lima solamente.',
+        razones: '1. Alta disposición a pagar por sostenibilidad (marca premium). 2. Regulación municipal que prohíbe plásticos de un solo uso desde 2024. 3. Presión de consumidores (78% prefiere restaurantes eco-friendly según Datum 2025). 4. Red de chefs influyentes que actúan como early adopters.',
+        estrategiaEntrada: 'Partner con la Sociedad Peruana de Gastronomía (APEGA) para acceso directo a decisores. Piloto con 5 restaurantes top en Miraflores como caso de éxito.',
+      },
+    },
+    'end-user-profile': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        nombre: 'Carlos, Gerente de Operaciones de restaurante premium',
+        edad: '35-50 años',
+        rol: 'Gerente de operaciones o dueño de restaurante/cadena gastronómica',
+        frustraciones: 'Costos crecientes de empaques importados, presión regulatoria para eliminar plásticos, clientes que exigen prácticas sostenibles, proveedores de empaques eco poco confiables.',
+        necesidades: 'Empaques compostables que sean resistentes (no se filtren ni se rompan), precio competitivo vs importados, suministro confiable y puntual, historia de impacto para comunicar a clientes.',
+        comportamiento: 'Compra quincenal o mensual, decide en 2-3 semanas, prueba con pedido pequeño antes de comprometer volumen. Valora relación directa con proveedor.',
       },
     },
     'tam-calculator': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        tam: '2400000000',
+        sam: '340000000',
+        som: '18000000',
+        metodologia: 'TAM: Mercado global de empaques sostenibles para food service en LATAM ($2.4B, Mordor Intelligence 2025). SAM: Perú + Colombia + Chile — restaurantes, hoteles y retail con compromiso sostenible ($340M). SOM: Lima + Cusco + Arequipa, segmento premium con capacidad de distribución actual ($18M en 24 meses).',
+        fuentesDatos: 'Mordor Intelligence 2025, Euromonitor Perú, INEI censo económico, APEGA base de datos.',
+        supuestos: 'Penetración del 5.3% del SAM en 24 meses, precio promedio por cliente $950/mes, retención del 85%.',
+      },
+    },
+    'persona-profile': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        nombre: 'María del Carmen Rodríguez',
+        cargo: 'Directora de Compras, cadena de restaurantes "Sabores del Pacífico" (12 locales)',
+        edad: '42 años',
+        ubicacion: 'Lima, Perú',
+        objetivos: 'Reducir huella de carbono de la cadena en 30% para 2027. Cumplir con ordenanza municipal anti-plástico. Mantener costos operativos estables.',
+        dolores: 'Proveedores de empaques eco que no cumplen entregas a tiempo. Empaques compostables importados que cuestan 3.5x más. Empaques que se rompen con sopas y líquidos calientes.',
+        canalPreferido: 'WhatsApp Business para pedidos rápidos, reunión presencial para cerrar contrato anual.',
+        presupuesto: '$14,400/año en empaques para 12 locales.',
+      },
+    },
+
+    // ─── Stage 2: Validación (all completed) ───
+    'full-lifecycle-usecase': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        casoDeUso: 'Restaurante premium pide empaques para delivery/takeout → EcoBio entrega en 48h → Chef empaca comida → Cliente recibe empaque con branding del restaurante + sello compostable → Cliente desecha en basura orgánica → Empaque se descompone en 90 días → Restaurante recibe reporte de impacto mensual.',
+        puntosDeFriccion: '1. Primer pedido requiere calibración de tamaños. 2. Capacitación al staff sobre almacenamiento (evitar humedad). 3. Integración con sistema de pedidos del restaurante.',
+        metricas: 'Tiempo de entrega: 48h Lima, 72h provincias. Tasa de reorden: 92%. NPS: 78. Vida útil del empaque: 6 meses almacenado, 90 días para descomposición.',
+      },
+    },
+    'product-specification': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        producto: 'Línea de empaques compostables EcoBio: contenedores (500ml, 750ml, 1000ml), platos (7", 9"), bowls (12oz, 16oz, 32oz), vasos para bebidas calientes (8oz, 12oz, 16oz).',
+        material: 'Fibra de bagazo de caña + almidón de yuca amazónica. Recubrimiento impermeabilizante con cera de carnaúba (100% vegetal).',
+        especificaciones: 'Resistencia térmica: -20°C a 120°C. Resistencia a líquidos: 4+ horas sin filtración. Microondeable. Certificación compostable EN 13432. Libre de PFAS.',
+        diferenciador: '40% más barato que alternativas importadas europeas. Materia prima 100% local. Huella de carbono 73% menor que plástico convencional.',
+      },
+    },
+    'quantified-value-prop': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        propuesta: 'EcoBio reduce tu gasto en empaques sostenibles en 40% vs importados europeos, mientras eliminas el 100% del plástico de un solo uso y comunicas impacto real a tus clientes.',
+        metricasValor: 'Ahorro promedio: $480/mes por local vs empaques importados. Reducción de CO2: 2.3 toneladas/año por restaurante. Cumplimiento regulatorio inmediato. Incremento de 12% en percepción de marca según encuesta a comensales.',
+        evidencia: 'Piloto con 5 restaurantes en Miraflores (3 meses): ahorro promedio de $520/mes, cero quejas por calidad, 94% satisfacción del staff.',
+      },
+    },
+    'first-10-customers': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        clientes: [
+          { nombre: 'Sabores del Pacífico (12 locales)', estado: 'Contrato anual', mrr: '$4,800' },
+          { nombre: 'Hotel Belmond Miraflores', estado: 'Contrato anual', mrr: '$3,200' },
+          { nombre: 'Central Restaurante', estado: 'Contrato semestral', mrr: '$2,100' },
+          { nombre: 'Maido', estado: 'Contrato semestral', mrr: '$1,800' },
+          { nombre: 'Hilton Lima Miraflores', estado: 'Contrato anual', mrr: '$5,600' },
+          { nombre: 'Astrid & Gastón', estado: 'Contrato trimestral', mrr: '$1,900' },
+          { nombre: 'La Mar Cebichería', estado: 'Contrato semestral', mrr: '$2,400' },
+          { nombre: 'Marriott Lima', estado: 'Contrato anual', mrr: '$4,200' },
+          { nombre: 'IK Restaurante', estado: 'Contrato trimestral', mrr: '$1,600' },
+          { nombre: 'Panchita (Grupo Acurio)', estado: 'Piloto', mrr: '$1,100' },
+        ],
+        payingCustomers: 23,
+        totalMRR: '$47,000',
+        estrategia: 'Venta directa B2B con demo de producto en restaurante. Piloto gratuito de 2 semanas (50 unidades). Conversión de piloto a contrato: 87%.',
+        aprendizajes: 'Los hoteles tienen ciclos de compra más largos (45-60 días) pero tickets 3x mayores. Restaurantes cierran en 2-3 semanas. El boca a boca entre chefs es el canal #1.',
+      },
+    },
+    'core-competitive-position': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        posicion: 'Único fabricante de empaques compostables con materia prima 100% amazónica en Perú. Combinación de precio competitivo (40% menos que importados) + supply chain local + certificación internacional.',
+        competidores: '1. Biopak (Australia) — premium, 3x precio. 2. Vegware (UK) — buena calidad, importación cara y lenta. 3. EcoProducts (US) — no distribuye en Perú. 4. Artesanos locales — sin escala ni certificación.',
+        ventajaDefendible: 'Patentes en proceso (3) sobre formulación de biomaterial con fibras amazónicas. Contratos de suministro exclusivo con 4 cooperativas agrícolas en Madre de Dios. Certificación EN 13432 (barrera de entrada de 18 meses).',
+        moat: 'Vertically integrated: controlamos desde la materia prima (alianzas con cooperativas) hasta la entrega. Esto nos da 62% de margen bruto vs 35-40% de revendedores de importados.',
+      },
+    },
+    'lean-canvas': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        problem: '1. Empaques de plástico de un solo uso contaminan y enfrentan prohibiciones regulatorias crecientes.\n2. Alternativas compostables importadas cuestan 3-4x más, haciendo inviable la transición.\n3. No existe un fabricante local de empaques compostables certificados en Perú.',
+        customerSegments: 'Restaurantes premium y cadenas gastronómicas en Lima (primary). Hoteles eco-certificados (secondary). Retail orgánico y catering corporativo (tertiary).',
+        uvp: 'Empaques 100% compostables hechos con fibras amazónicas — 40% más baratos que importados, con certificación internacional y entrega en 48h.',
+        solution: 'Línea completa de empaques compostables (contenedores, platos, bowls, vasos) fabricados con bagazo de caña + almidón de yuca amazónica.',
+        channels: 'Venta directa B2B, partnerships con APEGA y gremios hoteleros, marketplace propio para reorden automatizado.',
+        revenueStreams: 'Venta de empaques (suscripción mensual recurrente), branding personalizado (+15% premium), reportes de impacto ambiental para ESG.',
+        costStructure: 'Materia prima (23%), manufactura (18%), logística (12%), equipo (35%), marketing (7%), overhead (5%).',
+        keyMetrics: 'MRR, churn rate, margen bruto, NPS, toneladas de plástico evitadas.',
+        unfairAdvantage: '3 patentes en proceso, contratos exclusivos con cooperativas amazónicas, certificación EN 13432.',
+      },
+    },
+    'competitor-analysis': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        competidores: [
+          { nombre: 'Biopak', fortalezas: 'Marca global, amplio catálogo', debilidades: 'Precio 3x mayor, no tiene presencia local en Perú', amenaza: 'Media' },
+          { nombre: 'Vegware', fortalezas: 'Buena calidad, certificaciones europeas', debilidades: 'Tiempos de importación de 6-8 semanas, costo de flete', amenaza: 'Media' },
+          { nombre: 'Artesanos locales', fortalezas: 'Precio bajo, producción local', debilidades: 'Sin certificación, calidad inconsistente, no escalan', amenaza: 'Baja' },
+        ],
+        ventajaCompetitiva: 'Somos el único jugador que combina: fabricación local (entrega 48h), precio competitivo (40% menos que importados), certificación internacional (EN 13432), y materia prima amazónica sostenible.',
+        estrategiaDefensiva: 'Patentes + contratos de suministro exclusivo + certificaciones = barrera de entrada de 18-24 meses para cualquier competidor.',
+      },
+    },
+    'impact-metrics': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        co2Avoided: '847 toneladas CO2eq/año (proyección a 100 clientes)',
+        wasteDiverted: '234 toneladas de plástico de un solo uso evitadas/año',
+        comunidadesBeneficiadas: '4 cooperativas agrícolas en Madre de Dios (120+ familias)',
+        empleosGenerados: '8 directos + 45 indirectos (cooperativas y logística)',
+        metricaODS: 'ODS 12 (Producción responsable): 100% productos compostables. ODS 13 (Acción climática): reducción de 73% en huella de carbono vs plástico. ODS 8 (Trabajo decente): salarios 30% sobre promedio regional para cooperativistas.',
+        impactoActual: 'A la fecha: 38 toneladas de plástico evitadas, 127 toneladas CO2eq reducidas, 4 cooperativas con contratos estables.',
+        metodologiaMedicion: 'LCA (Life Cycle Assessment) validado por SGS Perú. Medición trimestral con reportes a clientes.',
+      },
+    },
+
+    // ─── Stage 3: Aceleración (mostly completed) ───
+    'decision-making-unit': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        decisor: 'Gerente de Operaciones o Director de Compras (firma contrato, aprueba presupuesto)',
+        influenciador: 'Chef ejecutivo (valida calidad del producto), Gerente de Sostenibilidad/ESG (valida impacto ambiental)',
+        usuario: 'Staff de cocina y empaque (usa el producto diariamente)',
+        bloqueador: 'Área financiera (si el precio no es competitivo), Legal (revisión de contrato de suministro)',
+        procesoPago: 'Factura a 30 días para contratos anuales, pago contra entrega para pedidos spot. Moneda: PEN o USD.',
+        tiempoDecision: 'Restaurantes independientes: 2-3 semanas. Cadenas/hoteles: 45-60 días. Corporativos: 60-90 días.',
+      },
+    },
+    'customer-acquisition-process': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        etapas: '1. Prospección (LinkedIn, APEGA, referidos) → 2. Demo en restaurante (muestra gratis) → 3. Piloto 2 semanas (50 unidades) → 4. Evaluación con chef y operaciones → 5. Propuesta comercial → 6. Cierre de contrato',
+        tasaConversion: 'Prospecto → Demo: 35%. Demo → Piloto: 72%. Piloto → Contrato: 87%. Total funnel: 22%.',
+        cac: '$3,200 (incluye muestras, tiempo de vendedor, demo)',
+        tiempoCierre: 'Promedio 28 días para restaurantes, 52 días para hoteles.',
+        canalMasEfectivo: 'Referidos de chefs existentes (CAC: $1,800, conversión 45%). LinkedIn outbound (CAC: $4,100, conversión 18%).',
+      },
+    },
+    'business-model-design': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        modelo: 'B2B SaaS + Product: suscripción mensual para pedidos recurrentes de empaques con plataforma de reorden + reportes de impacto.',
+        flujos: '1. Venta de empaques (85% revenue) — suscripción mensual con descuento por volumen. 2. Branding personalizado (10%) — impresión del logo del cliente en empaques (+15% premium). 3. Reportes de impacto ESG (5%) — dashboard y certificado trimestral.',
+        unitEconomics: 'ARPU: $2,040/mes. Gross margin: 62%. Contribution margin: 48%.',
+        escalabilidad: 'Modelo replicable en Colombia y Chile sin necesidad de planta propia (partner manufacturing). Plataforma de reorden automatiza el 70% de pedidos recurrentes.',
+      },
+    },
+    'pricing-framework': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        estrategia: 'Value-based pricing: posicionamos al 60% del precio de importados europeos pero 15-20% sobre plástico convencional. El valor percibido (cumplimiento regulatorio + marketing sostenible) justifica el premium.',
+        planes: [
+          { nombre: 'Starter', precio: '$800/mes', incluye: 'Hasta 2,000 unidades, 3 productos, entrega quincenal' },
+          { nombre: 'Growth', precio: '$1,800/mes', incluye: 'Hasta 5,000 unidades, catálogo completo, entrega semanal, branding básico' },
+          { nombre: 'Enterprise', precio: '$4,500+/mes', incluye: 'Volumen ilimitado, branding premium, reportes ESG, account manager dedicado' },
+        ],
+        descuentos: 'Contrato anual: -10%. Contrato semestral: -5%. Referido: $200 crédito para ambas partes.',
+      },
+    },
+    'ltv-unit-economics': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        ltv: '28500',
+        cac: '3200',
+        ltvCacRatio: '8.9',
+        paybackMonths: '4.2',
+        churnRate: '8% anual (< 1% mensual)',
+        arpu: '$2,040/mes',
+        grossMargin: '62%',
+        contributionMargin: '48%',
+        cohortAnalysis: 'Cohorte Q3 2025: 100% retención a 6 meses. Cohorte Q1 2026: 96% retención a 3 meses. Expansión neta: 115% (clientes aumentan pedidos con el tiempo).',
+      },
+    },
+    'sales-process-map': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        proceso: '1. Identificación (LinkedIn Sales Navigator + base APEGA) → 2. Contacto inicial (email personalizado + WhatsApp) → 3. Demo presencial con muestras → 4. Piloto gratuito 2 semanas → 5. Follow-up con métricas del piloto → 6. Propuesta comercial → 7. Negociación → 8. Firma contrato → 9. Onboarding (capacitación staff) → 10. Primera entrega',
+        herramientas: 'CRM: HubSpot (free). Comunicación: WhatsApp Business. Propuestas: Canva + Google Docs. Facturación: Nubefact.',
+        kpis: 'Meetings/semana: 8. Pilotos activos: 4-5. Win rate: 22%. Deal size promedio: $24,500/año.',
+        equipo: '1 sales lead (Ana) + 1 SDR (medio tiempo). Plan: contratar 2 SDRs al cerrar ronda.',
+      },
+    },
+    'okr-tracker': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        periodo: 'Q2 2026',
+        okrs: [
+          {
+            objetivo: 'Alcanzar $60K MRR para fin de Q2',
+            resultados: [
+              { kr: 'Cerrar 8 nuevos clientes Enterprise', progreso: 65 },
+              { kr: 'Aumentar ARPU a $2,400/mes', progreso: 80 },
+              { kr: 'Reducir churn a < 5% anual', progreso: 90 },
+            ],
+          },
+          {
+            objetivo: 'Preparar operaciones para escalar a Colombia',
+            resultados: [
+              { kr: 'Firmar 1 partner de manufactura en Bogotá', progreso: 40 },
+              { kr: 'Obtener certificación INVIMA', progreso: 20 },
+              { kr: 'Pipeline de 15 prospectos en Colombia', progreso: 55 },
+            ],
+          },
+          {
+            objetivo: 'Cerrar ronda pre-seed de $500K',
+            resultados: [
+              { kr: 'Pitch a 20 inversionistas', progreso: 70 },
+              { kr: 'Terminar due diligence con 3 fondos interesados', progreso: 45 },
+              { kr: 'Data room completo y actualizado', progreso: 85 },
+            ],
+          },
+        ],
+      },
+    },
+    'regulatory-compass': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        regulaciones: [
+          { nombre: 'Ley 30884 — Plásticos de un solo uso (Perú)', estado: 'Cumplimiento total', impacto: 'Positivo — genera demanda de nuestros productos' },
+          { nombre: 'EN 13432 — Compostabilidad', estado: 'Certificación obtenida (SGS)', impacto: 'Diferenciador clave vs competencia local' },
+          { nombre: 'DIGESA — Registro sanitario', estado: 'Vigente hasta 2028', impacto: 'Requisito para venta a food service' },
+          { nombre: 'Ordenanza municipal Lima — Prohibición plásticos', estado: 'Cumplimiento total', impacto: 'Acelera conversión de clientes en Lima' },
+        ],
+        riesgos: 'Si se relaja la regulación anti-plástico, la presión de precio vs convencional aumenta. Mitigación: nuestro precio ya es solo 15-20% sobre convencional.',
+        patentes: '3 patentes en proceso ante INDECOPI: formulación de biomaterial (PE-2024-001234), proceso de recubrimiento (PE-2024-001567), sistema de compostaje acelerado (PE-2025-000891).',
+      },
+    },
+
+    // ─── Stage 4: Escalamiento (partially started) ───
+    'key-assumptions': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: true,
+      lastSaved: now,
+      data: {
+        supuestos: [
+          { supuesto: 'La regulación anti-plástico se mantendrá o endurecerá en LATAM', riesgo: 'Medio', validacion: 'Validado — 14 países LATAM con legislación activa, tendencia global irreversible' },
+          { supuesto: 'Podemos mantener 62% de margen bruto al escalar', riesgo: 'Alto', validacion: 'Parcialmente validado — negociando contratos de suministro a 2 años para fijar costos' },
+          { supuesto: 'El CAC se mantiene bajo $4,000 al entrar a nuevos mercados', riesgo: 'Alto', validacion: 'No validado — Colombia puede requerir CAC mayor por falta de marca' },
+          { supuesto: 'Podemos replicar manufactura con partners en otros países', riesgo: 'Medio', validacion: 'En validación — 2 partners potenciales en Colombia identificados' },
+        ],
+      },
+    },
+    'mvbp-definition': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        mvbp: 'Plataforma de reorden automatizado con dashboard de impacto ambiental para clientes Enterprise.',
+        funcionalidades: '1. Reorden automático basado en consumo histórico. 2. Dashboard en tiempo real de kg de plástico evitados. 3. Certificado de impacto descargable para reportes ESG. 4. Integración con sistemas de compras del cliente.',
+        metricas: 'Adoption rate > 60% en 3 meses. Reducción de carga operativa de ventas en 40%. NPS > 80.',
+        timeline: 'MVP en 8 semanas. Beta con 5 clientes Enterprise. Launch general en Q3 2026.',
+      },
+    },
+    'traction-validation': {
+      completed: true,
+      completedAt: now,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        traccion: 'MRR: $47,000. 23 clientes pagando. Crecimiento MoM: 18%. Churn: <1% mensual. NPS: 78.',
+        hitos: [
+          { fecha: '2024-06', hito: 'Primera venta (piloto con Central Restaurante)' },
+          { fecha: '2024-09', hito: '$5K MRR — 5 clientes' },
+          { fecha: '2025-01', hito: '$15K MRR — certificación EN 13432 obtenida' },
+          { fecha: '2025-06', hito: '$28K MRR — 15 clientes, contrato con Hilton' },
+          { fecha: '2025-12', hito: '$38K MRR — 20 clientes, equipo de 6 personas' },
+          { fecha: '2026-03', hito: '$47K MRR — 23 clientes, equipo de 8, inicio fundraising' },
+        ],
+        evidencia: 'Revenue verificable por Nubefact (facturación electrónica SUNAT). Contratos firmados disponibles en data room.',
+      },
+    },
+    'product-plan-scaling': {
       completed: false,
       completedAt: null,
       reportGenerated: false,
       lastSaved: now,
       data: {
-        tam: '45000000',
-        sam: '12000000',
-        som: '800000',
-        metodologia: 'Restaurantes premium LATAM × consumo empaque/mes × precio.',
+        roadmap: 'Q2 2026: Plataforma de reorden. Q3 2026: Expansión a Colombia. Q4 2026: Línea de empaques para retail (consumer). Q1 2027: Planta propia en Lima.',
+        capacidadActual: '50,000 unidades/mes (planta tercerizada en Lurín).',
+        capacidadObjetivo: '200,000 unidades/mes para Q1 2027.',
+      },
+    },
+    'pitch-deck-builder': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        elevatorPitch: 'EcoBio Perú transforma residuos amazónicos en empaques compostables de alta performance para el food service latinoamericano. Con 23 clientes pagando, $47K MRR y 62% de margen bruto, estamos levantando $500K para expandir a Colombia y triplicar producción.',
+        slides: ['Problema', 'Solución', 'Mercado ($2.4B TAM)', 'Producto', 'Tracción', 'Modelo de negocio', 'Competencia', 'Equipo', 'Financieros', 'Ask: $500K pre-seed'],
+        estado: 'Deck v3 en revisión. 12 pitches realizados, 3 fondos en due diligence.',
+      },
+    },
+    'cap-table-fundraising': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        totalRaised: '230000',
+        lastRound: 'Pre-seed (angel + grant)',
+        valuation: '2500000',
+        capTable: [
+          { nombre: 'Ana Quispe (CEO)', porcentaje: '45%' },
+          { nombre: 'Ricardo Mendoza (CTO)', porcentaje: '30%' },
+          { nombre: 'Angel investors (3)', porcentaje: '15%' },
+          { nombre: 'ESOP pool', porcentaje: '10%' },
+        ],
+        rondaActual: 'Buscando $500K pre-seed a $2.5M pre-money. 20 inversores contactados, 3 en due diligence.',
+        usoDeFondos: '40% expansión Colombia, 25% plataforma tech, 20% equipo, 15% capital de trabajo.',
+      },
+    },
+    'data-room-builder': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        documentos: [
+          { nombre: 'Pitch Deck v3', estado: 'Listo' },
+          { nombre: 'Financial Model (3 años)', estado: 'Listo' },
+          { nombre: 'Cap Table detallado', estado: 'Listo' },
+          { nombre: 'Contratos con clientes (top 10)', estado: 'Listo' },
+          { nombre: 'Certificación EN 13432', estado: 'Listo' },
+          { nombre: 'Patentes en proceso (3)', estado: 'En revisión' },
+          { nombre: 'Term Sheet borrador', estado: 'Pendiente' },
+        ],
+      },
+    },
+    'financial-model-builder': {
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
+      lastSaved: now,
+      data: {
+        mrr: '47000',
+        arr: '564000',
+        burnRate: '32000',
+        runway: '14',
+        grossMargin: '62',
+        netMargin: '-8',
+        proyeccion: [
+          { periodo: '2026 Q2', mrr: '60000', clientes: 30 },
+          { periodo: '2026 Q4', mrr: '95000', clientes: 48 },
+          { periodo: '2027 Q2', mrr: '150000', clientes: 75 },
+        ],
+        breakeven: 'Proyectado para Q4 2026 con 35+ clientes.',
       },
     },
   }
   try {
     localStorage.setItem(key, JSON.stringify(seeded))
+  } catch { /* ignore */ }
+
+  // Seed rich profile extras for demo
+  const profileKey = `s4c_${DEMO_FOUNDER_ID}_profile_extra`
+  try {
+    const existingProfile = localStorage.getItem(profileKey)
+    if (!existingProfile || existingProfile === '{}') {
+      localStorage.setItem(profileKey, JSON.stringify({
+        vertical: 'cleantech_climatech',
+        country: 'Perú',
+        role: 'CEO & Co-Founder',
+        experience: '2-3 startups',
+        linkedin: 'linkedin.com/in/ana-quispe-ecobio',
+        description: 'Ingeniera ambiental por la PUCP con maestría en biomateriales por la Universidad Nacional de Ingeniería. 8 años de experiencia en economía circular, ex-investigadora en CONCYTEC. Co-fundó EcoBio Perú en 2023 para transformar residuos amazónicos en empaques compostables de alta performance. La startup ha validado su tecnología con 3 patentes en proceso y contratos con las principales cadenas de restaurantes sostenibles en Lima.',
+        teamSize: '8',
+        website: 'https://ecobioperu.com',
+        foundedYear: '2023',
+        legalEntity: 'EcoBio Perú S.A.C.',
+        ruc: '20612345678',
+      }))
+    }
   } catch { /* ignore */ }
 }
 

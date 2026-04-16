@@ -339,7 +339,9 @@ export default function AuthModal() {
                         }}
                         style={{
                           background: 'none',
-                          border: 'none',
+                          borderTop: 'none',
+                          borderRight: 'none',
+                          borderLeft: 'none',
                           borderBottom: mode === tab ? '2px solid var(--color-ink)' : '2px solid transparent',
                           padding: '0.875rem 0',
                           marginRight: '2rem',

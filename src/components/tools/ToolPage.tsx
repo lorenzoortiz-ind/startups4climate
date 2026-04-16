@@ -543,8 +543,10 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 padding: '1rem 1.25rem',
                 borderRadius: preambOpen ? '14px 14px 0 0' : 14,
                 background: 'var(--color-bg-card)',
-                border: '1px solid var(--color-border)',
-                borderBottom: preambOpen ? '1px solid var(--color-border)' : undefined,
+                borderTop: '1px solid var(--color-border)',
+                borderRight: '1px solid var(--color-border)',
+                borderLeft: '1px solid var(--color-border)',
+                borderBottom: '1px solid var(--color-border)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
@@ -594,7 +596,9 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                 style={{
                   padding: '1.25rem 1.5rem',
                   background: 'var(--color-bg-card)',
-                  border: '1px solid var(--color-border)',
+                  borderRight: '1px solid var(--color-border)',
+                  borderBottom: '1px solid var(--color-border)',
+                  borderLeft: '1px solid var(--color-border)',
                   borderTop: 'none',
                   borderRadius: '0 0 14px 14px',
                   display: 'grid',

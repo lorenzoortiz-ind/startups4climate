@@ -88,7 +88,7 @@ RESUMEN:
         defaultOpen
       >
         {data.assumptions.map((a, i) => (
-          <div key={i} style={{ padding: '1rem', borderRadius: 10, border: `1px solid ${riesgoColor(a.riesgo)}25`, borderLeft: `3px solid ${riesgoColor(a.riesgo)}`, marginBottom: '0.75rem', background: 'var(--color-bg-primary)' }}>
+          <div key={i} style={{ padding: '1rem', borderRadius: 10, borderTop: `1px solid ${riesgoColor(a.riesgo)}25`, borderRight: `1px solid ${riesgoColor(a.riesgo)}25`, borderBottom: `1px solid ${riesgoColor(a.riesgo)}25`, borderLeft: `3px solid ${riesgoColor(a.riesgo)}`, marginBottom: '0.75rem', background: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
               <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Supuesto {i + 1}</span>
               {data.assumptions.length > 1 && (

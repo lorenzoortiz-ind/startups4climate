@@ -64,14 +64,34 @@ function cacheStartup(userId: string, startup: StartupProfile | null) {
   }
 }
 
+// Matches RFC 4122 UUID. Skip Supabase for non-UUID ids (e.g. demo users).
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export function StartupProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth()
+  const { user, appUser, isDemo } = useAuth()
   const [startup, setStartup] = useState<StartupProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchStartup = useCallback(async () => {
     if (!user) {
       setStartup(null)
+      setLoading(false)
+      return
+    }
+
+    // Skip startup fetch for non-founder roles (admin_org, superadmin) — they
+    // don't have a startups row and the query 400s with admin-demo ids anyway.
+    if (appUser && appUser.role !== 'founder') {
+      setStartup(null)
+      setLoading(false)
+      return
+    }
+
+    // Skip Supabase for demo users (id is not a valid UUID → 400) and fall back
+    // to any locally cached startup (seeded by the demo bootstrap).
+    if (isDemo || !UUID_RE.test(user.id)) {
+      const cached = getCachedStartup(user.id)
+      setStartup(cached ?? null)
       setLoading(false)
       return
     }
@@ -121,7 +141,7 @@ export function StartupProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false)
     }
-  }, [user])
+  }, [user, appUser, isDemo])
 
   useEffect(() => {
     fetchStartup()

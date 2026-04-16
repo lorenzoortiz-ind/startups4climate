@@ -16,6 +16,8 @@ import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 interface CohortWithOrg {
   id: string
   name: string
@@ -71,11 +73,13 @@ export default function ProgramasPage() {
       }))
       setCohorts(mapped as CohortWithOrg[])
 
-      // Load founder's existing requests
-      const res = await fetch('/api/cohort-requests')
-      if (res.ok) {
-        const data = await res.json()
-        setMyRequests(data.requests || [])
+      // Load founder's existing requests (skip for demo users — no Supabase session)
+      if (UUID_RE.test(user.id)) {
+        const res = await fetch('/api/cohort-requests')
+        if (res.ok) {
+          const data = await res.json()
+          setMyRequests(data.requests || [])
+        }
       }
 
       // If founder has org, load org name
@@ -99,6 +103,10 @@ export default function ProgramasPage() {
   }, [loadData])
 
   const handleRequest = async (cohortId: string) => {
+    if (!user || !UUID_RE.test(user.id)) {
+      setError('Crea una cuenta real para solicitar acceso a programas.')
+      return
+    }
     setSubmitting(cohortId)
     setError(null)
     try {
@@ -115,7 +123,7 @@ export default function ProgramasPage() {
       }
       setSuccessId(cohortId)
       setSubmitting(null)
-      // Refresh requests
+      // Refresh requests (safe — handleRequest guard already ensures real user)
       const res2 = await fetch('/api/cohort-requests')
       if (res2.ok) {
         const data2 = await res2.json()

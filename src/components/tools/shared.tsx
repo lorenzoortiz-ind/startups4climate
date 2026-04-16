@@ -174,7 +174,9 @@ export function InsightPanel({
       padding: '1rem 1.25rem',
       borderRadius: 12,
       background: `${accentColor}06`,
-      border: `1px solid ${accentColor}15`,
+      borderTop: `1px solid ${accentColor}15`,
+      borderRight: `1px solid ${accentColor}15`,
+      borderBottom: `1px solid ${accentColor}15`,
       borderLeft: `3px solid ${accentColor}`,
     }}>
       <div style={{ flexShrink: 0, marginTop: 2 }}>

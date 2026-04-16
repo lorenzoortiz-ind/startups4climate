@@ -39,7 +39,7 @@ export default function OrgDashboardMockup({
 
       {/* Sidebar */}
       <rect x="20" y="48" width="90" height="244" fill="#191919" />
-      <rect x="20" y="280" width="90" height="12" rx="0 0 12 0" fill="#191919" />
+      <rect x="20" y="280" width="90" height="12" fill="#191919" />
 
       {/* Sidebar logo */}
       <text x="32" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="9" fontWeight="700" fill="#fff">

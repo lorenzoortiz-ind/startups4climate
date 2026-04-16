@@ -79,6 +79,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       })
   }, [appUser?.org_id, isDemo])
 
+  // Route guards — effects only (avoid setState-during-render warnings)
+  useEffect(() => {
+    if (loading) return
+    if (!appUser) {
+      router.replace('/')
+      return
+    }
+    if (appUser.role !== 'admin_org' && appUser.role !== 'superadmin') {
+      router.replace('/tools')
+    }
+  }, [loading, appUser, router])
 
   if (loading) {
     return (
@@ -99,16 +110,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  // Redirect if not authenticated or not admin
-  if (!appUser) {
-    router.replace('/')
-    return null
-  }
-
-  if (appUser.role !== 'admin_org' && appUser.role !== 'superadmin') {
-    router.replace('/tools')
-    return null
-  }
+  // Render nothing while redirecting (effect above handles navigation)
+  if (!appUser) return null
+  if (appUser.role !== 'admin_org' && appUser.role !== 'superadmin') return null
 
   const isActive = (href: string) => {
     if (href === '/admin') return pathname === '/admin'

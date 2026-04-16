@@ -220,6 +220,30 @@ export default function PerfilPage() {
     async function loadStartupData() {
       if (!appUser) return
 
+      // Demo users (non-UUID ids) can't be queried against Postgres — bail out
+      // and let the localStorage fallback below populate the form.
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+      if (!UUID_RE.test(appUser.id)) {
+        // fall through to localStorage fallback
+        if (typeof window !== 'undefined') {
+          try {
+            const extraKey = `s4c_${appUser.id}_profile_extra`
+            const extra = JSON.parse(localStorage.getItem(extraKey) || localStorage.getItem('s4c_profile_extra') || '{}')
+            if (extra.role) setRole(extra.role)
+            if (extra.linkedin) setLinkedin(extra.linkedin)
+            if (extra.descripcion) setDescripcion(extra.descripcion)
+            if (extra.vertical) setVertical(extra.vertical)
+            if (extra.country) setCountry(extra.country)
+            if (extra.phone) setPhone(extra.phone)
+            if (extra.website) setWebsite(extra.website)
+            if (extra.teamSize) setTeamSize(String(extra.teamSize))
+            if (extra.radarNewsletter) setRadarNewsletter(extra.radarNewsletter)
+            if (extra.oppsNewsletter) setOppsNewsletter(extra.oppsNewsletter)
+          } catch { /* ignore */ }
+        }
+        return
+      }
+
       try {
         const { data: startup } = await supabase
           .from('startups')
@@ -281,22 +305,26 @@ export default function PerfilPage() {
     localStorage.setItem(extraKey, JSON.stringify(extraData))
 
     if (appUser) {
-      try {
-        const { error: startupError } = await supabase.from('startups').upsert(
-          {
-            founder_id: appUser.id,
-            name: startupName,
-            description: descripcion,
-            vertical,
-            country,
-            website,
-            team_size: teamSize ? Number(teamSize) : null,
-          },
-          { onConflict: 'founder_id' }
-        )
-        if (startupError) console.warn('Failed to upsert startups table:', startupError.message)
-      } catch (err) {
-        console.warn('Error upserting startups table:', err)
+      // Demo users don't persist to Supabase — localStorage above already captured state
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+      if (UUID_RE.test(appUser.id)) {
+        try {
+          const { error: startupError } = await supabase.from('startups').upsert(
+            {
+              founder_id: appUser.id,
+              name: startupName,
+              description: descripcion,
+              vertical,
+              country,
+              website,
+              team_size: teamSize ? Number(teamSize) : null,
+            },
+            { onConflict: 'founder_id' }
+          )
+          if (startupError) console.warn('Failed to upsert startups table:', startupError.message)
+        } catch (err) {
+          console.warn('Error upserting startups table:', err)
+        }
       }
     }
 

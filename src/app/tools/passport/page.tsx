@@ -1802,7 +1802,9 @@ export default function PassportPage() {
                     padding: '0.75rem',
                     borderRadius: 8,
                     background: 'var(--color-bg-primary)',
-                    border: '1px solid var(--color-border)',
+                    borderTop: '1px solid var(--color-border)',
+                    borderRight: '1px solid var(--color-border)',
+                    borderBottom: '1px solid var(--color-border)',
                     borderLeft: `3px solid ${stageMeta.color}`,
                   }}
                 >

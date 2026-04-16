@@ -701,6 +701,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
     }, 8000)
 
+    // Rehydrate demo session from cookie before hitting Supabase. Without this,
+    // refreshing /tools or /admin in demo mode redirects back to / because
+    // appUser is null during the Supabase round-trip.
+    if (typeof document !== 'undefined') {
+      const demoCookie = document.cookie
+        .split('; ')
+        .find((c) => c.startsWith('s4c_demo='))
+        ?.split('=')[1] as 'founder' | 'admin_org' | undefined
+      if (demoCookie === 'founder') {
+        seedDemoFounderData()
+        setAppUser({ ...DEMO_FOUNDER_USER })
+        setIsDemo(true)
+        setLoading(false)
+        clearTimeout(safetyTimeout)
+        return () => { cancelled = true }
+      }
+      if (demoCookie === 'admin_org') {
+        setAppUser({ ...DEMO_ADMIN_USER })
+        setIsDemo(true)
+        setLoading(false)
+        clearTimeout(safetyTimeout)
+        return () => { cancelled = true }
+      }
+    }
+
     // Get initial user (getUser() validates with the server, unlike getSession())
     supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
       if (cancelled) return

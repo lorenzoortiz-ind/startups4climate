@@ -1,5 +1,15 @@
 import { supabase } from './supabase'
 
+/* ─── UUID helpers ─── */
+// Real users have RFC 4122 UUIDs. Demo users (e.g. "demo-founder-...") don't,
+// and Postgres rejects them with a 400 when used in `eq('user_id', …)` filters.
+// We skip all Supabase round-trips for those IDs and use localStorage as the
+// source of truth.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+function isRemoteSyncable(userId: string): boolean {
+  return UUID_RE.test(userId)
+}
+
 /* ─── Retry helper for Supabase writes ─── */
 async function withRetry<T>(fn: () => Promise<T>, retries = 2, delayMs = 500): Promise<T> {
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -63,6 +73,9 @@ export function getProgress(userId: string): ProgressMap {
  * Get all tool progress from Supabase first, falling back to localStorage.
  */
 export async function getProgressAsync(userId: string): Promise<ProgressMap> {
+  // Demo users: skip Supabase (non-UUID id → 400), read from localStorage only
+  if (!isRemoteSyncable(userId)) return getLocalProgress(userId)
+
   try {
     const { data, error } = await supabase
       .from('tool_data')
@@ -110,6 +123,13 @@ export async function saveToolData(userId: string, toolId: string, data: Record<
     reportGenerated: existing?.reportGenerated ?? false,
     data,
     lastSaved: now,
+  }
+
+  // Demo users: skip Supabase entirely, localStorage is the source of truth
+  if (!isRemoteSyncable(userId)) {
+    localProgress[toolId] = entry
+    saveLocalProgress(userId, localProgress)
+    return
   }
 
   // Try Supabase first with retry
@@ -167,6 +187,13 @@ export async function markToolCompleted(userId: string, toolId: string) {
     completedAt: now,
   }
 
+  // Demo users: skip Supabase entirely
+  if (!isRemoteSyncable(userId)) {
+    localProgress[toolId] = entry
+    saveLocalProgress(userId, localProgress)
+    return
+  }
+
   // Supabase first with retry
   try {
     await withRetry(async () => {
@@ -204,6 +231,13 @@ export async function markReportGenerated(userId: string, toolId: string) {
     completedAt: existing?.completedAt ?? null,
     lastSaved: existing?.lastSaved ?? null,
     reportGenerated: true,
+  }
+
+  // Demo users: skip Supabase entirely
+  if (!isRemoteSyncable(userId)) {
+    localProgress[toolId] = entry
+    saveLocalProgress(userId, localProgress)
+    return
   }
 
   // Supabase first with retry
@@ -252,6 +286,7 @@ export async function syncToolDataToSupabase(
   toolId: string,
   data: Record<string, unknown>
 ) {
+  if (!isRemoteSyncable(userId)) return // Demo users: no-op
   const { error } = await supabase
     .from('tool_data')
     .upsert(
@@ -276,6 +311,7 @@ export async function loadToolDataFromSupabase(
   userId: string,
   toolId: string
 ): Promise<Record<string, unknown> | null> {
+  if (!isRemoteSyncable(userId)) return null // Demo users: skip
   const { data, error } = await supabase
     .from('tool_data')
     .select('data')
@@ -293,6 +329,7 @@ export async function loadToolDataFromSupabase(
  * Called on dashboard load to ensure localStorage is in sync.
  */
 export async function hydrateProgressFromSupabase(userId: string): Promise<boolean> {
+  if (!isRemoteSyncable(userId)) return false // Demo users: skip
   try {
     const { data, error } = await supabase
       .from('tool_data')
@@ -344,6 +381,7 @@ export async function syncProgressToSupabase(
   completed: boolean,
   reportGenerated: boolean
 ) {
+  if (!isRemoteSyncable(userId)) return // Demo users: no-op
   const { error } = await supabase
     .from('tool_data')
     .upsert(

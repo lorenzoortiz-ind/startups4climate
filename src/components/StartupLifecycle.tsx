@@ -330,7 +330,9 @@ export default function StartupLifecycle() {
                     style={{
                       padding: '1.75rem',
                       borderRadius: 'var(--radius-lg)',
-                      border: '1px solid var(--color-border)',
+                      borderTop: '1px solid var(--color-border)',
+                      borderRight: '1px solid var(--color-border)',
+                      borderBottom: '1px solid var(--color-border)',
                       borderLeft: `4px solid ${stage.stageColor}`,
                       background: 'var(--color-paper)',
                       display: 'flex',

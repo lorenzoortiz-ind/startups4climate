@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
-import { useAuth, type User } from '@/context/AuthContext'
+import { Menu, X, ArrowRight, ChevronDown, Building2, Rocket } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import S4CLogo from '@/components/S4CLogo'
@@ -23,9 +23,12 @@ export default function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
   const [demoLoading, setDemoLoading] = useState<string | null>(null)
+  const [demoOpen, setDemoOpen] = useState(false)
+  const demoRef = useRef<HTMLDivElement>(null)
 
   const handleDemoEnter = (role: 'founder' | 'admin_org', redirect: string, key: string) => {
     setDemoLoading(key)
+    setDemoOpen(false)
     try {
       enterDemoMode(role)
       // Soft navigation keeps the React context alive (no cookie/session required).
@@ -41,6 +44,25 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Close demo dropdown on outside click / Escape
+  useEffect(() => {
+    if (!demoOpen) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (demoRef.current && !demoRef.current.contains(e.target as Node)) {
+        setDemoOpen(false)
+      }
+    }
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDemoOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEsc)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEsc)
+    }
+  }, [demoOpen])
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false)
@@ -97,17 +119,18 @@ export default function Navbar() {
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2.5rem' }}>
+            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2rem', flex: 1, justifyContent: 'center' }}>
               {navLinks.map((link) => {
                 const linkStyle: React.CSSProperties = {
                   fontFamily: 'var(--font-body)',
-                  fontSize: '1rem',
+                  fontSize: '0.95rem',
                   fontWeight: 500,
                   color: 'var(--color-ink)',
                   textDecoration: 'none',
                   opacity: 0.8,
                   transition: 'opacity 0.2s ease',
                   cursor: 'pointer',
+                  whiteSpace: 'nowrap',
                 }
 
                 if (link.isPage) {
@@ -133,46 +156,145 @@ export default function Navbar() {
             </div>
 
             {/* Desktop CTAs */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
+            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
               {!user && (
-                <>
+                <div ref={demoRef} style={{ position: 'relative' }}>
                   <button
-                    onClick={() => handleDemoEnter('admin_org', '/admin', 'bio')}
+                    onClick={() => setDemoOpen((o) => !o)}
                     disabled={demoLoading !== null}
+                    aria-haspopup="menu"
+                    aria-expanded={demoOpen}
                     style={{
-                      padding: '8px 14px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '9px 14px',
                       borderRadius: 'var(--radius-md)',
-                      background: 'rgba(13,148,136,0.1)',
-                      color: '#0D9488',
-                      border: '1px solid rgba(13,148,136,0.25)',
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: demoLoading ? 'wait' : 'pointer',
-                      opacity: demoLoading && demoLoading !== 'bio' ? 0.5 : 1,
-                    }}
-                  >
-                    {demoLoading === 'bio' ? 'Cargando...' : 'Demo Organización'}
-                  </button>
-                  <button
-                    onClick={() => handleDemoEnter('founder', '/tools', 'ana')}
-                    disabled={demoLoading !== null}
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: 'var(--radius-md)',
-                      background: 'rgba(255,107,74,0.1)',
+                      background: demoOpen ? 'rgba(255,107,74,0.14)' : 'rgba(255,107,74,0.08)',
                       color: '#FF6B4A',
                       border: '1px solid rgba(255,107,74,0.25)',
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.8rem',
+                      fontSize: '0.85rem',
                       fontWeight: 600,
                       cursor: demoLoading ? 'wait' : 'pointer',
-                      opacity: demoLoading && demoLoading !== 'ana' ? 0.5 : 1,
+                      whiteSpace: 'nowrap',
+                      transition: 'background 0.15s ease',
                     }}
                   >
-                    {demoLoading === 'ana' ? 'Cargando...' : 'Demo Founder'}
+                    {demoLoading ? 'Cargando...' : 'Demo'}
+                    <ChevronDown
+                      size={14}
+                      style={{
+                        transition: 'transform 0.2s ease',
+                        transform: demoOpen ? 'rotate(180deg)' : 'rotate(0)',
+                      }}
+                    />
                   </button>
-                </>
+
+                  <AnimatePresence>
+                    {demoOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.15 }}
+                        role="menu"
+                        style={{
+                          position: 'absolute',
+                          top: 'calc(100% + 8px)',
+                          right: 0,
+                          minWidth: 240,
+                          background: 'var(--color-paper)',
+                          border: '1px solid var(--color-border)',
+                          borderRadius: 14,
+                          boxShadow: '0 12px 32px -8px rgba(0,0,0,0.15)',
+                          padding: 6,
+                          zIndex: 1002,
+                        }}
+                      >
+                        <button
+                          onClick={() => handleDemoEnter('founder', '/tools', 'ana')}
+                          role="menuitem"
+                          className="demo-menu-item"
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            padding: '10px 12px',
+                            borderRadius: 10,
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontFamily: 'var(--font-body)',
+                          }}
+                        >
+                          <div style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 8,
+                            background: 'rgba(255,107,74,0.12)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                          }}>
+                            <Rocket size={16} color="#FF6B4A" />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-ink)' }}>
+                              Demo Founder
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                              Vista de fundadora (Ana Quispe)
+                            </div>
+                          </div>
+                        </button>
+
+                        <button
+                          onClick={() => handleDemoEnter('admin_org', '/admin', 'bio')}
+                          role="menuitem"
+                          className="demo-menu-item"
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            padding: '10px 12px',
+                            borderRadius: 10,
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontFamily: 'var(--font-body)',
+                          }}
+                        >
+                          <div style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 8,
+                            background: 'rgba(13,148,136,0.12)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                          }}>
+                            <Building2 size={16} color="#0D9488" />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-ink)' }}>
+                              Demo Organización
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                              Panel admin (BioInnova)
+                            </div>
+                          </div>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               )}
               {user ? (
                 <button
@@ -283,18 +405,22 @@ export default function Navbar() {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 12px 24px;
+          padding: 10px 22px;
           border-radius: var(--radius-xl);
           background-color: var(--color-ink);
           color: var(--color-paper);
           font-family: var(--font-body);
-          font-size: 1rem;
+          font-size: 0.95rem;
           font-weight: 700;
           border: none;
           cursor: pointer;
+          white-space: nowrap;
         }
         .typeform-btn:hover {
           background-color: var(--color-accent-primary);
+        }
+        .demo-menu-item:hover {
+          background: var(--color-cream) !important;
         }
       `}</style>
     </>

@@ -11,6 +11,11 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Card } from '@/components/ui'
+import { SuperadminExecutiveSummary } from '@/components/admin/SuperadminExecutiveSummary'
+import {
+  DEMO_ORG, DEMO_COHORTS, DEMO_STARTUPS, DEMO_VERTICAL_DISTRIBUTION,
+  DEMO_STAGE_DISTRIBUTION, topStartupsByReadiness,
+} from '@/lib/demo/admin-fixtures'
 
 interface OrgMetrics {
   totalStartups: number
@@ -142,6 +147,17 @@ const MOCK_DEMO_METRICS: OrgMetrics = {
 
 export default function AdminDashboard() {
   const { appUser, isDemo } = useAuth()
+
+  // Superadmin (MINPRO) demo dashboard — render executive summary instead of org-specific data
+  if (isDemo && appUser?.role === 'superadmin') {
+    return <SuperadminExecutiveSummary />
+  }
+
+  return <AdminOrgDashboard />
+}
+
+function AdminOrgDashboard() {
+  const { appUser, isDemo } = useAuth()
   const [metrics, setMetrics] = useState<OrgMetrics>({
     totalStartups: 0,
     activeCohorts: 0,
@@ -157,11 +173,35 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (isDemo) {
-      setOrgName('Universidad Demo')
+      setOrgName(DEMO_ORG.name)
       setOrgLogo(null)
-      setCohorts(MOCK_DEMO_COHORTS)
-      setStartups(MOCK_DEMO_STARTUPS)
-      setMetrics(MOCK_DEMO_METRICS)
+      const cohorts: CohortRow[] = DEMO_COHORTS.map((c) => ({
+        id: c.id,
+        name: c.name,
+        status: c.status,
+        start_date: c.startDate,
+        end_date: c.endDate,
+        startup_count: c.startupIds.length,
+      }))
+      const top = topStartupsByReadiness(5)
+      const startupRows: StartupRow[] = top.map((s) => ({
+        id: s.id,
+        name: s.name,
+        vertical: s.verticalLabel,
+        stage: s.stageLabel,
+        diagnostic_score: s.diagnosticScore,
+        tools_completed: s.toolsCompleted,
+        founder_name: s.founderName,
+        country: 'Perú',
+      }))
+      setCohorts(cohorts)
+      setStartups(startupRows)
+      setMetrics({
+        totalStartups: DEMO_ORG.activeStartups,
+        activeCohorts: DEMO_COHORTS.filter((c) => c.status === 'active').length,
+        avgScore: 7.3,
+        avgToolsCompleted: 23,
+      })
       setLoading(false)
       return
     }
@@ -537,6 +577,121 @@ export default function AdminDashboard() {
           )
         })}
       </div>
+
+      {/* Demo-only enriched insights */}
+      {isDemo && (
+        <motion.div
+          {...fadeUp}
+          transition={{ ...fadeUp.transition, delay: 0.18 }}
+          style={{ marginBottom: '1.5rem' }}
+        >
+          <Card padding="none" style={{ padding: '1.5rem' }}>
+            <div style={{
+              display: 'grid', gap: '1rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+              marginBottom: '1.25rem',
+            }}>
+              {[
+                { label: 'Financiamiento gestionado', value: 'USD 1.2M', bg: 'rgba(255,107,74,0.08)', color: '#FF6B4A' },
+                { label: 'Tools completion rate', value: `${DEMO_ORG.toolsCompletionRate}%`, bg: 'rgba(13,148,136,0.08)', color: '#0D9488' },
+                { label: 'NPS promedio', value: DEMO_ORG.averageNps, bg: 'rgba(59,130,246,0.08)', color: '#3B82F6' },
+                { label: 'Mentores activos', value: DEMO_ORG.mentors, bg: 'rgba(139,92,246,0.08)', color: '#8B5CF6' },
+              ].map((k) => (
+                <div key={k.label} style={{
+                  padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)',
+                  background: k.bg,
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-heading)', fontWeight: 700,
+                    fontSize: '1.3rem', color: 'var(--color-text-primary)',
+                    lineHeight: 1.1, marginBottom: '0.2rem',
+                  }}>
+                    {k.value}
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.66rem',
+                    color: 'var(--color-text-secondary)',
+                    textTransform: 'uppercase', letterSpacing: '0.05em',
+                  }}>
+                    {k.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{
+              display: 'grid', gap: '1.25rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            }}>
+              <div>
+                <h4 style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                  fontWeight: 700, color: 'var(--color-text-secondary)',
+                  textTransform: 'uppercase', letterSpacing: '0.06em',
+                  marginBottom: '0.55rem',
+                }}>
+                  Distribución por vertical
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  {DEMO_VERTICAL_DISTRIBUTION.map((v) => {
+                    const total = DEMO_VERTICAL_DISTRIBUTION.reduce((s, x) => s + x.count, 0)
+                    const pct = (v.count / total) * 100
+                    return (
+                      <div key={v.key}>
+                        <div style={{
+                          display: 'flex', justifyContent: 'space-between',
+                          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                          color: 'var(--color-text-primary)',
+                          marginBottom: '0.2rem',
+                        }}>
+                          <span>{v.label}</span>
+                          <span style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-secondary)' }}>{v.count}</span>
+                        </div>
+                        <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${pct}%`, background: v.color, borderRadius: 3 }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <h4 style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                  fontWeight: 700, color: 'var(--color-text-secondary)',
+                  textTransform: 'uppercase', letterSpacing: '0.06em',
+                  marginBottom: '0.55rem',
+                }}>
+                  Distribución por etapa
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  {DEMO_STAGE_DISTRIBUTION.map((s) => {
+                    const total = DEMO_STAGE_DISTRIBUTION.reduce((sum, x) => sum + x.count, 0)
+                    const pct = (s.count / total) * 100
+                    return (
+                      <div key={s.key}>
+                        <div style={{
+                          display: 'flex', justifyContent: 'space-between',
+                          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                          color: 'var(--color-text-primary)',
+                          marginBottom: '0.2rem',
+                        }}>
+                          <span>{s.label}</span>
+                          <span style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-secondary)' }}>{s.count}</span>
+                        </div>
+                        <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${pct}%`, background: s.color, borderRadius: 3 }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Cohorts section */}
       <motion.div

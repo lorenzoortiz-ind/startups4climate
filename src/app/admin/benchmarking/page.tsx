@@ -15,6 +15,7 @@ import {
 import { TrendingUp, TrendingDown, Minus, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { DEMO_STARTUPS, DEMO_ORG } from '@/lib/demo/admin-fixtures'
 
 interface BenchmarkMetric {
   metric: string
@@ -49,16 +50,23 @@ const fadeUp = {
   transition: { duration: 0.4, ease: 'easeOut' as const },
 }
 
+// Auto-derived from DEMO_STARTUPS for consistency with the rest of the demo
+const DEMO_TOOLS_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.toolsCompleted, 0) / DEMO_STARTUPS.length).toFixed(1)
+const DEMO_READINESS_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.readiness, 0) / DEMO_STARTUPS.length).toFixed(1)
+const DEMO_DIAG_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.diagnosticScore, 0) / DEMO_STARTUPS.length).toFixed(1)
+
 const MOCK_DEMO_BENCHMARK: BenchmarkMetric[] = [
-  { metric: 'Herramientas completadas', org: 4.8, platform: 3.2 },
-  { metric: 'Avance de etapa (%)', org: 68, platform: 54 },
-  { metric: 'Score diagnóstico', org: 6.8, platform: 5.4 },
+  { metric: 'Herramientas completadas (de 32)', org: DEMO_TOOLS_AVG, platform: 11.4 },
+  { metric: 'Readiness score (0-100)', org: DEMO_READINESS_AVG, platform: 56 },
+  { metric: 'Score diagnóstico (0-10)', org: DEMO_DIAG_AVG, platform: 5.6 },
+  { metric: 'NPS programa', org: DEMO_ORG.averageNps, platform: 62 },
 ]
 
 const MOCK_DEMO_CHART: { name: string; tuOrg: number; promedio: number }[] = [
-  { name: 'Herramientas', tuOrg: 4.8, promedio: 3.2 },
-  { name: 'Avance (%)', tuOrg: 68, promedio: 54 },
-  { name: 'Score diag.', tuOrg: 6.8, promedio: 5.4 },
+  { name: 'Herramientas', tuOrg: DEMO_TOOLS_AVG, promedio: 11.4 },
+  { name: 'Readiness', tuOrg: DEMO_READINESS_AVG, promedio: 56 },
+  { name: 'Score diag.', tuOrg: DEMO_DIAG_AVG, promedio: 5.6 },
+  { name: 'NPS', tuOrg: DEMO_ORG.averageNps, promedio: 62 },
 ]
 
 export default function BenchmarkingPage() {
@@ -358,6 +366,96 @@ export default function BenchmarkingPage() {
           </ResponsiveContainer>
         </div>
       </motion.div>
+
+      {/* Demo: Startups comparison table */}
+      {isDemo && (
+        <motion.div
+          {...fadeUp}
+          transition={{ ...fadeUp.transition, delay: 0.4 }}
+          style={{ ...cardStyle, marginTop: '1.5rem' }}
+        >
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem',
+          }}>
+            <h3 style={{
+              fontFamily: 'var(--font-heading)', fontWeight: 600,
+              fontSize: '1rem', color: 'var(--color-text-primary)',
+            }}>
+              Comparativo por startup ({DEMO_STARTUPS.length})
+            </h3>
+            <span style={{
+              fontFamily: 'var(--font-body)', fontSize: '0.72rem',
+              color: 'var(--color-text-muted)',
+            }}>
+              Ordenado por readiness · USD MRR · Crecimiento MoM
+            </span>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{
+              width: '100%', borderCollapse: 'collapse',
+              fontFamily: 'var(--font-body)', fontSize: '0.8rem',
+            }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  {['Startup', 'Vertical', 'Etapa', 'Readiness', 'MRR (USD)', 'TAM (USD)', '↑ MoM', 'Estado'].map((h) => (
+                    <th key={h} style={{
+                      padding: '0.6rem 0.5rem', textAlign: 'left',
+                      fontWeight: 600, color: 'var(--color-text-muted)',
+                      fontSize: '0.7rem', textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                    }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...DEMO_STARTUPS]
+                  .sort((a, b) => b.readiness - a.readiness)
+                  .map((s) => {
+                    const statusColor = s.status === 'on_track' ? '#0D9488' : s.status === 'at_risk' ? '#F59E0B' : '#DC2626'
+                    const statusLabel = s.status === 'on_track' ? 'On track' : s.status === 'at_risk' ? 'En riesgo' : 'Alerta'
+                    return (
+                      <tr key={s.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                        <td style={{ padding: '0.55rem 0.5rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+                          {s.name}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)' }}>
+                          {s.verticalLabel}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)' }}>
+                          {s.stageLabel}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
+                          {s.readiness}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                          {s.mrr > 0 ? `$${s.mrr.toLocaleString('en-US')}` : '—'}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                          ${(s.tam / 1_000_000).toFixed(0)}M
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                          {s.growthRate > 0 ? `+${s.growthRate}%` : '—'}
+                        </td>
+                        <td style={{ padding: '0.55rem 0.5rem' }}>
+                          <span style={{
+                            padding: '0.15rem 0.5rem', borderRadius: 'var(--radius-xl)',
+                            background: `${statusColor}1A`, color: statusColor,
+                            fontSize: '0.65rem', fontWeight: 600,
+                          }}>
+                            {statusLabel}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 }

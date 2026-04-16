@@ -10,6 +10,7 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import { useSuperadmin } from '@/context/SuperadminContext'
 import { supabase } from '@/lib/supabase'
+import { DEMO_EXECUTOR_ORGS } from '@/lib/demo/superadmin-fixtures'
 
 interface OrgRow {
   id: string
@@ -26,6 +27,7 @@ const TYPE_LABELS: Record<string, string> = {
   university: 'Universidad',
   incubator: 'Incubadora',
   accelerator: 'Aceleradora',
+  hub: 'Hub',
   government: 'Gobierno',
   ngo: 'ONG',
   other: 'Otro',
@@ -45,7 +47,7 @@ const cardStyle: React.CSSProperties = {
 }
 
 export default function OrganizacionesPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const { isSuperadmin } = useSuperadmin()
   const router = useRouter()
   const [orgs, setOrgs] = useState<OrgRow[]>([])
@@ -55,6 +57,23 @@ export default function OrganizacionesPage() {
   useEffect(() => {
     if (appUser && appUser.role !== 'superadmin') {
       router.replace('/admin')
+      return
+    }
+
+    if (isDemo) {
+      setOrgs(
+        DEMO_EXECUTOR_ORGS.map((o, i) => ({
+          id: o.id,
+          name: o.name,
+          type: o.type,
+          country: 'Perú',
+          plan: o.budgetExecutedPEN > 3_000_000 ? 'enterprise' : o.budgetExecutedPEN > 1_500_000 ? 'professional' : 'starter',
+          is_active: true,
+          created_at: new Date(2025, i, 15).toISOString(),
+          startups_count: o.startupsCount,
+        }))
+      )
+      setLoading(false)
       return
     }
 
@@ -98,7 +117,7 @@ export default function OrganizacionesPage() {
     }
 
     loadOrgs()
-  }, [appUser, router])
+  }, [appUser, router, isDemo])
 
   if (!isSuperadmin) return null
 

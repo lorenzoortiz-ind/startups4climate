@@ -9,6 +9,11 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
+import {
+  DEMO_PROGRAMS, DEMO_MINPRO_KPIS, DEMO_REGION_DISTRIBUTION,
+  DEMO_VERTICAL_DISTRIBUTION_NATIONAL, DEMO_STAGE_DISTRIBUTION_NATIONAL,
+  DEMO_GENDER_DISTRIBUTION, programRoi, formatPEN,
+} from '@/lib/demo/superadmin-fixtures'
 
 const cardStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
@@ -38,7 +43,7 @@ interface GroupCount {
 }
 
 export default function MetricasPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
 
   // Top metrics
@@ -59,6 +64,34 @@ export default function MetricasPage() {
   const [dailyRegistrations, setDailyRegistrations] = useState<{ date: string; count: number }[]>([])
 
   useEffect(() => {
+    if (isDemo) {
+      setTotalOrgs(8)
+      setTotalFounders(187)
+      setTotalStartups(DEMO_MINPRO_KPIS.startupsTotal)
+      setActiveCohorts(DEMO_PROGRAMS.reduce((s, p) => s + p.cohortsCount, 0))
+      setAvgToolsCompleted(18.2)
+      setAvgDiagnosticScore(7.0)
+      setPendingInvitations(12)
+      setOpenTickets(3)
+      setOrgsByPlan([
+        { label: 'enterprise', count: 2 },
+        { label: 'professional', count: 4 },
+        { label: 'starter', count: 2 },
+      ])
+      setFoundersByStage(DEMO_STAGE_DISTRIBUTION_NATIONAL.map((s) => ({ label: s.label, count: s.count })))
+      // Synthetic 30-day registration curve for demo
+      const synthetic: { date: string; count: number }[] = []
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+        const key = d.toISOString().substring(0, 10)
+        const base = 4 + Math.round(Math.sin(i / 4) * 3 + (i % 7 === 0 ? 6 : 0))
+        synthetic.push({ date: key, count: Math.max(0, base) })
+      }
+      setDailyRegistrations(synthetic)
+      setLoading(false)
+      return
+    }
+
     async function loadMetrics() {
       setLoading(true)
 
@@ -164,7 +197,7 @@ export default function MetricasPage() {
     }
 
     loadMetrics()
-  }, [])
+  }, [isDemo])
 
   if (appUser?.role !== 'superadmin') {
     return (
@@ -563,6 +596,221 @@ export default function MetricasPage() {
           })}
         </div>
       </motion.div>
+
+      {/* Demo-only: National comparative breakdowns */}
+      {isDemo && (
+        <>
+          <div style={{ height: '1.5rem' }} />
+          <div style={{
+            display: 'grid', gap: '1rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            marginBottom: '1rem',
+          }}>
+            {/* Regional */}
+            <motion.div {...fadeUp} style={cardStyle}>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontWeight: 600,
+                fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+                marginBottom: '1rem',
+              }}>
+                Distribución regional
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {DEMO_REGION_DISTRIBUTION.filter((r) => r.startups > 0).map((r) => {
+                  const max = Math.max(...DEMO_REGION_DISTRIBUTION.map((x) => x.startups))
+                  const pct = (r.startups / max) * 100
+                  return (
+                    <div key={r.region}>
+                      <div style={{
+                        display: 'flex', justifyContent: 'space-between',
+                        marginBottom: '0.2rem',
+                      }}>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                          color: 'var(--color-text-primary)', fontWeight: 500,
+                        }}>
+                          {r.region}
+                        </span>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                          color: 'var(--color-text-secondary)',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}>
+                          {r.startups} startups
+                        </span>
+                      </div>
+                      <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${pct}%`, background: r.color, borderRadius: 3 }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </motion.div>
+
+            {/* Verticales nacional */}
+            <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.05 }} style={cardStyle}>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontWeight: 600,
+                fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+                marginBottom: '1rem',
+              }}>
+                Verticales · nacional
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {DEMO_VERTICAL_DISTRIBUTION_NATIONAL.map((v) => {
+                  const max = Math.max(...DEMO_VERTICAL_DISTRIBUTION_NATIONAL.map((x) => x.count))
+                  const pct = (v.count / max) * 100
+                  return (
+                    <div key={v.key}>
+                      <div style={{
+                        display: 'flex', justifyContent: 'space-between',
+                        marginBottom: '0.2rem',
+                      }}>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                          color: 'var(--color-text-primary)', fontWeight: 500,
+                        }}>
+                          {v.label}
+                        </span>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                          color: 'var(--color-text-secondary)',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}>
+                          {v.count}
+                        </span>
+                      </div>
+                      <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${pct}%`, background: v.color, borderRadius: 3 }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </motion.div>
+
+            {/* Género */}
+            <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.1 }} style={cardStyle}>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontWeight: 600,
+                fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+                marginBottom: '1rem',
+              }}>
+                Diversidad de género
+              </h3>
+              <div style={{
+                display: 'flex', height: 14, borderRadius: 7,
+                overflow: 'hidden', marginBottom: '1rem',
+              }}>
+                {DEMO_GENDER_DISTRIBUTION.map((g) => (
+                  <div key={g.key} style={{
+                    width: `${g.pct}%`, background: g.color, height: '100%',
+                  }} title={`${g.label}: ${g.pct}%`} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                {DEMO_GENDER_DISTRIBUTION.map((g) => (
+                  <div key={g.key} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  }}>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                      color: 'var(--color-text-primary)',
+                    }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: g.color }} />
+                      {g.label}
+                    </span>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                      color: 'var(--color-text-secondary)', fontWeight: 600,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      {g.pct}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ROI por programa */}
+          <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.15 }} style={cardStyle}>
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              marginBottom: '1rem',
+            }}>
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontWeight: 600,
+                fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+              }}>
+                ROI estimado por programa
+              </h3>
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                color: 'var(--color-text-muted)',
+              }}>
+                Ratio MRR anualizado / Presupuesto ejecutado
+              </span>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{
+                width: '100%', borderCollapse: 'collapse',
+                fontFamily: 'var(--font-body)', fontSize: '0.78rem',
+              }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                    {['Programa', 'Región', 'Presupuesto ejec.', 'Startups', 'Empleos', 'tCO₂eq', 'ROI'].map((h) => (
+                      <th key={h} style={{
+                        padding: '0.55rem 0.5rem', textAlign: 'left',
+                        fontWeight: 600, color: 'var(--color-text-muted)',
+                        fontSize: '0.66rem', textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                      }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...DEMO_PROGRAMS]
+                    .sort((a, b) => programRoi(b) - programRoi(a))
+                    .map((p) => {
+                      const roi = programRoi(p)
+                      const roiColor = roi >= 0.5 ? '#0D9488' : roi >= 0.2 ? '#F59E0B' : '#DC2626'
+                      return (
+                        <tr key={p.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-primary)', fontWeight: 500 }}>
+                            {p.name}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)' }}>
+                            {p.region}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                            {formatPEN(p.budgetExecuted)}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                            {p.startupsCount}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                            {p.jobsGenerated}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+                            {p.co2Avoided}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.5rem', fontVariantNumeric: 'tabular-nums', fontWeight: 700, color: roiColor }}>
+                            {roi.toFixed(2)}x
+                          </td>
+                        </tr>
+                      )
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        </>
+      )}
     </motion.div>
   )
 }

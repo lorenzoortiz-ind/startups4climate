@@ -74,8 +74,8 @@ const InsightBox: React.FC<InsightBoxProps> = ({
     <div
       style={{
         backgroundColor: cfg.bg,
-        borderLeft: `3px solid ${cfg.border}`,
-        borderRadius: 'var(--radius-sm)',
+        border: `1px solid ${cfg.border}33`,
+        borderRadius: 'var(--radius-md)',
         padding: 'var(--space-4) var(--space-5)',
         display: 'flex',
         gap: 'var(--space-4)',

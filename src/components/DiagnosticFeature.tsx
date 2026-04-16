@@ -22,8 +22,10 @@ export default function DiagnosticFeature() {
       id="diagnostico-info"
       style={{
         padding: 'var(--section-py) 0',
-        background: 'var(--color-ink)',
-        color: 'var(--color-paper)',
+        background: 'var(--color-bg-card)',
+        color: 'var(--color-text-primary)',
+        borderTop: '1px solid var(--color-border)',
+        borderBottom: '1px solid var(--color-border)',
       }}
     >
       <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
@@ -53,7 +55,7 @@ export default function DiagnosticFeature() {
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
               marginBottom: '2rem',
-              color: 'var(--color-paper)',
+              color: 'var(--color-text-primary)',
             }}>
               Diagnóstico de Startup Readiness
             </h2>
@@ -61,7 +63,7 @@ export default function DiagnosticFeature() {
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-heading-lg)',
               lineHeight: 1.4,
-              color: 'rgba(255,255,255,0.7)',
+              color: 'var(--color-text-secondary)',
               maxWidth: 600,
             }}>
               10 preguntas que evalúan tu idea, mercado, equipo y modelo de negocio. Descubre tu etapa real y accede a las herramientas que necesitas hoy.
@@ -86,11 +88,12 @@ export default function DiagnosticFeature() {
                   minWidth: 56,
                   height: 56,
                   borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255,255,255,0.1)',
+                  background: 'rgba(255,107,74,0.10)',
+                  border: '1px solid rgba(255,107,74,0.25)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-paper)',
+                  color: 'var(--color-accent-primary)',
                 }}>
                   <f.icon size={24} strokeWidth={2} />
                 </div>
@@ -101,7 +104,7 @@ export default function DiagnosticFeature() {
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
                     marginBottom: '0.5rem',
-                    color: 'var(--color-paper)',
+                    color: 'var(--color-text-primary)',
                   }}>
                     {f.title}
                   </h3>
@@ -109,7 +112,7 @@ export default function DiagnosticFeature() {
                     fontFamily: 'var(--font-body)',
                     fontSize: 'var(--text-body-lg)',
                     lineHeight: 1.5,
-                    color: 'rgba(255,255,255,0.6)',
+                    color: 'var(--color-text-muted)',
                     margin: 0,
                   }}>
                     {f.desc}

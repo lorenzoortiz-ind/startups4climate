@@ -70,9 +70,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     const composedStyle: React.CSSProperties = {
       borderRadius: 'var(--radius-card)',
       overflow: 'hidden',
-      transition: 'box-shadow 0.25s var(--ease-smooth), transform 0.25s var(--ease-smooth)',
-      borderLeft: accent ? `3px solid ${accent}` : undefined,
+      transition: 'box-shadow 0.15s var(--ease-smooth), transform 0.15s var(--ease-smooth), border-color 0.15s ease',
       ...variantBase[variant],
+      ...(accent ? { borderTop: `2px solid ${accent}` } : {}),
       ...(hoverable && hovered
         ? {
             boxShadow: 'var(--shadow-card-hover)',

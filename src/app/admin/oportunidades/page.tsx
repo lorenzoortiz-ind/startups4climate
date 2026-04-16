@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import { DEMO_OPPORTUNITIES } from '@/lib/demo/admin-fixtures'
 
 /* ─── Types ─── */
 type OpportunityType = 'Grant' | 'Aceleradora' | 'Competencia' | 'Fondo' | 'Capacitación' | 'Programa'
@@ -152,6 +153,29 @@ const OPPORTUNITIES: Opportunity[] = [
     region: 'Regional',
   },
 ]
+
+/* ─── Demo: map DEMO_OPPORTUNITIES → Opportunity shape ─── */
+const TYPE_FROM_DEMO: Record<string, OpportunityType> = {
+  grant: 'Grant',
+  fund: 'Fondo',
+  competition: 'Competencia',
+  accelerator: 'Aceleradora',
+}
+const MONTH_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+function fmtDeadline(iso: string): string {
+  const d = new Date(iso)
+  return `${d.getDate()} ${MONTH_ES[d.getMonth()]} ${d.getFullYear()}`
+}
+const DEMO_OPPORTUNITIES_MAPPED: Opportunity[] = DEMO_OPPORTUNITIES.map((o) => ({
+  name: o.title,
+  organization: o.org,
+  type: TYPE_FROM_DEMO[o.type] || 'Programa',
+  amount: o.amount,
+  deadline: fmtDeadline(o.deadline),
+  description: `Convocatoria curada para el ecosistema ${o.vertical}. Apoyo a startups con foco regional y vinculación con la red MINPRO / Innóvate Perú.`,
+  eligibility: `Startups con foco en ${o.vertical}. Operaciones en Perú o LATAM, con al menos un MVP validado.`,
+  region: 'Perú / LATAM',
+}))
 
 /* ─── Date helpers ─── */
 const MONTH_MAP: Record<string, number> = {
@@ -389,7 +413,7 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
 
 /* ─── Main page ─── */
 export default function AdminOportunidadesPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const router = useRouter()
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('Todos')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Vigentes')
@@ -399,7 +423,8 @@ export default function AdminOportunidadesPage() {
     return null
   }
 
-  const filtered = OPPORTUNITIES
+  const sourceList = isDemo ? DEMO_OPPORTUNITIES_MAPPED : OPPORTUNITIES
+  const filtered = sourceList
     .filter((o) => typeFilter === 'Todos' || o.type === typeFilter)
     .filter((o) => {
       if (statusFilter === 'Todas') return true

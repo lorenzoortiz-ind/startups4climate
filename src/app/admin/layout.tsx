@@ -24,6 +24,7 @@ import {
   ScrollText,
   Wrench,
   Shield,
+  Briefcase,
 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useAuth } from '@/context/AuthContext'
@@ -42,6 +43,7 @@ const NAV_ITEMS = [
 ] as const
 
 const SUPERADMIN_NAV = [
+  { href: '/admin/programas', label: 'Programas', icon: Briefcase },
   { href: '/admin/organizaciones', label: 'Organizaciones', icon: Building2 },
   { href: '/admin/usuarios', label: 'Usuarios', icon: UsersRound },
   { href: '/admin/metricas', label: 'Métricas globales', icon: Activity },
@@ -63,13 +65,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [pathname])
 
   useEffect(() => {
-    if (!appUser?.org_id) return
     // Demo org — hardcode display info without hitting Supabase
     if (isDemo) {
       setOrgLogo(null)
-      setOrgName('Universidad Demo')
+      if (appUser?.role === 'superadmin') {
+        setOrgName('Ministerio de la Producción')
+      } else {
+        setOrgName('Universidad BioInnova')
+      }
       return
     }
+    if (!appUser?.org_id) return
     supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single()
       .then(({ data }) => {
         if (data) {
@@ -77,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setOrgName(data.name)
         }
       })
-  }, [appUser?.org_id, isDemo])
+  }, [appUser?.org_id, appUser?.role, isDemo])
 
   // Route guards — effects only (avoid setState-during-render warnings)
   useEffect(() => {

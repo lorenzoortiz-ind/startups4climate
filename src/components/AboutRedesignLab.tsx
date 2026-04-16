@@ -99,7 +99,7 @@ export default function AboutRedesignLab() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.1 }}
-                  whileHover={{ y: -6, boxShadow: '0 24px 48px -12px rgba(25,25,25,0.12)' }}
+                  whileHover={{ y: -4, boxShadow: '0 12px 32px -8px rgba(0,0,0,0.5)' }}
                   style={{
                     background: 'var(--color-paper)',
                     borderRadius: 'var(--radius-lg)',

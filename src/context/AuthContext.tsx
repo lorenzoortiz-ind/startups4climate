@@ -56,13 +56,14 @@ interface AuthContextType {
   authModalOpen: boolean
   authModalMode: 'login' | 'register'
   updateUserStage: (stage: string, score: number) => void
-  enterDemoMode: (role: 'founder' | 'admin_org') => void
+  enterDemoMode: (role: 'founder' | 'admin_org' | 'superadmin') => void
 }
 
 /* ─── Demo user fixtures ─── */
 export const DEMO_FOUNDER_ID = 'demo-founder-0000-0000-0000-000000000001'
 export const DEMO_ADMIN_ID = 'demo-admin-0000-0000-0000-000000000002'
 export const DEMO_ORG_ID = 'demo-org-0000-0000-0000-000000000003'
+export const DEMO_SUPERADMIN_ID = 'demo-super-0000-0000-0000-000000000004'
 
 const DEMO_FOUNDER_USER: AppUser = {
   id: DEMO_FOUNDER_ID,
@@ -81,7 +82,19 @@ const DEMO_ADMIN_USER: AppUser = {
   email: 'demo.admin@s4c.demo',
   role: 'admin_org',
   org_id: DEMO_ORG_ID,
-  full_name: 'Universidad Demo',
+  full_name: 'Universidad BioInnova',
+  startup_name: null,
+  stage: null,
+  diagnosticScore: null,
+  created_at: new Date().toISOString(),
+}
+
+const DEMO_SUPERADMIN_USER: AppUser = {
+  id: DEMO_SUPERADMIN_ID,
+  email: 'minpro@s4c.demo',
+  role: 'superadmin',
+  org_id: null,
+  full_name: 'Ministerio de la Producción (Demo)',
   startup_name: null,
   stage: null,
   diagnosticScore: null,
@@ -90,7 +103,7 @@ const DEMO_ADMIN_USER: AppUser = {
 
 /** True if a user id belongs to one of our demo fixtures. */
 export function isDemoUserId(id: string | null | undefined): boolean {
-  return id === DEMO_FOUNDER_ID || id === DEMO_ADMIN_ID
+  return id === DEMO_FOUNDER_ID || id === DEMO_ADMIN_ID || id === DEMO_SUPERADMIN_ID
 }
 
 /** Seed some example tool progress into localStorage so demo founder has content. */
@@ -708,7 +721,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const demoCookie = document.cookie
         .split('; ')
         .find((c) => c.startsWith('s4c_demo='))
-        ?.split('=')[1] as 'founder' | 'admin_org' | undefined
+        ?.split('=')[1] as 'founder' | 'admin_org' | 'superadmin' | undefined
       if (demoCookie === 'founder') {
         seedDemoFounderData()
         setAppUser({ ...DEMO_FOUNDER_USER })
@@ -719,6 +732,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       if (demoCookie === 'admin_org') {
         setAppUser({ ...DEMO_ADMIN_USER })
+        setIsDemo(true)
+        setLoading(false)
+        clearTimeout(safetyTimeout)
+        return () => { cancelled = true }
+      }
+      if (demoCookie === 'superadmin') {
+        setAppUser({ ...DEMO_SUPERADMIN_USER })
         setIsDemo(true)
         setLoading(false)
         clearTimeout(safetyTimeout)
@@ -1080,14 +1100,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ])
   }, [])
 
-  const enterDemoMode = useCallback((role: 'founder' | 'admin_org') => {
+  const enterDemoMode = useCallback((role: 'founder' | 'admin_org' | 'superadmin') => {
     // Rehydrate demo user from fixtures (force re-render) and seed localStorage.
     setIsDemo(true)
     if (role === 'founder') {
       seedDemoFounderData()
       setAppUser({ ...DEMO_FOUNDER_USER })
-    } else {
+    } else if (role === 'admin_org') {
       setAppUser({ ...DEMO_ADMIN_USER })
+    } else {
+      setAppUser({ ...DEMO_SUPERADMIN_USER })
     }
     setLoading(false)
     // Set a cookie so middleware lets demo users through (24h lifetime).

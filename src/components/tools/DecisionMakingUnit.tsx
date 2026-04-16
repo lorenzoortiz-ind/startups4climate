@@ -86,11 +86,8 @@ ${data.stakeholders.map((s, i) => `STAKEHOLDER ${i + 1}:
             <div key={i} style={{
               padding: '1rem',
               borderRadius: 12,
-              borderTop: `1px solid ${rolColor(s.rol)}25`,
-              borderRight: `1px solid ${rolColor(s.rol)}25`,
-              borderBottom: `1px solid ${rolColor(s.rol)}25`,
-              borderLeft: `3px solid ${rolColor(s.rol)}`,
-              background: 'var(--color-bg-primary)',
+              border: `1px solid ${rolColor(s.rol)}30`,
+              background: `${rolColor(s.rol)}10`,
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <span style={{

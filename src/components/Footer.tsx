@@ -24,7 +24,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--color-ink)', color: 'var(--color-paper)', padding: '6rem 0 3rem' }}>
+    <footer style={{ background: 'var(--color-bg-dark)', color: 'var(--color-text-primary)', padding: '6rem 0 3rem', borderTop: '1px solid var(--color-border)' }}>
       <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
 
         {/* Top: Info + Logo & Links Grid */}
@@ -44,7 +44,7 @@ export default function Footer() {
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
                 fontSize: '1.25rem',
-                color: 'var(--color-paper)',
+                color: 'var(--color-text-primary)',
                 letterSpacing: '-0.02em',
               }}>
                 Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate

@@ -14,10 +14,11 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import { DEMO_ECOSYSTEM_ACTORS } from '@/lib/demo/admin-fixtures'
 
 /* ─── Types ─── */
 type Category = 'Inversión' | 'Regulación' | 'Tendencia' | 'Programa'
-type Tab = 'noticias' | 'programa'
+type Tab = 'noticias' | 'programa' | 'actores'
 
 interface NewsItem {
   title: string
@@ -148,7 +149,28 @@ const CATEGORIES: (Category | 'Todos')[] = ['Todos', 'Inversión', 'Regulación'
 const TABS: { id: Tab; label: string; icon: typeof Newspaper }[] = [
   { id: 'noticias', label: 'Noticias del ecosistema', icon: Newspaper },
   { id: 'programa', label: 'Relevante para tu programa', icon: Target },
+  { id: 'actores', label: 'Actores del ecosistema', icon: Radio },
 ]
+
+const ACTOR_CATEGORY_LABELS: Record<string, string> = {
+  incubator: 'Incubadoras',
+  fund: 'Fondos / VC',
+  gov: 'Gobierno',
+  university: 'Universidades',
+  corporate: 'Corporates',
+  media: 'Medios',
+  event: 'Eventos',
+}
+
+const ACTOR_CATEGORY_COLORS: Record<string, string> = {
+  incubator: '#0D9488',
+  fund: '#8B5CF6',
+  gov: '#3B82F6',
+  university: '#16A34A',
+  corporate: '#FF6B4A',
+  media: '#F59E0B',
+  event: '#EC4899',
+}
 
 /* ─── Components ─── */
 function CategoryPill({ category }: { category: Category }) {
@@ -352,7 +374,7 @@ function ProgramCard({ item, index }: { item: ProgramItem; index: number }) {
 
 /* ─── Main page ─── */
 export default function AdminRadarPage() {
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [activeCategory, setActiveCategory] = useState<Category | 'Todos'>('Todos')
@@ -361,6 +383,9 @@ export default function AdminRadarPage() {
     router.replace('/admin')
     return null
   }
+
+  // Filter out actores tab when not in demo mode
+  const visibleTabs = isDemo ? TABS : TABS.filter((t) => t.id !== 'actores')
 
   const filteredNews =
     activeCategory === 'Todos'
@@ -470,7 +495,7 @@ export default function AdminRadarPage() {
             paddingBottom: '0.25rem',
           }}
         >
-          {TABS.map((tab) => {
+          {visibleTabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
             return (
@@ -620,6 +645,97 @@ export default function AdminRadarPage() {
                 <ProgramCard key={item.title} item={item} index={i} />
               ))}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'actores' && isDemo && (
+          <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.75rem 1rem', borderRadius: 12,
+                background: 'rgba(13,148,136,0.04)',
+                border: '1px solid rgba(13,148,136,0.15)',
+                marginBottom: '1.25rem',
+              }}
+            >
+              <Radio size={14} color="#0D9488" />
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-secondary)',
+              }}>
+                Mapa del ecosistema · {DEMO_ECOSYSTEM_ACTORS.length} actores activos en Perú y LATAM
+              </span>
+            </motion.div>
+
+            {Object.keys(ACTOR_CATEGORY_LABELS).map((cat) => {
+              const items = DEMO_ECOSYSTEM_ACTORS.filter((a) => a.category === cat)
+              if (items.length === 0) return null
+              const color = ACTOR_CATEGORY_COLORS[cat]
+              return (
+                <div key={cat} style={{ marginBottom: '1.5rem' }}>
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                    marginBottom: '0.75rem',
+                  }}>
+                    <span style={{
+                      width: 8, height: 8, borderRadius: '50%', background: color,
+                    }} />
+                    <h3 style={{
+                      fontFamily: 'var(--font-heading)', fontWeight: 600,
+                      fontSize: '0.95rem', color: 'var(--color-text-primary)',
+                      margin: 0,
+                    }}>
+                      {ACTOR_CATEGORY_LABELS[cat]}
+                    </h3>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                      color: 'var(--color-text-muted)',
+                    }}>
+                      ({items.length})
+                    </span>
+                  </div>
+                  <div style={{
+                    display: 'grid', gap: '0.6rem',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(220px, 100%), 1fr))',
+                  }}>
+                    {items.map((a) => (
+                      <div key={a.id} style={{
+                        padding: '0.75rem 0.85rem',
+                        borderRadius: 'var(--radius-sm)',
+                        background: `${color}0A`,
+                        border: `1px solid ${color}33`,
+                      }}>
+                        <div style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.82rem',
+                          fontWeight: 600, color: 'var(--color-text-primary)',
+                          marginBottom: '0.2rem',
+                        }}>
+                          {a.name}
+                        </div>
+                        <div style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.66rem',
+                          color: 'var(--color-text-muted)',
+                          textTransform: 'uppercase', letterSpacing: '0.04em',
+                          marginBottom: '0.35rem',
+                        }}>
+                          {a.region}
+                        </div>
+                        <div style={{
+                          fontFamily: 'var(--font-body)', fontSize: '0.72rem',
+                          color: 'var(--color-text-secondary)', lineHeight: 1.4,
+                        }}>
+                          {a.description}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>

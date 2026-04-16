@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { DEMO_COHORTS } from '@/lib/demo/admin-fixtures'
 
 interface CohortRow {
   id: string
@@ -37,38 +38,16 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
-const MOCK_DEMO_COHORTS: (CohortRow & { startupsCount: number })[] = [
-  {
-    id: 'demo-cohort-otono-2025',
-    name: 'Cohorte Otoño 2025',
-    description: 'Cohorte enfocada en startups de impacto ambiental en fase MVP.',
-    start_date: '2025-09-01',
-    end_date: '2025-12-15',
-    status: 'active',
-    created_at: '2025-08-15T10:00:00Z',
-    startupsCount: 12,
-  },
-  {
-    id: 'demo-cohort-primavera-2026',
-    name: 'Cohorte Primavera 2026',
-    description: 'Nueva generación de founders con foco en agritech y biotech.',
-    start_date: '2026-03-01',
-    end_date: '2026-06-30',
-    status: 'active',
-    created_at: '2026-02-10T10:00:00Z',
-    startupsCount: 8,
-  },
-  {
-    id: 'demo-cohort-verano-2025',
-    name: 'Cohorte Verano 2025',
-    description: 'Cohorte piloto completada con éxito.',
-    start_date: '2025-06-01',
-    end_date: '2025-08-31',
-    status: 'completed',
-    created_at: '2025-05-10T10:00:00Z',
-    startupsCount: 10,
-  },
-]
+const MOCK_DEMO_COHORTS: (CohortRow & { startupsCount: number })[] = DEMO_COHORTS.map((c) => ({
+  id: c.id,
+  name: c.name,
+  description: c.description,
+  start_date: c.startDate,
+  end_date: c.endDate,
+  status: c.status,
+  created_at: c.startDate,
+  startupsCount: c.startupIds.length,
+}))
 
 export default function CohortesPage() {
   const { appUser, isDemo } = useAuth()

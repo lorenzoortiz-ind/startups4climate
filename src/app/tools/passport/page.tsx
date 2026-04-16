@@ -1801,11 +1801,8 @@ export default function PassportPage() {
                     marginTop: '0.75rem',
                     padding: '0.75rem',
                     borderRadius: 8,
-                    background: 'var(--color-bg-primary)',
-                    borderTop: '1px solid var(--color-border)',
-                    borderRight: '1px solid var(--color-border)',
-                    borderBottom: '1px solid var(--color-border)',
-                    borderLeft: `3px solid ${stageMeta.color}`,
+                    background: `${stageMeta.color}10`,
+                    border: `1px solid ${stageMeta.color}30`,
                   }}
                 >
                   <div

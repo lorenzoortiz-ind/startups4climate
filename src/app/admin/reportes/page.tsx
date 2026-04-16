@@ -7,9 +7,12 @@ import {
   Download,
   ChevronDown,
   Loader2,
+  Sheet,
+  CalendarClock,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { DEMO_COHORTS, DEMO_ADMIN_REPORTS } from '@/lib/demo/admin-fixtures'
 
 interface CohortOption {
   id: string
@@ -60,11 +63,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
 }
 
-const MOCK_DEMO_COHORTS: CohortOption[] = [
-  { id: 'demo-cohort-primavera-2026', name: 'Cohorte Primavera 2026' },
-  { id: 'demo-cohort-otono-2025', name: 'Cohorte Otoño 2025' },
-  { id: 'demo-cohort-verano-2025', name: 'Cohorte Verano 2025' },
-]
+const MOCK_DEMO_COHORTS: CohortOption[] = DEMO_COHORTS.map((c) => ({ id: c.id, name: c.name }))
 
 export default function ReportesPage() {
   const { appUser, isDemo } = useAuth()
@@ -336,36 +335,168 @@ export default function ReportesPage() {
 
       </div>
 
-      {/* Info */}
-      <div style={{
-        ...cardStyle,
-        textAlign: 'center',
-        padding: '3rem 2rem',
-      }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'var(--color-bg-muted)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          margin: '0 auto 1rem',
-        }}>
-          <FileBarChart size={24} color="var(--color-text-muted)" />
+      {/* Info / Demo gallery */}
+      {isDemo ? (
+        <div>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: '0.75rem',
+          }}>
+            <h2 style={{
+              fontFamily: 'var(--font-heading)', fontWeight: 600,
+              fontSize: '1.0625rem', color: 'var(--color-text-primary)',
+            }}>
+              Reportes ya generados
+            </h2>
+            <span style={{
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+              color: 'var(--color-text-muted)',
+            }}>
+              {DEMO_ADMIN_REPORTS.length} reportes disponibles
+            </span>
+          </div>
+          <div style={{
+            display: 'grid', gap: '0.85rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          }}>
+            {DEMO_ADMIN_REPORTS.map((r, i) => (
+              <motion.div
+                key={r.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: i * 0.05 }}
+                style={{ ...cardStyle, padding: '1.1rem 1.2rem' }}
+              >
+                <div style={{
+                  display: 'flex', alignItems: 'flex-start',
+                  justifyContent: 'space-between', gap: '0.5rem',
+                  marginBottom: '0.5rem',
+                }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(255,107,74,0.10)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    <FileBarChart size={16} color="#FF6B4A" />
+                  </div>
+                  <div style={{
+                    display: 'flex', gap: '0.4rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.65rem',
+                    color: 'var(--color-text-muted)',
+                  }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
+                      <Sheet size={12} /> {r.sheets} hojas
+                    </span>
+                    <span>·</span>
+                    <span>{r.rows} filas</span>
+                  </div>
+                </div>
+                <h3 style={{
+                  fontFamily: 'var(--font-heading)', fontWeight: 600,
+                  fontSize: '0.95rem', color: 'var(--color-text-primary)',
+                  marginBottom: '0.2rem',
+                }}>
+                  {r.title}
+                </h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.78rem',
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.45, marginBottom: '0.85rem',
+                }}>
+                  {r.subtitle}
+                </p>
+                <div style={{
+                  display: 'grid', gap: '0.35rem',
+                  gridTemplateColumns: '1fr 1fr',
+                  marginBottom: '0.85rem',
+                }}>
+                  {r.metrics.map((m) => (
+                    <div key={m.label} style={{
+                      padding: '0.45rem 0.55rem',
+                      borderRadius: 'var(--radius-sm)',
+                      background: 'var(--color-bg-muted)',
+                    }}>
+                      <div style={{
+                        fontFamily: 'var(--font-body)', fontSize: '0.6rem',
+                        color: 'var(--color-text-muted)',
+                        textTransform: 'uppercase', letterSpacing: '0.04em',
+                        marginBottom: '0.15rem',
+                      }}>
+                        {m.label}
+                      </div>
+                      <div style={{
+                        fontFamily: 'var(--font-body)', fontSize: '0.78rem',
+                        fontWeight: 600, color: 'var(--color-text-primary)',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}>
+                        {m.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  paddingTop: '0.7rem',
+                  borderTop: '1px solid var(--color-border)',
+                }}>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                    fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                    color: 'var(--color-text-muted)',
+                  }}>
+                    <CalendarClock size={12} />
+                    {new Date(r.lastGenerated).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </div>
+                  <button
+                    onClick={() => setError('La descarga de reportes está deshabilitada en modo demo.')}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                      padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)',
+                      background: 'var(--color-accent-primary)', color: '#fff',
+                      fontFamily: 'var(--font-body)', fontSize: '0.7rem',
+                      fontWeight: 600, border: 'none', cursor: 'pointer',
+                    }}
+                  >
+                    <Download size={12} />
+                    Excel
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
-        <h3 style={{
-          fontFamily: 'var(--font-heading)', fontWeight: 600,
-          fontSize: '1rem', color: 'var(--color-text-primary)',
-          marginBottom: '0.5rem',
+      ) : (
+        <div style={{
+          ...cardStyle,
+          textAlign: 'center',
+          padding: '3rem 2rem',
         }}>
-          Reportes en formato Excel
-        </h3>
-        <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-          color: 'var(--color-text-secondary)', maxWidth: 420,
-          margin: '0 auto', lineHeight: 1.6,
-        }}>
-          Los reportes incluyen métricas de avance, distribución por etapa, herramientas completadas,
-          scores diagnósticos y datos de cada startup del programa.
-        </p>
-      </div>
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'var(--color-bg-muted)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 1rem',
+          }}>
+            <FileBarChart size={24} color="var(--color-text-muted)" />
+          </div>
+          <h3 style={{
+            fontFamily: 'var(--font-heading)', fontWeight: 600,
+            fontSize: '1rem', color: 'var(--color-text-primary)',
+            marginBottom: '0.5rem',
+          }}>
+            Reportes en formato Excel
+          </h3>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+            color: 'var(--color-text-secondary)', maxWidth: 420,
+            margin: '0 auto', lineHeight: 1.6,
+          }}>
+            Los reportes incluyen métricas de avance, distribución por etapa, herramientas completadas,
+            scores diagnósticos y datos de cada startup del programa.
+          </p>
+        </div>
+      )}
     </motion.div>
   )
 }

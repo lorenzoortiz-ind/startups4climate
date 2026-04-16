@@ -57,7 +57,7 @@ function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: n
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ type: 'spring', damping: 20, stiffness: 100, delay }}
-      whileHover={{ y: -6, boxShadow: '0 24px 48px -12px rgba(25,25,25,0.12)' }}
+      whileHover={{ y: -4, boxShadow: '0 12px 32px -8px rgba(0,0,0,0.5)' }}
       style={{
         background: 'var(--color-paper)',
         borderRadius: 'var(--radius-lg)',
@@ -74,8 +74,9 @@ function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: n
         width: 52,
         height: 52,
         borderRadius: 'var(--radius-full)',
-        background: 'var(--color-ink)',
-        color: 'var(--color-paper)',
+        background: 'rgba(255,107,74,0.10)',
+        border: '1px solid rgba(255,107,74,0.22)',
+        color: 'var(--color-accent-primary)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -111,7 +112,7 @@ function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: n
 
 export default function ValueProp() {
   return (
-    <section id="plataforma" style={{ padding: 'var(--section-py) 0', background: 'var(--color-paper)' }}>
+    <section id="plataforma" style={{ padding: 'var(--section-py) 0', background: 'var(--color-bg-card)' }}>
       <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
 
         <motion.div

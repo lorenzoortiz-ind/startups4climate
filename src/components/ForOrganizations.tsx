@@ -55,15 +55,15 @@ function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number })
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: 'var(--color-paper)',
+        background: 'var(--color-bg-card)',
         borderRadius: 'var(--radius-lg)',
-        border: `1px solid ${hovered ? feature.accent : 'var(--color-border)'}`,
+        border: `1px solid ${hovered ? feature.accent + '55' : 'var(--color-border)'}`,
         padding: '3rem 2.5rem',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'transform 0.2s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease',
-        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
-        boxShadow: hovered ? 'var(--shadow-float)' : '0 1px 4px rgba(25,25,25,0.04)',
+        transition: 'transform 0.15s var(--ease-spring), box-shadow 0.15s ease, border-color 0.15s ease',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        boxShadow: hovered ? 'var(--shadow-card-hover)' : 'var(--shadow-card)',
         cursor: 'default',
       }}
     >
@@ -72,20 +72,20 @@ function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number })
           width: 60,
           height: 60,
           borderRadius: 'var(--radius-md)',
-          background: hovered ? feature.accentBg : 'var(--color-bg-primary)',
-          border: `1px solid ${hovered ? feature.accent + '30' : 'var(--color-border)'}`,
+          background: hovered ? feature.accentBg : 'rgba(255,255,255,0.03)',
+          border: `1px solid ${hovered ? feature.accent + '40' : 'var(--color-border-strong)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           marginBottom: '2rem',
-          transition: 'background 0.2s ease, border-color 0.2s ease',
+          transition: 'background 0.15s ease, border-color 0.15s ease',
         }}
       >
         <IconComp
           size={28}
           strokeWidth={1.5}
-          color={hovered ? feature.accent : 'var(--color-ink)'}
-          style={{ transition: 'color 0.2s ease' }}
+          color={hovered ? feature.accent : 'var(--color-text-secondary)'}
+          style={{ transition: 'color 0.15s ease' }}
         />
       </div>
       <h3
@@ -190,15 +190,17 @@ export default function ForOrganizations() {
         <motion.div
           {...springReveal}
           style={{
-            background: 'var(--color-ink)',
+            background: 'linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%)',
+            border: '1px solid var(--color-border-strong)',
             borderRadius: 'var(--radius-xl)',
             padding: 'clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 4rem)',
             textAlign: 'center',
             maxWidth: 920,
             margin: '0 auto',
-            color: 'var(--color-paper)',
+            color: 'var(--color-text-primary)',
             position: 'relative',
             overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           }}
         >
           {/* Decorative accent */}
@@ -238,7 +240,7 @@ export default function ForOrganizations() {
               letterSpacing: '-0.04em',
               lineHeight: 1.05,
               marginBottom: '1.25rem',
-              color: 'var(--color-paper)',
+              color: 'var(--color-text-primary)',
             }}
           >
             ¿Gestionas un programa de<br />incubación o aceleración?
@@ -264,28 +266,29 @@ export default function ForOrganizations() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.75rem',
-              padding: '1.25rem 2.5rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-paper)',
-              color: 'var(--color-ink)',
+              padding: '1.05rem 2rem',
+              borderRadius: 12,
+              background: 'var(--color-accent-primary)',
+              color: '#fff',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-body-lg)',
-              fontWeight: 700,
+              fontWeight: 600,
               border: 'none',
               cursor: 'pointer',
-              transition: 'background 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-spring)',
+              boxShadow: '0 4px 16px rgba(255,107,74,0.25)',
+              transition: 'background 0.15s ease, transform 0.15s var(--ease-spring), box-shadow 0.15s ease',
               textDecoration: 'none',
               letterSpacing: '-0.01em',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-accent-primary)'
-              e.currentTarget.style.color = 'var(--color-paper)'
-              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.background = 'var(--color-accent-hover)'
+              e.currentTarget.style.transform = 'translateY(-1px)'
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,107,74,0.35)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-paper)'
-              e.currentTarget.style.color = 'var(--color-ink)'
+              e.currentTarget.style.background = 'var(--color-accent-primary)'
               e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(255,107,74,0.25)'
             }}
           >
             Agenda una llamada

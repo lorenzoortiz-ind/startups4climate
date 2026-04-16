@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { getCohortById, startupsByCohort } from '@/lib/demo/admin-fixtures'
 
 interface CohortData {
   id: string
@@ -64,6 +65,8 @@ const STAGE_LABELS: Record<string, string> = {
   incubation: 'Incubación',
   acceleration: 'Aceleración',
   scaling: 'Escalamiento',
+  completed: 'Completado',
+  pending: 'Pendiente',
 }
 
 const VERTICAL_LABELS: Record<string, string> = {
@@ -77,6 +80,11 @@ const VERTICAL_LABELS: Record<string, string> = {
   saas_enterprise: 'SaaS/Enterprise',
   social_impact: 'Impacto social',
   other: 'Otro',
+  // demo extras
+  biomateriales: 'Biomateriales',
+  agritech: 'Agritech',
+  energia: 'Energía',
+  otros: 'Otros',
 }
 
 const cardStyle: React.CSSProperties = {
@@ -110,7 +118,7 @@ const labelStyle: React.CSSProperties = {
 export default function CohortDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const cohortId = params.id as string
 
   const [cohort, setCohort] = useState<CohortData | null>(null)
@@ -132,6 +140,52 @@ export default function CohortDetailPage() {
   const loadCohort = useCallback(async () => {
     setLoading(true)
     setError(null)
+
+    // Demo short-circuit: serve fixture data when in demo mode
+    if (isDemo) {
+      const demoCohort = getCohortById(cohortId)
+      if (!demoCohort) {
+        setError('No se encontró la cohorte (demo).')
+        setLoading(false)
+        return
+      }
+      setCohort({
+        id: demoCohort.id,
+        name: demoCohort.name,
+        description: demoCohort.description,
+        start_date: demoCohort.startDate,
+        end_date: demoCohort.endDate,
+        status: demoCohort.status,
+        org_id: 'demo-org-bioinnova',
+        milestones: demoCohort.milestones.map((m) => ({
+          name: m.title,
+          stage: m.status === 'done' ? 'completed' : 'pending',
+          deadline: m.date,
+        })),
+      })
+      setEditForm({
+        name: demoCohort.name,
+        description: demoCohort.description,
+        start_date: demoCohort.startDate,
+        end_date: demoCohort.endDate,
+      })
+      const demoStartups = startupsByCohort(cohortId)
+      setStartups(
+        demoStartups.map((s) => ({
+          assignment_id: `demo-assign-${s.id}`,
+          startup_id: s.id,
+          name: s.name,
+          founder_name: s.founderName,
+          vertical: s.vertical,
+          stage: s.stage,
+          diagnostic_score: s.diagnosticScore,
+          tools_completed: s.toolsCompleted,
+          assignment_status: 'active',
+        }))
+      )
+      setLoading(false)
+      return
+    }
 
     const { data: cohortData, error: cohortError } = await supabase
       .from('cohorts')
@@ -200,7 +254,7 @@ export default function CohortDetailPage() {
     }
 
     setLoading(false)
-  }, [cohortId])
+  }, [cohortId, isDemo])
 
   useEffect(() => {
     loadCohort()
@@ -208,6 +262,10 @@ export default function CohortDetailPage() {
 
   const handleSaveEdit = async () => {
     if (!editForm.name.trim()) return
+    if (isDemo) {
+      setEditing(false)
+      return
+    }
     setSaving(true)
     const { error: updateError } = await supabase
       .from('cohorts')
@@ -229,6 +287,10 @@ export default function CohortDetailPage() {
   }
 
   const handleStatusChange = async (newStatus: string) => {
+    if (isDemo) {
+      if (cohort) setCohort({ ...cohort, status: newStatus })
+      return
+    }
     const { error: updateError } = await supabase
       .from('cohorts')
       .update({ status: newStatus })
@@ -240,6 +302,11 @@ export default function CohortDetailPage() {
   }
 
   const handleDelete = async () => {
+    if (isDemo) {
+      setShowDeleteConfirm(false)
+      router.push('/admin/cohortes')
+      return
+    }
     setDeleting(true)
     // Remove startup assignments first
     await supabase.from('cohort_startups').delete().eq('cohort_id', cohortId)
@@ -254,6 +321,10 @@ export default function CohortDetailPage() {
   }
 
   const handleRemoveStartup = async (assignmentId: string) => {
+    if (isDemo) {
+      setStartups((prev) => prev.filter((s) => s.assignment_id !== assignmentId))
+      return
+    }
     const { error: removeError } = await supabase
       .from('cohort_startups')
       .delete()
@@ -266,6 +337,11 @@ export default function CohortDetailPage() {
 
   const loadAvailableStartups = async () => {
     setLoadingStartups(true)
+    if (isDemo) {
+      setAvailableStartups([])
+      setLoadingStartups(false)
+      return
+    }
     const currentIds = startups.map((s) => s.startup_id)
 
     // Get startups from the org's founders only
@@ -299,6 +375,10 @@ export default function CohortDetailPage() {
   }
 
   const handleAddStartup = async (startupId: string) => {
+    if (isDemo) {
+      setShowAddStartup(false)
+      return
+    }
     const { error: addError } = await supabase
       .from('cohort_startups')
       .insert({ cohort_id: cohortId, startup_id: startupId })
@@ -350,12 +430,28 @@ export default function CohortDetailPage() {
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
           color: 'var(--color-text-secondary)', textDecoration: 'none',
-          marginBottom: '1.5rem',
+          marginBottom: '1rem',
         }}
       >
         <ChevronLeft size={16} />
         Volver a cohortes
       </Link>
+
+      {isDemo && (
+        <div
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+            padding: '0.375rem 0.75rem', borderRadius: 999,
+            background: 'var(--color-warning-light)',
+            border: '1px solid var(--color-warning-border)',
+            color: 'var(--color-warning)',
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
+            fontWeight: 500, marginBottom: '1rem', marginLeft: '0.75rem',
+          }}
+        >
+          Modo demo — los datos son ilustrativos
+        </div>
+      )}
 
       {/* Error */}
       {error && (
@@ -529,6 +625,105 @@ export default function CohortDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Demo: Budget & progress panel */}
+      {isDemo && (() => {
+        const demoCohort = getCohortById(cohortId)
+        if (!demoCohort) return null
+        const execPct = Math.round((demoCohort.budgetExecuted / demoCohort.budgetAssigned) * 100)
+        const monthPct = Math.round((demoCohort.monthCurrent / demoCohort.monthTotal) * 100)
+        const fmtPEN = (n: number) => `S/ ${n.toLocaleString('es-PE')}`
+        return (
+          <div style={{ ...cardStyle, padding: '1.5rem', marginBottom: '1.5rem' }}>
+            <h2 style={{
+              fontFamily: 'var(--font-heading)', fontWeight: 600,
+              fontSize: '1.0625rem', color: 'var(--color-text-primary)',
+              marginBottom: '1rem',
+            }}>
+              Presupuesto y ejecución
+            </h2>
+            <div style={{
+              display: 'grid', gap: '1rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              marginBottom: '1.25rem',
+            }}>
+              {[
+                { label: 'Asignado', value: fmtPEN(demoCohort.budgetAssigned), color: '#3B82F6' },
+                { label: 'Ejecutado', value: fmtPEN(demoCohort.budgetExecuted), color: '#0D9488' },
+                { label: 'Saldo', value: fmtPEN(demoCohort.budgetAssigned - demoCohort.budgetExecuted), color: '#94A3B8' },
+                { label: 'Graduados', value: `${demoCohort.graduates}`, color: '#FF6B4A' },
+              ].map((k) => (
+                <div key={k.label} style={{
+                  padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)',
+                  background: `${k.color}0F`, border: `1px solid ${k.color}33`,
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.66rem',
+                    color: 'var(--color-text-secondary)',
+                    textTransform: 'uppercase', letterSpacing: '0.05em',
+                    marginBottom: '0.3rem',
+                  }}>
+                    {k.label}
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-heading)', fontWeight: 700,
+                    fontSize: '1.15rem', color: 'var(--color-text-primary)',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    {k.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginBottom: '0.85rem' }}>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between',
+                marginBottom: '0.35rem',
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                  color: 'var(--color-text-primary)', fontWeight: 500,
+                }}>
+                  Ejecución presupuestaria
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                  color: 'var(--color-text-secondary)',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  {execPct}%
+                </span>
+              </div>
+              <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                <div style={{ width: `${execPct}%`, height: '100%', background: '#0D9488' }} />
+              </div>
+            </div>
+            <div>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between',
+                marginBottom: '0.35rem',
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                  color: 'var(--color-text-primary)', fontWeight: 500,
+                }}>
+                  Avance temporal · mes {demoCohort.monthCurrent} de {demoCohort.monthTotal}
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                  color: 'var(--color-text-secondary)',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  {monthPct}%
+                </span>
+              </div>
+              <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
+                <div style={{ width: `${monthPct}%`, height: '100%', background: '#FF6B4A' }} />
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Milestones */}
       {cohort.milestones.length > 0 && (

@@ -84,8 +84,9 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 1000,
-          backgroundColor: scrolled ? 'rgba(247, 246, 242, 0.95)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          backgroundColor: scrolled ? 'rgba(11, 14, 20, 0.72)' : 'rgba(11, 14, 20, 0.0)',
+          backdropFilter: scrolled ? 'blur(12px) saturate(160%)' : 'blur(6px)',
+          WebkitBackdropFilter: scrolled ? 'blur(12px) saturate(160%)' : 'blur(6px)',
           borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
           padding: '1rem 0',
           transition: 'all 0.3s var(--ease-smooth)',
@@ -110,7 +111,7 @@ export default function Navbar() {
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 700,
                   fontSize: '1.2rem',
-                  color: 'var(--color-ink)',
+                  color: 'var(--color-text-primary)',
                   letterSpacing: '-0.03em',
                 }}
               >
@@ -123,12 +124,11 @@ export default function Navbar() {
               {navLinks.map((link) => {
                 const linkStyle: React.CSSProperties = {
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
+                  fontSize: '0.9rem',
                   fontWeight: 500,
-                  color: 'var(--color-ink)',
+                  color: 'var(--color-text-secondary)',
                   textDecoration: 'none',
-                  opacity: 0.8,
-                  transition: 'opacity 0.2s ease',
+                  transition: 'color 0.15s ease',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                 }
@@ -204,10 +204,10 @@ export default function Navbar() {
                           top: 'calc(100% + 8px)',
                           right: 0,
                           minWidth: 240,
-                          background: 'var(--color-paper)',
-                          border: '1px solid var(--color-border)',
-                          borderRadius: 14,
-                          boxShadow: '0 12px 32px -8px rgba(0,0,0,0.15)',
+                          background: 'var(--color-bg-elevated)',
+                          border: '1px solid var(--color-border-strong)',
+                          borderRadius: 12,
+                          boxShadow: '0 12px 32px -8px rgba(0,0,0,0.6)',
                           padding: 6,
                           zIndex: 1002,
                         }}
@@ -243,7 +243,7 @@ export default function Navbar() {
                             <Rocket size={16} color="#FF6B4A" />
                           </div>
                           <div style={{ minWidth: 0 }}>
-                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-ink)' }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                               Demo Founder
                             </div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
@@ -283,7 +283,7 @@ export default function Navbar() {
                             <Building2 size={16} color="#0D9488" />
                           </div>
                           <div style={{ minWidth: 0 }}>
-                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-ink)' }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                               Demo Organización
                             </div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
@@ -318,7 +318,7 @@ export default function Navbar() {
               className="md:hidden"
               onClick={() => setMobileOpen(true)}
               aria-label="Abrir menú"
-              style={{ background: 'none', border: 'none', color: 'var(--color-ink)', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', cursor: 'pointer' }}
             >
               <Menu size={28} />
             </button>
@@ -337,7 +337,7 @@ export default function Navbar() {
               position: 'fixed',
               inset: 0,
               zIndex: 1001,
-              backgroundColor: 'var(--color-paper)',
+              backgroundColor: 'var(--color-bg-primary)',
               display: 'flex',
               flexDirection: 'column',
               padding: '2rem var(--container-px)',
@@ -346,7 +346,7 @@ export default function Navbar() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '3rem' }}>
               <button
                 onClick={() => setMobileOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--color-ink)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', cursor: 'pointer' }}
               >
                 <X size={32} />
               </button>
@@ -368,7 +368,7 @@ export default function Navbar() {
                     fontSize: 'var(--text-display-md)',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 700,
-                    color: 'var(--color-ink)',
+                    color: 'var(--color-text-primary)',
                     textDecoration: 'none',
                     letterSpacing: '-0.02em',
                   }}
@@ -385,9 +385,9 @@ export default function Navbar() {
                   width: '100%',
                   padding: '1.5rem',
                   fontSize: '1.25rem',
-                  borderRadius: 'var(--radius-xl)',
-                  backgroundColor: 'var(--color-ink)',
-                  color: 'var(--color-paper)',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: '#fff',
                   border: 'none',
                   fontWeight: 700,
                 }}
@@ -400,27 +400,29 @@ export default function Navbar() {
       </AnimatePresence>
 
       <style>{`
-        .nav-hover:hover { opacity: 1 !important; color: var(--color-accent-primary) !important; }
+        .nav-hover:hover { color: var(--color-text-primary) !important; }
         .typeform-btn {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 10px 22px;
-          border-radius: var(--radius-xl);
-          background-color: var(--color-ink);
-          color: var(--color-paper);
+          padding: 9px 18px;
+          border-radius: 8px;
+          background-color: var(--color-accent-primary);
+          color: #fff;
           font-family: var(--font-body);
-          font-size: 0.95rem;
-          font-weight: 700;
+          font-size: 0.875rem;
+          font-weight: 600;
           border: none;
           cursor: pointer;
           white-space: nowrap;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+          transition: background 0.15s ease;
         }
         .typeform-btn:hover {
-          background-color: var(--color-accent-primary);
+          background-color: var(--color-accent-hover);
         }
         .demo-menu-item:hover {
-          background: var(--color-cream) !important;
+          background: rgba(255,255,255,0.04) !important;
         }
       `}</style>
     </>

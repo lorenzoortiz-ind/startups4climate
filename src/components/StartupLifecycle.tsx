@@ -81,9 +81,9 @@ const stages = [
     title: 'Aceleración',
     subtitle: 'Modelo de Negocio y Crecimiento',
     focus: 'Estructura tu modelo de negocio, pricing y proceso de ventas',
-    stageColor: '#2A222B',
-    stageBg: 'rgba(42,34,43,0.07)',
-    stageBorder: 'rgba(42,34,43,0.18)',
+    stageColor: '#F59E0B',
+    stageBg: 'rgba(245,158,11,0.10)',
+    stageBorder: 'rgba(245,158,11,0.25)',
     tools: [
       { name: 'DMU', category: 'VENTAS', icon: Briefcase, desc: 'Identifica todas las personas que influyen en la decisión de compra.' },
       { name: 'Adquisición', category: 'MARKETING', icon: Megaphone, desc: 'Mapea paso a paso cómo un cliente pasa de no conocerte a comprar.' },
@@ -118,7 +118,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
   ESTRATEGIA: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
   MERCADO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
   PRODUCTO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  FINANZAS: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)' },
+  FINANZAS: { color: '#F59E0B', bg: 'rgba(245,158,11,0.10)' },
   VENTAS: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
   MARKETING: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
   EQUIPO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
@@ -188,16 +188,17 @@ export default function StartupLifecycle() {
               style={{
                 flex: '1 0 200px',
                 padding: '1.5rem',
-                borderRadius: 'var(--radius-lg)',
-                border: isActive ? '2px solid var(--color-ink)' : '1px solid var(--color-border)',
-                background: isActive ? 'var(--color-ink)' : 'var(--color-paper)',
-                color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
+                borderRadius: 'var(--radius-md)',
+                border: isActive ? `1px solid ${s.stageColor}55` : '1px solid var(--color-border)',
+                background: isActive ? 'var(--color-bg-elevated)' : 'var(--color-bg-card)',
+                color: 'var(--color-text-primary)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.2s var(--ease-smooth)',
+                transition: 'all 0.15s var(--ease-smooth)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.75rem',
+                boxShadow: isActive ? `0 0 0 1px ${s.stageColor}30, 0 4px 14px rgba(0,0,0,0.4)` : 'none',
               }}
             >
               <div style={{
@@ -205,7 +206,7 @@ export default function StartupLifecycle() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: isActive ? 1 : 0.5, color: isActive ? 'var(--color-paper)' : 'var(--color-ink)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isActive ? s.stageColor : 'var(--color-text-secondary)' }}>
                   <s.icon size={18} strokeWidth={2} />
                   <span style={{
                     fontFamily: 'var(--font-body)',
@@ -213,7 +214,6 @@ export default function StartupLifecycle() {
                     fontWeight: 700,
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase' as const,
-                    color: isActive ? 'var(--color-paper)' : 'inherit',
                   }}>
                     {s.number}
                   </span>
@@ -221,12 +221,12 @@ export default function StartupLifecycle() {
                 <span style={{
                   padding: '0.2rem 0.6rem',
                   borderRadius: 'var(--radius-full)',
-                  background: isActive ? 'rgba(255,255,255,0.15)' : 'var(--color-bg-primary)',
-                  border: isActive ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--color-border)',
+                  background: isActive ? `${s.stageColor}15` : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${isActive ? s.stageColor + '33' : 'var(--color-border)'}`,
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.625rem',
                   fontWeight: 600,
-                  color: isActive ? 'var(--color-paper)' : 'var(--color-text-secondary)',
+                  color: isActive ? s.stageColor : 'var(--color-text-muted)',
                   letterSpacing: '0.02em',
                   whiteSpace: 'nowrap' as const,
                 }}>
@@ -240,7 +240,7 @@ export default function StartupLifecycle() {
                 letterSpacing: '-0.02em',
                 margin: 0,
                 lineHeight: 1.2,
-                color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
+                color: 'var(--color-text-primary)',
               }}>
                 {s.title}
               </h3>
@@ -326,21 +326,18 @@ export default function StartupLifecycle() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.06 }}
-                    whileHover={{ y: -5, boxShadow: '0 20px 40px -12px rgba(25,25,25,0.12)' }}
+                    whileHover={{ y: -3, boxShadow: '0 12px 28px -8px rgba(0,0,0,0.5)' }}
                     style={{
                       padding: '1.75rem',
-                      borderRadius: 'var(--radius-lg)',
-                      borderTop: '1px solid var(--color-border)',
-                      borderRight: '1px solid var(--color-border)',
-                      borderBottom: '1px solid var(--color-border)',
-                      borderLeft: `4px solid ${stage.stageColor}`,
-                      background: 'var(--color-paper)',
+                      borderRadius: 12,
+                      border: '1px solid var(--color-border)',
+                      background: 'var(--color-bg-card)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '0.875rem',
                       cursor: 'default',
-                      transition: 'box-shadow 0.25s var(--ease-smooth), transform 0.25s var(--ease-smooth)',
-                      boxShadow: '0 2px 8px rgba(25,25,25,0.04)',
+                      transition: 'box-shadow 0.15s var(--ease-smooth), transform 0.15s var(--ease-smooth), border-color 0.15s ease',
+                      boxShadow: 'var(--shadow-card)',
                       position: 'relative',
                       overflow: 'hidden',
                     }}
@@ -435,14 +432,16 @@ export default function StartupLifecycle() {
                   alignItems: 'center',
                   gap: '0.5rem',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '1.0625rem',
-                  fontWeight: 700,
-                  color: 'var(--color-ink)',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  color: '#fff',
                   textDecoration: 'none',
-                  padding: '0.875rem 2rem',
-                  borderRadius: 'var(--radius-full)',
-                  border: '2px solid var(--color-ink)',
-                  transition: 'all 0.2s ease',
+                  padding: '0.875rem 1.75rem',
+                  borderRadius: 12,
+                  background: 'var(--color-accent-primary)',
+                  border: 'none',
+                  boxShadow: '0 4px 14px rgba(255,107,74,0.25)',
+                  transition: 'all 0.15s ease',
                 }}
                 className="tools-cta-link"
               >
@@ -469,8 +468,9 @@ export default function StartupLifecycle() {
           }
         }
         .tools-cta-link:hover {
-          background-color: var(--color-ink) !important;
-          color: var(--color-paper) !important;
+          background-color: var(--color-accent-hover) !important;
+          color: #fff !important;
+          transform: translateY(-1px);
         }
       `}</style>
     </section>

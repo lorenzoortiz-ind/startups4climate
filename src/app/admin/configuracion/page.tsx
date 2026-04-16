@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Save, Building2, CreditCard, Globe, Loader2, Image as ImageIcon, Upload } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
+import { DEMO_ORG } from '@/lib/demo/admin-fixtures'
 
 const PLAN_LABELS: Record<string, string> = {
   starter: 'Starter',
@@ -54,14 +55,14 @@ interface OrgData {
 }
 
 const MOCK_DEMO_ORG: OrgData & { startup_count: number } = {
-  name: 'Universidad Demo',
-  website: 'https://universidad-demo.edu',
+  name: DEMO_ORG.name,
+  website: 'https://bioinnova.unamad.edu.pe',
   logo_url: null,
-  billing_email: 'facturacion@universidad-demo.edu',
-  plan: 'professional',
-  max_startups: 50,
-  contract_end: '2026-12-31',
-  startup_count: 30,
+  billing_email: 'facturacion@bioinnova.unamad.edu.pe',
+  plan: DEMO_ORG.plan.toLowerCase(),
+  max_startups: DEMO_ORG.maxStartups,
+  contract_end: DEMO_ORG.contractEnd,
+  startup_count: DEMO_ORG.activeStartups,
 }
 
 export default function ConfiguracionPage() {

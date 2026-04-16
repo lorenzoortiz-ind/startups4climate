@@ -19,10 +19,11 @@ export default function CTAFinal() {
   return (
     <section style={{
       padding: 'clamp(6rem, 12vw, 12rem) 0',
-      background: 'var(--color-ink)',
-      color: 'var(--color-paper)',
+      background: 'linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-card) 100%)',
+      color: 'var(--color-text-primary)',
       position: 'relative',
       overflow: 'hidden',
+      borderTop: '1px solid var(--color-border)',
     }}>
       {/* Decorative diagonal lines background */}
       <div
@@ -34,8 +35,8 @@ export default function CTAFinal() {
             -45deg,
             transparent,
             transparent 40px,
-            rgba(255,255,255,0.025) 40px,
-            rgba(255,255,255,0.025) 41px
+            rgba(255,255,255,0.018) 40px,
+            rgba(255,255,255,0.018) 41px
           )`,
           pointerEvents: 'none',
         }}
@@ -76,7 +77,7 @@ export default function CTAFinal() {
             lineHeight: 1.05,
             letterSpacing: '-0.03em',
             marginBottom: '2rem',
-            color: 'var(--color-paper)',
+            color: 'var(--color-text-primary)',
           }}>
             Tu idea puede cambiar Latinoamérica.{' '}
             <span style={{ color: 'var(--color-accent-primary)' }}>
@@ -88,7 +89,7 @@ export default function CTAFinal() {
             fontFamily: 'var(--font-body)',
             fontSize: 'var(--text-body-lg)',
             lineHeight: 1.6,
-            color: 'rgba(255, 255, 255, 0.7)',
+            color: 'var(--color-text-secondary)',
             maxWidth: 640,
             margin: '0 auto 3rem',
           }}>
@@ -108,24 +109,25 @@ export default function CTAFinal() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  padding: '1.25rem 2.5rem',
-                  background: 'var(--color-paper)',
-                  color: 'var(--color-ink)',
-                  borderRadius: 'var(--radius-full)',
+                  padding: '1.05rem 2rem',
+                  background: 'var(--color-accent-primary)',
+                  color: '#fff',
+                  borderRadius: 12,
                   fontFamily: 'var(--font-body)',
                   fontSize: '1rem',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s var(--ease-spring), background 0.2s ease',
+                  boxShadow: '0 4px 16px rgba(255,107,74,0.30)',
+                  transition: 'transform 0.15s var(--ease-spring), background 0.15s ease, box-shadow 0.15s ease',
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.background = '#f0efea'
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.background = 'var(--color-accent-hover)'
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.background = 'var(--color-paper)'
+                  e.currentTarget.style.background = 'var(--color-accent-primary)'
                 }}
               >
                 <LayoutDashboard size={20} strokeWidth={2.5} />
@@ -138,24 +140,25 @@ export default function CTAFinal() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  padding: '1.25rem 2.5rem',
-                  background: 'var(--color-paper)',
-                  color: 'var(--color-ink)',
-                  borderRadius: 'var(--radius-full)',
+                  padding: '1.05rem 2rem',
+                  background: 'var(--color-accent-primary)',
+                  color: '#fff',
+                  borderRadius: 12,
                   fontFamily: 'var(--font-body)',
                   fontSize: '1rem',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s var(--ease-spring), background 0.2s ease',
+                  boxShadow: '0 4px 16px rgba(255,107,74,0.30)',
+                  transition: 'transform 0.15s var(--ease-spring), background 0.15s ease, box-shadow 0.15s ease',
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.background = '#f0efea'
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.background = 'var(--color-accent-hover)'
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.background = 'var(--color-paper)'
+                  e.currentTarget.style.background = 'var(--color-accent-primary)'
                 }}
               >
                 Acceder gratis
@@ -169,23 +172,25 @@ export default function CTAFinal() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.75rem',
-                padding: '1.25rem 2.5rem',
-                background: 'transparent',
-                color: 'var(--color-paper)',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                borderRadius: 'var(--radius-full)',
+                padding: '1.05rem 2rem',
+                background: 'rgba(255,255,255,0.03)',
+                color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border-strong)',
+                borderRadius: 12,
                 fontFamily: 'var(--font-body)',
                 fontSize: '1rem',
-                fontWeight: 600,
+                fontWeight: 500,
                 textDecoration: 'none',
-                transition: 'border-color 0.2s ease, transform 0.2s var(--ease-spring)',
+                transition: 'border-color 0.15s ease, transform 0.15s var(--ease-spring), background 0.15s ease',
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.8)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)'
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
               }}
               onMouseOut={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+                e.currentTarget.style.borderColor = 'var(--color-border-strong)'
+                e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
                 e.currentTarget.style.transform = 'translateY(0)'
               }}
             >

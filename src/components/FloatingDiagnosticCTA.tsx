@@ -60,20 +60,20 @@ export default function FloatingDiagnosticCTA() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '1rem 1.5rem',
-            backgroundColor: 'var(--color-ink)',
-            color: 'var(--color-paper)',
+            padding: '0.875rem 1.5rem',
+            backgroundColor: 'var(--color-accent-primary)',
+            color: '#fff',
             border: 'none',
-            borderRadius: 'var(--radius-full)',
+            borderRadius: 12,
             fontFamily: 'var(--font-body)',
-            fontSize: '1rem',
-            fontWeight: 700,
+            fontSize: '0.9375rem',
+            fontWeight: 600,
             cursor: 'pointer',
-            boxShadow: 'var(--shadow-float)',
+            boxShadow: '0 8px 24px rgba(255,107,74,0.30), 0 1px 2px rgba(0,0,0,0.4)',
           }}
           whileHover={{
-            backgroundColor: 'var(--color-accent-primary)',
-            scale: 1.03,
+            backgroundColor: 'var(--color-accent-hover)',
+            scale: 1.02,
           }}
           whileTap={{ scale: 0.97 }}
         >

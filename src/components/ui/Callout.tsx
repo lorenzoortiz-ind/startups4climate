@@ -25,8 +25,10 @@ const Callout: React.FC<CalloutProps> = ({ type = 'note', title, children }) => 
   return (
     <div
       style={{
-        borderLeft: `3px solid ${cfg.color}`,
-        padding: 'var(--space-2) var(--space-4)',
+        background: `${cfg.color}10`,
+        border: `1px solid ${cfg.color}25`,
+        borderRadius: 'var(--radius-md)',
+        padding: 'var(--space-3) var(--space-4)',
         margin: 0,
       }}
     >

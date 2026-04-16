@@ -173,11 +173,8 @@ export function InsightPanel({
       gap: '0.875rem',
       padding: '1rem 1.25rem',
       borderRadius: 12,
-      background: `${accentColor}06`,
-      borderTop: `1px solid ${accentColor}15`,
-      borderRight: `1px solid ${accentColor}15`,
-      borderBottom: `1px solid ${accentColor}15`,
-      borderLeft: `3px solid ${accentColor}`,
+      background: `${accentColor}10`,
+      border: `1px solid ${accentColor}22`,
     }}>
       <div style={{ flexShrink: 0, marginTop: 2 }}>
         {icon || <BookOpen size={16} color={accentColor} />}

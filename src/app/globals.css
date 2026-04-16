@@ -20,6 +20,7 @@
   --color-bg-primary:    #F7F6F2;
   --color-bg-card:       #FFFFFF;
   --color-bg-dark:       #191919;
+  --color-bg-muted:      #F0EFEA;
 
   /* Text */
   --color-text-primary:   #191919;
@@ -147,6 +148,97 @@
   /* Easings */
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
   --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ─── Dark Mode for App Layouts (Tools + Admin) ─── */
+[data-app-layout] {
+  --color-bg-primary: #13131f;
+  --color-bg-card: #1e1e30;
+  --color-bg-dark: #0f0f1a;
+  --color-bg-muted: #1a1a2e;
+
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-on-dark: #FFFFFF;
+
+  --color-ink: #f1f5f9;
+  --color-ink-light: #e2e8f0;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.15);
+
+  --color-input-bg: #252540;
+  --color-input-focus: #8b5cf6;
+
+  --color-paper: #1e1e30;
+  --color-cream: #13131f;
+  --color-off-white: #1a1a2e;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  --shadow-input: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  --color-gray-50: #1a1a2e;
+  --color-gray-100: #1e1e30;
+  --color-gray-200: #252540;
+  --color-gray-400: #64748b;
+  --color-gray-500: #94a3b8;
+  --color-gray-600: #cbd5e1;
+
+  --color-accent-light: rgba(255, 107, 74, 0.12);
+  --color-success-light: rgba(13, 148, 136, 0.12);
+  --color-danger-light: rgba(220, 38, 38, 0.12);
+  --color-warning-light: rgba(217, 119, 6, 0.12);
+  --color-info-light: rgba(59, 130, 246, 0.12);
+
+  --color-admin-sidebar-bg: #0f0f1a;
+
+  color-scheme: dark;
+}
+
+/* Dark mode form elements within app layouts */
+[data-app-layout] input,
+[data-app-layout] textarea,
+[data-app-layout] select {
+  background: var(--color-input-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  padding: 0.75rem 1rem;
+}
+
+[data-app-layout] input:focus,
+[data-app-layout] textarea:focus,
+[data-app-layout] select:focus {
+  border-color: var(--color-input-focus);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.15);
+}
+
+[data-app-layout] input::placeholder,
+[data-app-layout] textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Dark scrollbar for app layouts */
+[data-app-layout] ::-webkit-scrollbar-track { background: var(--color-bg-primary); }
+[data-app-layout] ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+[data-app-layout] ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); }
+
+[data-app-layout] ::selection {
+  background: var(--color-accent-primary);
+  color: white;
+}
+
+/* Prevent button hover "jump" in dark mode */
+[data-app-layout] button:hover {
+  transform: none;
+}
+[data-app-layout] button:active {
+  transform: none;
 }
 
 @theme inline {

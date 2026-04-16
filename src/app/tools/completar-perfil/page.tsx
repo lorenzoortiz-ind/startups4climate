@@ -40,11 +40,11 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '0.75rem 1rem',
   borderRadius: 10,
-  border: '1px solid var(--color-border, #e5e7eb)',
+  border: '1px solid var(--color-border)',
   fontFamily: 'var(--font-body)',
   fontSize: '0.875rem',
-  color: 'var(--color-text-primary, #111827)',
-  background: 'var(--color-bg-card, #ffffff)',
+  color: 'var(--color-text-primary)',
+  background: 'var(--color-bg-card)',
   outline: 'none',
   transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
   boxSizing: 'border-box' as const,
@@ -53,7 +53,7 @@ const inputStyle: React.CSSProperties = {
 const selectStyle: React.CSSProperties = {
   ...inputStyle,
   appearance: 'none' as const,
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'right 1rem center',
   paddingRight: '2.5rem',
@@ -64,7 +64,7 @@ const labelStyle: React.CSSProperties = {
   fontFamily: 'var(--font-body)',
   fontSize: '0.8125rem',
   fontWeight: 600,
-  color: 'var(--color-text-secondary, #374151)',
+  color: 'var(--color-text-secondary)',
   marginBottom: '0.375rem',
 }
 
@@ -142,7 +142,7 @@ export default function CompletarPerfilPage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '2rem 1rem',
-        background: 'var(--color-bg-muted, #f9fafb)',
+        background: 'var(--color-bg-primary)',
       }}
     >
       <motion.div
@@ -152,11 +152,11 @@ export default function CompletarPerfilPage() {
         style={{
           width: '100%',
           maxWidth: 540,
-          background: 'var(--color-bg-card, #ffffff)',
+          background: 'var(--color-bg-card)',
           borderRadius: 16,
-          border: '1px solid var(--color-border, #e5e7eb)',
+          border: '1px solid var(--color-border)',
           padding: '2.5rem 2rem',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         {/* Header */}
@@ -166,21 +166,21 @@ export default function CompletarPerfilPage() {
               width: 48,
               height: 48,
               borderRadius: 12,
-              background: '#ecfdf5',
+              background: 'var(--color-success-light)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1rem',
             }}
           >
-            <Sparkles size={24} color="#0D9488" />
+            <Sparkles size={24} color="var(--color-accent-secondary)" />
           </div>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
               fontSize: '1.5rem',
               fontWeight: 700,
-              color: 'var(--color-text-primary, #111827)',
+              color: 'var(--color-text-primary)',
               margin: 0,
             }}
           >
@@ -190,7 +190,7 @@ export default function CompletarPerfilPage() {
             style={{
               fontFamily: 'var(--font-body)',
               fontSize: '0.875rem',
-              color: 'var(--color-text-muted, #6b7280)',
+              color: 'var(--color-text-muted)',
               margin: '0.5rem 0 0',
             }}
           >
@@ -221,8 +221,8 @@ export default function CompletarPerfilPage() {
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   fontFamily: 'var(--font-body)',
-                  background: step >= s ? '#0D9488' : 'var(--color-bg-muted, #f3f4f6)',
-                  color: step >= s ? '#fff' : 'var(--color-text-muted, #9ca3af)',
+                  background: step >= s ? 'var(--color-accent-secondary)' : 'var(--color-cream)',
+                  color: step >= s ? '#fff' : 'var(--color-text-muted)',
                   transition: 'all 0.3s ease',
                 }}
               >
@@ -233,7 +233,7 @@ export default function CompletarPerfilPage() {
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.75rem',
                   fontWeight: step === s ? 600 : 400,
-                  color: step === s ? 'var(--color-text-primary, #111827)' : 'var(--color-text-muted, #9ca3af)',
+                  color: step === s ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                 }}
               >
                 Paso {s} de 2
@@ -243,7 +243,7 @@ export default function CompletarPerfilPage() {
                   style={{
                     width: 32,
                     height: 2,
-                    background: step >= 2 ? '#0D9488' : 'var(--color-border, #e5e7eb)',
+                    background: step >= 2 ? 'var(--color-accent-secondary)' : 'var(--color-border)',
                     borderRadius: 1,
                     transition: 'background 0.3s ease',
                   }}
@@ -364,7 +364,7 @@ export default function CompletarPerfilPage() {
                   padding: '0.75rem 1.5rem',
                   borderRadius: 10,
                   border: 'none',
-                  background: step1Valid ? '#0D9488' : 'var(--color-border, #d1d5db)',
+                  background: step1Valid ? 'var(--color-accent-secondary)' : 'var(--color-border)',
                   color: '#fff',
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.875rem',
@@ -424,7 +424,7 @@ export default function CompletarPerfilPage() {
                 <div>
                   <label style={labelStyle}>
                     Sitio web{' '}
-                    <span style={{ fontWeight: 400, color: 'var(--color-text-muted, #9ca3af)' }}>
+                    <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
                       (opcional)
                     </span>
                   </label>
@@ -451,9 +451,9 @@ export default function CompletarPerfilPage() {
                   style={{
                     padding: '0.75rem 1.25rem',
                     borderRadius: 10,
-                    border: '1px solid var(--color-border, #e5e7eb)',
-                    background: 'var(--color-bg-card, #ffffff)',
-                    color: 'var(--color-text-secondary, #374151)',
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg-card)',
+                    color: 'var(--color-text-secondary)',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.875rem',
                     fontWeight: 500,
@@ -476,7 +476,7 @@ export default function CompletarPerfilPage() {
                     padding: '0.75rem 1.5rem',
                     borderRadius: 10,
                     border: 'none',
-                    background: '#0D9488',
+                    background: 'var(--color-accent-secondary)',
                     color: '#fff',
                     fontFamily: 'var(--font-body)',
                     fontSize: '0.875rem',
@@ -507,7 +507,7 @@ export default function CompletarPerfilPage() {
               border: 'none',
               fontFamily: 'var(--font-body)',
               fontSize: '0.8125rem',
-              color: 'var(--color-text-muted, #9ca3af)',
+              color: 'var(--color-text-muted)',
               cursor: 'pointer',
               textDecoration: 'underline',
               textUnderlineOffset: '2px',

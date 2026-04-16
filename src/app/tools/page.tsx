@@ -56,7 +56,7 @@ const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
   Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
   Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
   Producto: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
-  Finanzas: { color: 'var(--color-ink)', bg: 'rgba(25,25,25,0.06)' },
+  Finanzas: { color: 'var(--color-text-primary)', bg: 'rgba(139,92,246,0.08)' },
   Ventas: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
   Marketing: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
   Equipo: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
@@ -106,7 +106,7 @@ function ToolCard({
         opacity: locked ? 0.45 : 1,
         cursor: locked ? 'not-allowed' : 'pointer',
         transform: hovered && !locked ? 'translateY(-4px)' : 'translateY(0)',
-        boxShadow: hovered && !locked ? '0 16px 32px -8px rgba(25,25,25,0.1)' : '0 2px 8px rgba(25,25,25,0.04)',
+        boxShadow: hovered && !locked ? '0 16px 32px -8px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.06)',
         minHeight: 130,
       }}
     >
@@ -379,7 +379,7 @@ export default function ToolsDashboard() {
           style={{
             padding: 'clamp(1.5rem, 3vw, 2.5rem)',
             background:
-              'linear-gradient(135deg, var(--color-paper) 0%, var(--color-cream) 100%)',
+              'linear-gradient(135deg, rgba(255,107,74,0.08), rgba(139,92,246,0.06))',
             border: '1px solid var(--color-border)',
             position: 'relative',
             overflow: 'hidden',
@@ -947,7 +947,7 @@ export default function ToolsDashboard() {
                   width: 32,
                   height: 32,
                   borderRadius: 'var(--radius-sm)',
-                  background: isLocked ? 'var(--color-cream)' : `${meta.color}15`,
+                  background: isLocked ? 'var(--color-bg-primary)' : `${meta.color}15`,
                   border: `1px solid ${isLocked ? 'var(--color-border)' : `${meta.color}40`}`,
                   display: 'flex',
                   alignItems: 'center',

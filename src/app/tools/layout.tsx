@@ -38,14 +38,14 @@ const STAGE_CONFIG = {
 
 /* ─── Sidebar palette ─── */
 const SB = {
-  bg: 'var(--color-admin-sidebar-bg)',
+  bg: '#0f0f1a',
   text: '#94A3B8',
   textActive: '#FFFFFF',
   textHover: '#F1F5F9',
   textMuted: 'rgba(255,255,255,0.35)',
   divider: 'rgba(255,255,255,0.06)',
   hoverBg: 'rgba(255,255,255,0.06)',
-  cardBg: 'rgba(255,255,255,0.03)',
+  cardBg: 'rgba(255,255,255,0.04)',
 }
 
 function StageSidebarSection({

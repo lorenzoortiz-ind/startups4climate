@@ -295,7 +295,7 @@ function CircularProgress({
 function SectionHeader({
   title,
   icon: Icon,
-  color = 'var(--color-ink)',
+  color = 'var(--color-text-primary)',
   badge,
 }: {
   title: string
@@ -303,6 +303,10 @@ function SectionHeader({
   color?: string
   badge?: string
 }) {
+  const isVar = color.startsWith('var(')
+  const bgColor = isVar ? 'rgba(255,255,255,0.06)' : `${color}12`
+  const badgeBg = isVar ? 'rgba(255,255,255,0.06)' : `${color}10`
+
   return (
     <div
       style={{
@@ -318,7 +322,7 @@ function SectionHeader({
             width: 28,
             height: 28,
             borderRadius: 7,
-            background: `${color}12`,
+            background: bgColor,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -332,7 +336,7 @@ function SectionHeader({
             fontFamily: 'var(--font-heading)',
             fontSize: 'var(--text-base)',
             fontWeight: 700,
-            color: 'var(--color-ink)',
+            color: 'var(--color-text-primary)',
             margin: 0,
             letterSpacing: '-0.01em',
           }}
@@ -349,7 +353,7 @@ function SectionHeader({
             color,
             padding: '0.125rem 0.5rem',
             borderRadius: 6,
-            background: `${color}10`,
+            background: badgeBg,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
           }}
@@ -940,7 +944,7 @@ export default function PassportPage() {
                   fontFamily: 'var(--font-heading)',
                   fontSize: 'var(--text-xl)',
                   fontWeight: 700,
-                  color: 'var(--color-ink)',
+                  color: 'var(--color-text-primary)',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.3,
                   margin: 0,
@@ -1072,7 +1076,7 @@ export default function PassportPage() {
                   fontFamily: 'var(--font-heading)',
                   fontSize: 'var(--text-xl)',
                   fontWeight: 700,
-                  color: 'var(--color-ink)',
+                  color: 'var(--color-text-primary)',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.3,
                   margin: 0,
@@ -1654,7 +1658,7 @@ export default function PassportPage() {
             transition={{ duration: 0.5, delay: 0.25 }}
             style={cardStyle}
           >
-            <SectionHeader title="Posicion financiera" icon={DollarSign} color="#2A222B" />
+            <SectionHeader title="Posicion financiera" icon={DollarSign} color="var(--color-text-primary)" />
 
             <div
               style={{
@@ -1779,7 +1783,7 @@ export default function PassportPage() {
               transition={{ duration: 0.5, delay: 0.35 }}
               style={cardStyle}
             >
-              <SectionHeader title="Descripcion" icon={FileText} color="var(--color-ink)" />
+              <SectionHeader title="Descripcion" icon={FileText} color="var(--color-text-primary)" />
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
@@ -2062,7 +2066,7 @@ export default function PassportPage() {
               padding: '0.5rem 1rem',
               borderRadius: 8,
               background: 'var(--color-bg-primary)',
-              color: 'var(--color-ink)',
+              color: 'var(--color-text-primary)',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-sm)',
               fontWeight: 600,

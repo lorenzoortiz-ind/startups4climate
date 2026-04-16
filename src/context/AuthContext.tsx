@@ -96,12 +96,13 @@ export function isDemoUserId(id: string | null | undefined): boolean {
 /** Seed some example tool progress into localStorage so demo founder has content. */
 function seedDemoFounderData() {
   if (typeof window === 'undefined') return
-  const key = `s4c_${DEMO_FOUNDER_ID}_tool_progress`
-  // Only seed if empty
+  const SEED_VERSION = '2'  // Bump this when seed data changes
+  const versionKey = `s4c_${DEMO_FOUNDER_ID}_seed_version`
   try {
-    const existing = localStorage.getItem(key)
-    if (existing && existing !== '{}') return
+    const currentVersion = localStorage.getItem(versionKey)
+    if (currentVersion === SEED_VERSION) return
   } catch { /* ignore */ }
+  const key = `s4c_${DEMO_FOUNDER_ID}_tool_progress`
 
   const now = new Date().toISOString()
   const seeded = {
@@ -588,6 +589,9 @@ function seedDemoFounderData() {
         ruc: '20612345678',
       }))
     }
+  } catch { /* ignore */ }
+  try {
+    localStorage.setItem(versionKey, SEED_VERSION)
   } catch { /* ignore */ }
 }
 

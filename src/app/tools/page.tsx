@@ -326,6 +326,7 @@ export default function ToolsDashboard() {
         margin: '0 auto',
         overflowWrap: 'break-word',
         wordBreak: 'break-word',
+        overflow: 'hidden',
       }}
     >
       {/* ─── Demo banner ─── */}
@@ -445,6 +446,9 @@ export default function ToolsDashboard() {
                   letterSpacing: '-0.035em',
                   lineHeight: 1.1,
                   marginBottom: '0.625rem',
+                  overflowWrap: 'break-word',
+                  wordBreak: 'break-word',
+                  minWidth: 0,
                 }}
               >
                 Bienvenida, {firstName}
@@ -1029,12 +1033,14 @@ export default function ToolsDashboard() {
         .tools-dash-grid {
           grid-template-columns: repeat(3, 1fr);
         }
+        @media (max-width: 1100px) {
+          .metrics-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
         @media (max-width: 900px) {
           .tools-dash-grid {
             grid-template-columns: repeat(2, 1fr);
-          }
-          .metrics-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           }
           .passport-grid {
             grid-template-columns: 1fr !important;

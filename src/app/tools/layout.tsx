@@ -350,6 +350,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     if (user) {
       const progress = getProgress(user.id)
       setCompletedIds(new Set(Object.entries(progress).filter(([, v]) => v.completed).map(([k]) => k)))
+      if (isDemo) return
       // Hydrate from Supabase on first load
       hydrateProgressFromSupabase(user.id).then((changed) => {
         if (changed) {
@@ -358,7 +359,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         }
       })
     }
-  }, [user, pathname])
+  }, [user, pathname, isDemo])
 
   if (loading || !user) {
     return (
@@ -965,7 +966,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       <main
         style={{
           flex: 1,
-          marginLeft: 0,
           minHeight: '100vh',
           minWidth: 0,
           overflowX: 'hidden',

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolProgress, ToolActionBar, inputStyle, labelStyle, btnSmall } from './shared'
 
 interface RevenueStream {
   [key: string]: unknown
@@ -73,12 +74,11 @@ const revenueTypeLabels: Record<string, string> = {
   'marketplace': 'Marketplace',
 }
 
+const ACCENT = '#0D9488'
+
 export default function FinancialModelBuilder({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'financial-model-builder', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
 
   // Array updaters
   const updateRevenue = (i: number, field: keyof RevenueStream, value: string | number) => {
@@ -190,6 +190,16 @@ export default function FinancialModelBuilder({ userId, onComplete, onGenerateRe
 
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
 
+  // Progress: count sections with data
+  const filledSections = [
+    data.start_date && data.initial_capital > 0,
+    data.revenue_streams.some(rs => rs.name.trim()),
+    data.fixed_costs.some(fc => fc.name.trim()),
+    data.variable_costs.some(vc => vc.name.trim()),
+    data.team.some(tm => tm.role.trim()),
+    data.planned_rounds.length > 0,
+  ].filter(Boolean).length
+
   const handleReport = () => {
     const content = `
 MODELO FINANCIERO
@@ -229,9 +239,18 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <ToolProgress filled={filledSections} total={6} accentColor={ACCENT} />
+
       {/* Assumptions */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)', display: 'block', marginBottom: '0.75rem' }}>Supuestos generales</span>
+      <ToolSection
+        number={1}
+        title="Supuestos generales"
+        subtitle="Define los parámetros base de tu modelo financiero"
+        insight="Tu modelo financiero es una hipótesis, no una promesa. Lo que importa es que los drivers sean razonables y defendibles."
+        insightSource="Harvard Business School, Entrepreneurial Finance"
+        defaultOpen
+        accentColor={ACCENT}
+      >
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.75rem' }}>
           <div>
             <label style={labelStyle}>Fecha de inicio</label>
@@ -255,14 +274,19 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             <input type="number" value={data.initial_capital || ''} onChange={e => setData(p => ({ ...p, initial_capital: Number(e.target.value) || 0 }))} placeholder="0" style={inputStyle} />
           </div>
         </div>
-      </div>
+      </ToolSection>
 
       {/* Revenue Streams */}
-      <SectionCollapsible title="Fuentes de ingreso" sectionKey="revenue" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={2}
+        title="Fuentes de ingreso"
+        subtitle="Define tus líneas de revenue y sus drivers de crecimiento"
+        accentColor={ACCENT}
+      >
         {data.revenue_streams.map((rs, i) => (
-          <div key={i} style={{ padding: '0.75rem', borderRadius: 8, border: '1px solid var(--color-border)', marginBottom: '0.625rem', background: 'var(--color-bg-primary)' }}>
+          <div key={i} style={{ padding: '0.75rem', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: '0.625rem', background: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Ingreso {i + 1}</span>
+              <span style={{ ...labelStyle, marginBottom: 0 }}>Ingreso {i + 1}</span>
               {data.revenue_streams.length > 1 && (
                 <button onClick={() => removeRevenue(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.2rem 0.4rem' }}><Trash2 size={11} /></button>
               )}
@@ -289,11 +313,16 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             </div>
           </div>
         ))}
-        <button onClick={addRevenue} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar fuente de ingreso</button>
-      </SectionCollapsible>
+        <button onClick={addRevenue} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar fuente de ingreso</button>
+      </ToolSection>
 
       {/* Fixed Costs */}
-      <SectionCollapsible title="Costos fijos" sectionKey="fixed" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={3}
+        title="Costos fijos"
+        subtitle="Gastos mensuales que no varían con el volumen"
+        accentColor={ACCENT}
+      >
         {data.fixed_costs.map((fc, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={fc.name} onChange={e => updateFixed(i, 'name', e.target.value)} placeholder="Nombre del costo" style={{ ...inputStyle, flex: 2 }} />
@@ -303,11 +332,16 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addFixed} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar costo fijo</button>
-      </SectionCollapsible>
+        <button onClick={addFixed} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar costo fijo</button>
+      </ToolSection>
 
       {/* Variable Costs */}
-      <SectionCollapsible title="Costos variables" sectionKey="variable" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={4}
+        title="Costos variables"
+        subtitle="Gastos que escalan con el volumen de unidades"
+        accentColor={ACCENT}
+      >
         {data.variable_costs.map((vc, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={vc.name} onChange={e => updateVariable(i, 'name', e.target.value)} placeholder="Nombre del costo" style={{ ...inputStyle, flex: 2 }} />
@@ -317,11 +351,16 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addVariable} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar costo variable</button>
-      </SectionCollapsible>
+        <button onClick={addVariable} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar costo variable</button>
+      </ToolSection>
 
       {/* Team */}
-      <SectionCollapsible title="Equipo" sectionKey="team" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={5}
+        title="Equipo"
+        subtitle="Define roles, salarios y mes de incorporación"
+        accentColor={ACCENT}
+      >
         {data.team.map((tm, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
             <input value={tm.role} onChange={e => updateTeam(i, 'role', e.target.value)} placeholder="Rol" style={{ ...inputStyle, flex: 2 }} />
@@ -336,11 +375,16 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             )}
           </div>
         ))}
-        <button onClick={addTeam} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar miembro</button>
-      </SectionCollapsible>
+        <button onClick={addTeam} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar miembro</button>
+      </ToolSection>
 
       {/* Funding Rounds */}
-      <SectionCollapsible title="Rondas de financiamiento" sectionKey="funding" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={6}
+        title="Rondas de financiamiento"
+        subtitle="Planifica tus rondas de inversión"
+        accentColor={ACCENT}
+      >
         {data.planned_rounds.map((r, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <input value={r.name} onChange={e => updateRound(i, 'name', e.target.value)} placeholder="Nombre (Pre-seed, Seed...)" style={{ ...inputStyle, flex: 2, minWidth: 140 }} />
@@ -350,13 +394,16 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             <button onClick={() => removeRound(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630', padding: '0.3rem 0.5rem' }}><Trash2 size={11} /></button>
           </div>
         ))}
-        <button onClick={addRound} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar ronda</button>
-      </SectionCollapsible>
+        <button onClick={addRound} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar ronda</button>
+      </ToolSection>
 
       {/* Auto-calculated outputs */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)', display: 'block', marginBottom: '1rem' }}>Resultados calculados</span>
-
+      <ToolSection
+        number={7}
+        title="Resultados calculados"
+        subtitle="Métricas clave y proyección mensual auto-calculadas"
+        accentColor={ACCENT}
+      >
         {/* Key metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
@@ -366,7 +413,7 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Runway estimado</span>
             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#0D9488' : summaryMetrics.runway >= 12 ? '#2A222B' : '#DC2626' }}>
-              {summaryMetrics.runway >= 999 ? '∞' : `${summaryMetrics.runway} meses`}
+              {summaryMetrics.runway >= 999 ? '\u221E' : `${summaryMetrics.runway} meses`}
             </span>
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
@@ -401,63 +448,14 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
             </tbody>
           </table>
         </div>
-      </div>
+      </ToolSection>
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOutlineGreen}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-        <button onClick={onComplete} style={btnSolidGreen}>
-          <CheckCircle2 size={15} /> Marcar como completada
-        </button>
-        <button onClick={handleReport} style={btnOutline}>
-          <FileText size={15} /> Generar reporte
-        </button>
-      </div>
+      <ToolActionBar onSave={handleSave} onComplete={onComplete} onReport={handleReport} saved={saved} accentColor={ACCENT} />
     </div>
   )
 }
 
-/* ── Shared sub-components & styles ── */
-
-function SectionCollapsible({ title, sectionKey, open, toggle, children }: {
-  title: string; sectionKey: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode
-}) {
-  return (
-    <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-      <button onClick={() => toggle(sectionKey)} style={sectionBtn}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</span>
-        <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[sectionKey] ? 'rotate(180deg)' : 'rotate(0)' }} />
-      </button>
-      {open[sectionKey] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const sectionBtn: React.CSSProperties = {
-  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-  padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8,
-  border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)',
-  outline: 'none',
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 600,
-  color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.25rem',
-}
-
-const btnSmall: React.CSSProperties = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-  padding: '0.35rem 0.75rem', borderRadius: 6, fontSize: '0.75rem',
-  fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent',
-  border: '1px solid var(--color-border)', cursor: 'pointer',
-}
+/* ── Local table styles ── */
 
 const thStyle: React.CSSProperties = {
   padding: '0.5rem 0.75rem', textAlign: 'left', fontWeight: 600,
@@ -468,28 +466,4 @@ const thStyle: React.CSSProperties = {
 const tdStyle: React.CSSProperties = {
   padding: '0.375rem 0.75rem', borderBottom: '1px solid var(--color-border)',
   color: 'var(--color-text-primary)',
-}
-
-const btnOutlineGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#0D9488',
-  border: '1.5px solid #0D948840', cursor: 'pointer',
-}
-
-const btnSolidGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#0D9488', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
-}
-
-const btnOutline: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: 'var(--color-text-secondary)',
-  border: '1.5px solid var(--color-border)', cursor: 'pointer',
 }

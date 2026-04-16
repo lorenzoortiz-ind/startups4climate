@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, ChevronDown, ChevronRight } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolActionBar, ToolProgress, textareaStyle, labelStyle } from './shared'
 
 const SLIDES = [
   { id: 's1', title: '1. Portada', color: '#FF6B4A', guide: 'Nombre de la startup, logo, tagline de 1 línea, nombre del fundador y fecha. El tagline debe responder: "¿Qué haces y para quién?"', fields: [{ id: 'tagline', label: 'Tagline (1 línea)', ph: 'Ej: Producimos hidrógeno verde a paridad de precio con el hidrógeno gris' }, { id: 'name_role', label: 'Nombre del presentador y cargo', ph: 'María García, CEO & Co-fundadora' }] },
@@ -22,7 +22,6 @@ const SLIDES = [
 
 export default function PitchDeck({ userId, onComplete, onGenerateReport, toolStorageId }: ToolComponentProps) {
   const [values, setValues] = useToolState(userId, toolStorageId ?? 'pitch-deck', {} as Record<string, string>)
-  const [openSlides, setOpenSlides] = useState(new Set(['s1', 's2']))
 
   const allFields = SLIDES.flatMap((s) => s.fields)
   const filled = allFields.filter((f) => values[f.id]?.trim()).length
@@ -36,7 +35,7 @@ ${s.title.toUpperCase()}
 ${s.guide}
 
 ${s.fields.map((f) => `${f.label}:
-${values[f.id] || '(Sin completar)'}`).join('\n\n')}`).join('\n\n' + '─'.repeat(60) + '\n\n')}
+${values[f.id] || '(Sin completar)'}`).join('\n\n')}`).join('\n\n' + '\u2500'.repeat(60) + '\n\n')}
 
 Completado: ${filled}/${allFields.length} campos (${Math.round(filled / allFields.length * 100)}%)
     `.trim()
@@ -46,59 +45,57 @@ Completado: ${filled}/${allFields.length} campos (${Math.round(filled / allField
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem 1.25rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>Slides completados</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700, color: '#0D9488' }}>{filled}/{allFields.length} campos</span>
-        </div>
-        <div style={{ height: 4, borderRadius: 2, background: 'var(--color-bg-muted)' }}>
-          <div style={{ height: '100%', borderRadius: 2, background: '#0D9488', width: `${(filled / allFields.length) * 100}%`, transition: 'width 0.4s' }} />
-        </div>
-      </div>
+      <ToolProgress filled={filled} total={allFields.length} accentColor="#0D9488" />
 
-      {SLIDES.map((slide) => {
-        const isOpen = openSlides.has(slide.id)
+      {SLIDES.map((slide, slideIdx) => {
         const slideFilled = slide.fields.filter((f) => values[f.id]?.trim()).length
         return (
-          <div key={slide.id} style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
-            <button onClick={() => setOpenSlides((s) => { const n = new Set(s); isOpen ? n.delete(slide.id) : n.add(slide.id); return n })}
-              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.25rem', background: `${slide.color}08`, border: 'none', cursor: 'pointer' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: slide.color }} />
-                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{slide.title}</span>
+          <ToolSection
+            key={slide.id}
+            number={slideIdx + 1}
+            title={slide.title}
+            subtitle={`${slideFilled}/${slide.fields.length} campos completados`}
+            insight={slideIdx === 0
+              ? 'Los inversores toman la decisión en los primeros 3 slides. Problema, solución y tracción deben ser irresistibles.'
+              : undefined}
+            insightSource={slideIdx === 0 ? 'Y Combinator, How to Pitch' : undefined}
+            defaultOpen={slideIdx < 2}
+            accentColor={slide.color}
+          >
+            {/* Slide guide */}
+            <div style={{
+              padding: '0.75rem',
+              borderRadius: 8,
+              background: `${slide.color}08`,
+              border: `1px solid ${slide.color}15`,
+              marginBottom: '1rem',
+            }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: 'var(--color-text-secondary)', margin: 0 }}>{slide.guide}</p>
+            </div>
+
+            {slide.fields.map((f) => (
+              <div key={f.id} style={{ marginBottom: '0.875rem' }}>
+                <label style={labelStyle}>{f.label}</label>
+                <textarea
+                  value={values[f.id] || ''}
+                  onChange={(e) => setValues((p) => ({ ...p, [f.id]: e.target.value }))}
+                  placeholder={f.ph}
+                  rows={2}
+                  style={{
+                    ...textareaStyle,
+                    borderColor: values[f.id] ? `${slide.color}30` : 'var(--color-border)',
+                    minHeight: 60,
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = slide.color)}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = values[f.id] ? `${slide.color}30` : 'var(--color-border)')}
+                />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: slideFilled === slide.fields.length ? '#0D9488' : slide.color }}>{slideFilled}/{slide.fields.length}</span>
-                {isOpen ? <ChevronDown size={14} color="#9CA3AF" /> : <ChevronRight size={14} color="#9CA3AF" />}
-              </div>
-            </button>
-            {isOpen && (
-              <div style={{ padding: '1.25rem' }}>
-                <div style={{ padding: '0.75rem', borderRadius: 8, background: `${slide.color}08`, border: `1px solid ${slide.color}15`, marginBottom: '1rem' }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', lineHeight: 1.6, color: 'var(--color-text-secondary)' }}>{slide.guide}</p>
-                </div>
-                {slide.fields.map((f) => (
-                  <div key={f.id} style={{ marginBottom: '0.875rem' }}>
-                    <label style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.375rem' }}>{f.label}</label>
-                    <textarea value={values[f.id] || ''} onChange={(e) => setValues((p) => ({ ...p, [f.id]: e.target.value }))} placeholder={f.ph} rows={2}
-                      style={{ width: '100%', padding: '0.625rem 0.75rem', borderRadius: 8, border: `1px solid ${values[f.id] ? slide.color + '30' : 'var(--color-border)'}`, fontFamily: 'var(--font-body)', fontSize: '0.875rem', lineHeight: 1.5, color: 'var(--color-text-primary)', outline: 'none', resize: 'vertical', background: 'var(--color-bg-primary)', transition: 'border 0.15s' }}
-                      onFocus={(e) => (e.currentTarget.style.borderColor = slide.color)}
-                      onBlur={(e) => (e.currentTarget.style.borderColor = values[f.id] ? slide.color + '30' : 'var(--color-border)')}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            ))}
+          </ToolSection>
         )
       })}
 
-      <button onClick={handleReport} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem', borderRadius: 12, background: '#0D9488', color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(13,148,136,0.3)', transition: 'all 0.2s' }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = '#0B7C72')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#0D9488')}
-      >
-        <Download size={17} /> Exportar Guía Completa del Pitch Deck
-      </button>
+      <ToolActionBar onComplete={onComplete} onReport={handleReport} />
     </div>
   )
 }

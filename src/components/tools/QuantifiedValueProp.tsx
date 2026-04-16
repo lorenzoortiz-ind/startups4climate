@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolActionBar, ToolProgress, InsightPanel, inputStyle, textareaStyle, labelStyle } from './shared'
 
 interface Data {
   ahorroEconomico: number | string
@@ -16,12 +16,20 @@ interface Data {
 
 const DEFAULT: Data = { ahorroEconomico: '', ahorroTiempo: '', reduccionRiesgo: '', statusQuo: '', comparacion: '', roi: '' }
 
+const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
+
 export default function QuantifiedValueProp({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'quantified-value-prop', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
+
+  const sectionKeys = ['ahorroEconomico', 'ahorroTiempo', 'roi', 'reduccionRiesgo', 'statusQuo', 'comparacion'] as const
+  const filled = sectionKeys.filter(k => {
+    const v = data[k]
+    if (typeof v === 'number') return true
+    return typeof v === 'string' && v.trim().length > 0
+  }).length
 
   const handleReport = () => {
     const content = `
@@ -46,77 +54,69 @@ ${data.comparacion || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {/* Number sections - always visible */}
-      <div style={cardStyle}>
-        <div style={{ padding: '1rem 1.25rem' }}><span style={headingStyle}>Valor entregado al cliente</span></div>
-        <div style={{ padding: '0 1.25rem 1.25rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-            <div>
-              <label style={labelStyle}>Ahorro económico (anual)</label>
-              <div style={{ position: 'relative' }}>
-                <span style={prefixStyle}>$</span>
-                <input type="number" value={data.ahorroEconomico} onChange={e => setData(p => ({ ...p, ahorroEconomico: e.target.value }))} placeholder="Ej: 50000" step="1000" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
-              </div>
+      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#0D9488" />
+
+      <InsightPanel title="Referencia académica">
+        <p style={{ margin: 0 }}>
+          &ldquo;Si no puedes cuantificar cuánto vale tu solución en dólares/tiempo/riesgo para el cliente, no tienes una propuesta de valor — tienes una esperanza.&rdquo;
+        </p>
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          color: 'var(--color-text-muted)',
+          fontStyle: 'italic',
+          marginTop: '0.25rem',
+          display: 'block',
+        }}>
+          — MIT Disciplined Entrepreneurship, Step 10
+        </span>
+      </InsightPanel>
+
+      <ToolSection number={1} title="Valor entregado al cliente" subtitle="Métricas cuantificables de impacto" defaultOpen accentColor="#0D9488">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+          <div>
+            <label style={labelStyle}>Ahorro económico (anual)</label>
+            <div style={{ position: 'relative' }}>
+              <span style={prefixStyle}>$</span>
+              <input type="number" value={data.ahorroEconomico} onChange={e => setData(p => ({ ...p, ahorroEconomico: e.target.value }))} placeholder="Ej: 50000" step="1000" style={{ ...inputStyle, paddingLeft: '1.75rem' }} />
             </div>
-            <div>
-              <label style={labelStyle}>Ahorro de tiempo (mensual)</label>
-              <div style={{ position: 'relative' }}>
-                <input type="number" value={data.ahorroTiempo} onChange={e => setData(p => ({ ...p, ahorroTiempo: e.target.value }))} placeholder="Ej: 40" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
-                <span style={suffixStyle}>hrs</span>
-              </div>
+          </div>
+          <div>
+            <label style={labelStyle}>Ahorro de tiempo (mensual)</label>
+            <div style={{ position: 'relative' }}>
+              <input type="number" value={data.ahorroTiempo} onChange={e => setData(p => ({ ...p, ahorroTiempo: e.target.value }))} placeholder="Ej: 40" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
+              <span style={suffixStyle}>hrs</span>
             </div>
-            <div>
-              <label style={labelStyle}>ROI estimado</label>
-              <div style={{ position: 'relative' }}>
-                <input type="number" value={data.roi} onChange={e => setData(p => ({ ...p, roi: e.target.value }))} placeholder="Ej: 300" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
-                <span style={suffixStyle}>%</span>
-              </div>
+          </div>
+          <div>
+            <label style={labelStyle}>ROI estimado</label>
+            <div style={{ position: 'relative' }}>
+              <input type="number" value={data.roi} onChange={e => setData(p => ({ ...p, roi: e.target.value }))} placeholder="Ej: 300" step="1" style={{ ...inputStyle, paddingRight: '2.5rem' }} />
+              <span style={suffixStyle}>%</span>
             </div>
           </div>
         </div>
-      </div>
+      </ToolSection>
 
-      <Collapsible title="Reducción de riesgo" k="reduccionRiesgo" open={openSections} toggle={toggle}>
-        <textarea value={data.reduccionRiesgo} onChange={e => setData(p => ({ ...p, reduccionRiesgo: e.target.value }))} placeholder="¿Qué riesgos reduces para el cliente? ¿Cómo los cuantificas?" rows={4} style={taStyle} />
-      </Collapsible>
+      <ToolSection number={2} title="Reducción de riesgo" subtitle="Valor intangible cuantificado" accentColor="#0D9488">
+        <textarea value={data.reduccionRiesgo} onChange={e => setData(p => ({ ...p, reduccionRiesgo: e.target.value }))} placeholder="¿Qué riesgos reduces para el cliente? ¿Cómo los cuantificas?" rows={4} style={textareaStyle} />
+      </ToolSection>
 
-      <Collapsible title="Status quo actual del cliente" k="statusQuo" open={openSections} toggle={toggle}>
-        <textarea value={data.statusQuo} onChange={e => setData(p => ({ ...p, statusQuo: e.target.value }))} placeholder="¿Cómo resuelve el cliente este problema hoy? ¿Cuánto le cuesta en tiempo, dinero y frustración?" rows={4} style={taStyle} />
-      </Collapsible>
+      <ToolSection number={3} title="Status quo actual del cliente" subtitle="El costo de no hacer nada" accentColor="#0D9488">
+        <textarea value={data.statusQuo} onChange={e => setData(p => ({ ...p, statusQuo: e.target.value }))} placeholder="¿Cómo resuelve el cliente este problema hoy? ¿Cuánto le cuesta en tiempo, dinero y frustración?" rows={4} style={textareaStyle} />
+      </ToolSection>
 
-      <Collapsible title="Comparación cuantificada" k="comparacion" open={openSections} toggle={toggle}>
-        <textarea value={data.comparacion} onChange={e => setData(p => ({ ...p, comparacion: e.target.value }))} placeholder="Compara numéricamente: antes vs después de usar tu solución" rows={4} style={taStyle} />
-      </Collapsible>
+      <ToolSection number={4} title="Comparación cuantificada" subtitle="Antes vs después con números" accentColor="#0D9488">
+        <textarea value={data.comparacion} onChange={e => setData(p => ({ ...p, comparacion: e.target.value }))} placeholder="Compara numéricamente: antes vs después de usar tu solución" rows={4} style={textareaStyle} />
+      </ToolSection>
 
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOG}><Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}</button>
-        <button onClick={onComplete} style={btnSG}><CheckCircle2 size={15} /> Marcar como completada</button>
-        <button onClick={handleReport} style={btnO}><FileText size={15} /> Generar reporte</button>
-      </div>
+      <ToolActionBar
+        onSave={handleSave}
+        onComplete={onComplete}
+        onReport={handleReport}
+        saved={saved}
+        accentColor="#0D9488"
+      />
     </div>
   )
 }
-
-function Collapsible({ title, k, open, toggle, children }: { title: string; k: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode }) {
-  return (
-    <div style={cardStyle}>
-      <button onClick={() => toggle(k)} style={sectionBtn}>
-        <span style={headingStyle}>{title}</span>
-        <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[k] ? 'rotate(180deg)' : 'rotate(0)' }} />
-      </button>
-      {open[k] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const cardStyle: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }
-const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }
-const sectionBtn: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
-const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.375rem', display: 'block' }
-const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }
-const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#0D9488', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)' }
-const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }
-const prefixStyle: React.CSSProperties = { position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }
-const suffixStyle: React.CSSProperties = { position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', pointerEvents: 'none' }

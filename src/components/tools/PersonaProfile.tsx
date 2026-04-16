@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolActionBar, ToolProgress, inputStyle, textareaStyle, labelStyle } from './shared'
 
 interface Data {
   [key: string]: unknown
@@ -22,11 +22,21 @@ const DEFAULT: Data = { nombre: '', edad: '', cargo: '', empresaTipo: '', diaTip
 
 export default function PersonaProfile({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'persona-profile', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
   const u = (field: keyof Data, value: string) => setData(p => ({ ...p, [field]: value }))
+
+  const filledCount = [
+    data.nombre,
+    data.edad ? String(data.edad) : '',
+    data.cargo,
+    data.empresaTipo,
+    data.diaTipico,
+    data.frustraciones,
+    data.motivaciones,
+    data.criteriosCompra,
+    data.cita,
+  ].filter(Boolean).length
 
   const handleReport = () => {
     const content = `
@@ -57,53 +67,84 @@ CITA REPRESENTATIVA:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {/* Basic info - number fields always visible */}
-      <div style={cardStyle}>
-        <div style={{ padding: '1rem 1.25rem' }}><span style={headingStyle}>Datos básicos de la persona</span></div>
-        <div style={{ padding: '0 1.25rem 1.25rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr 1fr', gap: '0.625rem' }}>
+      <ToolProgress filled={filledCount} total={9} />
+
+      <ToolSection
+        number={1}
+        title="Datos básicos de la persona"
+        subtitle="Identidad y contexto profesional"
+        insight="Tu persona no es un avatar ficticio — es el composite de 5+ entrevistas reales con usuarios potenciales."
+        insightSource="Steve Blank, The Startup Owner's Manual"
+        defaultOpen
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr 1fr', gap: '0.625rem' }}>
+          <div>
+            <label style={labelStyle}>Nombre</label>
             <input value={data.nombre} onChange={e => u('nombre', e.target.value)} placeholder="Nombre de la persona" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Edad</label>
             <input type="number" value={data.edad} onChange={e => u('edad', e.target.value)} placeholder="Edad" style={{ ...inputStyle, width: 80 }} />
+          </div>
+          <div>
+            <label style={labelStyle}>Cargo / Rol</label>
             <input value={data.cargo} onChange={e => u('cargo', e.target.value)} placeholder="Cargo / Rol" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Empresa tipo</label>
             <input value={data.empresaTipo} onChange={e => u('empresaTipo', e.target.value)} placeholder="Empresa tipo" style={inputStyle} />
           </div>
         </div>
-      </div>
+      </ToolSection>
 
-      {[
-        { key: 'diaTipico', title: 'Día típico', ph: '¿Cómo es un día típico de esta persona? ¿Qué tareas hace, qué herramientas usa?' },
-        { key: 'frustraciones', title: 'Frustraciones principales', ph: '¿Qué le frustra? ¿Qué problemas enfrenta constantemente?' },
-        { key: 'motivaciones', title: 'Motivaciones', ph: '¿Qué la motiva? ¿Qué quiere lograr profesional y personalmente?' },
-        { key: 'criteriosCompra', title: 'Criterios de decisión de compra', ph: '¿Qué factores considera al evaluar una solución? Precio, facilidad, soporte...' },
-        { key: 'cita', title: 'Cita representativa', ph: 'Una frase que esta persona diría sobre su problema o necesidad...' },
-      ].map(s => (
-        <div key={s.key} style={cardStyle}>
-          <button onClick={() => toggle(s.key)} style={sectionBtn}>
-            <span style={headingStyle}>{s.title}</span>
-            <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: openSections[s.key] ? 'rotate(180deg)' : 'rotate(0)' }} />
-          </button>
-          {openSections[s.key] && (
-            <div style={{ padding: '0 1.25rem 1.25rem' }}>
-              <textarea value={(data as Record<string, string>)[s.key]} onChange={e => u(s.key as keyof Data, e.target.value)} placeholder={s.ph} rows={4} style={taStyle} />
-            </div>
-          )}
-        </div>
-      ))}
+      <ToolSection
+        number={2}
+        title="Día típico"
+        subtitle="Rutina diaria, herramientas y decisiones"
+      >
+        <textarea value={(data as Record<string, string>).diaTipico} onChange={e => u('diaTipico', e.target.value)} placeholder="¿Cómo es un día típico de esta persona? ¿Qué tareas hace, qué herramientas usa?" rows={4} style={textareaStyle} />
+      </ToolSection>
 
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOG}><Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}</button>
-        <button onClick={onComplete} style={btnSG}><CheckCircle2 size={15} /> Marcar como completada</button>
-        <button onClick={handleReport} style={btnO}><FileText size={15} /> Generar reporte</button>
-      </div>
+      <ToolSection
+        number={3}
+        title="Frustraciones principales"
+        subtitle="Los problemas que enfrenta constantemente"
+        insight="Las mejores oportunidades de negocio nacen de frustraciones que el usuario ya intenta resolver con workarounds manuales o herramientas inadecuadas."
+        insightSource="Ash Maurya, Running Lean"
+      >
+        <textarea value={(data as Record<string, string>).frustraciones} onChange={e => u('frustraciones', e.target.value)} placeholder="¿Qué le frustra? ¿Qué problemas enfrenta constantemente?" rows={4} style={textareaStyle} />
+      </ToolSection>
+
+      <ToolSection
+        number={4}
+        title="Motivaciones"
+        subtitle="Metas profesionales y personales"
+      >
+        <textarea value={(data as Record<string, string>).motivaciones} onChange={e => u('motivaciones', e.target.value)} placeholder="¿Qué la motiva? ¿Qué quiere lograr profesional y personalmente?" rows={4} style={textareaStyle} />
+      </ToolSection>
+
+      <ToolSection
+        number={5}
+        title="Criterios de decisión de compra"
+        subtitle="Factores que influyen en su elección de solución"
+      >
+        <textarea value={(data as Record<string, string>).criteriosCompra} onChange={e => u('criteriosCompra', e.target.value)} placeholder="¿Qué factores considera al evaluar una solución? Precio, facilidad, soporte..." rows={4} style={textareaStyle} />
+      </ToolSection>
+
+      <ToolSection
+        number={6}
+        title="Cita representativa"
+        subtitle="Una frase que esta persona diría sobre su problema"
+      >
+        <textarea value={(data as Record<string, string>).cita} onChange={e => u('cita', e.target.value)} placeholder='Una frase que esta persona diría sobre su problema o necesidad...' rows={3} style={textareaStyle} />
+      </ToolSection>
+
+      <ToolActionBar
+        onSave={handleSave}
+        onComplete={onComplete}
+        onReport={handleReport}
+        saved={saved}
+      />
     </div>
   )
 }
-
-const cardStyle: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }
-const headingStyle: React.CSSProperties = { fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }
-const sectionBtn: React.CSSProperties = { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer' }
-const inputStyle: React.CSSProperties = { width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)', outline: 'none' }
-const taStyle: React.CSSProperties = { ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6 }
-const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }
-const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#0D9488', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)' }
-const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }

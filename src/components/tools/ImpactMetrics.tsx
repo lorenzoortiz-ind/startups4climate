@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolProgress, ToolActionBar, inputStyle, textareaStyle, labelStyle, btnSmall } from './shared'
 
 interface Metric {
   [key: string]: unknown
@@ -75,12 +76,11 @@ const progressColor = (pct: number) => {
   return '#DC2626'
 }
 
+const ACCENT = '#0D9488'
+
 export default function ImpactMetrics({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'impact-metrics', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
 
   const toggleODS = (n: number) => {
     setData(p => ({
@@ -108,6 +108,14 @@ export default function ImpactMetrics({ userId, onComplete, onGenerateReport }: 
 
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
 
+  // Progress: count filled sections
+  const filledSections = [
+    data.ods_alignment.length > 0,
+    data.impact_thesis.trim().length > 0,
+    data.theory_of_change.trim().length > 0,
+    data.metrics.some(m => m.name.trim().length > 0),
+  ].filter(Boolean).length
+
   const handleReport = () => {
     const content = `
 MARCO DE MEDICIÓN DE IMPACTO
@@ -131,11 +139,18 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <ToolProgress filled={filledSections} total={4} accentColor={ACCENT} />
+
       {/* ODS Alignment */}
-      <SectionCollapsible title="Alineación con los ODS" sectionKey="ods" open={openSections} toggle={toggle}>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginBottom: '0.75rem' }}>
-          Selecciona los Objetivos de Desarrollo Sostenible con los que se alinea tu startup.
-        </p>
+      <ToolSection
+        number={1}
+        title="Alineación con los ODS"
+        subtitle="Selecciona los Objetivos de Desarrollo Sostenible relevantes"
+        insight="Mide impacto con la misma rigurosidad que mides revenue. tCO2eq reducidas, vidas impactadas, empleos creados — los inversores de impacto exigen datos."
+        insightSource="GIIN Impact Measurement Framework"
+        defaultOpen
+        accentColor={ACCENT}
+      >
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem' }}>
           {Array.from({ length: 17 }, (_, i) => i + 1).map(n => {
             const selected = data.ods_alignment.includes(n)
@@ -156,20 +171,35 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
             )
           })}
         </div>
-      </SectionCollapsible>
+      </ToolSection>
 
       {/* Impact thesis */}
-      <SectionCollapsible title="Tesis de impacto" sectionKey="thesis" open={openSections} toggle={toggle}>
-        <textarea value={data.impact_thesis} onChange={e => setData(p => ({ ...p, impact_thesis: e.target.value }))} placeholder="¿Cuál es el cambio positivo que tu startup genera en el mundo? Describe tu tesis de impacto en 2-3 párrafos." rows={5} style={taStyle} />
-      </SectionCollapsible>
+      <ToolSection
+        number={2}
+        title="Tesis de impacto"
+        subtitle="Define el cambio positivo que genera tu startup"
+        accentColor={ACCENT}
+      >
+        <textarea value={data.impact_thesis} onChange={e => setData(p => ({ ...p, impact_thesis: e.target.value }))} placeholder="¿Cuál es el cambio positivo que tu startup genera en el mundo? Describe tu tesis de impacto en 2-3 párrafos." rows={5} style={textareaStyle} />
+      </ToolSection>
 
       {/* Theory of change */}
-      <SectionCollapsible title="Teoría del cambio" sectionKey="toc" open={openSections} toggle={toggle}>
-        <textarea value={data.theory_of_change} onChange={e => setData(p => ({ ...p, theory_of_change: e.target.value }))} placeholder="Describe la cadena causal: ¿cómo tus actividades llevan a outputs, outcomes y finalmente al impacto deseado?" rows={5} style={taStyle} />
-      </SectionCollapsible>
+      <ToolSection
+        number={3}
+        title="Teoría del cambio"
+        subtitle="Describe la cadena causal de actividades a impacto"
+        accentColor={ACCENT}
+      >
+        <textarea value={data.theory_of_change} onChange={e => setData(p => ({ ...p, theory_of_change: e.target.value }))} placeholder="Describe la cadena causal: ¿cómo tus actividades llevan a outputs, outcomes y finalmente al impacto deseado?" rows={5} style={textareaStyle} />
+      </ToolSection>
 
       {/* Metrics */}
-      <SectionCollapsible title="Métricas de impacto" sectionKey="metrics" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={4}
+        title="Métricas de impacto"
+        subtitle="Define métricas cuantificables con baseline, meta y progreso"
+        accentColor={ACCENT}
+      >
         {data.metrics.map((m, i) => {
           const pct = metricProgress(m)
           const catInfo = categoryLabels[m.category]
@@ -177,7 +207,7 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
             <div key={i} style={{ padding: '1rem', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: '0.75rem', background: 'var(--color-bg-primary)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Métrica {i + 1}</span>
+                  <span style={{ ...labelStyle, marginBottom: 0 }}>Métrica {i + 1}</span>
                   <span style={{ padding: '0.15rem 0.5rem', borderRadius: 8, background: `${catInfo.color}15`, color: catInfo.color, fontFamily: 'var(--font-body)', fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase' }}>{catInfo.label}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -195,7 +225,7 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
                   <option value="impact">Impacto</option>
                 </select>
               </div>
-              <textarea value={m.description} onChange={e => updateMetric(i, 'description', e.target.value)} placeholder="Descripción de la métrica" rows={2} style={{ ...taStyle, marginBottom: '0.5rem' }} />
+              <textarea value={m.description} onChange={e => updateMetric(i, 'description', e.target.value)} placeholder="Descripción de la métrica" rows={2} style={{ ...textareaStyle, marginBottom: '0.5rem' }} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Baseline</label>
@@ -211,7 +241,7 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
                 </div>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Unidad</label>
-                  <input value={m.unit} onChange={e => updateMetric(i, 'unit', e.target.value)} placeholder="Ej: ton CO₂" style={inputStyle} />
+                  <input value={m.unit} onChange={e => updateMetric(i, 'unit', e.target.value)} placeholder="Ej: ton CO2" style={inputStyle} />
                 </div>
               </div>
               <input value={m.measurement_method} onChange={e => updateMetric(i, 'measurement_method', e.target.value)} placeholder="Método de medición" style={{ ...inputStyle, marginBottom: '0.5rem' }} />
@@ -222,89 +252,10 @@ ${data.metrics.map((m, i) => `${i + 1}. ${m.name || '(Sin nombre)'} [${categoryL
             </div>
           )
         })}
-        <button onClick={addMetric} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar métrica</button>
-      </SectionCollapsible>
+        <button onClick={addMetric} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar métrica</button>
+      </ToolSection>
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOutlineGreen}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-        <button onClick={onComplete} style={btnSolidGreen}>
-          <CheckCircle2 size={15} /> Marcar como completada
-        </button>
-        <button onClick={handleReport} style={btnOutline}>
-          <FileText size={15} /> Generar reporte
-        </button>
-      </div>
+      <ToolActionBar onSave={handleSave} onComplete={onComplete} onReport={handleReport} saved={saved} accentColor={ACCENT} />
     </div>
   )
-}
-
-/* ── Shared sub-components & styles ── */
-
-function SectionCollapsible({ title, sectionKey, open, toggle, children }: {
-  title: string; sectionKey: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode
-}) {
-  return (
-    <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-      <button onClick={() => toggle(sectionKey)} style={sectionBtn}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</span>
-        <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[sectionKey] ? 'rotate(180deg)' : 'rotate(0)' }} />
-      </button>
-      {open[sectionKey] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const sectionBtn: React.CSSProperties = {
-  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-  padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8,
-  border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)',
-  outline: 'none',
-}
-
-const taStyle: React.CSSProperties = {
-  ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6,
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 600,
-  color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.25rem',
-}
-
-const btnSmall: React.CSSProperties = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-  padding: '0.35rem 0.75rem', borderRadius: 6, fontSize: '0.75rem',
-  fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent',
-  border: '1px solid var(--color-border)', cursor: 'pointer',
-}
-
-const btnOutlineGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#0D9488',
-  border: '1.5px solid #0D948840', cursor: 'pointer',
-}
-
-const btnSolidGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#0D9488', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
-}
-
-const btnOutline: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: 'var(--color-text-secondary)',
-  border: '1.5px solid var(--color-border)', cursor: 'pointer',
 }

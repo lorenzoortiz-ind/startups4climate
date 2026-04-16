@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolProgress, ToolActionBar, inputStyle, textareaStyle, labelStyle, btnSmall } from './shared'
 
 interface Requirement {
   [key: string]: unknown
@@ -49,12 +50,11 @@ const statusConfig: Record<string, { bg: string; color: string; label: string }>
   completado: { bg: '#CCFBF1', color: '#0D9488', label: 'Completado' },
 }
 
+const ACCENT = '#0D9488'
+
 export default function RegulatoryCompass({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'regulatory-compass', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
 
   const updateRequirement = (i: number, field: keyof Requirement, value: string) => {
     setData(p => {
@@ -72,6 +72,12 @@ export default function RegulatoryCompass({ userId, onComplete, onGenerateReport
     const done = data.requirements.filter(r => r.status === 'completado').length
     return Math.round((done / data.requirements.length) * 100)
   }, [data.requirements])
+
+  // Progress: count filled sections
+  const filledSections = [
+    data.country.trim().length > 0 || data.vertical.trim().length > 0,
+    data.requirements.some(r => r.name.trim().length > 0),
+  ].filter(Boolean).length
 
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
 
@@ -97,8 +103,18 @@ ${data.requirements.map((r, i) => `${i + 1}. [${categoryLabels[r.category]}] ${r
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <ToolProgress filled={filledSections} total={2} accentColor={ACCENT} />
+
       {/* Country & Vertical */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
+      <ToolSection
+        number={1}
+        title="Contexto regulatorio"
+        subtitle="Define tu país y vertical para mapear requisitos"
+        insight="La regulación no es un obstáculo — es una barrera de entrada que protege a quienes la navegan primero."
+        insightSource="MIT Sloan, Regulatory Strategy"
+        defaultOpen
+        accentColor={ACCENT}
+      >
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
           <div>
             <label style={labelStyle}>País</label>
@@ -117,16 +133,21 @@ ${data.requirements.map((r, i) => `${i + 1}. [${categoryLabels[r.category]}] ${r
         <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
           <div style={{ height: '100%', width: `${completionPct}%`, borderRadius: 4, background: completionPct >= 75 ? '#0D9488' : completionPct >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
         </div>
-      </div>
+      </ToolSection>
 
       {/* Requirements */}
-      <SectionCollapsible title="Requisitos regulatorios" sectionKey="requirements" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={2}
+        title="Requisitos regulatorios"
+        subtitle="Lista todos los requisitos legales y regulatorios necesarios"
+        accentColor={ACCENT}
+      >
         {data.requirements.map((r, i) => {
           const sc = statusConfig[r.status]
           return (
             <div key={i} style={{ padding: '1rem', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: '0.75rem', background: 'var(--color-bg-primary)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Requisito {i + 1}</span>
+                <span style={{ ...labelStyle, marginBottom: 0 }}>Requisito {i + 1}</span>
                 {data.requirements.length > 1 && (
                   <button onClick={() => removeRequirement(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630' }}><Trash2 size={12} /> Eliminar</button>
                 )}
@@ -146,7 +167,7 @@ ${data.requirements.map((r, i) => `${i + 1}. [${categoryLabels[r.category]}] ${r
                 </div>
               </div>
               <input value={r.name} onChange={e => updateRequirement(i, 'name', e.target.value)} placeholder="Nombre del requisito" style={{ ...inputStyle, marginBottom: '0.5rem' }} />
-              <textarea value={r.description} onChange={e => updateRequirement(i, 'description', e.target.value)} placeholder="Descripción detallada" rows={2} style={{ ...taStyle, marginBottom: '0.5rem' }} />
+              <textarea value={r.description} onChange={e => updateRequirement(i, 'description', e.target.value)} placeholder="Descripción detallada" rows={2} style={{ ...textareaStyle, marginBottom: '0.5rem' }} />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <div>
                   <label style={{ ...labelStyle, fontSize: '0.6875rem' }}>Entidad responsable</label>
@@ -161,93 +182,14 @@ ${data.requirements.map((r, i) => `${i + 1}. [${categoryLabels[r.category]}] ${r
                   <input value={r.estimated_cost} onChange={e => updateRequirement(i, 'estimated_cost', e.target.value)} placeholder="Ej: $5,000 MXN" style={inputStyle} />
                 </div>
               </div>
-              <textarea value={r.notes} onChange={e => updateRequirement(i, 'notes', e.target.value)} placeholder="Notas adicionales" rows={2} style={taStyle} />
+              <textarea value={r.notes} onChange={e => updateRequirement(i, 'notes', e.target.value)} placeholder="Notas adicionales" rows={2} style={textareaStyle} />
             </div>
           )
         })}
-        <button onClick={addRequirement} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar requisito</button>
-      </SectionCollapsible>
+        <button onClick={addRequirement} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar requisito</button>
+      </ToolSection>
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOutlineGreen}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-        <button onClick={onComplete} style={btnSolidGreen}>
-          <CheckCircle2 size={15} /> Marcar como completada
-        </button>
-        <button onClick={handleReport} style={btnOutline}>
-          <FileText size={15} /> Generar reporte
-        </button>
-      </div>
+      <ToolActionBar onSave={handleSave} onComplete={onComplete} onReport={handleReport} saved={saved} accentColor={ACCENT} />
     </div>
   )
-}
-
-/* ── Shared sub-components & styles ── */
-
-function SectionCollapsible({ title, sectionKey, open, toggle, children }: {
-  title: string; sectionKey: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode
-}) {
-  return (
-    <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-      <button onClick={() => toggle(sectionKey)} style={sectionBtn}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</span>
-        <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[sectionKey] ? 'rotate(180deg)' : 'rotate(0)' }} />
-      </button>
-      {open[sectionKey] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const sectionBtn: React.CSSProperties = {
-  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-  padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8,
-  border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)',
-  outline: 'none',
-}
-
-const taStyle: React.CSSProperties = {
-  ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6,
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 600,
-  color: 'var(--color-text-secondary)', display: 'block', marginBottom: '0.25rem',
-}
-
-const btnSmall: React.CSSProperties = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-  padding: '0.35rem 0.75rem', borderRadius: 6, fontSize: '0.75rem',
-  fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent',
-  border: '1px solid var(--color-border)', cursor: 'pointer',
-}
-
-const btnOutlineGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#0D9488',
-  border: '1.5px solid #0D948840', cursor: 'pointer',
-}
-
-const btnSolidGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#0D9488', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
-}
-
-const btnOutline: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: 'var(--color-text-secondary)',
-  border: '1.5px solid var(--color-border)', cursor: 'pointer',
 }

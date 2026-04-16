@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolActionBar, ToolProgress, InsightPanel, inputStyle, btnSmall } from './shared'
 
 interface Customer {
   company: string
@@ -25,6 +26,16 @@ const DEFAULT: Data = {
 
 const STATUSES = ['Por contactar', 'Contactado', 'Interesado', 'En negociación', 'Cliente']
 
+const statusColor = (s: string) => {
+  switch (s) {
+    case 'Cliente': return '#0D9488'
+    case 'En negociación': return '#2A222B'
+    case 'Interesado': return '#0D9488'
+    case 'Contactado': return '#FF6B4A'
+    default: return '#9CA3AF'
+  }
+}
+
 export default function FirstTenCustomers({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'first-10-customers', DEFAULT)
   const [saved, setSaved] = useState(false)
@@ -40,15 +51,7 @@ export default function FirstTenCustomers({ userId, onComplete, onGenerateReport
   const addCustomer = () => setData(p => ({ ...p, customers: [...p.customers, emptyCustomer()] }))
   const removeCustomer = (i: number) => setData(p => ({ ...p, customers: p.customers.filter((_, idx) => idx !== i) }))
 
-  const statusColor = (s: string) => {
-    switch (s) {
-      case 'Cliente': return '#0D9488'
-      case 'En negociación': return '#2A222B'
-      case 'Interesado': return '#0D9488'
-      case 'Contactado': return '#FF6B4A'
-      default: return '#9CA3AF'
-    }
-  }
+  const filled = data.customers.filter(c => c.company.trim().length > 0).length
 
   const handleReport = () => {
     const content = `
@@ -71,22 +74,42 @@ RESUMEN:
     onGenerateReport(content)
   }
 
+  const btnDanger: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0.25rem 0.5rem', borderRadius: 6, background: 'transparent', color: '#DC2626', border: '1px solid #DC262630', cursor: 'pointer' }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {/* Summary bar */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem 1.25rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        {STATUSES.map(s => (
-          <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: statusColor(s) }} />
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-              {s}: {data.customers.filter(c => c.status === s).length}
-            </span>
-          </div>
-        ))}
-      </div>
+      <ToolProgress filled={filled} total={data.customers.length} accentColor="#0D9488" />
 
-      {/* Customer cards */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
+      <InsightPanel title="Referencia académica">
+        <p style={{ margin: 0 }}>
+          &ldquo;Tus primeros 10 clientes no son un pipeline de ventas — son tu laboratorio de product-market fit.&rdquo;
+        </p>
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          color: 'var(--color-text-muted)',
+          fontStyle: 'italic',
+          marginTop: '0.25rem',
+          display: 'block',
+        }}>
+          — Stanford Lean LaunchPad
+        </span>
+      </InsightPanel>
+
+      {/* Summary bar */}
+      <ToolSection number={1} title="Pipeline de clientes" subtitle="Estado actual de tu embudo" defaultOpen accentColor="#0D9488">
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+          {STATUSES.map(s => (
+            <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: statusColor(s) }} />
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                {s}: {data.customers.filter(c => c.status === s).length}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Customer cards */}
         {data.customers.map((c, i) => (
           <div key={i} style={{ padding: '1rem', borderRadius: 10, border: `1px solid ${statusColor(c.status)}25`, marginBottom: '0.75rem', background: 'var(--color-bg-primary)', borderLeft: `3px solid ${statusColor(c.status)}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
@@ -106,21 +129,16 @@ RESUMEN:
             </div>
           </div>
         ))}
-        <button onClick={addCustomer} style={btnAdd}><Plus size={14} /> Agregar cliente</button>
-      </div>
+        <button onClick={addCustomer} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={14} /> Agregar cliente</button>
+      </ToolSection>
 
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOG}><Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}</button>
-        <button onClick={onComplete} style={btnSG}><CheckCircle2 size={15} /> Marcar como completada</button>
-        <button onClick={handleReport} style={btnO}><FileText size={15} /> Generar reporte</button>
-      </div>
+      <ToolActionBar
+        onSave={handleSave}
+        onComplete={onComplete}
+        onReport={handleReport}
+        saved={saved}
+        accentColor="#0D9488"
+      />
     </div>
   )
 }
-
-const inputStyle: React.CSSProperties = { width: '100%', padding: '0.5rem 0.75rem', borderRadius: 8, border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-primary)', outline: 'none' }
-const btnDanger: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0.25rem 0.5rem', borderRadius: 6, background: 'transparent', color: '#DC2626', border: '1px solid #DC262630', cursor: 'pointer' }
-const btnAdd: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.375rem', padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.8125rem', fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1px solid #0D948830', cursor: 'pointer' }
-const btnOG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: '#0D9488', border: '1.5px solid #0D948840', cursor: 'pointer' }
-const btnSG: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: '#0D9488', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)' }
-const btnO: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem', borderRadius: 10, fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600, background: 'transparent', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)', cursor: 'pointer' }

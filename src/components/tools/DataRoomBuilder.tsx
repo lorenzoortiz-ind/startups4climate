@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolProgress, ToolActionBar, inputStyle, btnSmall } from './shared'
 
 interface Document {
   [key: string]: unknown
@@ -84,12 +84,11 @@ const statusColors: Record<string, { bg: string; color: string; label: string }>
   listo: { bg: '#CCFBF1', color: '#0D9488', label: 'Listo' },
 }
 
+const ACCENT = '#0D9488'
+
 export default function DataRoomBuilder({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'data-room-builder', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
 
   const updateDocument = (catIdx: number, docIdx: number, field: keyof Document, value: string) => {
     setData(p => {
@@ -136,6 +135,9 @@ export default function DataRoomBuilder({ userId, onComplete, onGenerateReport }
     return Math.round((listo / allDocs.length) * 100)
   }, [data.categories])
 
+  // Progress: count categories that have at least one 'listo' doc
+  const filledSections = data.categories.filter(cat => cat.documents.some(d => d.status === 'listo')).length
+
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
 
   const handleReport = () => {
@@ -152,8 +154,10 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <ToolProgress filled={filledSections} total={data.categories.length} accentColor={ACCENT} />
+
       {/* Overall readiness */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', padding: '1.25rem' }}>
+      <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Preparación general del Data Room</span>
           <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#2A222B' : '#DC2626' }}>{overallReadiness}%</span>
@@ -167,8 +171,14 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
       {data.categories.map((cat, catIdx) => {
         const readiness = categoryReadiness(cat)
         return (
-          <SectionCollapsible key={catIdx} title={cat.name} sectionKey={`cat-${catIdx}`} open={openSections} toggle={toggle}
-            right={<span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600, color: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#2A222B' : '#DC2626' }}>{readiness}%</span>}
+          <ToolSection
+            key={catIdx}
+            number={catIdx + 1}
+            title={cat.name}
+            subtitle={`${readiness}% listo`}
+            insight={catIdx === 0 ? 'Un data room bien organizado demuestra madurez operativa. Los inversores evalúan tu disciplina tanto como tu producto.' : undefined}
+            insightSource={catIdx === 0 ? 'Y Combinator, Series A Guide' : undefined}
+            accentColor={ACCENT}
           >
             {/* Progress bar per category */}
             <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden', marginBottom: '1rem' }}>
@@ -178,7 +188,7 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
             {cat.documents.map((doc, docIdx) => {
               const sc = statusColors[doc.status]
               return (
-                <div key={docIdx} style={{ padding: '0.75rem', borderRadius: 8, border: '1px solid var(--color-border)', marginBottom: '0.5rem', background: 'var(--color-bg-primary)' }}>
+                <div key={docIdx} style={{ padding: '0.75rem', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: '0.5rem', background: 'var(--color-bg-primary)' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                     <input value={doc.name} onChange={e => updateDocument(catIdx, docIdx, 'name', e.target.value)} placeholder="Nombre del documento" style={{ ...inputStyle, flex: 1, minWidth: 160 }} />
                     <select value={doc.status} onChange={e => updateDocument(catIdx, docIdx, 'status', e.target.value)} style={{ ...inputStyle, width: 'auto', padding: '0.5rem 0.75rem', background: sc.bg, color: sc.color, fontWeight: 600, fontSize: '0.75rem' }}>
@@ -197,85 +207,12 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
                 </div>
               )
             })}
-            <button onClick={() => addDocument(catIdx)} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830', marginTop: '0.25rem' }}>+ Agregar documento</button>
-          </SectionCollapsible>
+            <button onClick={() => addDocument(catIdx)} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30`, marginTop: '0.25rem' }}>+ Agregar documento</button>
+          </ToolSection>
         )
       })}
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOutlineGreen}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-        <button onClick={onComplete} style={btnSolidGreen}>
-          <CheckCircle2 size={15} /> Marcar como completada
-        </button>
-        <button onClick={handleReport} style={btnOutline}>
-          <FileText size={15} /> Generar reporte
-        </button>
-      </div>
+      <ToolActionBar onSave={handleSave} onComplete={onComplete} onReport={handleReport} saved={saved} accentColor={ACCENT} />
     </div>
   )
-}
-
-/* ── Shared sub-components & styles ── */
-
-function SectionCollapsible({ title, sectionKey, open, toggle, children, right }: {
-  title: string; sectionKey: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode; right?: React.ReactNode
-}) {
-  return (
-    <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-      <button onClick={() => toggle(sectionKey)} style={sectionBtn}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {right}
-          <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[sectionKey] ? 'rotate(180deg)' : 'rotate(0)' }} />
-        </div>
-      </button>
-      {open[sectionKey] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const sectionBtn: React.CSSProperties = {
-  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-  padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8,
-  border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)',
-  outline: 'none',
-}
-
-const btnSmall: React.CSSProperties = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-  padding: '0.35rem 0.75rem', borderRadius: 6, fontSize: '0.75rem',
-  fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent',
-  border: '1px solid var(--color-border)', cursor: 'pointer',
-}
-
-const btnOutlineGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#0D9488',
-  border: '1.5px solid #0D948840', cursor: 'pointer',
-}
-
-const btnSolidGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#0D9488', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
-}
-
-const btnOutline: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: 'var(--color-text-secondary)',
-  border: '1.5px solid var(--color-border)', cursor: 'pointer',
 }

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolSection, ToolProgress, ToolActionBar, inputStyle, textareaStyle, labelStyle, btnSmall } from './shared'
 
 interface Competitor {
   [key: string]: unknown
@@ -46,12 +47,11 @@ const scoreColor = (s: number) => {
   return '#DC2626'
 }
 
+const ACCENT = '#0D9488'
+
 export default function CompetitorAnalysis({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'competitor-analysis', DEFAULT)
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [saved, setSaved] = useState(false)
-
-  const toggle = (k: string) => setOpenSections(p => ({ ...p, [k]: !p[k] }))
 
   const updateCompetitor = (i: number, field: keyof Competitor, value: string) => {
     setData(p => {
@@ -85,6 +85,13 @@ export default function CompetitorAnalysis({ userId, onComplete, onGenerateRepor
 
   const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 2000) }
 
+  // Progress: count sections with data
+  const filledSections = [
+    data.competitors.some(c => c.name.trim()),
+    data.matrix_dimensions.some(d => Object.keys(d.scores).length > 0),
+    data.differentiation.trim().length > 0,
+  ].filter(Boolean).length
+
   const handleReport = () => {
     const content = `
 ANÁLISIS COMPETITIVO
@@ -109,12 +116,22 @@ ${data.differentiation || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <ToolProgress filled={filledSections} total={3} accentColor={ACCENT} />
+
       {/* Competitors */}
-      <SectionCollapsible title="Competidores" sectionKey="competitors" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={1}
+        title="Competidores"
+        subtitle="Identifica a los principales competidores y alternativas en tu mercado"
+        insight="No compitas contra competidores — compite contra la alternativa actual del cliente, que muchas veces es 'no hacer nada'."
+        insightSource="Peter Thiel, Zero to One"
+        defaultOpen
+        accentColor={ACCENT}
+      >
         {data.competitors.map((c, i) => (
           <div key={i} style={{ padding: '1rem', borderRadius: 10, border: '1px solid var(--color-border)', marginBottom: '0.75rem', background: 'var(--color-bg-primary)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-secondary)' }}>Competidor {i + 1}</span>
+              <span style={{ ...labelStyle, marginBottom: 0 }}>Competidor {i + 1}</span>
               {data.competitors.length > 1 && (
                 <button onClick={() => removeCompetitor(i)} style={{ ...btnSmall, color: '#DC2626', borderColor: '#DC262630' }}><Trash2 size={12} /> Eliminar</button>
               )}
@@ -123,10 +140,10 @@ ${data.differentiation || '(No completado)'}
               <input value={c.name} onChange={e => updateCompetitor(i, 'name', e.target.value)} placeholder="Nombre" style={inputStyle} />
               <input value={c.website} onChange={e => updateCompetitor(i, 'website', e.target.value)} placeholder="Sitio web" style={inputStyle} />
             </div>
-            <textarea value={c.description} onChange={e => updateCompetitor(i, 'description', e.target.value)} placeholder="Descripción del competidor" rows={2} style={taStyle} />
+            <textarea value={c.description} onChange={e => updateCompetitor(i, 'description', e.target.value)} placeholder="Descripción del competidor" rows={2} style={textareaStyle} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginTop: '0.5rem' }}>
-              <textarea value={c.strengths} onChange={e => updateCompetitor(i, 'strengths', e.target.value)} placeholder="Fortalezas" rows={2} style={taStyle} />
-              <textarea value={c.weaknesses} onChange={e => updateCompetitor(i, 'weaknesses', e.target.value)} placeholder="Debilidades" rows={2} style={taStyle} />
+              <textarea value={c.strengths} onChange={e => updateCompetitor(i, 'strengths', e.target.value)} placeholder="Fortalezas" rows={2} style={textareaStyle} />
+              <textarea value={c.weaknesses} onChange={e => updateCompetitor(i, 'weaknesses', e.target.value)} placeholder="Debilidades" rows={2} style={textareaStyle} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginTop: '0.5rem' }}>
               <input value={c.pricing} onChange={e => updateCompetitor(i, 'pricing', e.target.value)} placeholder="Modelo de precios" style={inputStyle} />
@@ -134,11 +151,16 @@ ${data.differentiation || '(No completado)'}
             </div>
           </div>
         ))}
-        <button onClick={addCompetitor} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={12} /> Agregar competidor</button>
-      </SectionCollapsible>
+        <button onClick={addCompetitor} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30` }}><Plus size={12} /> Agregar competidor</button>
+      </ToolSection>
 
       {/* Competitive Matrix */}
-      <SectionCollapsible title="Matriz competitiva" sectionKey="matrix" open={openSections} toggle={toggle}>
+      <ToolSection
+        number={2}
+        title="Matriz competitiva"
+        subtitle="Evalúa a cada competidor en dimensiones clave de 1 a 5"
+        accentColor={ACCENT}
+      >
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-body)', fontSize: '0.8125rem' }}>
             <thead>
@@ -185,68 +207,25 @@ ${data.differentiation || '(No completado)'}
             </tbody>
           </table>
         </div>
-        <button onClick={addDimension} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830', marginTop: '0.75rem' }}><Plus size={12} /> Agregar dimensión</button>
-      </SectionCollapsible>
+        <button onClick={addDimension} style={{ ...btnSmall, color: ACCENT, borderColor: `${ACCENT}30`, marginTop: '0.75rem' }}><Plus size={12} /> Agregar dimensión</button>
+      </ToolSection>
 
       {/* Differentiation */}
-      <SectionCollapsible title="Resumen de diferenciación" sectionKey="differentiation" open={openSections} toggle={toggle}>
-        <textarea value={data.differentiation} onChange={e => setData(p => ({ ...p, differentiation: e.target.value }))} placeholder="¿Qué hace única a tu startup frente a la competencia? ¿Cuál es tu ventaja competitiva sostenible?" rows={5} style={taStyle} />
-      </SectionCollapsible>
+      <ToolSection
+        number={3}
+        title="Resumen de diferenciación"
+        subtitle="Define tu ventaja competitiva sostenible"
+        accentColor={ACCENT}
+      >
+        <textarea value={data.differentiation} onChange={e => setData(p => ({ ...p, differentiation: e.target.value }))} placeholder="¿Qué hace única a tu startup frente a la competencia? ¿Cuál es tu ventaja competitiva sostenible?" rows={5} style={textareaStyle} />
+      </ToolSection>
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-        <button onClick={handleSave} style={btnOutlineGreen}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-        <button onClick={onComplete} style={btnSolidGreen}>
-          <CheckCircle2 size={15} /> Marcar como completada
-        </button>
-        <button onClick={handleReport} style={btnOutline}>
-          <FileText size={15} /> Generar reporte
-        </button>
-      </div>
+      <ToolActionBar onSave={handleSave} onComplete={onComplete} onReport={handleReport} saved={saved} accentColor={ACCENT} />
     </div>
   )
 }
 
-/* ── Shared sub-components & styles ── */
-
-function SectionCollapsible({ title, sectionKey, open, toggle, children }: {
-  title: string; sectionKey: string; open: Record<string, boolean>; toggle: (k: string) => void; children: React.ReactNode
-}) {
-  return (
-    <div style={{ background: 'var(--color-bg-card)', borderRadius: 14, border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-      <button onClick={() => toggle(sectionKey)} style={sectionBtn}>
-        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</span>
-        <ChevronDown size={18} color="var(--color-text-muted)" style={{ transition: 'transform 0.2s', transform: open[sectionKey] ? 'rotate(180deg)' : 'rotate(0)' }} />
-      </button>
-      {open[sectionKey] && <div style={{ padding: '0 1.25rem 1.25rem' }}>{children}</div>}
-    </div>
-  )
-}
-
-const sectionBtn: React.CSSProperties = {
-  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-  padding: '1rem 1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.625rem 0.875rem', borderRadius: 8,
-  border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-primary)',
-  outline: 'none',
-}
-
-const taStyle: React.CSSProperties = {
-  ...inputStyle, resize: 'vertical' as const, lineHeight: 1.6,
-}
-
-const btnSmall: React.CSSProperties = {
-  display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-  padding: '0.35rem 0.75rem', borderRadius: 6, fontSize: '0.75rem',
-  fontFamily: 'var(--font-body)', fontWeight: 600, background: 'transparent',
-  border: '1px solid var(--color-border)', cursor: 'pointer',
-}
+/* ── Local table styles ── */
 
 const thStyle: React.CSSProperties = {
   padding: '0.5rem 0.625rem', textAlign: 'left', fontWeight: 600,
@@ -255,28 +234,4 @@ const thStyle: React.CSSProperties = {
 
 const tdStyle: React.CSSProperties = {
   padding: '0.375rem 0.625rem', borderBottom: '1px solid var(--color-border)',
-}
-
-const btnOutlineGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: '#0D9488',
-  border: '1.5px solid #0D948840', cursor: 'pointer',
-}
-
-const btnSolidGreen: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: '#0D9488', color: 'white',
-  border: 'none', cursor: 'pointer', boxShadow: '0 2px 8px rgba(13,148,136,0.3)',
-}
-
-const btnOutline: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: '0.5rem',
-  padding: '0.75rem 1.25rem', borderRadius: 10,
-  fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
-  background: 'transparent', color: 'var(--color-text-secondary)',
-  border: '1.5px solid var(--color-border)', cursor: 'pointer',
 }

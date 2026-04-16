@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Download } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import type { ToolComponentProps } from './ToolPage'
+import { ToolProgress, InsightPanel } from './shared'
 
 const BLOCKS = [
   { id: 'problem', label: 'Problema', hint: 'Top 3 problemas del cliente. ¿Qué está roto? ¿Qué alternativas existen hoy?', color: '#DC2626', row: 0, col: 0, span: 1 },
@@ -25,9 +26,9 @@ export default function LeanCanvas({ userId, onComplete, onGenerateReport, toolS
   const [activeBlock, setActiveBlock] = useState<string | null>(null)
 
   const filled = BLOCKS.filter((b) => values[b.id]?.trim().length > 0).length
-  const pct = Math.round((filled / BLOCKS.length) * 100)
 
   const handleReport = () => {
+    const pct = Math.round((filled / BLOCKS.length) * 100)
     const content = `
 CLIMATE LEAN CANVAS
 
@@ -44,17 +45,7 @@ Completado: ${filled}/${BLOCKS.length} bloques (${pct}%)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* Progress */}
-      <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>Completado</span>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 700, color: '#FF6B4A' }}>{filled}/{BLOCKS.length} bloques</span>
-          </div>
-          <div style={{ height: 4, borderRadius: 2, background: 'var(--color-bg-muted)' }}>
-            <div style={{ height: '100%', borderRadius: 2, background: '#FF6B4A', width: `${pct}%`, transition: 'width 0.4s' }} />
-          </div>
-        </div>
-      </div>
+      <ToolProgress filled={filled} total={BLOCKS.length} accentColor="#FF6B4A" />
 
       {/* Canvas grid — 3 columns max */}
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.25rem', boxShadow: 'var(--shadow-card)' }}>
@@ -80,6 +71,23 @@ Completado: ${filled}/${BLOCKS.length} bloques (${pct}%)
           ))}
         </div>
       </div>
+
+      {/* Insight below the grid */}
+      <InsightPanel title="Referencia académica" accentColor="#FF6B4A">
+        <p style={{ margin: 0 }}>
+          &ldquo;El Lean Canvas no es un documento — es una conversación. Cada bloque debería poder explicarse en una oración.&rdquo;
+        </p>
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          color: 'var(--color-text-muted)',
+          fontStyle: 'italic',
+          marginTop: '0.25rem',
+          display: 'block',
+        }}>
+          — Ash Maurya, Running Lean
+        </span>
+      </InsightPanel>
 
       <button
         onClick={handleReport}

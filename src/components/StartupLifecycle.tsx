@@ -210,7 +210,7 @@ export default function StartupLifecycle() {
                   <s.icon size={18} strokeWidth={2} />
                   <span style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.75rem',
+                    fontSize: '0.6rem',
                     fontWeight: 700,
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase' as const,
@@ -224,7 +224,7 @@ export default function StartupLifecycle() {
                   background: isActive ? `${s.stageColor}15` : 'rgba(255,255,255,0.04)',
                   border: `1px solid ${isActive ? s.stageColor + '33' : 'var(--color-border)'}`,
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.625rem',
+                  fontSize: '0.5rem',
                   fontWeight: 600,
                   color: isActive ? s.stageColor : 'var(--color-text-muted)',
                   letterSpacing: '0.02em',
@@ -290,7 +290,7 @@ export default function StartupLifecycle() {
               <div>
                 <span style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.6875rem',
+                  fontSize: '0.55rem',
                   fontWeight: 700,
                   color: stage.stageColor,
                   textTransform: 'uppercase',
@@ -374,7 +374,7 @@ export default function StartupLifecycle() {
                           borderRadius: 'var(--radius-full)',
                           background: catColor.bg,
                           fontFamily: 'var(--font-body)',
-                          fontSize: '0.5625rem',
+                          fontSize: '0.45rem',
                           fontWeight: 700,
                           color: catColor.color,
                           letterSpacing: '0.06em',
@@ -402,7 +402,7 @@ export default function StartupLifecycle() {
                     {/* Description */}
                     <p style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.9375rem',
+                      fontSize: '0.75rem',
                       lineHeight: 1.55,
                       color: 'var(--color-text-secondary)',
                       margin: 0,
@@ -432,7 +432,7 @@ export default function StartupLifecycle() {
                   alignItems: 'center',
                   gap: '0.5rem',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '1rem',
+                  fontSize: '0.8rem',
                   fontWeight: 600,
                   color: '#fff',
                   textDecoration: 'none',

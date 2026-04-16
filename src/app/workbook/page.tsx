@@ -77,7 +77,7 @@ export default function WorkbookPage() {
               <span
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
+                  fontSize: '0.6rem',
                   fontWeight: 700,
                   color: 'var(--color-accent-secondary)',
                   letterSpacing: '0.04em',
@@ -142,7 +142,7 @@ export default function WorkbookPage() {
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.875rem',
+                      fontSize: '0.7rem',
                       color: 'var(--color-text-muted)',
                       marginTop: '0.25rem',
                     }}
@@ -262,7 +262,7 @@ export default function WorkbookPage() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: 'clamp(0.875rem, 1.5vw, 1.1rem)',
+                        fontSize: 'clamp(0.7rem, 1.5vw, 0.88rem)',
                         fontWeight: 700,
                         color: 'var(--color-ink)',
                         letterSpacing: '-0.02em',
@@ -275,7 +275,7 @@ export default function WorkbookPage() {
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.8rem',
+                        fontSize: '0.64rem',
                         fontWeight: 600,
                         color: item.color,
                         textTransform: 'uppercase',
@@ -333,7 +333,7 @@ export default function WorkbookPage() {
                 <span
                   style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.75rem',
+                    fontSize: '0.6rem',
                     fontWeight: 700,
                     color: 'var(--color-accent-secondary)',
                     letterSpacing: '0.04em',
@@ -418,7 +418,7 @@ export default function WorkbookPage() {
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.9375rem',
+                        fontSize: '0.75rem',
                         color: 'var(--color-text-secondary)',
                         lineHeight: 1.4,
                         letterSpacing: '-0.01em',
@@ -466,7 +466,7 @@ export default function WorkbookPage() {
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
+                  fontSize: '0.65rem',
                   color: 'var(--color-text-muted)',
                   marginTop: '1rem',
                   lineHeight: 1.5,

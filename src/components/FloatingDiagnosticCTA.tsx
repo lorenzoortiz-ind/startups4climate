@@ -66,7 +66,7 @@ export default function FloatingDiagnosticCTA() {
             border: 'none',
             borderRadius: 12,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.9375rem',
+            fontSize: '0.75rem',
             fontWeight: 600,
             cursor: 'pointer',
             boxShadow: '0 8px 24px rgba(255,107,74,0.30), 0 1px 2px rgba(0,0,0,0.4)',

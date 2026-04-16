@@ -254,7 +254,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
             background: 'var(--color-accent-primary)',
             color: '#fff',
             fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
+            fontSize: '0.6rem',
             fontWeight: 700,
             letterSpacing: '0.04em',
             textTransform: 'uppercase',
@@ -286,7 +286,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
         <span
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+            fontSize: 'clamp(1.6rem, 4vw, 2.24rem)',
             fontWeight: 700,
             color: plan.highlighted ? 'var(--color-accent-primary)' : plan.accent,
             letterSpacing: '-0.04em',
@@ -299,7 +299,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
           <span
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: '0.875rem',
+              fontSize: '0.7rem',
               color: 'var(--color-text-muted)',
               marginLeft: '0.5rem',
             }}
@@ -313,7 +313,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
       <p
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '0.9375rem',
+          fontSize: '0.75rem',
           color: 'var(--color-text-secondary)',
           lineHeight: 1.5,
           marginBottom: '1.5rem',
@@ -343,7 +343,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
               gap: '0.625rem',
               marginBottom: '0.75rem',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.9375rem',
+              fontSize: '0.75rem',
               color: 'var(--color-text-primary)',
               lineHeight: 1.4,
             }}
@@ -364,7 +364,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
         <p
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
+            fontSize: '0.65rem',
             color: 'var(--color-text-muted)',
             fontStyle: 'italic',
             marginTop: '0.75rem',
@@ -472,7 +472,7 @@ export default function OrganizacionesPage() {
               <span
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
+                  fontSize: '0.6rem',
                   fontWeight: 700,
                   color: 'var(--color-accent-primary)',
                   letterSpacing: '0.04em',
@@ -525,7 +525,7 @@ export default function OrganizacionesPage() {
                   <div
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                      fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
                       fontWeight: 700,
                       color: 'var(--color-ink)',
                       letterSpacing: '-0.05em',
@@ -537,7 +537,7 @@ export default function OrganizacionesPage() {
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.875rem',
+                      fontSize: '0.7rem',
                       color: 'var(--color-text-muted)',
                       marginTop: '0.25rem',
                     }}
@@ -646,7 +646,7 @@ export default function OrganizacionesPage() {
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
+              fontSize: '0.6rem',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -718,7 +718,7 @@ export default function OrganizacionesPage() {
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
+              fontSize: '0.6rem',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -903,7 +903,7 @@ export default function OrganizacionesPage() {
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
+              fontSize: '0.6rem',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -1030,7 +1030,7 @@ export default function OrganizacionesPage() {
                 background: 'none',
                 border: 'none',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.875rem',
+                fontSize: '0.7rem',
                 color: 'var(--color-text-secondary)',
                 cursor: 'pointer',
                 padding: 0,

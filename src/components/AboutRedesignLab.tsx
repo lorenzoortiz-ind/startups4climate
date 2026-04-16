@@ -55,7 +55,7 @@ export default function AboutRedesignLab() {
               <span style={{
                 display: 'inline-block',
                 fontFamily: 'var(--font-body)',
-                fontSize: '12px',
+                fontSize: '9.6px',
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase' as const,
@@ -142,7 +142,7 @@ export default function AboutRedesignLab() {
                   </h3>
                   <p style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.75rem',
+                    fontSize: '0.6rem',
                     fontWeight: 600,
                     textTransform: 'uppercase' as const,
                     letterSpacing: '0.05em',
@@ -168,7 +168,7 @@ export default function AboutRedesignLab() {
                         border: '1px solid var(--color-border)',
                         borderRadius: 'var(--radius-full)',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.625rem',
+                        fontSize: '0.5rem',
                         fontWeight: 600,
                         color: 'var(--color-ink)',
                         letterSpacing: '0.02em',
@@ -194,7 +194,7 @@ export default function AboutRedesignLab() {
           }}>
             <span style={{
               fontFamily: 'var(--font-body)',
-              fontSize: '11px',
+              fontSize: '8.8px',
               fontWeight: 600,
               textTransform: 'uppercase' as const,
               letterSpacing: '0.12em',

@@ -18,7 +18,7 @@ export default function CTAFinal() {
 
   return (
     <section style={{
-      padding: 'clamp(6rem, 12vw, 12rem) 0',
+      padding: 'clamp(4.8rem, 9.6vw, 9.6rem) 0',
       background: 'linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-card) 100%)',
       color: 'var(--color-text-primary)',
       position: 'relative',
@@ -114,7 +114,7 @@ export default function CTAFinal() {
                   color: '#fff',
                   borderRadius: 12,
                   fontFamily: 'var(--font-body)',
-                  fontSize: '1rem',
+                  fontSize: '0.8rem',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
@@ -145,7 +145,7 @@ export default function CTAFinal() {
                   color: '#fff',
                   borderRadius: 12,
                   fontFamily: 'var(--font-body)',
-                  fontSize: '1rem',
+                  fontSize: '0.8rem',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
@@ -178,7 +178,7 @@ export default function CTAFinal() {
                 border: '1px solid var(--color-border-strong)',
                 borderRadius: 12,
                 fontFamily: 'var(--font-body)',
-                fontSize: '1rem',
+                fontSize: '0.8rem',
                 fontWeight: 500,
                 textDecoration: 'none',
                 transition: 'border-color 0.15s ease, transform 0.15s var(--ease-spring), background 0.15s ease',

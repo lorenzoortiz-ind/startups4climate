@@ -245,7 +245,7 @@ const inputStyle = {
 const labelStyle = {
   display: 'block',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.75rem',
+  fontSize: '0.6rem',
   fontWeight: 700,
   color: 'var(--color-text-muted)',
   textTransform: 'uppercase' as const,
@@ -431,7 +431,7 @@ export default function DiagnosticForm() {
   }
 
   return (
-    <section id="diagnostico" style={{ padding: '4rem 0 6rem', background: 'var(--color-bg-primary)' }}>
+    <section id="diagnostico" style={{ padding: '3.2rem 0 4.8rem', background: 'var(--color-bg-primary)' }}>
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 1.5rem' }}>
         <div style={{
           background: 'var(--color-paper)',
@@ -451,10 +451,10 @@ export default function DiagnosticForm() {
           {step < 12 && (
             <div style={{ padding: '1rem 2rem 0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-text-muted)' }}>
                   {step === 0 ? 'Datos de contacto' : step <= 10 ? `Pregunta ${step}/10` : 'Procesando...'}
                 </span>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', color: 'var(--color-accent-primary)', fontWeight: 600 }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-accent-primary)', fontWeight: 600 }}>
                   {Math.round(progress)}%
                 </span>
               </div>
@@ -482,7 +482,7 @@ export default function DiagnosticForm() {
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-heading-lg)', fontWeight: 700, marginBottom: '0.375rem', color: 'var(--color-ink)', letterSpacing: '-0.03em' }}>
                     Realiza tu diagnóstico
                   </h3>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1.25rem' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: 'var(--color-text-secondary)', marginBottom: '1.25rem' }}>
                     Ingresa tus datos para recibir tu reporte personalizado.
                   </p>
                   <form onSubmit={handleSubmit(handleContactSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -501,7 +501,7 @@ export default function DiagnosticForm() {
                           onBlur={handleBlur('nombre')}
                         />
                         {errors.nombre && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6rem', color: '#DC2626', marginTop: '0.125rem' }}>
                             {errors.nombre.message}
                           </p>
                         )}
@@ -519,7 +519,7 @@ export default function DiagnosticForm() {
                           onBlur={handleBlur('email')}
                         />
                         {errors.email && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6rem', color: '#DC2626', marginTop: '0.125rem' }}>
                             {errors.email.message}
                           </p>
                         )}
@@ -541,7 +541,7 @@ export default function DiagnosticForm() {
                           onBlur={handleBlur('startup_name')}
                         />
                         {errors.startup_name && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6rem', color: '#DC2626', marginTop: '0.125rem' }}>
                             {errors.startup_name.message}
                           </p>
                         )}
@@ -569,7 +569,7 @@ export default function DiagnosticForm() {
                           ))}
                         </select>
                         {errors.vertical && (
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6rem', color: '#DC2626', marginTop: '0.125rem' }}>
                             {errors.vertical.message}
                           </p>
                         )}
@@ -593,7 +593,7 @@ export default function DiagnosticForm() {
                         onBlur={handleBlur('startup_description')}
                       />
                       {errors.startup_description && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#DC2626', marginTop: '0.125rem' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.6rem', color: '#DC2626', marginTop: '0.125rem' }}>
                           {errors.startup_description.message}
                         </p>
                       )}
@@ -666,7 +666,7 @@ export default function DiagnosticForm() {
                         background: 'var(--color-ink)',
                         color: 'white',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.9375rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         border: 'none',
                         cursor: 'pointer',
@@ -701,7 +701,7 @@ export default function DiagnosticForm() {
                       background: 'none',
                       border: 'none',
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
+                      fontSize: '0.65rem',
                       color: 'var(--color-text-muted)',
                       cursor: 'pointer',
                       marginBottom: '1rem',
@@ -710,7 +710,7 @@ export default function DiagnosticForm() {
                   >
                     <ArrowLeft size={16} /> Anterior
                   </button>
-                  <p style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-accent-primary)', marginBottom: '0.5rem' }}>
+                  <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-accent-primary)', marginBottom: '0.5rem' }}>
                     {questions[step - 1].subtitle}
                   </p>
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-heading-lg)', fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--color-ink)', marginBottom: '1.5rem', lineHeight: 1.3 }}>
@@ -770,10 +770,10 @@ export default function DiagnosticForm() {
                 >
                   <Loader2 size={40} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
 
-                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+                  <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
                     Analizando tu startup...
                   </h3>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: 'var(--color-text-secondary)' }}>
                     Calculando tu Startup Readiness Score y preparando tu roadmap personalizado.
                   </p>
                 </motion.div>
@@ -789,18 +789,18 @@ export default function DiagnosticForm() {
                 >
                   <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                     <CheckCircle2 size={32} color={profile.color} style={{ margin: '0 auto 0.75rem' }} />
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.375rem', letterSpacing: '-0.03em' }}>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-ink)', marginBottom: '0.375rem', letterSpacing: '-0.03em' }}>
                       Tu Startup Readiness Score
                     </h3>
                     <div style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: '3.5rem',
+                      fontSize: '2.8rem',
                       fontWeight: 700,
                       color: profile.color,
                       lineHeight: 1,
                       margin: '0.75rem 0',
                     }}>
-                      {countUp}<span style={{ fontSize: '1.5rem', color: 'var(--color-text-muted)' }}>/24</span>
+                      {countUp}<span style={{ fontSize: '1.2rem', color: 'var(--color-text-muted)' }}>/24</span>
                     </div>
                     <span style={{
                       display: 'inline-block',
@@ -809,7 +809,7 @@ export default function DiagnosticForm() {
                       background: `${profile.color}10`,
                       border: `1px solid ${profile.color}30`,
                       fontFamily: 'var(--font-body)',
-                      fontSize: '0.8125rem',
+                      fontSize: '0.65rem',
                       fontWeight: 700,
                       color: profile.color,
                     }}>
@@ -828,17 +828,17 @@ export default function DiagnosticForm() {
                       />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.375rem' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Incubación</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5rem', color: 'var(--color-text-muted)' }}>Incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.5rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
                     </div>
                   </div>
 
                   {/* Description */}
                   <p style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.9375rem',
+                    fontSize: '0.75rem',
                     lineHeight: 1.7,
                     color: 'var(--color-text-secondary)',
                     marginBottom: '1.5rem',
@@ -855,7 +855,7 @@ export default function DiagnosticForm() {
                     border: '1px solid var(--color-border)',
                     marginBottom: '1.5rem',
                   }}>
-                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
+                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
                       Tu Caja de Herramientas
                     </h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -866,7 +866,7 @@ export default function DiagnosticForm() {
                           background: `${profile.color}08`,
                           border: `1px solid ${profile.color}20`,
                           fontFamily: 'var(--font-body)',
-                          fontSize: '0.8125rem',
+                          fontSize: '0.65rem',
                           color: profile.color,
                           fontWeight: 500,
                         }}>
@@ -891,7 +891,7 @@ export default function DiagnosticForm() {
                         background: 'var(--color-ink)',
                         color: 'white',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.9375rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         textDecoration: 'none',
                         transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
@@ -917,7 +917,7 @@ export default function DiagnosticForm() {
                         border: '1.5px solid var(--color-ink)',
                         color: 'var(--color-ink)',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.9375rem',
+                        fontSize: '0.75rem',
                         fontWeight: 700,
                         textDecoration: 'none',
                         transition: 'all 0.2s var(--ease-smooth)',

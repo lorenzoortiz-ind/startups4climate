@@ -11,7 +11,7 @@ function AnimatedCounter({ value, label }: { value: string; label: string }) {
       <span
         style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+          fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
           fontWeight: 700,
           letterSpacing: '-0.04em',
           lineHeight: 1,
@@ -23,7 +23,7 @@ function AnimatedCounter({ value, label }: { value: string; label: string }) {
       <span
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: '0.875rem',
+          fontSize: '0.7rem',
           fontWeight: 500,
           color: 'var(--color-text-secondary)',
           letterSpacing: '-0.01em',
@@ -95,7 +95,7 @@ export default function Hero() {
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid var(--color-border-strong)',
                 fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
+                fontSize: '0.65rem',
                 fontWeight: 500,
                 color: 'var(--color-text-secondary)',
                 letterSpacing: '-0.01em',

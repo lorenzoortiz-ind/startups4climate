@@ -134,7 +134,7 @@ export default function ForOrganizations() {
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
+              fontSize: '0.6rem',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -221,7 +221,7 @@ export default function ForOrganizations() {
             style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
+              fontSize: '0.6rem',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',

@@ -39,7 +39,7 @@ export default function DiagnosticFeature() {
             <span style={{
               display: 'inline-block',
               fontFamily: 'var(--font-body)',
-              fontSize: '12px',
+              fontSize: '9.6px',
               fontWeight: 600,
               letterSpacing: '0.12em',
               textTransform: 'uppercase' as const,

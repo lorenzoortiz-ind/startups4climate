@@ -119,7 +119,7 @@ export default function ProblemSection() {
               <span
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(4rem, 8vw, 7rem)',
+                  fontSize: 'clamp(3.2rem, 8vw, 5.6rem)',
                   fontWeight: 700,
                   letterSpacing: '-0.05em',
                   lineHeight: 1,

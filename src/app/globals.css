@@ -43,19 +43,19 @@
   --radius-xl:  28px;
   --radius-full: 9999px;
 
-  --section-py: clamp(4rem, 8vw, 8rem);
-  --section-py-sm: clamp(3rem, 6vw, 5rem);
+  --section-py: clamp(3.2rem, 6.4vw, 6.4rem);
+  --section-py-sm: clamp(2.4rem, 4.8vw, 4rem);
   --container-max: 1400px;
   --container-px: clamp(1.5rem, 5vw, 6rem);
 
-  /* Typography Scales */
-  --text-display-xl: clamp(2.8rem, 6vw, 5.5rem);
-  --text-display-lg: clamp(2.2rem, 5vw, 4rem);
-  --text-display-md: clamp(1.6rem, 3.5vw, 2.8rem);
-  --text-heading-lg: clamp(1.5rem, 3vw, 2.5rem);
-  --text-heading-md: clamp(1.2rem, 2vw, 1.8rem);
-  --text-body-lg: clamp(1.1rem, 1.5vw, 1.3rem);
-  --text-body: 1.05rem;
+  /* Typography Scales — marketing pages (-20%). App layouts override below. */
+  --text-display-xl: clamp(2.24rem, 4.8vw, 4.4rem);
+  --text-display-lg: clamp(1.76rem, 4vw, 3.2rem);
+  --text-display-md: clamp(1.28rem, 2.8vw, 2.24rem);
+  --text-heading-lg: clamp(1.2rem, 2.4vw, 2rem);
+  --text-heading-md: clamp(0.96rem, 1.6vw, 1.44rem);
+  --text-body-lg: clamp(0.95rem, 1.2vw, 1.04rem);
+  --text-body: 1rem;
 
   /* ─── Semantic Colors (dark-tuned) ─── */
   --color-success:        #10B981;
@@ -200,6 +200,17 @@
 
   --color-admin-sidebar-bg: #0B0E14;
 
+  /* Preserve original typography & section scales inside the app (tools/admin don't shrink). */
+  --text-display-xl: clamp(2.8rem, 6vw, 5.5rem);
+  --text-display-lg: clamp(2.2rem, 5vw, 4rem);
+  --text-display-md: clamp(1.6rem, 3.5vw, 2.8rem);
+  --text-heading-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --text-heading-md: clamp(1.2rem, 2vw, 1.8rem);
+  --text-body-lg: clamp(1.1rem, 1.5vw, 1.3rem);
+  --text-body: 1.05rem;
+  --section-py: clamp(4rem, 8vw, 8rem);
+  --section-py-sm: clamp(3rem, 6vw, 5rem);
+
   color-scheme: dark;
 }
 
@@ -263,8 +274,14 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 96px; /* navbar offset for in-page anchors */
     text-rendering: optimizeLegibility;
     background-color: var(--color-bg-primary);
+  }
+
+  /* Sections that may be anchor targets keep enough room for the fixed navbar */
+  section[id] {
+    scroll-margin-top: 96px;
   }
 
   * {

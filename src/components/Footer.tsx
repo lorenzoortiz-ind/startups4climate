@@ -135,14 +135,40 @@ export default function Footer() {
           alignItems: 'center',
           gap: '1.5rem',
         }}>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            color: 'rgba(255, 255, 255, 0.4)',
-            margin: 0,
-          }}>
-            &copy; {new Date().getFullYear()} Startups4Climate by Redesign Lab. Todos los derechos reservados.
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8125rem',
+              color: 'rgba(255, 255, 255, 0.4)',
+              margin: 0,
+            }}>
+              &copy; {new Date().getFullYear()} Startups4Climate. Todos los derechos reservados.
+            </p>
+            <span style={{
+              width: 3,
+              height: 3,
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.2)',
+              display: 'inline-block',
+            }} />
+            <a
+              href="https://www.redesignlab.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                color: 'rgba(255, 255, 255, 0.45)',
+                textDecoration: 'none',
+                letterSpacing: '-0.005em',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
+              onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+            >
+              Creado por Re<span style={{ color: '#E63946' }}>.</span>design <span style={{ color: '#E63946' }}>Lab</span>
+            </a>
+          </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
             <div style={{ display: 'flex', gap: '1.5rem' }}>

@@ -221,12 +221,12 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
       style={{
         position: 'relative',
         background: plan.highlighted
-          ? 'var(--color-ink)'
-          : 'var(--color-paper)',
+          ? 'linear-gradient(180deg, rgba(255,107,74,0.10) 0%, rgba(255,107,74,0.02) 60%, var(--color-bg-elevated) 100%)'
+          : 'var(--color-bg-card)',
         borderRadius: 'var(--radius-xl)',
         border: plan.highlighted
-          ? '2px solid var(--color-accent-primary)'
-          : `1px solid ${hovered ? plan.accent : 'var(--color-border)'}`,
+          ? '1.5px solid rgba(255,107,74,0.45)'
+          : `1px solid ${hovered ? plan.accent : 'var(--color-border-strong)'}`,
         padding: '2.5rem 2rem',
         display: 'flex',
         flexDirection: 'column',
@@ -234,9 +234,11 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
         transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
         boxShadow: hovered
           ? plan.highlighted
-            ? '0 24px 48px -12px rgba(255,107,74,0.2)'
-            : 'var(--shadow-float)'
-          : '0 1px 4px rgba(25,25,25,0.04)',
+            ? '0 24px 48px -12px rgba(255,107,74,0.35)'
+            : '0 12px 32px -8px rgba(0,0,0,0.4)'
+          : plan.highlighted
+            ? '0 8px 24px -8px rgba(255,107,74,0.2)'
+            : '0 1px 4px rgba(0,0,0,0.2)',
         flex: '1 1 300px',
         maxWidth: 400,
       }}
@@ -271,7 +273,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
           fontFamily: 'var(--font-heading)',
           fontSize: 'var(--text-heading-md)',
           fontWeight: 700,
-          color: plan.highlighted ? 'var(--color-paper)' : 'var(--color-ink)',
+          color: 'var(--color-text-primary)',
           letterSpacing: '-0.03em',
           marginBottom: '0.5rem',
         }}
@@ -298,7 +300,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
             style={{
               fontFamily: 'var(--font-body)',
               fontSize: '0.875rem',
-              color: plan.highlighted ? 'rgba(255,255,255,0.5)' : 'var(--color-text-muted)',
+              color: 'var(--color-text-muted)',
               marginLeft: '0.5rem',
             }}
           >
@@ -312,7 +314,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
         style={{
           fontFamily: 'var(--font-body)',
           fontSize: '0.9375rem',
-          color: plan.highlighted ? 'rgba(255,255,255,0.6)' : 'var(--color-text-secondary)',
+          color: 'var(--color-text-secondary)',
           lineHeight: 1.5,
           marginBottom: '1.5rem',
           letterSpacing: '-0.01em',
@@ -325,7 +327,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
       <div
         style={{
           height: 1,
-          background: plan.highlighted ? 'rgba(255,255,255,0.1)' : 'var(--color-border)',
+          background: plan.highlighted ? 'rgba(255,107,74,0.18)' : 'var(--color-border)',
           marginBottom: '1.5rem',
         }}
       />
@@ -342,7 +344,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
               marginBottom: '0.75rem',
               fontFamily: 'var(--font-body)',
               fontSize: '0.9375rem',
-              color: plan.highlighted ? 'rgba(255,255,255,0.85)' : 'var(--color-text-secondary)',
+              color: 'var(--color-text-primary)',
               lineHeight: 1.4,
             }}
           >
@@ -363,7 +365,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.8125rem',
-            color: plan.highlighted ? 'rgba(255,255,255,0.4)' : 'var(--color-text-muted)',
+            color: 'var(--color-text-muted)',
             fontStyle: 'italic',
             marginTop: '0.75rem',
             marginBottom: '0.5rem',
@@ -386,13 +388,13 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
           marginTop: '1.5rem',
           padding: '1rem 1.5rem',
           borderRadius: 'var(--radius-full)',
-          background: plan.highlighted ? 'var(--color-accent-primary)' : 'var(--color-ink)',
-          color: '#fff',
+          background: plan.highlighted ? 'var(--color-accent-primary)' : 'transparent',
+          color: plan.highlighted ? '#fff' : 'var(--color-text-primary)',
           fontFamily: 'var(--font-body)',
           fontSize: 'var(--text-body)',
           fontWeight: 700,
           textDecoration: 'none',
-          border: 'none',
+          border: plan.highlighted ? 'none' : '1px solid var(--color-border-strong)',
           cursor: 'pointer',
           transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
         }}
@@ -862,7 +864,8 @@ export default function OrganizacionesPage() {
           viewport={{ once: true }}
           transition={{ type: 'spring', damping: 20, stiffness: 100 }}
           style={{
-            background: 'var(--color-ink)',
+            background: 'linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%)',
+            border: '1px solid var(--color-border-strong)',
             borderRadius: 'var(--radius-xl)',
             padding: 'clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 4rem)',
             textAlign: 'center',
@@ -919,7 +922,7 @@ export default function OrganizacionesPage() {
               letterSpacing: '-0.04em',
               lineHeight: 1.05,
               marginBottom: '1.25rem',
-              color: 'var(--color-paper)',
+              color: 'var(--color-text-primary)',
             }}
           >
             Listo para potenciar tu programa?
@@ -929,7 +932,7 @@ export default function OrganizacionesPage() {
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-body-lg)',
               lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.6)',
+              color: 'var(--color-text-secondary)',
               maxWidth: 560,
               margin: '0 auto 2.5rem',
               letterSpacing: '-0.01em',
@@ -988,26 +991,26 @@ export default function OrganizacionesPage() {
                 gap: '0.75rem',
                 padding: '1.25rem 2.5rem',
                 borderRadius: 'var(--radius-full)',
-                background: 'var(--color-paper)',
-                color: 'var(--color-ink)',
+                background: 'transparent',
+                color: 'var(--color-text-primary)',
                 fontFamily: 'var(--font-body)',
                 fontSize: 'var(--text-body-lg)',
                 fontWeight: 700,
-                border: 'none',
+                border: '1px solid var(--color-border-strong)',
                 cursor: 'pointer',
                 textDecoration: 'none',
                 letterSpacing: '-0.01em',
-                transition: 'transform 0.2s var(--ease-spring), background 0.2s ease, color 0.2s ease',
+                transition: 'transform 0.2s var(--ease-spring), background 0.2s ease, border-color 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.background = 'var(--color-accent-primary)'
-                e.currentTarget.style.color = '#fff'
+                e.currentTarget.style.background = 'rgba(255,107,74,0.08)'
+                e.currentTarget.style.borderColor = 'rgba(255,107,74,0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.background = 'var(--color-paper)'
-                e.currentTarget.style.color = 'var(--color-ink)'
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.borderColor = 'var(--color-border-strong)'
               }}
             >
               <Mail size={20} strokeWidth={2} />
@@ -1028,7 +1031,7 @@ export default function OrganizacionesPage() {
                 border: 'none',
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.875rem',
-                color: 'rgba(255,255,255,0.5)',
+                color: 'var(--color-text-secondary)',
                 cursor: 'pointer',
                 padding: 0,
               }}

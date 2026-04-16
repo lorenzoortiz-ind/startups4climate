@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight, ChevronDown, Building2, Rocket } from 'lucide-react'
+import { Menu, X, ArrowRight, ChevronDown, Building2, Rocket, Crown } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -26,7 +26,7 @@ export default function Navbar() {
   const [demoOpen, setDemoOpen] = useState(false)
   const demoRef = useRef<HTMLDivElement>(null)
 
-  const handleDemoEnter = (role: 'founder' | 'admin_org', redirect: string, key: string) => {
+  const handleDemoEnter = (role: 'founder' | 'admin_org' | 'superadmin', redirect: string, key: string) => {
     setDemoLoading(key)
     setDemoOpen(false)
     try {
@@ -38,6 +38,12 @@ export default function Navbar() {
       setTimeout(() => setDemoLoading(null), 400)
     }
   }
+
+  // Always expose the Demo dropdown on public pages (even with stale session)
+  // so demo viewers can switch personas. On authenticated pages, only show
+  // when no user is signed in.
+  const PUBLIC_PATHS = ['/', '/organizaciones', '/workbook']
+  const showDemoButton = !user || PUBLIC_PATHS.includes(pathname || '/')
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -157,7 +163,7 @@ export default function Navbar() {
 
             {/* Desktop CTAs */}
             <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
-              {!user && (
+              {showDemoButton && (
                 <div ref={demoRef} style={{ position: 'relative' }}>
                   <button
                     onClick={() => setDemoOpen((o) => !o)}
@@ -288,6 +294,46 @@ export default function Navbar() {
                             </div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                               Panel admin (BioInnova)
+                            </div>
+                          </div>
+                        </button>
+
+                        <button
+                          onClick={() => handleDemoEnter('superadmin', '/admin/programas', 'minpro')}
+                          role="menuitem"
+                          className="demo-menu-item"
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            padding: '10px 12px',
+                            borderRadius: 10,
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontFamily: 'var(--font-body)',
+                          }}
+                        >
+                          <div style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 8,
+                            background: 'rgba(245,158,11,0.12)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                          }}>
+                            <Crown size={16} color="#F59E0B" />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
+                              Demo Superadmin
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                              Vista MINPRO (programas)
                             </div>
                           </div>
                         </button>

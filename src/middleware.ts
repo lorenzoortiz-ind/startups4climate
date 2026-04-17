@@ -2,7 +2,42 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// Demo path rewrite map: /demo-* → real base + cookie role
+const DEMO_PATHS = [
+  { prefix: '/demo-tools',      realBase: '/tools',      role: 'founder'    },
+  { prefix: '/demo-admin',      realBase: '/admin',      role: 'admin_org'  },
+  { prefix: '/demo-superadmin', realBase: '/superadmin', role: 'superadmin' },
+] as const
+
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // ── Demo entry rewrites ──────────────────────────────────────────────────
+  // Intercept /demo-tools/*, /demo-admin/*, /demo-superadmin/*,
+  // set the s4c_demo cookie, and rewrite the request to the real path
+  // WITHOUT redirecting — the browser URL stays at /demo-*.
+  for (const { prefix, realBase, role } of DEMO_PATHS) {
+    if (pathname === prefix || pathname.startsWith(prefix + '/')) {
+      const subPath = pathname.slice(prefix.length) // e.g. '/passport' or ''
+      const rewriteUrl = request.nextUrl.clone()
+      rewriteUrl.pathname = realBase + subPath
+
+      const response = NextResponse.rewrite(rewriteUrl)
+      // Only set the cookie if not already set to avoid overwriting on every
+      // sub-page navigation within the demo session.
+      if (request.cookies.get('s4c_demo')?.value !== role) {
+        response.cookies.set('s4c_demo', role, {
+          path: '/',
+          maxAge: 60 * 60 * 2, // 2 hours
+          httpOnly: false,
+          sameSite: 'lax',
+        })
+      }
+      return response
+    }
+  }
+
+  // ── Supabase session refresh ──────────────────────────────────────────────
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -41,7 +76,6 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse
   }
 
-  const pathname = request.nextUrl.pathname
   const demoRole = request.cookies.get('s4c_demo')?.value as 'founder' | 'admin_org' | 'superadmin' | undefined
   const isDemoAdminOrg = demoRole === 'admin_org'
   const isDemoSuperadmin = demoRole === 'superadmin'
@@ -121,5 +155,15 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/tools/:path*', '/admin/:path*', '/superadmin/:path*'],
+  matcher: [
+    '/tools/:path*',
+    '/admin/:path*',
+    '/superadmin/:path*',
+    '/demo-tools',
+    '/demo-tools/:path*',
+    '/demo-admin',
+    '/demo-admin/:path*',
+    '/demo-superadmin',
+    '/demo-superadmin/:path*',
+  ],
 }

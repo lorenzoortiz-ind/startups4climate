@@ -853,7 +853,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     >
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex"
+        className={isDemo ? undefined : "hidden lg:flex"}
         style={{
           width: 240,
           flexShrink: 0,
@@ -865,15 +865,17 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           zIndex: 40,
           flexDirection: 'column',
           borderRight: '1px solid rgba(255,255,255,0.04)',
+          display: isDemo ? 'flex' : undefined,
         }}
       >
         {sidebarContent}
       </aside>
 
-      {/* Mobile header */}
+      {/* Mobile header — hidden in demo mode (sidebar always visible) */}
       <header
-        className="lg:hidden"
+        className={isDemo ? undefined : "lg:hidden"}
         style={{
+          display: isDemo ? 'none' : 'flex',
           position: 'fixed',
           top: 0,
           left: 0,
@@ -881,7 +883,6 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           zIndex: 50,
           height: 52,
           background: SB.bg,
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0 1rem',

@@ -277,24 +277,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div data-app-layout style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex"
+        className={isDemo ? undefined : "hidden lg:flex"}
         style={{
           width: 260, flexShrink: 0,
           background: 'var(--color-admin-sidebar-bg)',
           position: 'fixed', top: 0, left: 0, bottom: 0,
           zIndex: 40, flexDirection: 'column',
+          display: isDemo ? 'flex' : undefined,
         }}
       >
         {sidebarContent}
       </aside>
 
-      {/* Mobile header */}
+      {/* Mobile header — hidden in demo mode (sidebar always visible) */}
       <header
-        className="lg:hidden"
+        className={isDemo ? undefined : "lg:hidden"}
         style={{
+          display: isDemo ? 'none' : 'flex',
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           height: 56, background: 'var(--color-admin-sidebar-bg)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          alignItems: 'center', justifyContent: 'space-between',
           padding: '0 1rem',
         }}
       >

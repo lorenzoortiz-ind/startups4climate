@@ -10,7 +10,10 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
   const hideChrome =
     pathname.startsWith('/tools') ||
     pathname.startsWith('/admin') ||
-    pathname.startsWith('/superadmin')
+    pathname.startsWith('/superadmin') ||
+    pathname.startsWith('/demo-tools') ||
+    pathname.startsWith('/demo-admin') ||
+    pathname.startsWith('/demo-superadmin')
 
   return (
     <>

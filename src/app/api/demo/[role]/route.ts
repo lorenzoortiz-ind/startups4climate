@@ -8,12 +8,12 @@ import { NextRequest, NextResponse } from 'next/server'
  * Roles:
  *   founder    → /tools
  *   admin_org  → /admin
- *   superadmin → /admin/programas
+ *   superadmin → /superadmin
  */
 const ROLE_TO_DESTINATION: Record<string, string> = {
   founder: '/tools',
   admin_org: '/admin',
-  superadmin: '/admin/programas',
+  superadmin: '/superadmin',
 }
 
 export async function GET(

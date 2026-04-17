@@ -626,13 +626,14 @@ export default function CohortDetailPage() {
         )}
       </div>
 
-      {/* Demo: Budget & progress panel */}
+      {/* Demo: Cohort progress + platform KPIs panel */}
       {isDemo && (() => {
         const demoCohort = getCohortById(cohortId)
         if (!demoCohort) return null
-        const execPct = Math.round((demoCohort.budgetExecuted / demoCohort.budgetAssigned) * 100)
         const monthPct = Math.round((demoCohort.monthCurrent / demoCohort.monthTotal) * 100)
-        const fmtPEN = (n: number) => `S/ ${n.toLocaleString('es-PE')}`
+        const fmtUSD = (n: number) =>
+          n >= 1_000_000 ? `USD ${(n / 1_000_000).toFixed(1)}M` :
+          n >= 1_000 ? `USD ${(n / 1_000).toFixed(0)}K` : `USD ${n.toLocaleString('es-PE')}`
         return (
           <div style={{ ...cardStyle, padding: '1.5rem', marginBottom: '1.5rem' }}>
             <h2 style={{
@@ -640,7 +641,7 @@ export default function CohortDetailPage() {
               fontSize: '1.0625rem', color: 'var(--color-text-primary)',
               marginBottom: '1rem',
             }}>
-              Presupuesto y ejecución
+              KPIs de cohorte
             </h2>
             <div style={{
               display: 'grid', gap: '1rem',
@@ -648,9 +649,9 @@ export default function CohortDetailPage() {
               marginBottom: '1.25rem',
             }}>
               {[
-                { label: 'Asignado', value: fmtPEN(demoCohort.budgetAssigned), color: '#3B82F6' },
-                { label: 'Ejecutado', value: fmtPEN(demoCohort.budgetExecuted), color: '#0D9488' },
-                { label: 'Saldo', value: fmtPEN(demoCohort.budgetAssigned - demoCohort.budgetExecuted), color: '#94A3B8' },
+                { label: 'Tools completion', value: `${demoCohort.toolsCompletionPct}%`, color: '#0D9488' },
+                { label: 'NPS founders', value: `${demoCohort.npsFounders}`, color: '#3B82F6' },
+                { label: 'Funding levantado', value: fmtUSD(demoCohort.fundingRaisedUSD), color: '#16A34A' },
                 { label: 'Graduados', value: `${demoCohort.graduates}`, color: '#FF6B4A' },
               ].map((k) => (
                 <div key={k.label} style={{
@@ -684,18 +685,18 @@ export default function CohortDetailPage() {
                   fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                   color: 'var(--color-text-primary)', fontWeight: 500,
                 }}>
-                  Ejecución presupuestaria
+                  Retención de founders
                 </span>
                 <span style={{
                   fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                   color: 'var(--color-text-secondary)',
                   fontVariantNumeric: 'tabular-nums',
                 }}>
-                  {execPct}%
+                  {demoCohort.retentionRate}%
                 </span>
               </div>
               <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-                <div style={{ width: `${execPct}%`, height: '100%', background: '#0D9488' }} />
+                <div style={{ width: `${demoCohort.retentionRate}%`, height: '100%', background: '#0D9488' }} />
               </div>
             </div>
             <div>

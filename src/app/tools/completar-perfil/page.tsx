@@ -1,9 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, ArrowLeft, CheckCircle2, User, Briefcase, Globe, Sparkles } from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
+import {
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle2,
+  User,
+  Briefcase,
+  Globe,
+  Sparkles,
+  Target,
+  DollarSign,
+  Award,
+} from 'lucide-react'
+import { useAuth, DEMO_FOUNDER_ID } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -27,6 +38,14 @@ const LATAM_COUNTRIES = [
   'Uruguay', 'Venezuela',
 ]
 
+const PERU_REGIONS = [
+  'Amazonas', 'Áncash', 'Apurímac', 'Arequipa', 'Ayacucho', 'Cajamarca',
+  'Callao', 'Cusco', 'Huancavelica', 'Huánuco', 'Ica', 'Junín', 'La Libertad',
+  'Lambayeque', 'Lima', 'Loreto', 'Madre de Dios', 'Moquegua', 'Pasco',
+  'Piura', 'Puno', 'San Martín', 'Tacna', 'Tumbes', 'Ucayali',
+  'Resto LATAM',
+]
+
 const ROLE_OPTIONS = ['CEO / Founder', 'CTO', 'COO', 'CMO', 'CPO', 'Otro']
 
 const EXPERIENCE_OPTIONS = [
@@ -34,6 +53,37 @@ const EXPERIENCE_OPTIONS = [
   '1-2 startups anteriores',
   '3+ startups',
   'Experiencia corporativa',
+]
+
+const BUSINESS_MODEL_OPTIONS = [
+  'B2B',
+  'B2C',
+  'B2B2C',
+  'Marketplace',
+  'SaaS',
+  'Hardware',
+  'Servicios',
+]
+
+const PRICING_PLACEHOLDER = 'Ej: Suscripción mensual + setup fee'
+
+const CERTIFICATION_OPTIONS = [
+  'B Corp',
+  'B Corp en proceso',
+  'ISO 14001',
+  'TÜV Compostable',
+  'TÜV Compostable en proceso',
+  'EN 13432',
+  'Comercio Justo',
+  'Orgánico',
+  'Carbono Neutro',
+  'Ninguna',
+]
+
+const SDG_OPTIONS = [
+  'ODS 1', 'ODS 2', 'ODS 3', 'ODS 4', 'ODS 5', 'ODS 6', 'ODS 7',
+  'ODS 8', 'ODS 9', 'ODS 10', 'ODS 11', 'ODS 12', 'ODS 13', 'ODS 14',
+  'ODS 15', 'ODS 16', 'ODS 17',
 ]
 
 const inputStyle: React.CSSProperties = {
@@ -68,26 +118,118 @@ const labelStyle: React.CSSProperties = {
   marginBottom: '0.375rem',
 }
 
+const chipBase: React.CSSProperties = {
+  padding: '0.375rem 0.75rem',
+  borderRadius: 999,
+  fontFamily: 'var(--font-body)',
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  cursor: 'pointer',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-card)',
+  color: 'var(--color-text-secondary)',
+  transition: 'all 0.15s ease',
+  userSelect: 'none' as const,
+}
+
+const chipActive: React.CSSProperties = {
+  ...chipBase,
+  background: 'var(--color-accent-secondary)',
+  color: '#fff',
+  borderColor: 'var(--color-accent-secondary)',
+}
+
+function Chips({
+  options,
+  selected,
+  onToggle,
+}: {
+  options: string[]
+  selected: string[]
+  onToggle: (v: string) => void
+}) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+      {options.map((opt) => {
+        const isActive = selected.includes(opt)
+        return (
+          <span
+            key={opt}
+            onClick={() => onToggle(opt)}
+            style={isActive ? chipActive : chipBase}
+          >
+            {opt}
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function CompletarPerfilPage() {
-  const { user } = useAuth()
+  const { user, isDemo } = useAuth()
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
 
-  // Step 1 fields
+  // Step 1 — quién eres
   const [vertical, setVertical] = useState('')
   const [country, setCountry] = useState('')
+  const [region, setRegion] = useState('')
   const [role, setRole] = useState('')
   const [experience, setExperience] = useState('')
   const [linkedin, setLinkedin] = useState('')
 
-  // Step 2 fields
+  // Step 2 — tu startup
   const [description, setDescription] = useState('')
   const [teamSize, setTeamSize] = useState('')
+  const [foundedYear, setFoundedYear] = useState('')
   const [website, setWebsite] = useState('')
+  const [businessModel, setBusinessModel] = useState('')
+  const [pricingModel, setPricingModel] = useState('')
 
-  const handleNext = () => {
-    setStep(2)
+  // Step 3 — tracción + impacto
+  const [currentMRR, setCurrentMRR] = useState('')
+  const [totalFunding, setTotalFunding] = useState('')
+  const [mainCustomers, setMainCustomers] = useState('')
+  const [certifications, setCertifications] = useState<string[]>([])
+  const [sdgImpact, setSdgImpact] = useState<string[]>([])
+  const [mainChallenges, setMainChallenges] = useState('')
+
+  // Demo pre-fill for Ana Quispe
+  useEffect(() => {
+    if (!isDemo || user?.id !== DEMO_FOUNDER_ID) return
+    setVertical('cleantech_climatech')
+    setCountry('Perú')
+    setRegion('Madre de Dios')
+    setRole('CEO / Founder')
+    setExperience('1-2 startups anteriores')
+    setLinkedin('https://linkedin.com/in/ana-quispe-ecobio')
+    setDescription(
+      'EcoBio Perú transforma cáscara de cacao y bagazo de yuca de cooperativas amazónicas en empaques compostables de alta performance para el food service latinoamericano. 23 clientes B2B activos (Hilton, Belmond, Central, Maido), $47K MRR, 12% MoM, certificación EN 13432, 3 patentes en proceso.'
+    )
+    setTeamSize('7')
+    setFoundedYear('2023')
+    setWebsite('https://ecobioperu.com')
+    setBusinessModel('B2B')
+    setPricingModel(
+      'Suscripción mensual recurrente con descuento por volumen anual + branding personalizado (+15% premium) + dashboard ESG ($300/mes Enterprise)'
+    )
+    setCurrentMRR('47000')
+    setTotalFunding('0')
+    setMainCustomers(
+      '1) Cadenas hoteleras premium (Hilton Lima, Belmond Miraflores, Marriott) — 38% del MRR. 2) Restaurantes de autor (Central, Maido, Astrid & Gastón, La Mar) — 32% del MRR. 3) Cadenas gastronómicas medianas (Sabores del Pacífico 12 locales, IK, Panchita del Grupo Acurio) — 30% del MRR.'
+    )
+    setCertifications(['B Corp en proceso', 'TÜV Compostable en proceso', 'EN 13432', 'Comercio Justo'])
+    setSdgImpact(['ODS 12', 'ODS 13', 'ODS 15', 'ODS 8'])
+    setMainChallenges(
+      '1) Escalar producción industrial de 50K a 200K unidades/mes manteniendo calidad y margen bruto >60%. 2) Cerrar ronda pre-seed de $500K para financiar molde industrial y expansión a Chile/Colombia. 3) Obtener certificación TÜV Compostable internacional sin frenar velocidad comercial local.'
+    )
+  }, [isDemo, user?.id])
+
+  const toggle = (list: string[], setList: (v: string[]) => void) => (v: string) => {
+    if (list.includes(v)) setList(list.filter((x) => x !== v))
+    else setList([...list, v])
   }
 
   const handleFinish = async () => {
@@ -95,22 +237,36 @@ export default function CompletarPerfilPage() {
     const profileData = {
       vertical,
       country,
+      region,
       role,
       experience,
       linkedin,
       description,
       teamSize: teamSize ? Number(teamSize) : null,
+      foundedYear: foundedYear ? Number(foundedYear) : null,
       website,
+      businessModel,
+      pricingModel,
+      currentMRR: currentMRR ? Number(currentMRR) : null,
+      totalFunding: totalFunding ? Number(totalFunding) : null,
+      mainCustomers,
+      certifications,
+      sdgImpact,
+      mainChallenges,
       completedAt: new Date().toISOString(),
     }
 
-    // Save to localStorage (namespaced by userId)
+    // Save to localStorage (namespaced by userId) — full payload
     const extraKey = user?.id ? `s4c_${user.id}_profile_extra` : 's4c_profile_extra'
-    localStorage.setItem(extraKey, JSON.stringify(profileData))
-
-    // Best-effort upsert to Supabase startups table
     try {
-      if (user?.id) {
+      localStorage.setItem(extraKey, JSON.stringify(profileData))
+    } catch {
+      // ignore quota errors
+    }
+
+    // Best-effort upsert to Supabase startups table — only fields that map to existing columns
+    if (!isDemo && user?.id) {
+      try {
         await supabase.from('startups').upsert(
           {
             founder_id: user.id,
@@ -124,15 +280,16 @@ export default function CompletarPerfilPage() {
           },
           { onConflict: 'founder_id' }
         )
+      } catch {
+        // Best effort — silently continue, full payload still in localStorage
       }
-    } catch {
-      // Best effort — silently continue
     }
 
     router.push('/tools')
   }
 
   const step1Valid = vertical && country && role && experience
+  const step2Valid = description && teamSize && businessModel
 
   return (
     <div
@@ -151,7 +308,7 @@ export default function CompletarPerfilPage() {
         transition={{ duration: 0.5 }}
         style={{
           width: '100%',
-          maxWidth: 540,
+          maxWidth: 580,
           background: 'var(--color-bg-card)',
           borderRadius: 16,
           border: '1px solid var(--color-border)',
@@ -204,11 +361,12 @@ export default function CompletarPerfilPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.75rem',
+            gap: '0.5rem',
             marginBottom: '2rem',
+            flexWrap: 'wrap',
           }}
         >
-          {[1, 2].map((s) => (
+          {[1, 2, 3].map((s) => (
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div
                 style={{
@@ -236,14 +394,14 @@ export default function CompletarPerfilPage() {
                   color: step === s ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                 }}
               >
-                Paso {s} de 2
+                Paso {s} de 3
               </span>
-              {s === 1 && (
+              {s < 3 && (
                 <div
                   style={{
-                    width: 32,
+                    width: 24,
                     height: 2,
-                    background: step >= 2 ? 'var(--color-accent-secondary)' : 'var(--color-border)',
+                    background: step > s ? 'var(--color-accent-secondary)' : 'var(--color-border)',
                     borderRadius: 1,
                     transition: 'background 0.3s ease',
                   }}
@@ -264,7 +422,6 @@ export default function CompletarPerfilPage() {
               transition={{ duration: 0.3 }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {/* Vertical */}
                 <div>
                   <label style={labelStyle}>
                     <Briefcase size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
@@ -284,27 +441,42 @@ export default function CompletarPerfilPage() {
                   </select>
                 </div>
 
-                {/* Country */}
-                <div>
-                  <label style={labelStyle}>
-                    <Globe size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                    País
-                  </label>
-                  <select
-                    style={selectStyle}
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                  >
-                    <option value="">Selecciona tu país</option>
-                    {LATAM_COUNTRIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>
+                      <Globe size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                      País
+                    </label>
+                    <select
+                      style={selectStyle}
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                    >
+                      <option value="">Selecciona país</option>
+                      {LATAM_COUNTRIES.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Región</label>
+                    <select
+                      style={selectStyle}
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                    >
+                      <option value="">Selecciona región</option>
+                      {PERU_REGIONS.map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                {/* Role */}
                 <div>
                   <label style={labelStyle}>
                     <User size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
@@ -324,7 +496,6 @@ export default function CompletarPerfilPage() {
                   </select>
                 </div>
 
-                {/* Experience */}
                 <div>
                   <label style={labelStyle}>Nivel de experiencia</label>
                   <select
@@ -341,7 +512,6 @@ export default function CompletarPerfilPage() {
                   </select>
                 </div>
 
-                {/* LinkedIn */}
                 <div>
                   <label style={labelStyle}>LinkedIn URL</label>
                   <input
@@ -354,9 +524,8 @@ export default function CompletarPerfilPage() {
                 </div>
               </div>
 
-              {/* Next button */}
               <button
-                onClick={handleNext}
+                onClick={() => setStep(2)}
                 disabled={!step1Valid}
                 style={{
                   width: '100%',
@@ -392,35 +561,42 @@ export default function CompletarPerfilPage() {
               transition={{ duration: 0.3 }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {/* Description */}
                 <div>
                   <label style={labelStyle}>Descripción breve de tu startup</label>
                   <textarea
-                    style={{
-                      ...inputStyle,
-                      minHeight: 100,
-                      resize: 'vertical',
-                    }}
-                    placeholder="Cuéntanos en pocas palabras qué hace tu startup..."
+                    style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }}
+                    placeholder="¿Qué hace tu startup? ¿Qué problema resuelve y para quién?"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
 
-                {/* Team size */}
-                <div>
-                  <label style={labelStyle}>Tamaño del equipo</label>
-                  <input
-                    type="number"
-                    style={inputStyle}
-                    placeholder="Ej: 5"
-                    min={1}
-                    value={teamSize}
-                    onChange={(e) => setTeamSize(e.target.value)}
-                  />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>Tamaño del equipo</label>
+                    <input
+                      type="number"
+                      style={inputStyle}
+                      placeholder="Ej: 5"
+                      min={1}
+                      value={teamSize}
+                      onChange={(e) => setTeamSize(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Año de fundación</label>
+                    <input
+                      type="number"
+                      style={inputStyle}
+                      placeholder="Ej: 2024"
+                      min={1990}
+                      max={new Date().getFullYear()}
+                      value={foundedYear}
+                      onChange={(e) => setFoundedYear(e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                {/* Website */}
                 <div>
                   <label style={labelStyle}>
                     Sitio web{' '}
@@ -436,16 +612,41 @@ export default function CompletarPerfilPage() {
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
+
+                <div>
+                  <label style={labelStyle}>Modelo de negocio</label>
+                  <select
+                    style={selectStyle}
+                    value={businessModel}
+                    onChange={(e) => setBusinessModel(e.target.value)}
+                  >
+                    <option value="">Selecciona modelo</option>
+                    {BUSINESS_MODEL_OPTIONS.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={labelStyle}>
+                    Modelo de pricing{' '}
+                    <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
+                      (opcional)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    style={inputStyle}
+                    placeholder={PRICING_PLACEHOLDER}
+                    value={pricingModel}
+                    onChange={(e) => setPricingModel(e.target.value)}
+                  />
+                </div>
               </div>
 
-              {/* Buttons */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '0.75rem',
-                  marginTop: '1.75rem',
-                }}
-              >
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem' }}>
                 <button
                   onClick={() => setStep(1)}
                   style={{
@@ -461,13 +662,153 @@ export default function CompletarPerfilPage() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.375rem',
-                    transition: 'background 0.2s ease',
                   }}
                 >
                   <ArrowLeft size={16} />
                   Atrás
                 </button>
+                <button
+                  onClick={() => setStep(3)}
+                  disabled={!step2Valid}
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: 10,
+                    border: 'none',
+                    background: step2Valid ? 'var(--color-accent-secondary)' : 'var(--color-border)',
+                    color: '#fff',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    cursor: step2Valid ? 'pointer' : 'not-allowed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  Siguiente
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
 
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>
+                      <DollarSign size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                      MRR actual (USD){' '}
+                      <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
+                        (opcional)
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      style={inputStyle}
+                      placeholder="Ej: 5000"
+                      min={0}
+                      value={currentMRR}
+                      onChange={(e) => setCurrentMRR(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>
+                      Funding total (USD){' '}
+                      <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
+                        (opcional)
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      style={inputStyle}
+                      placeholder="Ej: 100000"
+                      min={0}
+                      value={totalFunding}
+                      onChange={(e) => setTotalFunding(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={labelStyle}>
+                    ¿Quiénes son tus 3 principales clientes/segmentos?
+                  </label>
+                  <textarea
+                    style={{ ...inputStyle, minHeight: 80, resize: 'vertical' }}
+                    placeholder="Lista tus principales clientes o segmentos con un breve detalle..."
+                    value={mainCustomers}
+                    onChange={(e) => setMainCustomers(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>
+                    <Award size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                    Certificaciones
+                  </label>
+                  <Chips
+                    options={CERTIFICATION_OPTIONS}
+                    selected={certifications}
+                    onToggle={toggle(certifications, setCertifications)}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>
+                    <Target size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                    ODS de impacto
+                  </label>
+                  <Chips
+                    options={SDG_OPTIONS}
+                    selected={sdgImpact}
+                    onToggle={toggle(sdgImpact, setSdgImpact)}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>
+                    ¿Cuáles son tus 3 retos principales actualmente?
+                  </label>
+                  <textarea
+                    style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }}
+                    placeholder="Ej: 1) Escalar producción. 2) Acceso a capital. 3) Talento técnico..."
+                    value={mainChallenges}
+                    onChange={(e) => setMainChallenges(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem' }}>
+                <button
+                  onClick={() => setStep(2)}
+                  style={{
+                    padding: '0.75rem 1.25rem',
+                    borderRadius: 10,
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg-card)',
+                    color: 'var(--color-text-secondary)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.375rem',
+                  }}
+                >
+                  <ArrowLeft size={16} />
+                  Atrás
+                </button>
                 <button
                   onClick={handleFinish}
                   disabled={saving}
@@ -487,7 +828,6 @@ export default function CompletarPerfilPage() {
                     justifyContent: 'center',
                     gap: '0.5rem',
                     opacity: saving ? 0.7 : 1,
-                    transition: 'background 0.2s ease, opacity 0.2s ease',
                   }}
                 >
                   {saving ? 'Guardando...' : 'Completar perfil'}

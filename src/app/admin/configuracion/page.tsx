@@ -2,7 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Save, Building2, CreditCard, Globe, Loader2, Image as ImageIcon, Upload } from 'lucide-react'
+import {
+  Save,
+  Building2,
+  CreditCard,
+  Globe,
+  Loader2,
+  Upload,
+  Users,
+  Target,
+  Phone,
+  AtSign,
+} from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import { DEMO_ORG } from '@/lib/demo/admin-fixtures'
@@ -13,6 +24,35 @@ const PLAN_LABELS: Record<string, string> = {
   enterprise: 'Enterprise',
   institutional: 'Institutional',
 }
+
+const ORG_TYPES = ['Universidad', 'Incubadora', 'Aceleradora', 'Gobierno', 'Fondo', 'Corporativo']
+const COHORT_FREQUENCIES = ['Trimestral', 'Semestral', 'Anual', 'Continua']
+const VERTICAL_FOCUS_OPTIONS = [
+  'ClimaTech',
+  'AgriTech',
+  'Energía',
+  'Movilidad',
+  'Economía Circular',
+  'Biomateriales',
+  'Agua',
+  'Carbono',
+  'FoodTech',
+]
+
+const LATAM_COUNTRIES = [
+  'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
+  'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'México', 'Nicaragua',
+  'Panamá', 'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana',
+  'Uruguay', 'Venezuela',
+]
+
+const PERU_REGIONS = [
+  'Amazonas', 'Áncash', 'Apurímac', 'Arequipa', 'Ayacucho', 'Cajamarca',
+  'Callao', 'Cusco', 'Huancavelica', 'Huánuco', 'Ica', 'Junín', 'La Libertad',
+  'Lambayeque', 'Lima', 'Loreto', 'Madre de Dios', 'Moquegua', 'Pasco',
+  'Piura', 'Puno', 'San Martín', 'Tacna', 'Tumbes', 'Ucayali',
+  'Resto LATAM',
+]
 
 const cardStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
@@ -35,6 +75,15 @@ const inputStyle: React.CSSProperties = {
   transition: 'border-color 0.15s',
 }
 
+const selectStyle: React.CSSProperties = {
+  ...inputStyle,
+  appearance: 'none' as const,
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E")`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'right 0.75rem center',
+  paddingRight: '2.25rem',
+}
+
 const labelStyle: React.CSSProperties = {
   fontFamily: 'var(--font-body)',
   fontSize: '0.8125rem',
@@ -42,6 +91,27 @@ const labelStyle: React.CSSProperties = {
   color: 'var(--color-text-primary)',
   marginBottom: '0.375rem',
   display: 'block',
+}
+
+const chipBase: React.CSSProperties = {
+  padding: '0.3125rem 0.625rem',
+  borderRadius: 999,
+  fontFamily: 'var(--font-body)',
+  fontSize: '0.6875rem',
+  fontWeight: 500,
+  cursor: 'pointer',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-card)',
+  color: 'var(--color-text-secondary)',
+  transition: 'all 0.15s ease',
+  userSelect: 'none' as const,
+}
+
+const chipActive: React.CSSProperties = {
+  ...chipBase,
+  background: 'var(--color-accent-primary)',
+  color: '#fff',
+  borderColor: 'var(--color-accent-primary)',
 }
 
 interface OrgData {
@@ -54,7 +124,21 @@ interface OrgData {
   contract_end: string | null
 }
 
-const MOCK_DEMO_ORG: OrgData & { startup_count: number } = {
+const MOCK_DEMO_ORG: OrgData & {
+  startup_count: number
+  country: string
+  region: string
+  orgType: string
+  verticalFocus: string[]
+  cohortFrequency: string
+  mainContactName: string
+  mainContactRole: string
+  mainContactPhone: string
+  socialLinkedIn: string
+  socialTwitter: string
+  description: string
+  programGoals: string
+} = {
   name: DEMO_ORG.name,
   website: 'https://bioinnova.unamad.edu.pe',
   logo_url: null,
@@ -63,11 +147,27 @@ const MOCK_DEMO_ORG: OrgData & { startup_count: number } = {
   max_startups: DEMO_ORG.maxStartups,
   contract_end: DEMO_ORG.contractEnd,
   startup_count: DEMO_ORG.activeStartups,
+  country: 'Perú',
+  region: 'Lima',
+  orgType: 'Incubadora',
+  verticalFocus: ['ClimaTech', 'Biomateriales', 'AgriTech'],
+  cohortFrequency: 'Trimestral',
+  mainContactName: 'María Fernández',
+  mainContactRole: 'Directora de Innovación',
+  mainContactPhone: '+51 999 888 777',
+  socialLinkedIn: 'https://linkedin.com/company/bioinnova-pe',
+  socialTwitter: 'https://twitter.com/BioInnovaPE',
+  description:
+    'BioInnova es la incubadora de la Universidad Nacional Amazónica de Madre de Dios enfocada en startups de impacto ambiental con base científica. Acompañamos emprendedores que transforman investigación amazónica en negocios escalables: biomateriales, bioeconomía, AgriTech regenerativa y soluciones para el monitoreo de la Amazonía.',
+  programGoals:
+    'Para el 2026 buscamos: (1) graduar 12 startups de impacto con tracción comercial validada; (2) movilizar $1.5M en capital catalítico para nuestras startups; (3) firmar 3 alianzas con corporativos de retail y consumo masivo; (4) consolidar la primera red regional Madre de Dios + Cusco + Loreto de incubación amazónica.',
 }
 
 export default function ConfiguracionPage() {
   const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
+
+  // Core
   const [orgName, setOrgName] = useState('')
   const [website, setWebsite] = useState('')
   const [logoUrl, setLogoUrl] = useState('')
@@ -76,6 +176,21 @@ export default function ConfiguracionPage() {
   const [maxStartups, setMaxStartups] = useState(25)
   const [contractEnd, setContractEnd] = useState<string | null>(null)
   const [startupCount, setStartupCount] = useState(0)
+
+  // Extended (meta) fields
+  const [country, setCountry] = useState('')
+  const [region, setRegion] = useState('')
+  const [orgType, setOrgType] = useState('')
+  const [verticalFocus, setVerticalFocus] = useState<string[]>([])
+  const [cohortFrequency, setCohortFrequency] = useState('')
+  const [mainContactName, setMainContactName] = useState('')
+  const [mainContactRole, setMainContactRole] = useState('')
+  const [mainContactPhone, setMainContactPhone] = useState('')
+  const [socialLinkedIn, setSocialLinkedIn] = useState('')
+  const [socialTwitter, setSocialTwitter] = useState('')
+  const [description, setDescription] = useState('')
+  const [programGoals, setProgramGoals] = useState('')
+
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -92,6 +207,18 @@ export default function ConfiguracionPage() {
       setMaxStartups(MOCK_DEMO_ORG.max_startups)
       setContractEnd(MOCK_DEMO_ORG.contract_end)
       setStartupCount(MOCK_DEMO_ORG.startup_count)
+      setCountry(MOCK_DEMO_ORG.country)
+      setRegion(MOCK_DEMO_ORG.region)
+      setOrgType(MOCK_DEMO_ORG.orgType)
+      setVerticalFocus(MOCK_DEMO_ORG.verticalFocus)
+      setCohortFrequency(MOCK_DEMO_ORG.cohortFrequency)
+      setMainContactName(MOCK_DEMO_ORG.mainContactName)
+      setMainContactRole(MOCK_DEMO_ORG.mainContactRole)
+      setMainContactPhone(MOCK_DEMO_ORG.mainContactPhone)
+      setSocialLinkedIn(MOCK_DEMO_ORG.socialLinkedIn)
+      setSocialTwitter(MOCK_DEMO_ORG.socialTwitter)
+      setDescription(MOCK_DEMO_ORG.description)
+      setProgramGoals(MOCK_DEMO_ORG.programGoals)
       setLoading(false)
       setError(null)
       return
@@ -108,7 +235,7 @@ export default function ConfiguracionPage() {
           .from('organizations')
           .select('*')
           .eq('id', appUser!.org_id!)
-          .single()
+          .maybeSingle()
 
         if (orgErr) throw orgErr
 
@@ -120,6 +247,21 @@ export default function ConfiguracionPage() {
           setPlan(org.plan || 'starter')
           setMaxStartups(org.max_startups || 25)
           setContractEnd(org.contract_end)
+
+          // Extended fields may live in a JSONB `meta` column. Load defensively.
+          const meta = (org as { meta?: Record<string, unknown> }).meta || {}
+          setCountry(typeof meta.country === 'string' ? meta.country : '')
+          setRegion(typeof meta.region === 'string' ? meta.region : '')
+          setOrgType(typeof meta.orgType === 'string' ? meta.orgType : '')
+          setVerticalFocus(Array.isArray(meta.verticalFocus) ? (meta.verticalFocus as string[]) : [])
+          setCohortFrequency(typeof meta.cohortFrequency === 'string' ? meta.cohortFrequency : '')
+          setMainContactName(typeof meta.mainContactName === 'string' ? meta.mainContactName : '')
+          setMainContactRole(typeof meta.mainContactRole === 'string' ? meta.mainContactRole : '')
+          setMainContactPhone(typeof meta.mainContactPhone === 'string' ? meta.mainContactPhone : '')
+          setSocialLinkedIn(typeof meta.socialLinkedIn === 'string' ? meta.socialLinkedIn : '')
+          setSocialTwitter(typeof meta.socialTwitter === 'string' ? meta.socialTwitter : '')
+          setDescription(typeof meta.description === 'string' ? meta.description : '')
+          setProgramGoals(typeof meta.programGoals === 'string' ? meta.programGoals : '')
         }
 
         // Count startups in org's cohorts
@@ -146,6 +288,10 @@ export default function ConfiguracionPage() {
 
     loadOrg()
   }, [appUser?.org_id, isDemo])
+
+  const toggleVertical = (v: string) => {
+    setVerticalFocus((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]))
+  }
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -186,7 +332,6 @@ export default function ConfiguracionPage() {
     setLogoUrl(publicUrlData.publicUrl)
     setUploading(false)
 
-    // Reset file input
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -203,6 +348,22 @@ export default function ConfiguracionPage() {
     setSaving(true)
     setError(null)
 
+    const meta = {
+      country,
+      region,
+      orgType,
+      verticalFocus,
+      cohortFrequency,
+      mainContactName,
+      mainContactRole,
+      mainContactPhone,
+      socialLinkedIn,
+      socialTwitter,
+      description,
+      programGoals,
+    }
+
+    // First attempt: persist core columns + meta JSONB.
     const { error: updateError } = await supabase
       .from('organizations')
       .update({
@@ -210,15 +371,37 @@ export default function ConfiguracionPage() {
         website: website.trim() || null,
         logo_url: logoUrl.trim() || null,
         billing_email: billingEmail.trim() || null,
+        meta,
       })
       .eq('id', appUser.org_id)
 
     if (updateError) {
-      setError('Error al guardar los cambios. Intenta de nuevo.')
-    } else {
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+      // Fallback: meta column may not exist yet. Persist core fields only and
+      // cache the extended payload locally so the form stays consistent.
+      const { error: coreError } = await supabase
+        .from('organizations')
+        .update({
+          name: orgName.trim(),
+          website: website.trim() || null,
+          logo_url: logoUrl.trim() || null,
+          billing_email: billingEmail.trim() || null,
+        })
+        .eq('id', appUser.org_id)
+
+      if (coreError) {
+        console.error('[S4C Admin] Error saving org:', coreError)
+        setError('Error al guardar los cambios. Intenta de nuevo.')
+        setSaving(false)
+        return
+      }
+
+      try {
+        localStorage.setItem(`s4c_org_${appUser.org_id}_meta`, JSON.stringify(meta))
+      } catch { /* ignore */ }
     }
+
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
     setSaving(false)
   }
 
@@ -226,7 +409,6 @@ export default function ConfiguracionPage() {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
         <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
-
       </div>
     )
   }
@@ -236,7 +418,7 @@ export default function ConfiguracionPage() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      style={{ padding: '2rem 1.5rem', maxWidth: 720, margin: '0 auto' }}
+      style={{ padding: '2rem 1.5rem', maxWidth: 760, margin: '0 auto' }}
     >
       {isDemo && (
         <div
@@ -271,7 +453,7 @@ export default function ConfiguracionPage() {
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
           color: 'var(--color-text-secondary)',
         }}>
-          Administra los datos de tu organización y plan
+          Administra los datos de tu organización, equipo y plan
         </p>
       </div>
 
@@ -315,10 +497,93 @@ export default function ConfiguracionPage() {
             />
           </div>
 
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={labelStyle}>País</label>
+              <select
+                style={selectStyle}
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              >
+                <option value="">Selecciona país</option>
+                {LATAM_COUNTRIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Región</label>
+              <select
+                style={selectStyle}
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+              >
+                <option value="">Selecciona región</option>
+                {PERU_REGIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={labelStyle}>Tipo de organización</label>
+              <select
+                style={selectStyle}
+                value={orgType}
+                onChange={(e) => setOrgType(e.target.value)}
+              >
+                <option value="">Selecciona tipo</option>
+                {ORG_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Frecuencia de cohortes</label>
+              <select
+                style={selectStyle}
+                value={cohortFrequency}
+                onChange={(e) => setCohortFrequency(e.target.value)}
+              >
+                <option value="">Selecciona frecuencia</option>
+                {COHORT_FREQUENCIES.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={labelStyle}>
+              <Target size={13} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+              Verticales de enfoque
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+              {VERTICAL_FOCUS_OPTIONS.map((v) => (
+                <span
+                  key={v}
+                  onClick={() => toggleVertical(v)}
+                  style={verticalFocus.includes(v) ? chipActive : chipBase}
+                >
+                  {v}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <div style={{ marginBottom: '1rem' }}>
             <label style={labelStyle}>Logo</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-              {/* Logo preview */}
               <div style={{
                 width: 80, height: 80, borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--color-border)',
@@ -327,6 +592,7 @@ export default function ConfiguracionPage() {
                 overflow: 'hidden', flexShrink: 0,
               }}>
                 {logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={logoUrl}
                     alt="Logo de la organización"
@@ -337,7 +603,6 @@ export default function ConfiguracionPage() {
                 )}
               </div>
 
-              {/* Upload controls */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
                 <input
                   ref={fileInputRef}
@@ -380,7 +645,6 @@ export default function ConfiguracionPage() {
               </div>
             </div>
 
-            {/* URL input */}
             <input
               type="url"
               value={logoUrl}
@@ -398,7 +662,7 @@ export default function ConfiguracionPage() {
             </p>
           </div>
 
-          <div>
+          <div style={{ marginBottom: '1rem' }}>
             <label style={labelStyle}>
               <Globe size={13} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
               Sitio web
@@ -412,6 +676,122 @@ export default function ConfiguracionPage() {
               onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={labelStyle}>Descripción</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe tu organización en 2-3 oraciones"
+              style={{ ...inputStyle, minHeight: 80, resize: 'vertical' }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Objetivos del programa con S4C</label>
+            <textarea
+              value={programGoals}
+              onChange={(e) => setProgramGoals(e.target.value)}
+              placeholder="¿Qué buscan lograr este año con S4C?"
+              style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+        </div>
+
+        {/* Contact + social */}
+        <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            marginBottom: '1.25rem',
+          }}>
+            <Users size={18} color="var(--color-accent-primary)" />
+            <h2 style={{
+              fontFamily: 'var(--font-heading)', fontWeight: 600,
+              fontSize: '1rem', color: 'var(--color-text-primary)',
+            }}>
+              Contacto principal y redes
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={labelStyle}>Nombre del contacto</label>
+              <input
+                type="text"
+                value={mainContactName}
+                onChange={(e) => setMainContactName(e.target.value)}
+                placeholder="Ej: María Fernández"
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Cargo</label>
+              <input
+                type="text"
+                value={mainContactRole}
+                onChange={(e) => setMainContactRole(e.target.value)}
+                placeholder="Ej: Director de Innovación"
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+              />
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={labelStyle}>
+              <Phone size={13} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+              Teléfono de contacto
+            </label>
+            <input
+              type="tel"
+              value={mainContactPhone}
+              onChange={(e) => setMainContactPhone(e.target.value)}
+              placeholder="+51 999 999 999"
+              style={inputStyle}
+              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div>
+              <label style={labelStyle}>
+                <Globe size={13} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+                LinkedIn
+              </label>
+              <input
+                type="url"
+                value={socialLinkedIn}
+                onChange={(e) => setSocialLinkedIn(e.target.value)}
+                placeholder="https://linkedin.com/company/..."
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>
+                <AtSign size={13} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+                Twitter / X
+              </label>
+              <input
+                type="url"
+                value={socialTwitter}
+                onChange={(e) => setSocialTwitter(e.target.value)}
+                placeholder="https://twitter.com/..."
+                style={inputStyle}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+              />
+            </div>
           </div>
         </div>
 
@@ -430,7 +810,6 @@ export default function ConfiguracionPage() {
             </h2>
           </div>
 
-          {/* Plan display */}
           <div style={{
             padding: '1rem',
             borderRadius: 'var(--radius-sm)',

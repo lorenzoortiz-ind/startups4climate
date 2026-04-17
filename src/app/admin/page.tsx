@@ -11,9 +11,8 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Card } from '@/components/ui'
-import { SuperadminExecutiveSummary } from '@/components/admin/SuperadminExecutiveSummary'
 import {
-  DEMO_ORG, DEMO_COHORTS, DEMO_STARTUPS, DEMO_VERTICAL_DISTRIBUTION,
+  DEMO_ORG, DEMO_COHORTS, DEMO_VERTICAL_DISTRIBUTION,
   DEMO_STAGE_DISTRIBUTION, topStartupsByReadiness,
 } from '@/lib/demo/admin-fixtures'
 
@@ -146,13 +145,6 @@ const MOCK_DEMO_METRICS: OrgMetrics = {
 }
 
 export default function AdminDashboard() {
-  const { appUser, isDemo } = useAuth()
-
-  // Superadmin (MINPRO) demo dashboard — render executive summary instead of org-specific data
-  if (isDemo && appUser?.role === 'superadmin') {
-    return <SuperadminExecutiveSummary />
-  }
-
   return <AdminOrgDashboard />
 }
 

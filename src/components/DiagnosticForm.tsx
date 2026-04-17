@@ -663,19 +663,20 @@ export default function DiagnosticForm() {
                         width: '100%',
                         padding: '1rem',
                         borderRadius: 'var(--radius-full)',
-                        background: 'var(--color-ink)',
-                        color: 'white',
+                        background: 'var(--color-accent-primary)',
+                        color: '#fff',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.75rem',
+                        fontSize: '0.875rem',
                         fontWeight: 700,
                         border: 'none',
                         cursor: 'pointer',
-                        transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
+                        boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                        transition: 'background 0.2s, transform 0.2s var(--ease-spring), box-shadow 0.2s ease',
                         marginTop: '0.25rem',
                         letterSpacing: '-0.01em',
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,107,74,0.35), 0 2px 4px rgba(0,0,0,0.4)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)' }}
                     >
                       Comenzar Diagnóstico <ArrowRight size={18} />
                     </button>
@@ -888,17 +889,18 @@ export default function DiagnosticForm() {
                         width: '100%',
                         padding: '1rem',
                         borderRadius: 'var(--radius-full)',
-                        background: 'var(--color-ink)',
-                        color: 'white',
+                        background: 'var(--color-accent-primary)',
+                        color: '#fff',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.75rem',
+                        fontSize: '0.875rem',
                         fontWeight: 700,
                         textDecoration: 'none',
-                        transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
+                        boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                        transition: 'background 0.2s, transform 0.2s var(--ease-spring), box-shadow 0.2s ease',
                         letterSpacing: '-0.01em',
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-hover)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,107,74,0.35), 0 2px 4px rgba(0,0,0,0.4)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)' }}
                     >
                       Acceder a las Herramientas <ArrowRight size={18} />
                     </a>

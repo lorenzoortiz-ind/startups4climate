@@ -6,18 +6,18 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
-  Users,
-  FileBarChart,
-  BarChart3,
-  Settings,
   LogOut,
   Menu,
   X,
   ChevronLeft,
-  Radar,
-  Lightbulb,
-  BookOpen,
   Building2,
+  UsersRound,
+  Activity,
+  LifeBuoy,
+  ScrollText,
+  Wrench,
+  Shield,
+  Briefcase,
 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useAuth } from '@/context/AuthContext'
@@ -25,17 +25,17 @@ import { SuperadminProvider } from '@/context/SuperadminContext'
 import { supabase } from '@/lib/supabase'
 
 const NAV_ITEMS = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/cohortes', label: 'Cohortes', icon: Users },
-  { href: '/admin/reportes', label: 'Reportes', icon: FileBarChart },
-  { href: '/admin/benchmarking', label: 'Benchmarking', icon: BarChart3 },
-  { href: '/admin/radar', label: 'RADAR', icon: Radar },
-  { href: '/admin/oportunidades', label: 'Oportunidades', icon: Lightbulb },
-  { href: '/admin/recursos', label: 'Recursos', icon: BookOpen },
-  { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
+  { href: '/superadmin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/superadmin/programas', label: 'Programas', icon: Briefcase },
+  { href: '/superadmin/organizaciones', label: 'Organizaciones', icon: Building2 },
+  { href: '/superadmin/usuarios', label: 'Usuarios', icon: UsersRound },
+  { href: '/superadmin/metricas', label: 'Métricas globales', icon: Activity },
+  { href: '/superadmin/incidencias', label: 'Incidencias', icon: LifeBuoy },
+  { href: '/superadmin/actividad', label: 'Actividad', icon: ScrollText },
+  { href: '/superadmin/plataforma', label: 'Plataforma', icon: Wrench },
 ] as const
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function SuperadminLayout({ children }: { children: React.ReactNode }) {
   const { appUser, loading, logout, isDemo } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
@@ -48,34 +48,43 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [pathname])
 
   useEffect(() => {
-    // Demo org — hardcode display info without hitting Supabase
+    // Demo / superadmin display info — MINPRO branding
     if (isDemo) {
       setOrgLogo(null)
-      setOrgName('Universidad BioInnova')
+      setOrgName('Ministerio de la Producción')
       return
     }
-    if (!appUser?.org_id) return
-    supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).maybeSingle()
+    if (!appUser?.org_id) {
+      setOrgName('Ministerio de la Producción')
+      return
+    }
+    supabase
+      .from('organizations')
+      .select('name, logo_url')
+      .eq('id', appUser.org_id)
+      .maybeSingle()
       .then(({ data }) => {
         if (data) {
           setOrgLogo(data.logo_url)
           setOrgName(data.name)
+        } else {
+          setOrgName('Ministerio de la Producción')
         }
       })
   }, [appUser?.org_id, isDemo])
 
-  // Route guards — admin_org only. Superadmin has its own tree at /superadmin.
+  // Route guards — superadmin only
   useEffect(() => {
     if (loading) return
     if (!appUser) {
       router.replace('/')
       return
     }
-    if (appUser.role === 'superadmin') {
-      router.replace('/superadmin')
+    if (appUser.role === 'admin_org') {
+      router.replace('/admin')
       return
     }
-    if (appUser.role !== 'admin_org') {
+    if (appUser.role !== 'superadmin') {
       router.replace('/tools')
     }
   }, [loading, appUser, router])
@@ -94,17 +103,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
           animation: 'spin 0.8s linear infinite',
         }} />
-
       </div>
     )
   }
 
-  // Render nothing while redirecting (effect above handles navigation)
   if (!appUser) return null
-  if (appUser.role !== 'admin_org') return null
+  if (appUser.role !== 'superadmin') return null
 
   const isActive = (href: string) => {
-    if (href === '/admin') return pathname === '/admin'
+    if (href === '/superadmin') return pathname === '/superadmin'
     return pathname.startsWith(href)
   }
 
@@ -135,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <LayoutDashboard size={16} color="#fff" />
+            <Shield size={16} color="#fff" />
           </div>
         )}
         <div style={{ minWidth: 0 }}>
@@ -145,22 +152,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             lineHeight: 1.2,
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
-            {orgName || 'S4C Admin'}
+            {orgName || 'S4C Superadmin'}
           </div>
           <div style={{
             fontFamily: 'var(--font-body)', fontSize: '0.625rem',
             color: '#94A3B8', opacity: 0.7,
           }}>
-            Panel de gestión
+            Panel de gobierno
           </div>
         </div>
       </div>
 
       {/* Role badge */}
       <div style={{
-        display: 'inline-block',
-        background: 'rgba(13,148,136,0.15)',
-        color: '#0D9488',
+        display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+        background: 'rgba(255,107,74,0.15)',
+        color: '#FF6B4A',
         fontFamily: 'var(--font-body)',
         fontSize: '0.5625rem',
         fontWeight: 600,
@@ -169,11 +176,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         borderRadius: 4,
         letterSpacing: '0.06em',
         marginBottom: '0.75rem',
+        width: 'fit-content',
       }}>
-        Organizaci&oacute;n
+        <Shield size={10} />
+        Super Administrador
       </div>
 
-      {/* Navigation — admin_org only */}
+      {/* Navigation */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', flex: 1 }}>
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href)
@@ -221,7 +230,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           margin: '0 0.5rem 1rem',
         }} />
 
-        {/* User info */}
         <div style={{
           padding: '0.75rem',
           borderRadius: 'var(--radius-sm)',
@@ -309,13 +317,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             background: 'var(--color-admin-sidebar-active)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <LayoutDashboard size={14} color="#fff" />
+            <Shield size={14} color="#fff" />
           </div>
           <span style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: '0.75rem', color: '#F1F5F9',
           }}>
-            S4C Admin
+            S4C Superadmin
           </span>
         </div>
         <button
@@ -367,7 +375,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ flex: 1, minHeight: '100vh' }}
         className="lg:ml-[260px] pt-14 lg:pt-0"
       >
-        {/* Top header bar */}
         <div style={{
           height: 56, background: 'var(--color-bg-card)',
           borderBottom: '1px solid var(--color-border)',
@@ -380,7 +387,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             fontFamily: 'var(--font-heading)', fontWeight: 600,
             fontSize: '0.8125rem', color: 'var(--color-text-primary)',
           }}>
-            {appUser.startup_name || 'Mi Organización'}
+            {orgName || 'Superadmin'}
           </div>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '1rem',

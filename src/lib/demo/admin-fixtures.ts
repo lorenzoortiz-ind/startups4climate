@@ -36,11 +36,13 @@ export interface DemoCohort {
   endDate: string
   monthCurrent: number
   monthTotal: number
-  budgetAssigned: number // PEN
-  budgetExecuted: number // PEN
   startupIds: string[]
   description: string
   graduates: number
+  toolsCompletionPct: number // 0-100
+  retentionRate: number // 0-100
+  npsFounders: number // -100 a 100
+  fundingRaisedUSD: number
   milestones: { date: string; title: string; status: 'done' | 'pending' }[]
 }
 
@@ -76,11 +78,12 @@ export const DEMO_ORG = {
   plan: 'Enterprise',
   maxStartups: 40,
   branding: '#0D9488',
-  totalFundingManaged: 1_200_000, // USD
-  fundingManagedPEN: 4_560_000,
+  fundingRaisedUSD: 820_000,
+  mrrAggregateUSD: 78_400,
   averageNps: 81,
-  averageReadiness: 71,
-  toolsCompletionRate: 73,
+  averageReadiness: 74,
+  toolsCompletionRate: 68,
+  retentionRate: 92,
   activeStartups: 24,
   graduatedStartups: 6,
   mentors: 12,
@@ -130,11 +133,13 @@ export const DEMO_COHORTS: DemoCohort[] = [
     endDate: '2025-08-31',
     monthCurrent: 3,
     monthTotal: 3,
-    budgetAssigned: 320_000,
-    budgetExecuted: 318_500,
     startupIds: DEMO_STARTUPS.filter((s) => s.cohortId === 'coh-bi-verano25').map((s) => s.id),
     description: 'Cohorte piloto del programa BioInnova. 8 startups admitidas, 6 graduadas con tracción comercial validada.',
     graduates: 6,
+    toolsCompletionPct: 84,
+    retentionRate: 100,
+    npsFounders: 78,
+    fundingRaisedUSD: 320_000,
     milestones: [
       { date: '2025-06-15', title: 'Bootcamp inicial · 8 startups onboarded', status: 'done' },
       { date: '2025-07-01', title: 'Diagnóstico de readiness aplicado', status: 'done' },
@@ -151,17 +156,19 @@ export const DEMO_COHORTS: DemoCohort[] = [
     endDate: '2026-04-15',
     monthCurrent: 4,
     monthTotal: 6,
-    budgetAssigned: 480_000,
-    budgetExecuted: 312_000,
     startupIds: DEMO_STARTUPS.filter((s) => s.cohortId === 'coh-bi-otono25').map((s) => s.id),
     description: 'Cohorte ampliada con 12 startups de biomateriales, agritech, healthtech y energía. Mes 4 de 6.',
     graduates: 0,
+    toolsCompletionPct: 71,
+    retentionRate: 92,
+    npsFounders: 74,
+    fundingRaisedUSD: 410_000,
     milestones: [
       { date: '2025-09-20', title: 'Onboarding · 12 startups admitidas', status: 'done' },
       { date: '2025-10-15', title: 'Workshop biomateriales (UNAMAD)', status: 'done' },
       { date: '2025-12-10', title: 'Demo Day intermedio', status: 'done' },
       { date: '2026-02-20', title: 'Vinculación con inversionistas (3 fondos)', status: 'done' },
-      { date: '2026-04-01', title: 'Pitch final · S/ 480K en juego', status: 'pending' },
+      { date: '2026-04-01', title: 'Pitch final con jurado de fondos LATAM', status: 'pending' },
       { date: '2026-04-15', title: 'Cierre cohorte', status: 'pending' },
     ],
   },
@@ -173,11 +180,13 @@ export const DEMO_COHORTS: DemoCohort[] = [
     endDate: '2026-08-30',
     monthCurrent: 2,
     monthTotal: 6,
-    budgetAssigned: 180_000,
-    budgetExecuted: 42_000,
     startupIds: DEMO_STARTUPS.filter((s) => s.cohortId === 'coh-bi-primavera26').map((s) => s.id),
     description: 'Cohorte enfocada en early-stage. 6 founders en pre-incubación, foco en validación de hipótesis.',
     graduates: 0,
+    toolsCompletionPct: 38,
+    retentionRate: 100,
+    npsFounders: 68,
+    fundingRaisedUSD: 90_000,
     milestones: [
       { date: '2026-03-05', title: 'Bootcamp inicial', status: 'done' },
       { date: '2026-03-25', title: 'Diagnóstico de readiness aplicado', status: 'done' },
@@ -229,21 +238,21 @@ export const DEMO_ADMIN_REPORTS = [
       { label: 'Vertical top', value: 'Biomateriales (8.4)' },
       { label: 'Vertical en alerta', value: 'Otros (5.7)' },
       { label: 'Mayor crecimiento', value: 'Agritech (+18% MoM)' },
-      { label: 'Mayor capital captado', value: 'Biomateriales (S/ 760K)' },
+      { label: 'Mayor funding levantado', value: 'Biomateriales (USD 215K)' },
     ],
     rows: 5,
     sheets: 4,
     lastGenerated: '2026-04-10',
   },
   {
-    id: 'rep-fondos',
-    title: 'Uso de Fondos · 2026',
-    subtitle: 'Ejecución presupuestaria por cohorte y rubro',
+    id: 'rep-engagement',
+    title: 'Engagement de founders · 2026',
+    subtitle: 'Adopción de herramientas y retención por cohorte',
     metrics: [
-      { label: 'Presupuesto asignado', value: 'S/ 980,000' },
-      { label: 'Ejecutado YTD', value: 'S/ 672,500' },
-      { label: '% ejecución', value: '69%' },
-      { label: 'Burn rate mensual', value: 'S/ 84,000' },
+      { label: 'Tools completion rate', value: '68%' },
+      { label: 'Retención founders', value: '92%' },
+      { label: 'Sesiones AI mentor / mes', value: '412' },
+      { label: 'Founders activos 30d', value: '21 / 24' },
     ],
     rows: 18,
     sheets: 3,

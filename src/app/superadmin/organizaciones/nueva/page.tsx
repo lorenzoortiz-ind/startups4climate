@@ -111,7 +111,7 @@ export default function NuevaOrganizacionPage() {
       return
     }
 
-    router.push('/admin/organizaciones')
+    router.push('/superadmin/organizaciones')
   }
 
   return (
@@ -123,7 +123,7 @@ export default function NuevaOrganizacionPage() {
     >
       {/* Back link */}
       <Link
-        href="/admin/organizaciones"
+        href="/superadmin/organizaciones"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
@@ -280,7 +280,7 @@ export default function NuevaOrganizacionPage() {
             marginTop: '1.5rem', justifyContent: 'flex-end',
           }}>
             <Link
-              href="/admin/organizaciones"
+              href="/superadmin/organizaciones"
               style={{
                 padding: '0.375rem 0.75rem', borderRadius: 6,
                 border: '1px solid var(--color-border)',

@@ -12,7 +12,7 @@ import {
   DEMO_PROGRAMS,
   DEMO_MINPRO_KPIS,
   DEMO_REGION_DISTRIBUTION,
-  formatPEN,
+  formatUSD,
   type DemoProgram,
 } from '@/lib/demo/superadmin-fixtures'
 
@@ -66,7 +66,8 @@ export default function ProgramasPage() {
     )
   }
 
-  const maxBudget = Math.max(...filteredPrograms.map((p) => p.budgetAssigned))
+  const maxStartups = Math.max(...filteredPrograms.map((p) => p.startupsCount), 1)
+  const maxFunding = Math.max(...filteredPrograms.map((p) => p.fundingRaisedUSD), 1)
 
   return (
     <motion.div
@@ -119,10 +120,10 @@ export default function ProgramasPage() {
       }}>
         {[
           { label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#FF6B4A' },
-          { label: 'Startups apoyadas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#0D9488' },
-          { label: 'Ejecutado', value: formatPEN(DEMO_MINPRO_KPIS.budgetExecutedPEN), color: '#3B82F6' },
-          { label: 'Presupuestado', value: formatPEN(DEMO_MINPRO_KPIS.budgetAssignedPEN), color: '#8B5CF6' },
-          { label: '% Ejecución', value: `${DEMO_MINPRO_KPIS.executionPct}%`, color: '#16A34A' },
+          { label: 'Startups activas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#0D9488' },
+          { label: 'Readiness promedio', value: DEMO_MINPRO_KPIS.readinessAvg, color: '#3B82F6' },
+          { label: 'Tools completion', value: `${DEMO_MINPRO_KPIS.toolsCompletionPct}%`, color: '#8B5CF6' },
+          { label: 'Funding levantado', value: formatUSD(DEMO_MINPRO_KPIS.fundingRaisedUSD), color: '#16A34A' },
           { label: 'Regiones', value: DEMO_MINPRO_KPIS.regions, color: '#F59E0B' },
         ].map((k, i) => (
           <motion.div
@@ -160,7 +161,7 @@ export default function ProgramasPage() {
       }}
         className="programas-twocol"
       >
-        {/* Budget chart */}
+        {/* Reach chart */}
         <motion.div {...fadeUp} style={cardStyle}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '0.5rem',
@@ -172,17 +173,17 @@ export default function ProgramasPage() {
               fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
               margin: 0,
             }}>
-              Presupuesto asignado vs ejecutado por programa
+              Startups acompañadas y funding levantado por programa
             </h3>
           </div>
-          <BudgetBars programs={filteredPrograms} maxBudget={maxBudget} />
+          <ReachBars programs={filteredPrograms} maxStartups={maxStartups} maxFunding={maxFunding} />
           <div style={{
             display: 'flex', gap: '1rem', marginTop: '1rem',
             fontFamily: 'var(--font-body)', fontSize: '0.75rem',
             color: 'var(--color-text-secondary)',
           }}>
-            <Legend color="#FF6B4A" label="Asignado" />
-            <Legend color="#0D9488" label="Ejecutado" />
+            <Legend color="#FF6B4A" label="Startups activas" />
+            <Legend color="#0D9488" label="Funding levantado (USD)" />
           </div>
         </motion.div>
 
@@ -263,7 +264,7 @@ export default function ProgramasPage() {
           }}>
             <thead>
               <tr>
-                {['Programa', 'Ejecutor', 'Región', 'Vertical', 'Presupuesto', 'Ejecutado', 'Startups', 'Readiness', 'NPS', 'Completion', 'Status', ''].map((h) => (
+                {['Programa', 'Ejecutor', 'Región', 'Vertical', 'Startups', 'Readiness', 'Tools %', 'NPS', 'Funding', 'tCO₂eq', 'Status', ''].map((h) => (
                   <th key={h} style={{
                     textAlign: 'left', padding: '0.75rem 0.85rem',
                     borderBottom: '1px solid var(--color-border)',
@@ -280,7 +281,6 @@ export default function ProgramasPage() {
             <tbody>
               {filteredPrograms.map((p) => {
                 const status = STATUS_LABELS[p.status]
-                const execPct = Math.round((p.budgetExecuted / p.budgetAssigned) * 100)
                 return (
                   <tr key={p.id} style={{
                     borderBottom: '1px solid var(--color-border)',
@@ -301,33 +301,33 @@ export default function ProgramasPage() {
                     <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-secondary)' }}>
                       {p.vertical}
                     </td>
-                    <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
-                      {formatPEN(p.budgetAssigned)}
-                    </td>
-                    <td style={{ padding: '0.7rem 0.85rem', whiteSpace: 'nowrap' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatPEN(p.budgetExecuted)}</span>
-                        <span style={{
-                          padding: '0.1rem 0.4rem', borderRadius: 4,
-                          fontSize: '0.65rem', fontWeight: 600,
-                          background: execPct >= 60 ? 'rgba(13,148,136,0.12)' : 'rgba(245,158,11,0.12)',
-                          color: execPct >= 60 ? '#0D9488' : '#F59E0B',
-                        }}>
-                          {execPct}%
-                        </span>
-                      </div>
-                    </td>
                     <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                       {p.startupsCount}
                     </td>
                     <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                       {p.readinessAvg}
                     </td>
+                    <td style={{ padding: '0.7rem 0.85rem', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{p.toolsCompletionPct}%</span>
+                        <span style={{
+                          padding: '0.1rem 0.4rem', borderRadius: 4,
+                          fontSize: '0.65rem', fontWeight: 600,
+                          background: p.toolsCompletionPct >= 60 ? 'rgba(13,148,136,0.12)' : 'rgba(245,158,11,0.12)',
+                          color: p.toolsCompletionPct >= 60 ? '#0D9488' : '#F59E0B',
+                        }}>
+                          {p.toolsCompletionPct >= 60 ? 'OK' : 'Bajo'}
+                        </span>
+                      </div>
+                    </td>
                     <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                       {p.nps}
                     </td>
+                    <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                      {formatUSD(p.fundingRaisedUSD)}
+                    </td>
                     <td style={{ padding: '0.7rem 0.85rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                      {p.completionRate}%
+                      {p.co2Avoided.toLocaleString('es-PE')}
                     </td>
                     <td style={{ padding: '0.7rem 0.85rem', whiteSpace: 'nowrap' }}>
                       <span style={{
@@ -339,7 +339,7 @@ export default function ProgramasPage() {
                       </span>
                     </td>
                     <td style={{ padding: '0.7rem 0.85rem' }}>
-                      <Link href={`/admin/programas/${p.id}`} style={{ color: 'var(--color-text-muted)', display: 'inline-flex' }}>
+                      <Link href={`/superadmin/programas/${p.id}`} style={{ color: 'var(--color-text-muted)', display: 'inline-flex' }}>
                         <ChevronRight size={16} />
                       </Link>
                     </td>
@@ -362,10 +362,10 @@ export default function ProgramasPage() {
         </h3>
         <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
           <QuickLink href="/admin" label="Resumen ejecutivo" icon={TrendingUp} />
-          <QuickLink href="/admin/metricas" label="Métricas comparativas" icon={BarChart3} />
-          <QuickLink href="/admin/organizaciones" label="Organizaciones ejecutoras" icon={Building2} />
-          <QuickLink href="/admin/incidencias" label="Alertas y riesgos" icon={AlertTriangle} />
-          <QuickLink href="/admin/usuarios" label="Founders apoyados" icon={Users} />
+          <QuickLink href="/superadmin/metricas" label="Métricas comparativas" icon={BarChart3} />
+          <QuickLink href="/superadmin/organizaciones" label="Organizaciones ejecutoras" icon={Building2} />
+          <QuickLink href="/superadmin/incidencias" label="Alertas y riesgos" icon={AlertTriangle} />
+          <QuickLink href="/superadmin/usuarios" label="Founders apoyados" icon={Users} />
         </div>
       </motion.div>
 
@@ -378,7 +378,7 @@ export default function ProgramasPage() {
   )
 }
 
-function BudgetBars({ programs, maxBudget }: { programs: DemoProgram[]; maxBudget: number }) {
+function ReachBars({ programs, maxStartups, maxFunding }: { programs: DemoProgram[]; maxStartups: number; maxFunding: number }) {
   if (programs.length === 0) {
     return (
       <p style={{
@@ -395,21 +395,21 @@ function BudgetBars({ programs, maxBudget }: { programs: DemoProgram[]; maxBudge
       viewBox={`0 0 600 ${programs.length * 38 + 10}`}
       style={{ width: '100%', height: programs.length * 38 + 10 }}
       role="img"
-      aria-label="Gráfico de presupuesto por programa"
+      aria-label="Gráfico de startups y funding por programa"
     >
       {programs.map((p, i) => {
         const y = i * 38 + 4
-        const assignedW = (p.budgetAssigned / maxBudget) * 360
-        const executedW = (p.budgetExecuted / maxBudget) * 360
+        const startupsW = (p.startupsCount / maxStartups) * 360
+        const fundingW = (p.fundingRaisedUSD / maxFunding) * 360
         return (
           <g key={p.id}>
             <text x={0} y={y + 14} fontFamily="var(--font-body)" fontSize={11} fill="var(--color-text-secondary)">
               {p.name.length > 28 ? `${p.name.slice(0, 27)}…` : p.name}
             </text>
-            <rect x={210} y={y + 4} width={assignedW} height={10} rx={3} fill="rgba(255,107,74,0.85)" />
-            <rect x={210} y={y + 16} width={executedW} height={10} rx={3} fill="#0D9488" />
-            <text x={210 + Math.max(assignedW, executedW) + 6} y={y + 22} fontFamily="var(--font-body)" fontSize={10} fill="var(--color-text-secondary)">
-              {Math.round((p.budgetExecuted / p.budgetAssigned) * 100)}%
+            <rect x={210} y={y + 4} width={startupsW} height={10} rx={3} fill="rgba(255,107,74,0.85)" />
+            <rect x={210} y={y + 16} width={fundingW} height={10} rx={3} fill="#0D9488" />
+            <text x={210 + Math.max(startupsW, fundingW) + 6} y={y + 22} fontFamily="var(--font-body)" fontSize={10} fill="var(--color-text-secondary)">
+              {p.startupsCount} · {formatUSD(p.fundingRaisedUSD)}
             </text>
           </g>
         )

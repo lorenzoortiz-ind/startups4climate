@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
-  Briefcase, Users, Wallet, MapPin, AlertTriangle, Calendar,
-  TrendingUp, Award, ChevronRight,
+  Briefcase, Users, MapPin, AlertTriangle, Calendar,
+  TrendingUp, Award, ChevronRight, Wrench, Gauge,
 } from 'lucide-react'
 import {
   DEMO_PROGRAMS, DEMO_MINPRO_KPIS, DEMO_REGION_DISTRIBUTION,
-  DEMO_ALERTS, DEMO_UPCOMING_MILESTONES, formatPEN,
+  DEMO_ALERTS, DEMO_UPCOMING_MILESTONES, formatUSD,
 } from '@/lib/demo/superadmin-fixtures'
 
 const cardStyle: React.CSSProperties = {
@@ -78,9 +78,10 @@ export function SuperadminExecutiveSummary() {
         {[
           { icon: Briefcase, label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#FF6B4A' },
           { icon: Users, label: 'Startups apoyadas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#0D9488' },
-          { icon: Wallet, label: 'Total invertido', value: formatPEN(DEMO_MINPRO_KPIS.budgetExecutedPEN), color: '#3B82F6' },
-          { icon: TrendingUp, label: '% Ejecución', value: `${DEMO_MINPRO_KPIS.executionPct}%`, color: '#16A34A' },
-          { icon: Award, label: 'Startups graduadas', value: DEMO_MINPRO_KPIS.graduatedStartups, color: '#8B5CF6' },
+          { icon: Gauge, label: 'Readiness promedio', value: `${DEMO_MINPRO_KPIS.readinessAvg}/100`, color: '#3B82F6' },
+          { icon: Wrench, label: 'Tools completion', value: `${DEMO_MINPRO_KPIS.toolsCompletionPct}%`, color: '#16A34A' },
+          { icon: TrendingUp, label: 'Funding levantado', value: formatUSD(DEMO_MINPRO_KPIS.fundingRaisedUSD), color: '#8B5CF6' },
+          { icon: Award, label: 'Startups graduadas', value: DEMO_MINPRO_KPIS.graduatedStartups, color: '#EC4899' },
           { icon: MapPin, label: 'Regiones cubiertas', value: DEMO_MINPRO_KPIS.regions, color: '#F59E0B' },
         ].map((k, i) => {
           const Icon = k.icon
@@ -193,7 +194,7 @@ export function SuperadminExecutiveSummary() {
               return (
                 <Link
                   key={a.id}
-                  href={`/admin/programas/${a.programId}`}
+                  href={`/superadmin/programas/${a.programId}`}
                   style={{
                     display: 'flex', alignItems: 'flex-start', gap: '0.6rem',
                     padding: '0.65rem 0.8rem', borderRadius: 'var(--radius-sm)',
@@ -245,7 +246,7 @@ export function SuperadminExecutiveSummary() {
               Top programas por readiness
             </h3>
           </div>
-          <Link href="/admin/programas" style={{
+          <Link href="/superadmin/programas" style={{
             fontFamily: 'var(--font-body)', fontSize: '0.75rem',
             color: '#FF6B4A', textDecoration: 'none', fontWeight: 600,
           }}>
@@ -257,7 +258,7 @@ export function SuperadminExecutiveSummary() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
         }}>
           {topPerformers.map((p) => (
-            <Link key={p.id} href={`/admin/programas/${p.id}`} style={{
+            <Link key={p.id} href={`/superadmin/programas/${p.id}`} style={{
               padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--color-border)',
               background: 'var(--color-bg-card)',

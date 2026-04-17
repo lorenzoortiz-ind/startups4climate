@@ -43,13 +43,49 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
   const demoRole = request.cookies.get('s4c_demo')?.value as 'founder' | 'admin_org' | 'superadmin' | undefined
-  const isDemoAdminLike = demoRole === 'admin_org' || demoRole === 'superadmin'
+  const isDemoAdminOrg = demoRole === 'admin_org'
+  const isDemoSuperadmin = demoRole === 'superadmin'
+  const isDemoAdminLike = isDemoAdminOrg || isDemoSuperadmin
 
-  // Admin routes: require authentication + admin role (or demo admin/superadmin cookie)
+  // /superadmin routes: require authenticated superadmin (or demo superadmin cookie)
+  if (pathname.startsWith('/superadmin')) {
+    if (!user && !isDemoSuperadmin) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/'
+      redirectUrl.searchParams.set('auth', 'login')
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    if (user && !isDemoSuperadmin) {
+      const { data: profile } = await Promise.race([
+        supabase.from('profiles').select('role').eq('id', user.id).single(),
+        new Promise<{ data: null; error: { message: string } }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+        ),
+      ])
+
+      if (!profile || profile.role !== 'superadmin') {
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = profile?.role === 'admin_org' ? '/admin' : '/tools'
+        return NextResponse.redirect(redirectUrl)
+      }
+    }
+
+    return supabaseResponse
+  }
+
+  // /admin routes: require authentication + admin_org role (or demo admin cookie).
+  // Superadmins are redirected into /superadmin instead.
   if (pathname.startsWith('/admin') && !user && !isDemoAdminLike) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/'
     redirectUrl.searchParams.set('auth', 'login')
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  if (pathname.startsWith('/admin') && isDemoSuperadmin) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/superadmin'
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -61,7 +97,19 @@ export async function middleware(request: NextRequest) {
       ),
     ])
 
-    if (!profile || (profile.role !== 'admin_org' && profile.role !== 'superadmin')) {
+    if (!profile) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/tools'
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    if (profile.role === 'superadmin') {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/superadmin'
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    if (profile.role !== 'admin_org') {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/tools'
       return NextResponse.redirect(redirectUrl)
@@ -73,5 +121,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/tools/:path*', '/admin/:path*'],
+  matcher: ['/tools/:path*', '/admin/:path*', '/superadmin/:path*'],
 }

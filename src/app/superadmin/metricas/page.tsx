@@ -12,7 +12,7 @@ import { supabase } from '@/lib/supabase'
 import {
   DEMO_PROGRAMS, DEMO_MINPRO_KPIS, DEMO_REGION_DISTRIBUTION,
   DEMO_VERTICAL_DISTRIBUTION_NATIONAL, DEMO_STAGE_DISTRIBUTION_NATIONAL,
-  DEMO_GENDER_DISTRIBUTION, programRoi, formatPEN,
+  DEMO_GENDER_DISTRIBUTION, programLeverage, formatUSD,
 } from '@/lib/demo/superadmin-fixtures'
 
 const cardStyle: React.CSSProperties = {
@@ -735,7 +735,7 @@ export default function MetricasPage() {
             </motion.div>
           </div>
 
-          {/* ROI por programa */}
+          {/* Apalancamiento por programa */}
           <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.15 }} style={cardStyle}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -745,13 +745,13 @@ export default function MetricasPage() {
                 fontFamily: 'var(--font-heading)', fontWeight: 600,
                 fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
               }}>
-                ROI estimado por programa
+                Apalancamiento de capital por programa
               </h3>
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.7rem',
                 color: 'var(--color-text-muted)',
               }}>
-                Ratio MRR anualizado / Presupuesto ejecutado
+                Funding levantado por startup acompañada
               </span>
             </div>
             <div style={{ overflowX: 'auto' }}>
@@ -761,7 +761,7 @@ export default function MetricasPage() {
               }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    {['Programa', 'Región', 'Presupuesto ejec.', 'Startups', 'Empleos', 'tCO₂eq', 'ROI'].map((h) => (
+                    {['Programa', 'Región', 'Funding total', 'Startups', 'Empleos', 'tCO₂eq', 'USD/startup'].map((h) => (
                       <th key={h} style={{
                         padding: '0.55rem 0.5rem', textAlign: 'left',
                         fontWeight: 600, color: 'var(--color-text-muted)',
@@ -775,10 +775,10 @@ export default function MetricasPage() {
                 </thead>
                 <tbody>
                   {[...DEMO_PROGRAMS]
-                    .sort((a, b) => programRoi(b) - programRoi(a))
+                    .sort((a, b) => programLeverage(b) - programLeverage(a))
                     .map((p) => {
-                      const roi = programRoi(p)
-                      const roiColor = roi >= 0.5 ? '#0D9488' : roi >= 0.2 ? '#F59E0B' : '#DC2626'
+                      const lev = programLeverage(p)
+                      const levColor = lev >= 25_000 ? '#0D9488' : lev >= 12_000 ? '#F59E0B' : '#DC2626'
                       return (
                         <tr key={p.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                           <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-primary)', fontWeight: 500 }}>
@@ -788,7 +788,7 @@ export default function MetricasPage() {
                             {p.region}
                           </td>
                           <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
-                            {formatPEN(p.budgetExecuted)}
+                            {formatUSD(p.fundingRaisedUSD)}
                           </td>
                           <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
                             {p.startupsCount}
@@ -799,8 +799,8 @@ export default function MetricasPage() {
                           <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
                             {p.co2Avoided}
                           </td>
-                          <td style={{ padding: '0.55rem 0.5rem', fontVariantNumeric: 'tabular-nums', fontWeight: 700, color: roiColor }}>
-                            {roi.toFixed(2)}x
+                          <td style={{ padding: '0.55rem 0.5rem', fontVariantNumeric: 'tabular-nums', fontWeight: 700, color: levColor }}>
+                            {formatUSD(lev)}
                           </td>
                         </tr>
                       )

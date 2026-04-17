@@ -323,7 +323,7 @@ export default function OrganizacionDetailPage() {
     >
       {/* Back link */}
       <Link
-        href="/admin/organizaciones"
+        href="/superadmin/organizaciones"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',

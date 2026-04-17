@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft, MapPin, Calendar, Building2, CheckCircle2, Circle,
-  Users, Leaf, Heart, TrendingUp, Wallet, Briefcase,
+  Users, Leaf, Heart, TrendingUp, Briefcase, Rocket, Wrench,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import {
-  getProgramById, formatPEN, programRoi,
+  getProgramById, formatUSD, programLeverage,
 } from '@/lib/demo/superadmin-fixtures'
 
 const cardStyle: React.CSSProperties = {
@@ -47,7 +47,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
   if (!program) {
     return (
       <div style={{ padding: '3rem 1.5rem', maxWidth: 800, margin: '0 auto' }}>
-        <Link href="/admin/programas" style={{
+        <Link href="/superadmin/programas" style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
           fontFamily: 'var(--font-body)', fontSize: '0.85rem',
           color: '#FF6B4A', textDecoration: 'none', marginBottom: '1rem',
@@ -64,8 +64,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
     )
   }
 
-  const execPct = Math.round((program.budgetExecuted / program.budgetAssigned) * 100)
-  const roi = programRoi(program)
+  const leverage = programLeverage(program)
 
   return (
     <motion.div
@@ -74,7 +73,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
       transition={{ duration: 0.35 }}
       style={{ padding: '2rem 1.5rem', maxWidth: 1200, margin: '0 auto' }}
     >
-      <Link href="/admin/programas" style={{
+      <Link href="/superadmin/programas" style={{
         display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
         fontFamily: 'var(--font-body)', fontSize: '0.78rem',
         color: 'var(--color-text-secondary)', textDecoration: 'none', marginBottom: '1rem',
@@ -119,16 +118,16 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
         />
       </div>
 
-      {/* Budget exec */}
+      {/* Platform KPIs */}
       <motion.div {...fadeUp} style={{ ...cardStyle, marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <Wallet size={18} color="var(--color-text-muted)" />
+          <TrendingUp size={18} color="var(--color-text-muted)" />
           <h3 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 600,
             fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
             margin: 0,
           }}>
-            Presupuesto y ejecución
+            KPIs de plataforma
           </h3>
         </div>
 
@@ -136,25 +135,38 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
           gap: '0.75rem', marginBottom: '1rem',
         }}>
-          <Kpi label="Asignado" value={formatPEN(program.budgetAssigned)} color="#FF6B4A" />
-          <Kpi label="Ejecutado" value={formatPEN(program.budgetExecuted)} color="#0D9488" />
-          <Kpi label="% Ejecución" value={`${execPct}%`} color="#3B82F6" />
-          <Kpi label="ROI estimado" value={`${roi}x`} color="#8B5CF6" />
+          <Kpi label="Startups activas" value={program.startupsCount.toString()} color="#FF6B4A" />
+          <Kpi label="Tools completion" value={`${program.toolsCompletionPct}%`} color="#0D9488" />
+          <Kpi label="Retención founders" value={`${program.retentionRate}%`} color="#3B82F6" />
+          <Kpi label="Funding levantado" value={formatUSD(program.fundingRaisedUSD)} color="#8B5CF6" />
+          <Kpi label="MRR agregado" value={formatUSD(program.mrrAggregateUSD)} color="#16A34A" />
+          <Kpi label="Funding / startup" value={formatUSD(leverage)} color="#EC4899" />
         </div>
 
-        <div style={{
-          height: 14, borderRadius: 7, background: 'var(--color-bg-muted)',
-          overflow: 'hidden', position: 'relative',
-        }}>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${execPct}%` }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-            style={{
-              height: '100%', borderRadius: 7,
-              background: execPct >= 60 ? '#0D9488' : '#F59E0B',
-            }}
-          />
+        <div>
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
+            marginBottom: '0.35rem',
+            fontFamily: 'var(--font-body)', fontSize: '0.78rem',
+            color: 'var(--color-text-secondary)',
+          }}>
+            <span>Tools completion · founders del programa</span>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{program.toolsCompletionPct}%</span>
+          </div>
+          <div style={{
+            height: 14, borderRadius: 7, background: 'var(--color-bg-muted)',
+            overflow: 'hidden', position: 'relative',
+          }}>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${program.toolsCompletionPct}%` }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              style={{
+                height: '100%', borderRadius: 7,
+                background: program.toolsCompletionPct >= 60 ? '#0D9488' : '#F59E0B',
+              }}
+            />
+          </div>
         </div>
       </motion.div>
 
@@ -247,7 +259,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
         }}>
           <thead>
             <tr>
-              {['Startup', 'Vertical', 'Readiness', 'MRR (S/)'].map((h) => (
+              {['Startup', 'Vertical', 'Readiness', 'MRR (USD)'].map((h) => (
                 <th key={h} style={{
                   textAlign: 'left', padding: '0.65rem 1.5rem',
                   borderTop: '1px solid var(--color-border)',
@@ -278,7 +290,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
                   {b.readiness}
                 </td>
                 <td style={{ padding: '0.7rem 1.5rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                  {b.mrrPEN > 0 ? formatPEN(b.mrrPEN) : '—'}
+                  {b.mrrUSD > 0 ? formatUSD(b.mrrUSD) : '—'}
                 </td>
               </tr>
             ))}

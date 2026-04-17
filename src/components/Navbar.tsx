@@ -299,7 +299,7 @@ export default function Navbar() {
                         </button>
 
                         <button
-                          onClick={() => handleDemoEnter('superadmin', '/admin/programas', 'minpro')}
+                          onClick={() => handleDemoEnter('superadmin', '/superadmin', 'minpro')}
                           role="menuitem"
                           className="demo-menu-item"
                           style={{
@@ -333,7 +333,7 @@ export default function Navbar() {
                               Demo Superadmin
                             </div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                              Vista MINPRO (programas)
+                              Vista MINPRO (dashboard)
                             </div>
                           </div>
                         </button>

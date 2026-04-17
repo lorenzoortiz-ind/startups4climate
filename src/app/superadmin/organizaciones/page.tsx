@@ -67,7 +67,7 @@ export default function OrganizacionesPage() {
           name: o.name,
           type: o.type,
           country: 'Perú',
-          plan: o.budgetExecutedPEN > 3_000_000 ? 'enterprise' : o.budgetExecutedPEN > 1_500_000 ? 'professional' : 'starter',
+          plan: o.startupsCount >= 35 ? 'enterprise' : o.startupsCount >= 22 ? 'professional' : 'starter',
           is_active: true,
           created_at: new Date(2025, i, 15).toISOString(),
           startups_count: o.startupsCount,
@@ -167,7 +167,7 @@ export default function OrganizacionesPage() {
           </p>
         </div>
         <Link
-          href="/admin/organizaciones/nueva"
+          href="/superadmin/organizaciones/nueva"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             padding: '0.5rem 1rem', borderRadius: 8,
@@ -276,7 +276,7 @@ export default function OrganizacionesPage() {
                         borderBottom: '1px solid var(--color-border)',
                         cursor: 'pointer', transition: 'background 0.12s',
                       }}
-                      onClick={() => router.push(`/admin/organizaciones/${org.id}`)}
+                      onClick={() => router.push(`/superadmin/organizaciones/${org.id}`)}
                       onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-bg-muted)')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                     >

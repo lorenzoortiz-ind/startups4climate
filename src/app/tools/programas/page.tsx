@@ -477,9 +477,9 @@ export default function ProgramasPage() {
                           gap: '0.375rem',
                           padding: '0.5rem 1.125rem',
                           borderRadius: 8,
-                          background: 'var(--color-ink)',
+                          background: 'var(--color-accent-primary)',
                           border: 'none',
-                          color: 'white',
+                          color: '#fff',
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
                           fontWeight: 600,
@@ -489,10 +489,10 @@ export default function ProgramasPage() {
                           letterSpacing: '-0.01em',
                         }}
                         onMouseEnter={(e) => {
-                          if (!isSubmitting) e.currentTarget.style.background = '#FF6B4A'
+                          if (!isSubmitting) e.currentTarget.style.background = 'var(--color-accent-hover)'
                         }}
                         onMouseLeave={(e) => {
-                          if (!isSubmitting) e.currentTarget.style.background = 'var(--color-ink)'
+                          if (!isSubmitting) e.currentTarget.style.background = 'var(--color-accent-primary)'
                         }}
                       >
                         {isSubmitting ? (

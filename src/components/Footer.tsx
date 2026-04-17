@@ -166,7 +166,7 @@ export default function Footer() {
               onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
               onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
             >
-              Creado por Re<span style={{ color: '#E63946' }}>.</span>design <span style={{ color: '#E63946' }}>Lab</span>
+              Creado por Redesign <span style={{ color: '#E63946' }}>Lab.</span>
             </a>
           </div>
           

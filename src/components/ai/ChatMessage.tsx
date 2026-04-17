@@ -37,6 +37,27 @@ function renderMarkdown(text: string): React.ReactNode[] {
   while (i < lines.length) {
     const line = lines[i]
 
+    // ### / ## / # Headers → render as bold paragraph (no jumbo text)
+    if (/^#{1,3}\s/.test(line)) {
+      const text = line.replace(/^#{1,3}\s+/, '')
+      nodes.push(
+        <p key={key++} style={{ margin: '0.25rem 0 0.125rem', lineHeight: 1.5 }}>
+          <strong>{inlineStyle(text)}</strong>
+        </p>
+      )
+      i++
+      continue
+    }
+
+    // --- / === horizontal rules → small visual divider
+    if (/^[-=]{3,}$/.test(line.trim())) {
+      nodes.push(
+        <hr key={key++} style={{ border: 'none', borderTop: '1px solid var(--color-border)', margin: '0.5rem 0' }} />
+      )
+      i++
+      continue
+    }
+
     // Bullet list item (- or * at start, but not **)
     if (/^[\-\*]\s/.test(line) && !line.startsWith('**')) {
       const items: React.ReactNode[] = []
@@ -77,7 +98,7 @@ function renderMarkdown(text: string): React.ReactNode[] {
 
     // Empty line → small gap
     if (line.trim() === '') {
-      nodes.push(<div key={key++} style={{ height: '0.5rem' }} />)
+      nodes.push(<div key={key++} style={{ height: '0.4rem' }} />)
       i++
       continue
     }

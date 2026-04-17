@@ -28,6 +28,7 @@ import { TOOLS_BY_STAGE, TRANSVERSAL_TOOLS, type ToolDef } from '@/lib/tools-dat
 import { getProgress, hydrateProgressFromSupabase } from '@/lib/progress'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { supabase } from '@/lib/supabase'
+import DemoLinkRewriter from '@/components/DemoLinkRewriter'
 
 const STAGE_CONFIG = {
   1: { label: 'Pre-incubación', color: '#FF6B4A' },
@@ -979,6 +980,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Floating Mentor AI Widget */}
       <MentorWidget />
+
+      {/* Keep browser URL within /demo-tools/* during demo sessions */}
+      <DemoLinkRewriter />
     </div>
   )
 }

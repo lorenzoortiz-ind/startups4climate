@@ -24,6 +24,7 @@ import S4CLogo from '@/components/S4CLogo'
 import { useAuth } from '@/context/AuthContext'
 import { SuperadminProvider } from '@/context/SuperadminContext'
 import { supabase } from '@/lib/supabase'
+import DemoLinkRewriter from '@/components/DemoLinkRewriter'
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -395,6 +396,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
+
+      {/* Keep browser URL within /demo-admin/* during demo sessions */}
+      <DemoLinkRewriter />
     </div>
     </SuperadminProvider>
   )

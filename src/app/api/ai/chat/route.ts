@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { cookies } from 'next/headers'
 import { createSupabaseServer } from '@/lib/supabase-server'
 import { chatCompletion } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
@@ -11,18 +12,9 @@ const AGENT_PROMPTS: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-      return Response.json(
-        { error: 'No autenticado. Inicia sesión para usar el chat.' },
-        { status: 401 }
-      )
-    }
+    // ── Demo bypass: if s4c_demo cookie is set, skip Supabase auth ──
+    const cookieStore = await cookies()
+    const demoCookie = cookieStore.get('s4c_demo')?.value
 
     const body = await request.json()
     const { message, agentType, conversationId, userContext } = body as {
@@ -43,6 +35,53 @@ export async function POST(request: NextRequest) {
       return Response.json(
         { error: 'El mensaje es demasiado largo. Máximo 4000 caracteres.' },
         { status: 400 }
+      )
+    }
+
+    // ── Demo path: build context entirely from client-sent userContext ──
+    if (demoCookie) {
+      const demoProfile =
+        demoCookie === 'founder'
+          ? { id: 'demo', email: 'demo.founder@s4c.demo', full_name: 'Ana Quispe', role: 'founder', org_id: null, startup_name: 'EcoBio Perú', stage: '3', diagnostic_score: 84 }
+          : null
+
+      const startupContext = buildStartupContext(null, null, demoProfile, userContext)
+      const systemPrompt = AGENT_PROMPTS[agentType] || AGENT_PROMPTS.mentor
+
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'system', content: `CONTEXTO DE LA STARTUP DEL FOUNDER:\n${startupContext}` },
+        { role: 'user', content: message },
+      ]
+
+      let aiResponse: string
+      try {
+        const completion = await chatCompletion(messages, { stream: false, max_tokens: 1000 })
+        aiResponse = 'choices' in completion
+          ? completion.choices[0]?.message?.content || 'No pude generar una respuesta. Intenta de nuevo.'
+          : 'No pude generar una respuesta. Intenta de nuevo.'
+      } catch (apiError) {
+        console.error('[S4C AI] Gemini API error (demo):', apiError)
+        aiResponse = 'El servicio de AI no está disponible en este momento. Por favor intenta de nuevo en unos minutos.'
+      }
+
+      return Response.json({
+        response: aiResponse,
+        conversationId: conversationId || crypto.randomUUID(),
+      })
+    }
+
+    // ── Authenticated path ──
+    const supabase = await createSupabaseServer()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return Response.json(
+        { error: 'No autenticado. Inicia sesión para usar el chat.' },
+        { status: 401 }
       )
     }
 

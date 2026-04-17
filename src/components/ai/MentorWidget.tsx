@@ -14,7 +14,7 @@ export default function MentorWidget() {
   // Determine agent type based on user's startup vertical/stage
   const agentType = user?.stage ? `mentor-${user.stage}` : 'mentor'
 
-  // Build user context from auth + localStorage profile data
+  // Build user context from auth + localStorage profile data + completed tool data
   const userContext = useMemo(() => {
     const ctx: Record<string, unknown> = {}
     if (user) {
@@ -22,17 +22,65 @@ export default function MentorWidget() {
       ctx.email = user.email
       ctx.startup = user.startup
       ctx.stage = user.stage
+      ctx.diagnosticScore = user.diagnosticScore
     }
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && user) {
+      // Profile extras (vertical, region, MRR, certifications, etc.)
       try {
-        const extra = localStorage.getItem(user ? `s4c_${user.id}_profile_extra` : 's4c_profile_extra')
+        const extra = localStorage.getItem(`s4c_${user.id}_profile_extra`)
         if (extra) {
           const parsed = JSON.parse(extra)
           Object.assign(ctx, parsed)
         }
-      } catch {
-        // ignore parse errors
-      }
+      } catch { /* ignore */ }
+
+      // Completed tool data — build rich summaries for each completed tool
+      try {
+        const progressRaw = localStorage.getItem(`s4c_${user.id}_tool_progress`)
+        if (progressRaw) {
+          const progress = JSON.parse(progressRaw) as Record<string, {
+            completed?: boolean
+            data?: Record<string, unknown>
+          }>
+          const completedTools: string[] = []
+          const toolSummaries: Record<string, unknown> = {}
+
+          for (const [toolId, entry] of Object.entries(progress)) {
+            if (!entry.completed) continue
+            completedTools.push(toolId)
+            if (entry.data && Object.keys(entry.data).length > 0) {
+              // Extract the most relevant keys — keep to ~400 chars per tool
+              const summary: Record<string, unknown> = {}
+              const data = entry.data
+              // Universal high-signal keys
+              const KEY_PICK = [
+                'pasion', 'proposito', 'problemaReal',
+                'segmentoPrioritario', 'mercado', 'tamanoMercado',
+                'hipotesis', 'descripcionMVP', 'mrr', 'mrrActual', 'clientes',
+                'clientesPagando', 'npsScore', 'churnRate',
+                'vision', 'roadmap', 'riesgos',
+                'slides', 'elevatorPitch', 'fondosEnDD',
+                'capTable', 'useOfFunds', 'fondosDD',
+                'secciones', 'completeness',
+                'proyeccion', 'unitEconomics', 'breakeven',
+                'tam', 'sam', 'som',
+                'canales', 'embudo',
+              ]
+              for (const k of KEY_PICK) {
+                if (k in data) summary[k] = data[k]
+              }
+              if (Object.keys(summary).length > 0) {
+                toolSummaries[toolId] = summary
+              }
+            }
+          }
+
+          if (completedTools.length > 0) {
+            ctx.completedTools = completedTools
+            ctx.toolData = toolSummaries
+          }
+        }
+      } catch { /* ignore */ }
     }
     return ctx
   }, [user])

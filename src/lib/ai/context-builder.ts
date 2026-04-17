@@ -72,27 +72,98 @@ export function buildStartupContext(
     parts.push('No hay datos de la startup ni del founder registrados aún.')
   }
 
+  // Completed tools from Supabase (real users)
   const completedTools = progress?.filter((p) => p.completed) || []
-  parts.push(`HERRAMIENTAS COMPLETADAS: ${completedTools.length}/30`)
-
-  if (completedTools.length > 0) {
-    const toolNames = completedTools.map((t) => t.tool_id).join(', ')
-    parts.push(`HERRAMIENTAS COMPLETADAS (detalle): ${toolNames}`)
-  }
 
   // Merge client-side profile context (from localStorage / auth)
-  // This ensures the AI has profile data even if Supabase tables are empty
+  // For demo users this is the primary source of truth
   if (userContext && Object.keys(userContext).length > 0) {
-    if (userContext.vertical) parts.push(`VERTICAL (perfil): ${userContext.vertical}`)
-    if (userContext.country) parts.push(`PAIS (perfil): ${userContext.country}`)
-    if (userContext.role) parts.push(`ROL: ${userContext.role}`)
-    if (userContext.experience) parts.push(`EXPERIENCIA: ${userContext.experience}`)
-    if (userContext.descripcion || userContext.description) parts.push(`DESCRIPCION (perfil): ${userContext.descripcion || userContext.description}`)
-    if (userContext.teamSize) parts.push(`EQUIPO (perfil): ${userContext.teamSize} personas`)
-    if (userContext.website) parts.push(`WEBSITE (perfil): ${userContext.website}`)
-    if (userContext.linkedin) parts.push(`LINKEDIN: ${userContext.linkedin}`)
-    if (userContext.startup) parts.push(`STARTUP (nombre): ${userContext.startup}`)
     if (userContext.name) parts.push(`FOUNDER (nombre): ${userContext.name}`)
+    if (userContext.startup) parts.push(`STARTUP (nombre): ${userContext.startup}`)
+    if (userContext.stage) parts.push(`ETAPA (perfil): ${userContext.stage}`)
+    if (userContext.diagnosticScore) parts.push(`SCORE DIAGNOSTICO (perfil): ${userContext.diagnosticScore}/100`)
+    if (userContext.vertical) parts.push(`VERTICAL (perfil): ${userContext.vertical}`)
+    if (userContext.country) parts.push(`PAÍS (perfil): ${userContext.country}`)
+    if (userContext.region) parts.push(`REGIÓN: ${userContext.region}`)
+    if (userContext.role) parts.push(`ROL DEL FOUNDER: ${userContext.role}`)
+    if (userContext.experience) parts.push(`EXPERIENCIA: ${userContext.experience}`)
+    if (userContext.description || userContext.descripcion) parts.push(`DESCRIPCIÓN: ${userContext.description || userContext.descripcion}`)
+    if (userContext.teamSize) parts.push(`EQUIPO: ${userContext.teamSize} personas`)
+    if (userContext.foundedYear) parts.push(`AÑO FUNDACIÓN: ${userContext.foundedYear}`)
+    if (userContext.businessModel) parts.push(`MODELO DE NEGOCIO: ${userContext.businessModel}`)
+    if (userContext.currentMRR) parts.push(`MRR ACTUAL: $${userContext.currentMRR} USD`)
+    if (userContext.totalFunding) parts.push(`FUNDING TOTAL: $${userContext.totalFunding} USD`)
+    if (userContext.pricingModel) parts.push(`PRICING: ${userContext.pricingModel}`)
+    if (userContext.mainCustomers) parts.push(`CLIENTES PRINCIPALES: ${userContext.mainCustomers}`)
+    if (Array.isArray(userContext.certifications) && userContext.certifications.length > 0)
+      parts.push(`CERTIFICACIONES: ${(userContext.certifications as string[]).join(', ')}`)
+    if (Array.isArray(userContext.sdgImpact) && userContext.sdgImpact.length > 0)
+      parts.push(`ODS DE IMPACTO: ${(userContext.sdgImpact as string[]).join(', ')}`)
+    if (userContext.mainChallenges) parts.push(`PRINCIPALES RETOS: ${userContext.mainChallenges}`)
+    if (userContext.website) parts.push(`WEBSITE: ${userContext.website}`)
+    if (userContext.linkedin) parts.push(`LINKEDIN: ${userContext.linkedin}`)
+  }
+
+  // Completed tool count — merge from both sources
+  const clientCompletedTools = Array.isArray(userContext?.completedTools)
+    ? (userContext!.completedTools as string[])
+    : []
+  const totalCompleted = completedTools.length > 0
+    ? completedTools.length
+    : clientCompletedTools.length
+
+  parts.push(`\nHERRAMIENTAS COMPLETADAS: ${totalCompleted}/30`)
+
+  if (completedTools.length > 0) {
+    parts.push(`HERRAMIENTAS (Supabase): ${completedTools.map((t) => t.tool_id).join(', ')}`)
+  }
+  if (clientCompletedTools.length > 0 && completedTools.length === 0) {
+    parts.push(`HERRAMIENTAS COMPLETADAS (lista): ${clientCompletedTools.join(', ')}`)
+  }
+
+  // Rich tool data summaries from localStorage (available for demo + real users)
+  if (userContext?.toolData && typeof userContext.toolData === 'object') {
+    const toolData = userContext.toolData as Record<string, Record<string, unknown>>
+    const toolSections: string[] = []
+
+    const TOOL_LABELS: Record<string, string> = {
+      'passion-purpose': 'Pasión y propósito',
+      'market-segmentation': 'Segmentación de mercado',
+      'beachhead-market': 'Mercado de entrada',
+      'end-user-profile': 'Perfil del usuario',
+      'lean-canvas': 'Lean Canvas',
+      'tam-calculator': 'TAM/SAM/SOM',
+      'mvbp-definition': 'MVBP Definition',
+      'traction-validation': 'Tracción y validación',
+      'unit-economics': 'Unit Economics',
+      'product-plan-scaling': 'Plan de producto y escalado',
+      'pitch-deck-builder': 'Pitch Deck',
+      'cap-table-fundraising': 'Cap Table y fundraising',
+      'data-room-builder': 'Data Room',
+      'financial-model-builder': 'Modelo financiero',
+    }
+
+    for (const [toolId, data] of Object.entries(toolData)) {
+      if (!data || Object.keys(data).length === 0) continue
+      const label = TOOL_LABELS[toolId] || toolId
+      const lines: string[] = [`[${label}]`]
+
+      // Extract meaningful values concisely
+      for (const [k, v] of Object.entries(data)) {
+        if (v === null || v === undefined || v === '') continue
+        const strVal = Array.isArray(v)
+          ? (v as unknown[]).map((x) => (typeof x === 'object' ? JSON.stringify(x).slice(0, 80) : String(x))).slice(0, 3).join(' | ')
+          : typeof v === 'object'
+            ? JSON.stringify(v).slice(0, 150)
+            : String(v).slice(0, 200)
+        lines.push(`  ${k}: ${strVal}`)
+      }
+      toolSections.push(lines.join('\n'))
+    }
+
+    if (toolSections.length > 0) {
+      parts.push(`\nDATOS DETALLADOS DE HERRAMIENTAS COMPLETADAS:\n${toolSections.join('\n\n')}`)
+    }
   }
 
   return parts.join('\n')

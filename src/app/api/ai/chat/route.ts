@@ -86,16 +86,14 @@ export async function POST(request: NextRequest) {
           ? { id: 'demo', email: 'demo.founder@s4c.demo', full_name: 'Ana Quispe', role: 'founder', org_id: null, startup_name: 'EcoBio Perú', stage: '3', diagnostic_score: 84 }
           : null
 
-      // Limit context size to avoid Gemini token overflows (cap userContext toolData)
+      // Clamp tool data values to keep context manageable
       const safeUserContext = userContext ? clampUserContext(userContext) : undefined
       const startupContext = buildStartupContext(null, null, demoProfile, safeUserContext)
       const systemPrompt = AGENT_PROMPTS[agentType] || AGENT_PROMPTS.mentor
 
-      // Merge into a single system message to maximise compatibility
-      const combinedSystem = `${systemPrompt}\n\n---\nCONTEXTO DE LA STARTUP DEL FOUNDER:\n${startupContext}`
-
       const messages = [
-        { role: 'system', content: combinedSystem },
+        { role: 'system', content: systemPrompt },
+        { role: 'system', content: `CONTEXTO DE LA STARTUP DEL FOUNDER:\n${startupContext}` },
         { role: 'user', content: message },
       ]
 

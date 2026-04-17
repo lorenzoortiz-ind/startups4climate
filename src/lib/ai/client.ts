@@ -5,7 +5,7 @@ const client = new OpenAI({
   baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
 })
 
-const GEMINI_MODEL = 'gemini-2.5-flash-preview-04-17'
+const GEMINI_MODEL = 'gemini-2.5-flash'
 
 /**
  * Calls the Gemini chat completion endpoint via OpenAI-compatible API.

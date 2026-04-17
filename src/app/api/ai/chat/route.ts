@@ -5,6 +5,38 @@ import { chatCompletion } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
+/**
+ * Strip or truncate heavy fields from the client-sent userContext so the
+ * combined system prompt stays under ~6 000 tokens (≈24 KB of UTF-8 text).
+ * Tool data summaries are kept but each value is capped at 300 chars.
+ */
+function clampUserContext(ctx: Record<string, unknown>): Record<string, unknown> {
+  const MAX_VALUE_LEN = 300
+  const result: Record<string, unknown> = {}
+
+  for (const [k, v] of Object.entries(ctx)) {
+    if (k === 'toolData' && typeof v === 'object' && v !== null) {
+      const clamped: Record<string, unknown> = {}
+      for (const [toolId, toolVal] of Object.entries(v as Record<string, unknown>)) {
+        if (typeof toolVal === 'object' && toolVal !== null) {
+          const trimmed: Record<string, unknown> = {}
+          for (const [field, fv] of Object.entries(toolVal as Record<string, unknown>)) {
+            const str = typeof fv === 'string' ? fv : JSON.stringify(fv)
+            trimmed[field] = str.length > MAX_VALUE_LEN ? str.slice(0, MAX_VALUE_LEN) + '…' : fv
+          }
+          clamped[toolId] = trimmed
+        }
+      }
+      result[k] = clamped
+    } else if (typeof v === 'string' && v.length > MAX_VALUE_LEN) {
+      result[k] = v.slice(0, MAX_VALUE_LEN) + '…'
+    } else {
+      result[k] = v
+    }
+  }
+  return result
+}
+
 const AGENT_PROMPTS: Record<string, string> = {
   mentor: MENTOR_GENERAL_PROMPT,
   radar: `Eres un analista experto del ecosistema de innovación en Latinoamérica. Respondes en español. Das información sobre tendencias, noticias, fondos de inversión, programas de aceleración y eventos relevantes para startups de impacto en la región. Tus respuestas son concisas y accionables. No uses emojis ni markdown con # headers.`,
@@ -12,6 +44,15 @@ const AGENT_PROMPTS: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   try {
+    // Early check: ensure AI API key is configured
+    if (!process.env.GEMINI_API_KEY) {
+      console.error('[S4C AI] GEMINI_API_KEY is not set')
+      return Response.json(
+        { error: 'El servicio AI no está configurado. Contacta al administrador.' },
+        { status: 503 }
+      )
+    }
+
     // ── Demo bypass: if s4c_demo cookie is set, skip Supabase auth ──
     const cookieStore = await cookies()
     const demoCookie = cookieStore.get('s4c_demo')?.value
@@ -45,12 +86,16 @@ export async function POST(request: NextRequest) {
           ? { id: 'demo', email: 'demo.founder@s4c.demo', full_name: 'Ana Quispe', role: 'founder', org_id: null, startup_name: 'EcoBio Perú', stage: '3', diagnostic_score: 84 }
           : null
 
-      const startupContext = buildStartupContext(null, null, demoProfile, userContext)
+      // Limit context size to avoid Gemini token overflows (cap userContext toolData)
+      const safeUserContext = userContext ? clampUserContext(userContext) : undefined
+      const startupContext = buildStartupContext(null, null, demoProfile, safeUserContext)
       const systemPrompt = AGENT_PROMPTS[agentType] || AGENT_PROMPTS.mentor
 
+      // Merge into a single system message to maximise compatibility
+      const combinedSystem = `${systemPrompt}\n\n---\nCONTEXTO DE LA STARTUP DEL FOUNDER:\n${startupContext}`
+
       const messages = [
-        { role: 'system', content: systemPrompt },
-        { role: 'system', content: `CONTEXTO DE LA STARTUP DEL FOUNDER:\n${startupContext}` },
+        { role: 'system', content: combinedSystem },
         { role: 'user', content: message },
       ]
 
@@ -61,8 +106,10 @@ export async function POST(request: NextRequest) {
           ? completion.choices[0]?.message?.content || 'No pude generar una respuesta. Intenta de nuevo.'
           : 'No pude generar una respuesta. Intenta de nuevo.'
       } catch (apiError) {
-        console.error('[S4C AI] Gemini API error (demo):', apiError)
-        aiResponse = 'El servicio de AI no está disponible en este momento. Por favor intenta de nuevo en unos minutos.'
+        const errMsg = apiError instanceof Error ? apiError.message : String(apiError)
+        console.error('[S4C AI] Gemini API error (demo):', errMsg)
+        // Surface a cleaner error in demo so we can diagnose during presentations
+        aiResponse = `Lo siento, el servicio AI tuvo un problema técnico. (${errMsg.slice(0, 120)})`
       }
 
       return Response.json({

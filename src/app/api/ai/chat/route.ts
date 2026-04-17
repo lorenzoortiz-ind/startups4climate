@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
 
       let aiResponse: string
       try {
-        const completion = await chatCompletion(messages, { stream: false, max_tokens: 1000 })
+        const completion = await chatCompletion(messages, { stream: false, max_tokens: 1500 })
         aiResponse = 'choices' in completion
           ? completion.choices[0]?.message?.content || 'No pude generar una respuesta. Intenta de nuevo.'
           : 'No pude generar una respuesta. Intenta de nuevo.'

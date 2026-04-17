@@ -9,6 +9,91 @@ interface ChatMessageProps {
   timestamp?: string
 }
 
+/**
+ * Lightweight markdown renderer for assistant messages.
+ * Handles: **bold**, *italic*, bullet lists (- / *), numbered lists,
+ * and blank-line paragraph breaks. No external deps needed.
+ */
+function renderMarkdown(text: string): React.ReactNode[] {
+  const lines = text.split('\n')
+  const nodes: React.ReactNode[] = []
+  let key = 0
+
+  const inlineStyle = (line: string): React.ReactNode => {
+    // **bold** and *italic* inline
+    const parts = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g)
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} style={{ fontWeight: 700 }}>{part.slice(2, -2)}</strong>
+      }
+      if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+        return <em key={i}>{part.slice(1, -1)}</em>
+      }
+      return part
+    })
+  }
+
+  let i = 0
+  while (i < lines.length) {
+    const line = lines[i]
+
+    // Bullet list item (- or * at start, but not **)
+    if (/^[\-\*]\s/.test(line) && !line.startsWith('**')) {
+      const items: React.ReactNode[] = []
+      while (i < lines.length && /^[\-\*]\s/.test(lines[i]) && !lines[i].startsWith('**')) {
+        items.push(
+          <li key={i} style={{ marginBottom: '0.2rem' }}>
+            {inlineStyle(lines[i].replace(/^[\-\*]\s/, ''))}
+          </li>
+        )
+        i++
+      }
+      nodes.push(
+        <ul key={key++} style={{ paddingLeft: '1.25rem', margin: '0.25rem 0', listStyle: 'disc' }}>
+          {items}
+        </ul>
+      )
+      continue
+    }
+
+    // Numbered list item
+    if (/^\d+\.\s/.test(line)) {
+      const items: React.ReactNode[] = []
+      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
+        items.push(
+          <li key={i} style={{ marginBottom: '0.2rem' }}>
+            {inlineStyle(lines[i].replace(/^\d+\.\s/, ''))}
+          </li>
+        )
+        i++
+      }
+      nodes.push(
+        <ol key={key++} style={{ paddingLeft: '1.25rem', margin: '0.25rem 0' }}>
+          {items}
+        </ol>
+      )
+      continue
+    }
+
+    // Empty line → small gap
+    if (line.trim() === '') {
+      nodes.push(<div key={key++} style={{ height: '0.5rem' }} />)
+      i++
+      continue
+    }
+
+    // Normal paragraph line
+    nodes.push(
+      <p key={key++} style={{ margin: 0, lineHeight: 1.6 }}>
+        {inlineStyle(line)}
+      </p>
+    )
+    i++
+  }
+
+  return nodes
+}
+
 export default function ChatMessage({ role, content, timestamp }: ChatMessageProps) {
   const isUser = role === 'user'
 
@@ -41,17 +126,13 @@ export default function ChatMessage({ role, content, timestamp }: ChatMessagePro
           color: isUser ? '#FFFFFF' : 'var(--color-text-secondary)',
         }}
       >
-        {isUser ? (
-          <User size={16} />
-        ) : (
-          <Bot size={16} />
-        )}
+        {isUser ? <User size={16} /> : <Bot size={16} />}
       </div>
 
       {/* Bubble */}
       <div
         style={{
-          maxWidth: '75%',
+          maxWidth: '78%',
           padding: '0.75rem 1rem',
           borderRadius: 14,
           borderTopLeftRadius: isUser ? 14 : 4,
@@ -66,13 +147,11 @@ export default function ChatMessage({ role, content, timestamp }: ChatMessagePro
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.875rem',
-            lineHeight: 1.6,
             color: 'var(--color-text-primary)',
-            whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
           }}
         >
-          {content}
+          {isUser ? content : renderMarkdown(content)}
         </div>
         {timestamp && (
           <div

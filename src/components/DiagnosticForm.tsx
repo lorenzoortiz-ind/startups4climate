@@ -1340,19 +1340,19 @@ export default function DiagnosticForm() {
                   <div style={{
                     padding: '1.25rem',
                     borderRadius: 'var(--radius-lg)',
-                    background: 'var(--color-ink)',
+                    background: 'var(--color-paper)',
+                    border: '1px solid var(--color-border)',
                     marginBottom: '1.5rem',
-                    color: 'var(--color-paper)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '0.75rem' }}>
                       <Wrench size={14} color="#FF6B4A" />
-                      <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>
+                      <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
                         Tu roadmap para los próximos 30 días
                       </h4>
                     </div>
                     <ol style={{ paddingLeft: '1.25rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       {roadmap.bullets.map((b, i) => (
-                        <li key={i} style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.88)' }}>{b}</li>
+                        <li key={i} style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', lineHeight: 1.6, color: 'var(--color-ink)' }}>{b}</li>
                       ))}
                     </ol>
                   </div>

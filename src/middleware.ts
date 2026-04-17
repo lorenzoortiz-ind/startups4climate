@@ -23,16 +23,17 @@ export async function middleware(request: NextRequest) {
       rewriteUrl.pathname = realBase + subPath
 
       const response = NextResponse.rewrite(rewriteUrl)
-      // Only set the cookie if not already set to avoid overwriting on every
-      // sub-page navigation within the demo session.
-      if (request.cookies.get('s4c_demo')?.value !== role) {
-        response.cookies.set('s4c_demo', role, {
-          path: '/',
-          maxAge: 60 * 60 * 2, // 2 hours
-          httpOnly: false,
-          sameSite: 'lax',
-        })
-      }
+      // Always refresh the cookie so stale/expired values don't break the demo.
+      // httpOnly: false so the client JS (AuthContext) can read it.
+      response.cookies.set('s4c_demo', role, {
+        path: '/',
+        maxAge: 60 * 60 * 24, // 24 hours (matches /api/demo/[role] behavior)
+        httpOnly: false,
+        sameSite: 'lax',
+      })
+      // Prevent any CDN/browser caching of demo entry HTML so the cookie
+      // is always sent on the first load.
+      response.headers.set('cache-control', 'private, no-store, must-revalidate')
       return response
     }
   }

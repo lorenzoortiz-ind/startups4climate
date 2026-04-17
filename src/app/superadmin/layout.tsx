@@ -20,6 +20,7 @@ import {
   Briefcase,
 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import S4CLogo from '@/components/S4CLogo'
 import { useAuth } from '@/context/AuthContext'
 import { SuperadminProvider } from '@/context/SuperadminContext'
 import { supabase } from '@/lib/supabase'
@@ -136,13 +137,8 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
             }}
           />
         ) : (
-          <div style={{
-            width: 32, height: 32, borderRadius: 8,
-            background: 'var(--color-admin-sidebar-active)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <Shield size={16} color="#fff" />
+          <div style={{ flexShrink: 0, display: 'flex' }}>
+            <S4CLogo size={36} />
           </div>
         )}
         <div style={{ minWidth: 0 }}>
@@ -312,13 +308,7 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
         }}>
-          <div style={{
-            width: 28, height: 28, borderRadius: 6,
-            background: 'var(--color-admin-sidebar-active)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <Shield size={14} color="#fff" />
-          </div>
+          <S4CLogo size={28} />
           <span style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: '0.75rem', color: '#F1F5F9',

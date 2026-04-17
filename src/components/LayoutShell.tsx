@@ -7,7 +7,10 @@ import AuthModal from '@/components/AuthModal'
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const hideChrome = pathname.startsWith('/tools') || pathname.startsWith('/admin')
+  const hideChrome =
+    pathname.startsWith('/tools') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/superadmin')
 
   return (
     <>

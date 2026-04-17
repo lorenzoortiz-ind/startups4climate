@@ -11,7 +11,6 @@ import S4CLogo from '@/components/S4CLogo'
 const navLinks: { label: string; href: string; isPage?: boolean }[] = [
   { label: 'Plataforma', href: '/#plataforma' },
   { label: 'Diagnóstico', href: '/#diagnostico' },
-  { label: 'Quiénes somos', href: '/#about' },
   { label: 'Workbook', href: '/workbook', isPage: true },
   { label: 'Organizaciones', href: '/organizaciones', isPage: true },
 ]

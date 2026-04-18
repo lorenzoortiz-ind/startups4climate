@@ -59,6 +59,25 @@ export default function Footer() {
             }}>
               Democratizando el desarrollo de startups de impacto en Latinoamérica.
             </p>
+            <a
+              href="https://redesignlab.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                marginTop: '1rem',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                color: 'rgba(255, 255, 255, 0.45)',
+                textDecoration: 'none',
+                letterSpacing: '-0.005em',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.85)'}
+              onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+            >
+              powered by Redesign <span style={{ color: '#E63946' }}>Lab.</span>
+            </a>
           </div>
 
           {/* Links Grid */}

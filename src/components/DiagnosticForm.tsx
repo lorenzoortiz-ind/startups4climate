@@ -232,7 +232,7 @@ const profiles: Profile[] = [
     name: 'ETAPA 1: Pre-incubación',
     tag: 'Ideación',
     emoji: '🌱',
-    color: '#FF6B4A',
+    color: '#DA4E24',
     description: 'Las startups en esta etapa están explorando un problema real y construyendo las bases de su solución. El foco debe estar en validar supuestos con usuarios reales antes de invertir recursos en desarrollo. Es normal no tener ingresos ni equipo completo aún — lo más valioso es la claridad del problema que resuelven.',
   },
   {
@@ -241,7 +241,7 @@ const profiles: Profile[] = [
     name: 'ETAPA 2: Incubación',
     tag: 'Validación',
     emoji: '🔬',
-    color: '#0D9488',
+    color: '#1F77F6',
     description: 'Las startups en Etapa 2 ya tienen una hipótesis validada y están construyendo sus primeros flujos de clientes. El principal desafío es encontrar el product-market fit y estructurar un modelo de ingresos sostenible. Típicamente operan con recursos limitados y el equipo fundador cubre múltiples roles simultáneamente.',
   },
   {
@@ -250,7 +250,7 @@ const profiles: Profile[] = [
     name: 'ETAPA 3: Aceleración',
     tag: 'Crecimiento',
     emoji: '🚀',
-    color: '#D97706',
+    color: '#F0721D',
     description: 'Las startups en Etapa 3 tienen tracción demostrada y están optimizando sus motores de crecimiento. El foco está en escalar lo que ya funciona, profesionalizar el equipo y preparar la estructura para levantar capital institucional. La eficiencia operativa y la medición de métricas clave son críticas en esta fase.',
   },
   {
@@ -259,7 +259,7 @@ const profiles: Profile[] = [
     name: 'ETAPA 4: Escalamiento',
     tag: 'Escala',
     emoji: '🌍',
-    color: '#3B82F6',
+    color: '#1F77F6',
     description: 'Las startups en Etapa 4 tienen un modelo de negocio probado y están escalando operaciones, mercados o líneas de producto. El acceso a capital de mayor volumen, la gobernanza corporativa y la consolidación del impacto medible son las prioridades de esta etapa.',
   },
 ]
@@ -892,8 +892,8 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
               margin: '1rem 2rem 0',
               padding: '0.75rem 1rem',
               borderRadius: 'var(--radius-md)',
-              background: 'rgba(13,148,136,0.08)',
-              border: '1px solid rgba(13,148,136,0.3)',
+              background: 'rgba(31,119,246,0.08)',
+              border: '1px solid rgba(31,119,246,0.3)',
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
@@ -906,7 +906,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                 onClick={resumeProgress}
                 style={{
                   padding: '0.375rem 0.875rem', borderRadius: 'var(--radius-full)',
-                  background: '#0D9488', color: '#fff', border: 'none',
+                  background: '#1F77F6', color: '#fff', border: 'none',
                   fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer',
                 }}
               >Continuar</button>
@@ -1090,7 +1090,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         background: 'var(--color-accent-primary)', color: '#fff',
                         fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
                         border: 'none', cursor: 'pointer',
-                        boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                        boxShadow: '0 4px 16px rgba(218,78,36,0.25), 0 1px 2px rgba(0,0,0,0.4)',
                         transition: 'background 0.2s, transform 0.2s var(--ease-spring), box-shadow 0.2s ease',
                         marginTop: '0.25rem',
                         letterSpacing: '-0.01em',
@@ -1183,15 +1183,15 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                                   margin: '0.5rem 0 0.25rem',
                                   padding: '0.75rem 1rem',
                                   borderRadius: 'var(--radius-md)',
-                                  background: 'rgba(217,119,6,0.08)',
-                                  border: '1px solid rgba(217,119,6,0.35)',
+                                  background: 'rgba(240,114,29,0.08)',
+                                  border: '1px solid rgba(240,114,29,0.35)',
                                   display: 'flex', flexDirection: 'column', gap: '0.5rem',
                                 }}
                               >
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                                  <AlertTriangle size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />
+                                  <AlertTriangle size={16} color="#F0721D" style={{ flexShrink: 0, marginTop: 2 }} />
                                   <div>
-                                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 700, color: '#D97706', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>Nota</p>
+                                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 700, color: '#F0721D', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0, marginBottom: 2 }}>Nota</p>
                                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', lineHeight: 1.5, color: 'var(--color-ink)', margin: 0 }}>
                                       {activeWarning.message}
                                     </p>
@@ -1204,7 +1204,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                                   >Cambiar respuesta</button>
                                   <button
                                     onClick={keepAdaptiveOverride}
-                                    style={{ padding: '0.375rem 0.875rem', borderRadius: 'var(--radius-full)', background: '#D97706', color: '#fff', border: 'none', fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer' }}
+                                    style={{ padding: '0.375rem 0.875rem', borderRadius: 'var(--radius-full)', background: '#F0721D', color: '#fff', border: 'none', fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer' }}
                                   >Mantener y continuar</button>
                                 </div>
                               </motion.div>
@@ -1330,7 +1330,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                       {dimensions.map(d => {
                         const isStrength = fortalezas.find(f => f.key === d.key) !== undefined
                         const isGap = mejoras.find(m => m.key === d.key) !== undefined
-                        const barColor = isStrength ? '#0D9488' : isGap ? '#D97706' : profile.color
+                        const barColor = isStrength ? '#1F77F6' : isGap ? '#F0721D' : profile.color
                         return (
                           <div key={d.key}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -1358,12 +1358,12 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     <div style={{
                       padding: '1rem 1.25rem',
                       borderRadius: 'var(--radius-lg)',
-                      background: 'rgba(13,148,136,0.06)',
-                      border: '1px solid rgba(13,148,136,0.25)',
+                      background: 'rgba(31,119,246,0.06)',
+                      border: '1px solid rgba(31,119,246,0.25)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '0.5rem' }}>
-                        <Sparkles size={14} color="#0D9488" />
-                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, color: '#0D9488', letterSpacing: '-0.01em' }}>
+                        <Sparkles size={14} color="#1F77F6" />
+                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, color: '#1F77F6', letterSpacing: '-0.01em' }}>
                           Tus fortalezas
                         </h4>
                       </div>
@@ -1382,12 +1382,12 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     <div style={{
                       padding: '1rem 1.25rem',
                       borderRadius: 'var(--radius-lg)',
-                      background: 'rgba(217,119,6,0.06)',
-                      border: '1px solid rgba(217,119,6,0.25)',
+                      background: 'rgba(240,114,29,0.06)',
+                      border: '1px solid rgba(240,114,29,0.25)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '0.5rem' }}>
-                        <Target size={14} color="#D97706" />
-                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, color: '#D97706', letterSpacing: '-0.01em' }}>
+                        <Target size={14} color="#F0721D" />
+                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700, color: '#F0721D', letterSpacing: '-0.01em' }}>
                           Áreas de mejora
                         </h4>
                       </div>
@@ -1399,7 +1399,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         ))}
                       </ul>
                       {tags.equipo_tamano && TEAM_NOTES[tags.equipo_tamano] && (
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', lineHeight: 1.5, color: 'var(--color-text-secondary)', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed rgba(217,119,6,0.25)' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', lineHeight: 1.5, color: 'var(--color-text-secondary)', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed rgba(240,114,29,0.25)' }}>
                           <strong>Nota sobre tu equipo:</strong> {TEAM_NOTES[tags.equipo_tamano]}
                         </p>
                       )}
@@ -1415,7 +1415,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     marginBottom: '1.5rem',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '0.75rem' }}>
-                      <Wrench size={14} color="#FF6B4A" />
+                      <Wrench size={14} color="#DA4E24" />
                       <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
                         Tu roadmap para los próximos 30 días
                       </h4>
@@ -1474,13 +1474,13 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     <div style={{
                       padding: '1.25rem',
                       borderRadius: 'var(--radius-lg)',
-                      background: 'rgba(217,119,6,0.06)',
-                      border: '1px solid rgba(217,119,6,0.3)',
+                      background: 'rgba(240,114,29,0.06)',
+                      border: '1px solid rgba(240,114,29,0.3)',
                       marginBottom: '1.5rem',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginBottom: '0.5rem' }}>
-                        <AlertTriangle size={14} color="#D97706" />
-                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 700, color: '#D97706', letterSpacing: '-0.02em' }}>
+                        <AlertTriangle size={14} color="#F0721D" />
+                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', fontWeight: 700, color: '#F0721D', letterSpacing: '-0.02em' }}>
                           Nota del diagnóstico
                         </h4>
                       </div>
@@ -1508,7 +1508,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                           background: 'var(--color-accent-primary)', color: '#fff',
                           fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
                           border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                          boxShadow: '0 4px 16px rgba(218,78,36,0.25), 0 1px 2px rgba(0,0,0,0.4)',
                           letterSpacing: '-0.01em',
                         }}
                       >
@@ -1525,7 +1525,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         background: 'var(--color-accent-primary)', color: '#fff',
                         fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
                         textDecoration: 'none',
-                        boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                        boxShadow: '0 4px 16px rgba(218,78,36,0.25), 0 1px 2px rgba(0,0,0,0.4)',
                         transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
                         letterSpacing: '-0.01em',
                       }}
@@ -1562,7 +1562,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                   {!embedded && (
                     <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
                       <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                        <CheckCircle2 size={14} color="#0D9488" /> Guardamos tu diagnóstico. Si te registras, podrás seguir tu evolución en el tiempo.
+                        <CheckCircle2 size={14} color="#1F77F6" /> Guardamos tu diagnóstico. Si te registras, podrás seguir tu evolución en el tiempo.
                       </p>
                     </div>
                   )}

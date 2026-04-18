@@ -232,7 +232,7 @@ export default function AuthModal() {
                       fontFamily="var(--font-heading)"
                       fontSize="28"
                       fontWeight="700"
-                      fill="#FF6B4A"
+                      fill="#DA4E24"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.25, type: 'spring', damping: 20, stiffness: 100 }}
@@ -255,7 +255,7 @@ export default function AuthModal() {
                     {/* Animated progress arc */}
                     <motion.circle
                       cx="40" cy="40" r="36"
-                      stroke="#FF6B4A"
+                      stroke="#DA4E24"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                       fill="none"

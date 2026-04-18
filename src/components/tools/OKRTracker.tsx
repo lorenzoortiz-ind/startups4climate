@@ -41,12 +41,12 @@ const DEFAULT: Data = {
 }
 
 const progressColor = (pct: number) => {
-  if (pct >= 70) return '#0D9488'
+  if (pct >= 70) return '#1F77F6'
   if (pct >= 40) return '#2A222B'
   return '#DC2626'
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function OKRTracker({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'okr-tracker', DEFAULT)

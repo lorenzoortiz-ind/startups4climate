@@ -53,13 +53,13 @@ const STAGE_ICONS = {
 
 /* ─── Category color mapping (kept for ToolCard) ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
-  Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
-  Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
-  Producto: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
+  Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
+  Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
+  Producto: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
   Finanzas: { color: 'var(--color-text-primary)', bg: 'rgba(139,92,246,0.08)' },
-  Ventas: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
-  Marketing: { color: 'var(--color-accent-primary)', bg: 'rgba(255,107,74,0.08)' },
-  Equipo: { color: 'var(--color-accent-secondary)', bg: 'rgba(13,148,136,0.08)' },
+  Ventas: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
+  Marketing: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
+  Equipo: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
 }
 
 const springReveal = {
@@ -151,7 +151,7 @@ function ToolCard({
               gap: '0.25rem',
               padding: '2px 8px',
               borderRadius: 'var(--radius-full)',
-              background: 'rgba(13,148,136,0.08)',
+              background: 'rgba(31,119,246,0.08)',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-2xs)',
               fontWeight: 700,
@@ -692,8 +692,8 @@ export default function ToolsDashboard() {
               style={{
                 padding: '1.5rem 1.75rem',
                 background:
-                  'linear-gradient(135deg, rgba(255,107,74,0.06), var(--color-paper))',
-                border: '1px solid rgba(255,107,74,0.2)',
+                  'linear-gradient(135deg, rgba(218,78,36,0.06), var(--color-paper))',
+                border: '1px solid rgba(218,78,36,0.2)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',

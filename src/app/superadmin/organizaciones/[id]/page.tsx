@@ -54,8 +54,8 @@ const PLANS = [
 ]
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  active: { label: 'Activa', color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  planned: { label: 'Planificada', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+  active: { label: 'Activa', color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
+  planned: { label: 'Planificada', color: '#1F77F6', bg: 'rgba(59,130,246,0.08)' },
   completed: { label: 'Completada', color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
 }
 
@@ -309,8 +309,8 @@ export default function OrganizacionDetailPage() {
   }
 
   const STAT_CARDS = [
-    { label: 'Total startups', value: stats.totalStartups, icon: Users, color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-    { label: 'Total cohortes', value: stats.totalCohorts, icon: GraduationCap, color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+    { label: 'Total startups', value: stats.totalStartups, icon: Users, color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
+    { label: 'Total cohortes', value: stats.totalCohorts, icon: GraduationCap, color: '#1F77F6', bg: 'rgba(59,130,246,0.08)' },
     { label: 'Cohortes activas', value: stats.activeCohorts, icon: GraduationCap, color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)' },
   ]
 
@@ -344,10 +344,10 @@ export default function OrganizacionDetailPage() {
       }}>
         <div style={{
           width: 40, height: 40, borderRadius: 'var(--radius-sm)',
-          background: 'rgba(13,148,136,0.08)',
+          background: 'rgba(31,119,246,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontFamily: 'var(--font-heading)', fontWeight: 700,
-          fontSize: '1.125rem', color: '#0D9488',
+          fontSize: '1.125rem', color: '#1F77F6',
         }}>
           {org.name.charAt(0).toUpperCase()}
         </div>
@@ -362,8 +362,8 @@ export default function OrganizacionDetailPage() {
             <span style={{
               padding: '0.125rem 0.5rem', borderRadius: 999,
               fontSize: '0.6875rem', fontWeight: 500,
-              background: org.is_active !== false ? 'rgba(13,148,136,0.08)' : 'rgba(239,68,68,0.08)',
-              color: org.is_active !== false ? '#0D9488' : '#EF4444',
+              background: org.is_active !== false ? 'rgba(31,119,246,0.08)' : 'rgba(239,68,68,0.08)',
+              color: org.is_active !== false ? '#1F77F6' : '#EF4444',
             }}>
               {org.is_active !== false ? 'Activa' : 'Desactivada'}
             </span>
@@ -376,11 +376,11 @@ export default function OrganizacionDetailPage() {
         <div style={{
           marginBottom: '1.25rem', padding: '0.75rem 1rem',
           borderRadius: 'var(--radius-sm)',
-          background: message.type === 'success' ? 'rgba(13,148,136,0.08)' : 'rgba(239,68,68,0.08)',
-          border: `1px solid ${message.type === 'success' ? 'rgba(13,148,136,0.2)' : 'rgba(239,68,68,0.2)'}`,
+          background: message.type === 'success' ? 'rgba(31,119,246,0.08)' : 'rgba(239,68,68,0.08)',
+          border: `1px solid ${message.type === 'success' ? 'rgba(31,119,246,0.2)' : 'rgba(239,68,68,0.2)'}`,
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-          color: message.type === 'success' ? '#0D9488' : '#EF4444',
+          color: message.type === 'success' ? '#1F77F6' : '#EF4444',
         }}>
           {message.type === 'success' ? <Check size={16} /> : <X size={16} />}
           {message.text}
@@ -555,7 +555,7 @@ export default function OrganizacionDetailPage() {
                   background: 'rgba(59,130,246,0.08)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'var(--font-heading)', fontSize: '0.75rem', fontWeight: 700,
-                  color: '#3B82F6', flexShrink: 0,
+                  color: '#1F77F6', flexShrink: 0,
                 }}>
                   {(admin.full_name || admin.email).charAt(0).toUpperCase()}
                 </div>

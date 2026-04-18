@@ -47,10 +47,10 @@ const statusConfig: Record<string, { bg: string; color: string; label: string }>
   desconocido: { bg: '#F3F4F6', color: '#6B7280', label: 'Desconocido' },
   'no iniciado': { bg: '#FEE2E2', color: '#DC2626', label: 'No iniciado' },
   'en progreso': { bg: '#FEF3C7', color: '#2A222B', label: 'En progreso' },
-  completado: { bg: '#CCFBF1', color: '#0D9488', label: 'Completado' },
+  completado: { bg: '#CCFBF1', color: '#1F77F6', label: 'Completado' },
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function RegulatoryCompass({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'regulatory-compass', DEFAULT)
@@ -128,10 +128,10 @@ ${data.requirements.map((r, i) => `${i + 1}. [${categoryLabels[r.category]}] ${r
         {/* Progress */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Progreso regulatorio</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 700, color: completionPct >= 75 ? '#0D9488' : completionPct >= 50 ? '#2A222B' : '#DC2626' }}>{completionPct}%</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', fontWeight: 700, color: completionPct >= 75 ? '#1F77F6' : completionPct >= 50 ? '#2A222B' : '#DC2626' }}>{completionPct}%</span>
         </div>
         <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${completionPct}%`, borderRadius: 4, background: completionPct >= 75 ? '#0D9488' : completionPct >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
+          <div style={{ height: '100%', width: `${completionPct}%`, borderRadius: 4, background: completionPct >= 75 ? '#1F77F6' : completionPct >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
         </div>
       </ToolSection>
 

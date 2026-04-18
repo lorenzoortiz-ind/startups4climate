@@ -54,8 +54,8 @@ interface AvailableStartup {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'planned', label: 'Planificada', color: '#3B82F6' },
-  { value: 'active', label: 'Activa', color: '#0D9488' },
+  { value: 'planned', label: 'Planificada', color: '#1F77F6' },
+  { value: 'active', label: 'Activa', color: '#1F77F6' },
   { value: 'completed', label: 'Completada', color: '#6B7280' },
   { value: 'archived', label: 'Archivada', color: '#9CA3AF' },
 ]
@@ -662,10 +662,10 @@ export default function CohortDetailPage() {
               marginBottom: '1.25rem',
             }}>
               {[
-                { label: 'Tools completion', value: `${demoCohort.toolsCompletionPct}%`, color: '#0D9488' },
-                { label: 'NPS founders', value: `${demoCohort.npsFounders}`, color: '#3B82F6' },
+                { label: 'Tools completion', value: `${demoCohort.toolsCompletionPct}%`, color: '#1F77F6' },
+                { label: 'NPS founders', value: `${demoCohort.npsFounders}`, color: '#1F77F6' },
                 { label: 'Funding levantado', value: fmtUSD(demoCohort.fundingRaisedUSD), color: '#16A34A' },
-                { label: 'Graduados', value: `${demoCohort.graduates}`, color: '#FF6B4A' },
+                { label: 'Graduados', value: `${demoCohort.graduates}`, color: '#DA4E24' },
               ].map((k) => (
                 <div key={k.label} style={{
                   padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)',
@@ -709,7 +709,7 @@ export default function CohortDetailPage() {
                 </span>
               </div>
               <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-                <div style={{ width: `${demoCohort.retentionRate}%`, height: '100%', background: '#0D9488' }} />
+                <div style={{ width: `${demoCohort.retentionRate}%`, height: '100%', background: '#1F77F6' }} />
               </div>
             </div>
             <div>
@@ -732,7 +732,7 @@ export default function CohortDetailPage() {
                 </span>
               </div>
               <div style={{ height: 8, borderRadius: 4, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-                <div style={{ width: `${monthPct}%`, height: '100%', background: '#FF6B4A' }} />
+                <div style={{ width: `${monthPct}%`, height: '100%', background: '#DA4E24' }} />
               </div>
             </div>
           </div>
@@ -1022,7 +1022,7 @@ export default function CohortDetailPage() {
                 {inviteSuccess && (
                   <div style={{
                     padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(13,148,136,0.08)', color: '#0D9488',
+                    background: 'rgba(31,119,246,0.08)', color: '#1F77F6',
                     fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
                     marginBottom: '0.5rem',
                   }}>

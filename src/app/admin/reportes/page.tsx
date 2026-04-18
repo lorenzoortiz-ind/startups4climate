@@ -271,7 +271,7 @@ export default function ReportesPage() {
                     ? 'var(--color-accent-primary)'
                     : 'var(--color-border)'}`,
                   background: selectedType === type.value
-                    ? 'rgba(13,148,136,0.04)' : 'var(--color-bg-card)',
+                    ? 'rgba(31,119,246,0.04)' : 'var(--color-bg-card)',
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.15s',
@@ -374,11 +374,11 @@ export default function ReportesPage() {
                 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(255,107,74,0.10)',
+                    background: 'rgba(218,78,36,0.10)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
                   }}>
-                    <FileBarChart size={16} color="#FF6B4A" />
+                    <FileBarChart size={16} color="#DA4E24" />
                   </div>
                   <div style={{
                     display: 'flex', gap: '0.4rem',

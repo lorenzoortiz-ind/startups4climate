@@ -371,9 +371,9 @@ export const DEMO_MINPRO_KPIS = {
 
 /* ─────────────────── Region distribution ─────────────────── */
 export const DEMO_REGION_DISTRIBUTION = [
-  { region: 'Lima', programs: 2, startups: 74, color: '#0D9488' },
+  { region: 'Lima', programs: 2, startups: 74, color: '#1F77F6' },
   { region: 'Madre de Dios', programs: 2, startups: 64, color: '#16A34A' },
-  { region: 'Piura', programs: 1, startups: 44, color: '#3B82F6' },
+  { region: 'Piura', programs: 1, startups: 44, color: '#1F77F6' },
   { region: 'La Libertad', programs: 1, startups: 20, color: '#F59E0B' },
   { region: 'Arequipa', programs: 1, startups: 18, color: '#8B5CF6' },
   { region: 'Cusco', programs: 1, startups: 28, color: '#EC4899' },
@@ -382,9 +382,9 @@ export const DEMO_REGION_DISTRIBUTION = [
 
 /* ─────────────────── Vertical distribution ─────────────────── */
 export const DEMO_VERTICAL_DISTRIBUTION_NATIONAL = [
-  { key: 'biotech', label: 'Biotech', count: 48, color: '#0D9488' },
+  { key: 'biotech', label: 'Biotech', count: 48, color: '#1F77F6' },
   { key: 'agritech', label: 'Agritech', count: 42, color: '#16A34A' },
-  { key: 'healthtech', label: 'Healthtech', count: 36, color: '#3B82F6' },
+  { key: 'healthtech', label: 'Healthtech', count: 36, color: '#1F77F6' },
   { key: 'energia', label: 'Energía', count: 32, color: '#F59E0B' },
   { key: 'fintech', label: 'Fintech', count: 22, color: '#8B5CF6' },
   { key: 'edtech', label: 'EdTech', count: 18, color: '#EC4899' },
@@ -395,15 +395,15 @@ export const DEMO_VERTICAL_DISTRIBUTION_NATIONAL = [
 /* ─────────────────── Stage distribution ─────────────────── */
 export const DEMO_STAGE_DISTRIBUTION_NATIONAL = [
   { key: 'pre_incubation', label: 'Pre-incubación', count: 102, color: '#94A3B8' },
-  { key: 'incubation', label: 'Incubación', count: 82, color: '#3B82F6' },
-  { key: 'acceleration', label: 'Aceleración', count: 44, color: '#0D9488' },
-  { key: 'scaling', label: 'Escalamiento', count: 20, color: '#FF6B4A' },
+  { key: 'incubation', label: 'Incubación', count: 82, color: '#1F77F6' },
+  { key: 'acceleration', label: 'Aceleración', count: 44, color: '#1F77F6' },
+  { key: 'scaling', label: 'Escalamiento', count: 20, color: '#DA4E24' },
 ]
 
 /* ─────────────────── Gender distribution ─────────────────── */
 export const DEMO_GENDER_DISTRIBUTION = [
   { key: 'women', label: 'Mujeres founders', pct: 41, color: '#EC4899' },
-  { key: 'men', label: 'Hombres founders', pct: 52, color: '#3B82F6' },
+  { key: 'men', label: 'Hombres founders', pct: 52, color: '#1F77F6' },
   { key: 'mixed', label: 'Equipos mixtos', pct: 7, color: '#8B5CF6' },
 ]
 

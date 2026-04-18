@@ -41,13 +41,13 @@ const DEFAULT: Data = {
 }
 
 const scoreColor = (s: number) => {
-  if (s >= 4) return '#0D9488'
+  if (s >= 4) return '#1F77F6'
   if (s >= 3) return '#2A222B'
   if (s >= 2) return '#EA580C'
   return '#DC2626'
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function CompetitorAnalysis({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'competitor-analysis', DEFAULT)

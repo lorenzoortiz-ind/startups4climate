@@ -36,9 +36,9 @@ const stages: Stage[] = [
     id: 1,
     label: 'Pre-incubación',
     sublabel: 'Ideación y validación inicial',
-    color: '#FF6B4A',
-    bg: 'rgba(255,107,74,0.06)',
-    border: 'rgba(255,107,74,0.15)',
+    color: '#DA4E24',
+    bg: 'rgba(218,78,36,0.06)',
+    border: 'rgba(218,78,36,0.15)',
     icon: FlaskConical,
     tools: [
       {
@@ -81,9 +81,9 @@ const stages: Stage[] = [
     id: 2,
     label: 'Incubación',
     sublabel: 'Validación de mercado y prototipo',
-    color: '#0D9488',
-    bg: 'rgba(13,148,136,0.06)',
-    border: 'rgba(13,148,136,0.15)',
+    color: '#1F77F6',
+    bg: 'rgba(31,119,246,0.06)',
+    border: 'rgba(31,119,246,0.15)',
     icon: Rocket,
     tools: [
       {
@@ -168,9 +168,9 @@ const stages: Stage[] = [
     id: 4,
     label: 'Escalamiento',
     sublabel: 'Crecimiento y expansión',
-    color: '#0D9488',
-    bg: 'rgba(13,148,136,0.06)',
-    border: 'rgba(13,148,136,0.15)',
+    color: '#1F77F6',
+    bg: 'rgba(31,119,246,0.06)',
+    border: 'rgba(31,119,246,0.15)',
     icon: TrendingUp,
     tools: [
       {
@@ -344,15 +344,15 @@ export default function RecursosPage() {
                 width: 40,
                 height: 40,
                 borderRadius: 12,
-                background: 'rgba(217,119,6,0.08)',
-                border: '1px solid rgba(217,119,6,0.2)',
+                background: 'rgba(240,114,29,0.08)',
+                border: '1px solid rgba(240,114,29,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Layers size={20} color="#D97706" />
+              <Layers size={20} color="#F0721D" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
@@ -493,8 +493,8 @@ export default function RecursosPage() {
             marginTop: '2.5rem',
             padding: '1.25rem 1.5rem',
             borderRadius: 12,
-            background: 'linear-gradient(135deg, rgba(13,148,136,0.04), rgba(255,107,74,0.04))',
-            border: '1px solid rgba(13,148,136,0.1)',
+            background: 'linear-gradient(135deg, rgba(31,119,246,0.04), rgba(218,78,36,0.04))',
+            border: '1px solid rgba(31,119,246,0.1)',
             textAlign: 'center',
           }}
         >
@@ -514,7 +514,7 @@ export default function RecursosPage() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                color: '#0D9488',
+                color: '#1F77F6',
                 fontWeight: 600,
                 textDecoration: 'none',
               }}

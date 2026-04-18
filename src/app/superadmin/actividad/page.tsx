@@ -45,21 +45,21 @@ const ACTION_ICONS: Record<string, typeof Building2> = {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  'auth.login': '#0D9488',
+  'auth.login': '#1F77F6',
   'auth.password_reset': '#8B5CF6',
-  'profile.updated': '#3B82F6',
-  'tool.completed': '#0D9488',
-  'cohort.created': '#0D9488',
+  'profile.updated': '#1F77F6',
+  'tool.completed': '#1F77F6',
+  'cohort.created': '#1F77F6',
   'cohort.member_added': '#0EA5E9',
   'invitation.sent': '#EA580C',
   'invitation.accepted': '#10B981',
-  'report.generated': '#3B82F6',
+  'report.generated': '#1F77F6',
   'settings.changed': '#6B7280',
   'user.role_changed': '#8B5CF6',
   'ticket.opened': '#DC2626',
   'ticket.resolved': '#10B981',
   'ai.chat_started': '#7C3AED',
-  'org.created': '#3B82F6',
+  'org.created': '#1F77F6',
 }
 
 const ACTION_LABELS: Record<string, string> = {
@@ -342,8 +342,8 @@ const DEMO_ACTIVITY: ActivityEntry[] = [
 // ────────────────────────────────────────────────────────────
 
 const ROLE_BADGES: Record<string, { color: string; bg: string; label: string }> = {
-  founder: { color: '#0D9488', bg: 'rgba(13,148,136,0.12)', label: 'Founder' },
-  admin_org: { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', label: 'Admin org' },
+  founder: { color: '#1F77F6', bg: 'rgba(31,119,246,0.12)', label: 'Founder' },
+  admin_org: { color: '#1F77F6', bg: 'rgba(59,130,246,0.12)', label: 'Admin org' },
   superadmin: { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)', label: 'Superadmin' },
   system: { color: '#6B7280', bg: 'rgba(107,114,128,0.12)', label: 'Sistema' },
 }
@@ -574,7 +574,7 @@ export default function ActividadPage() {
           style={{
             width: 32, height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#0D9488',
+            borderTopColor: '#1F77F6',
             borderRadius: '50%',
           }}
         />
@@ -592,7 +592,7 @@ export default function ActividadPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <ScrollText size={20} color="#0D9488" />
+          <ScrollText size={20} color="#1F77F6" />
           <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
             Actividad
           </h1>
@@ -613,8 +613,8 @@ export default function ActividadPage() {
         }}
       >
         {[
-          { label: 'Eventos hoy', value: kpis.today, Icon: Activity, color: '#0D9488' },
-          { label: 'Logins 24h', value: kpis.logins24h, Icon: LogIn, color: '#3B82F6' },
+          { label: 'Eventos hoy', value: kpis.today, Icon: Activity, color: '#1F77F6' },
+          { label: 'Logins 24h', value: kpis.logins24h, Icon: LogIn, color: '#1F77F6' },
           { label: 'Acciones admin 7d', value: kpis.adminActions7d, Icon: Shield, color: '#8B5CF6' },
           { label: 'Errores 24h', value: kpis.errors24h, Icon: AlertTriangle, color: kpis.errors24h > 0 ? '#DC2626' : '#10B981' },
         ].map((k, i) => (

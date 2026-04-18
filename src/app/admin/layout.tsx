@@ -93,7 +93,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }}>
         <div style={{
           width: 40, height: 40, borderRadius: '50%',
-          border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
+          border: '3px solid #E5E7EB', borderTopColor: '#DA4E24',
           animation: 'spin 0.8s linear infinite',
         }} />
 
@@ -156,8 +156,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Role badge */}
       <div style={{
         display: 'inline-block',
-        background: 'rgba(13,148,136,0.15)',
-        color: '#0D9488',
+        background: 'rgba(31,119,246,0.15)',
+        color: '#1F77F6',
         fontFamily: 'var(--font-body)',
         fontSize: '0.5625rem',
         fontWeight: 600,

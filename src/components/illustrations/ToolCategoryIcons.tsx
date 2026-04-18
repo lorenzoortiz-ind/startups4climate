@@ -10,7 +10,7 @@ interface CategoryIconProps {
   color?: string
 }
 
-const DEFAULT_COLOR = '#0D9488'
+const DEFAULT_COLOR = '#1F77F6'
 const LINE_COLOR = '#1a1a1a'
 
 /** Estrategia — compass/target */

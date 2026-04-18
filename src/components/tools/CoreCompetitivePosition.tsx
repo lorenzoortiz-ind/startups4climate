@@ -62,7 +62,7 @@ MAPA DE POSICIONAMIENTO:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#1F77F6" />
 
       <InsightPanel title="Referencia académica">
         <p style={{ margin: 0 }}>
@@ -80,15 +80,15 @@ MAPA DE POSICIONAMIENTO:
         </span>
       </InsightPanel>
 
-      <ToolSection number={1} title="Definición del core" subtitle="Tu capacidad central diferenciadora" accentColor="#0D9488">
+      <ToolSection number={1} title="Definición del core" subtitle="Tu capacidad central diferenciadora" accentColor="#1F77F6">
         <textarea value={data.definicionCore} onChange={e => setData(p => ({ ...p, definicionCore: e.target.value }))} placeholder="¿Cuál es la capacidad central que te hace competitivo? ¿Qué haces mejor que nadie?" rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={2} title="Barreras de entrada" subtitle="Defensas estructurales de tu posición" accentColor="#0D9488">
+      <ToolSection number={2} title="Barreras de entrada" subtitle="Defensas estructurales de tu posición" accentColor="#1F77F6">
         <textarea value={data.barreras} onChange={e => setData(p => ({ ...p, barreras: e.target.value }))} placeholder="¿Qué barreras protegen tu posición? IP, datos, red de contactos, regulación..." rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={3} title="Mapa de posicionamiento" subtitle="Visualiza tu posición vs competidores" defaultOpen accentColor="#0D9488">
+      <ToolSection number={3} title="Mapa de posicionamiento" subtitle="Visualiza tu posición vs competidores" defaultOpen accentColor="#1F77F6">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
           <div>
             <label style={labelStyle}>Eje X (etiqueta)</label>
@@ -101,8 +101,8 @@ MAPA DE POSICIONAMIENTO:
         </div>
 
         {/* Tu posición */}
-        <div style={{ padding: '0.875rem', borderRadius: 10, border: '2px solid #0D948830', background: '#0D948808', marginBottom: '0.75rem' }}>
-          <span style={{ ...labelStyle, color: '#0D9488', fontWeight: 700 }}>Tu startup</span>
+        <div style={{ padding: '0.875rem', borderRadius: 10, border: '2px solid #1F77F630', background: '#1F77F608', marginBottom: '0.75rem' }}>
+          <span style={{ ...labelStyle, color: '#1F77F6', fontWeight: 700 }}>Tu startup</span>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginTop: '0.375rem' }}>
             <div>
               <label style={labelStyle}>{data.ejeXLabel || 'Eje X'}: {data.tuX}</label>
@@ -153,7 +153,7 @@ MAPA DE POSICIONAMIENTO:
         onComplete={onComplete}
         onReport={handleReport}
         saved={saved}
-        accentColor="#0D9488"
+        accentColor="#1F77F6"
       />
     </div>
   )

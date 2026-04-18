@@ -35,7 +35,7 @@ const STAGES = [
   { key: 'compra', title: 'Compra', convKey: 'compraConversion', ph: '\u00bfCu\u00e1l es el proceso de cierre de venta?' },
 ]
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function CustomerAcquisitionProcess({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'customer-acquisition-process', DEFAULT)

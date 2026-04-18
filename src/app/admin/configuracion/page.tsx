@@ -626,7 +626,7 @@ export default function ConfiguracionPage() {
                     transition: 'border-color 0.15s, background 0.15s',
                     opacity: uploading ? 0.7 : 1,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent-primary)'; e.currentTarget.style.background = 'rgba(13,148,136,0.04)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent-primary)'; e.currentTarget.style.background = 'rgba(31,119,246,0.04)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-card)' }}
                 >
                   {uploading ? (
@@ -813,8 +813,8 @@ export default function ConfiguracionPage() {
           <div style={{
             padding: '1rem',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(13,148,136,0.04)',
-            border: '1px solid rgba(13,148,136,0.12)',
+            background: 'rgba(31,119,246,0.04)',
+            border: '1px solid rgba(31,119,246,0.12)',
             marginBottom: '1.25rem',
           }}>
             <div style={{
@@ -838,7 +838,7 @@ export default function ConfiguracionPage() {
               </div>
               <span style={{
                 padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)',
-                background: 'rgba(13,148,136,0.08)', color: '#0D9488',
+                background: 'rgba(31,119,246,0.08)', color: '#1F77F6',
                 fontFamily: 'var(--font-body)', fontSize: '0.6875rem', fontWeight: 500,
               }}>
                 Activo
@@ -908,7 +908,7 @@ export default function ConfiguracionPage() {
               animate={{ opacity: 1, x: 0 }}
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
-                fontWeight: 500, color: '#0D9488',
+                fontWeight: 500, color: '#1F77F6',
               }}
             >
               Cambios guardados

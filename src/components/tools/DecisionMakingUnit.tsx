@@ -24,7 +24,7 @@ const emptyStakeholder = (): Stakeholder => ({ rol: 'Champion', nombre: '', infl
 
 const DEFAULT: Data = { stakeholders: [emptyStakeholder()] }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function DecisionMakingUnit({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'decision-making-unit', DEFAULT)
@@ -41,10 +41,10 @@ export default function DecisionMakingUnit({ userId, onComplete, onGenerateRepor
 
   const rolColor = (r: string) => {
     switch (r) {
-      case 'Champion': return '#0D9488'
+      case 'Champion': return '#1F77F6'
       case 'Comprador econ\u00f3mico': return '#2A222B'
-      case 'Usuario final': return '#0D9488'
-      case 'Influenciador t\u00e9cnico': return '#FF6B4A'
+      case 'Usuario final': return '#1F77F6'
+      case 'Influenciador t\u00e9cnico': return '#DA4E24'
       case 'Bloqueador potencial': return '#DC2626'
       default: return '#9CA3AF'
     }

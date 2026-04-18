@@ -58,7 +58,7 @@ ${data.brochure || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#1F77F6" />
 
       <InsightPanel title="Referencia académica">
         <p style={{ margin: 0 }}>
@@ -76,33 +76,33 @@ ${data.brochure || '(No completado)'}
         </span>
       </InsightPanel>
 
-      <ToolSection number={1} title="Nombre del producto" subtitle="Identidad de tu solución" accentColor="#0D9488">
+      <ToolSection number={1} title="Nombre del producto" subtitle="Identidad de tu solución" accentColor="#1F77F6">
         <input value={data.nombre} onChange={e => setData(p => ({ ...p, nombre: e.target.value }))} placeholder="Nombre de tu producto o servicio" style={inputStyle} />
       </ToolSection>
 
-      <ToolSection number={2} title="Descripción en una línea" subtitle="Elevator pitch en una oración" accentColor="#0D9488">
+      <ToolSection number={2} title="Descripción en una línea" subtitle="Elevator pitch en una oración" accentColor="#1F77F6">
         <input value={data.descripcionLinea} onChange={e => setData(p => ({ ...p, descripcionLinea: e.target.value }))} placeholder="Describe tu producto en una sola oración clara y convincente" style={inputStyle} />
       </ToolSection>
 
-      <ToolSection number={3} title="Features principales" subtitle="Funcionalidades clave de tu MVP" accentColor="#0D9488">
+      <ToolSection number={3} title="Features principales" subtitle="Funcionalidades clave de tu MVP" accentColor="#1F77F6">
         {data.features.map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
             <input value={f} onChange={e => updateFeature(i, e.target.value)} placeholder={`Feature ${i + 1}`} style={{ ...inputStyle, flex: 1 }} />
             {data.features.length > 1 && <button onClick={() => removeFeature(i)} style={btnDanger}><Trash2 size={14} /></button>}
           </div>
         ))}
-        <button onClick={addFeature} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={14} /> Agregar feature</button>
+        <button onClick={addFeature} style={{ ...btnSmall, color: '#1F77F6', borderColor: '#1F77F630' }}><Plus size={14} /> Agregar feature</button>
       </ToolSection>
 
-      <ToolSection number={4} title="Lo que NO hace el producto" subtitle="Límites claros del alcance" accentColor="#0D9488">
+      <ToolSection number={4} title="Lo que NO hace el producto" subtitle="Límites claros del alcance" accentColor="#1F77F6">
         <textarea value={data.noHace} onChange={e => setData(p => ({ ...p, noHace: e.target.value }))} placeholder="Define claramente qué está fuera del alcance de tu producto" rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={5} title="Diferenciadores clave" subtitle="Tu ventaja vs alternativas" accentColor="#0D9488">
+      <ToolSection number={5} title="Diferenciadores clave" subtitle="Tu ventaja vs alternativas" accentColor="#1F77F6">
         <textarea value={data.diferenciadores} onChange={e => setData(p => ({ ...p, diferenciadores: e.target.value }))} placeholder="¿Qué hace único a tu producto vs las alternativas?" rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={6} title="Brochure visual" subtitle="Comunicación visual del producto" accentColor="#0D9488">
+      <ToolSection number={6} title="Brochure visual" subtitle="Comunicación visual del producto" accentColor="#1F77F6">
         <textarea value={data.brochure} onChange={e => setData(p => ({ ...p, brochure: e.target.value }))} placeholder="Describe cómo se vería el brochure de tu producto: mensajes clave, visuales, estructura..." rows={4} style={textareaStyle} />
       </ToolSection>
 
@@ -111,7 +111,7 @@ ${data.brochure || '(No completado)'}
         onComplete={onComplete}
         onReport={handleReport}
         saved={saved}
-        accentColor="#0D9488"
+        accentColor="#1F77F6"
       />
     </div>
   )

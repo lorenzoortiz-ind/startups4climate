@@ -75,10 +75,10 @@ const TYPE_LABELS: Record<DbType, DisplayType> = {
 }
 
 const TYPE_COLORS: Record<DisplayType, { color: string; bg: string; border: string }> = {
-  Grant: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
+  Grant: { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)' },
   Aceleradora: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
   Competencia: { color: '#6366F1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)' },
-  Fondo: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
+  Fondo: { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)' },
   Préstamo: { color: '#0EA5E9', bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.2)' },
   Premio: { color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
   Fellowship: { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)' },
@@ -185,7 +185,7 @@ function computeMatch(
 }
 
 function getMatchColor(score: number): { color: string; bg: string; border: string } {
-  if (score >= 75) return { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' }
+  if (score >= 75) return { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)' }
   if (score >= 50) return { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' }
   return { color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)', border: 'rgba(156,163,175,0.2)' }
 }
@@ -415,11 +415,11 @@ export default function OportunidadesPage() {
           <div
             style={{
               width: 40, height: 40, borderRadius: 12,
-              background: 'rgba(255,107,74,0.08)', border: '1px solid rgba(255,107,74,0.2)',
+              background: 'rgba(218,78,36,0.08)', border: '1px solid rgba(218,78,36,0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}
           >
-            <Sparkles size={20} color="#FF6B4A" />
+            <Sparkles size={20} color="#DA4E24" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h1
@@ -487,11 +487,11 @@ export default function OportunidadesPage() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                 padding: '0.5rem 1rem', borderRadius: 999,
-                border: isActive ? '1px solid rgba(255,107,74,0.4)' : '1px solid var(--color-border)',
-                background: isActive ? 'rgba(255,107,74,0.1)' : 'var(--color-bg-card)',
+                border: isActive ? '1px solid rgba(218,78,36,0.4)' : '1px solid var(--color-border)',
+                background: isActive ? 'rgba(218,78,36,0.1)' : 'var(--color-bg-card)',
                 fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                 fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#FF6B4A' : 'var(--color-text-secondary)',
+                color: isActive ? '#DA4E24' : 'var(--color-text-secondary)',
                 cursor: 'pointer', whiteSpace: 'nowrap',
               }}
             >

@@ -167,17 +167,17 @@ const cardStyle: React.CSSProperties = {
 }
 
 const TAB_COLORS: Record<TabId, { color: string; bg: string; border: string }> = {
-  programa: { color: '#0D9488', bg: 'rgba(13,148,136,0.06)', border: 'rgba(13,148,136,0.15)' },
-  founders: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.06)', border: 'rgba(255,107,74,0.15)' },
+  programa: { color: '#1F77F6', bg: 'rgba(31,119,246,0.06)', border: 'rgba(31,119,246,0.15)' },
+  founders: { color: '#DA4E24', bg: 'rgba(218,78,36,0.06)', border: 'rgba(218,78,36,0.15)' },
   biblioteca: { color: '#7C3AED', bg: 'rgba(124,58,237,0.06)', border: 'rgba(124,58,237,0.15)' },
 }
 
 const FORMAT_COLORS: Record<string, { color: string; bg: string; border: string }> = {
   PDF: { color: '#DC2626', bg: 'rgba(220,38,38,0.06)', border: 'rgba(220,38,38,0.15)' },
   Video: { color: '#7C3AED', bg: 'rgba(124,58,237,0.06)', border: 'rgba(124,58,237,0.15)' },
-  Template: { color: '#0D9488', bg: 'rgba(13,148,136,0.06)', border: 'rgba(13,148,136,0.15)' },
+  Template: { color: '#1F77F6', bg: 'rgba(31,119,246,0.06)', border: 'rgba(31,119,246,0.15)' },
   Spreadsheet: { color: '#16A34A', bg: 'rgba(22,163,74,0.06)', border: 'rgba(22,163,74,0.15)' },
-  Slides: { color: '#D97706', bg: 'rgba(217,119,6,0.06)', border: 'rgba(217,119,6,0.15)' },
+  Slides: { color: '#F0721D', bg: 'rgba(240,114,29,0.06)', border: 'rgba(240,114,29,0.15)' },
   Database: { color: '#2563EB', bg: 'rgba(37,99,235,0.06)', border: 'rgba(37,99,235,0.15)' },
   Interactive: { color: '#0891B2', bg: 'rgba(8,145,178,0.06)', border: 'rgba(8,145,178,0.15)' },
   Audio: { color: '#9333EA', bg: 'rgba(147,51,234,0.06)', border: 'rgba(147,51,234,0.15)' },
@@ -212,15 +212,15 @@ export default function AdminRecursosPage() {
               width: 40,
               height: 40,
               borderRadius: 12,
-              background: 'rgba(13,148,136,0.08)',
-              border: '1px solid rgba(13,148,136,0.2)',
+              background: 'rgba(31,119,246,0.08)',
+              border: '1px solid rgba(31,119,246,0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
             }}
           >
-            <BookOpen size={20} color="#0D9488" />
+            <BookOpen size={20} color="#1F77F6" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h1
@@ -410,7 +410,7 @@ export default function AdminRecursosPage() {
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.6875rem',
                           fontWeight: 600,
-                          color: '#D97706',
+                          color: '#F0721D',
                           whiteSpace: 'nowrap',
                         }}
                       >
@@ -512,8 +512,8 @@ export default function AdminRecursosPage() {
           marginTop: '2rem',
           padding: '1.25rem 1.5rem',
           borderRadius: 12,
-          background: 'linear-gradient(135deg, rgba(13,148,136,0.04), rgba(124,58,237,0.04))',
-          border: '1px solid rgba(13,148,136,0.1)',
+          background: 'linear-gradient(135deg, rgba(31,119,246,0.04), rgba(124,58,237,0.04))',
+          border: '1px solid rgba(31,119,246,0.1)',
           textAlign: 'center',
         }}
       >
@@ -532,7 +532,7 @@ export default function AdminRecursosPage() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: '#0D9488',
+              color: '#1F77F6',
               fontWeight: 600,
               textDecoration: 'none',
             }}

@@ -28,10 +28,10 @@ const STATUSES = ['Por contactar', 'Contactado', 'Interesado', 'En negociación'
 
 const statusColor = (s: string) => {
   switch (s) {
-    case 'Cliente': return '#0D9488'
+    case 'Cliente': return '#1F77F6'
     case 'En negociación': return '#2A222B'
-    case 'Interesado': return '#0D9488'
-    case 'Contactado': return '#FF6B4A'
+    case 'Interesado': return '#1F77F6'
+    case 'Contactado': return '#DA4E24'
     default: return '#9CA3AF'
   }
 }
@@ -78,7 +78,7 @@ RESUMEN:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={data.customers.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={data.customers.length} accentColor="#1F77F6" />
 
       <InsightPanel title="Referencia académica">
         <p style={{ margin: 0 }}>
@@ -97,7 +97,7 @@ RESUMEN:
       </InsightPanel>
 
       {/* Summary bar */}
-      <ToolSection number={1} title="Pipeline de clientes" subtitle="Estado actual de tu embudo" defaultOpen accentColor="#0D9488">
+      <ToolSection number={1} title="Pipeline de clientes" subtitle="Estado actual de tu embudo" defaultOpen accentColor="#1F77F6">
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
           {STATUSES.map(s => (
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
@@ -129,7 +129,7 @@ RESUMEN:
             </div>
           </div>
         ))}
-        <button onClick={addCustomer} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={14} /> Agregar cliente</button>
+        <button onClick={addCustomer} style={{ ...btnSmall, color: '#1F77F6', borderColor: '#1F77F630' }}><Plus size={14} /> Agregar cliente</button>
       </ToolSection>
 
       <ToolActionBar
@@ -137,7 +137,7 @@ RESUMEN:
         onComplete={onComplete}
         onReport={handleReport}
         saved={saved}
-        accentColor="#0D9488"
+        accentColor="#1F77F6"
       />
     </div>
   )

@@ -52,8 +52,8 @@ const fadeUp = {
 }
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  active: { bg: 'rgba(13,148,136,0.1)', text: '#0D9488' },
-  planned: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6' },
+  active: { bg: 'rgba(31,119,246,0.1)', text: '#1F77F6' },
+  planned: { bg: 'rgba(59,130,246,0.1)', text: '#1F77F6' },
   completed: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' },
 }
 
@@ -309,14 +309,14 @@ function AdminOrgDashboard() {
       label: 'Total startups',
       value: metrics.totalStartups,
       icon: Rocket,
-      color: '#0D9488',
-      bg: 'rgba(13,148,136,0.08)',
+      color: '#1F77F6',
+      bg: 'rgba(31,119,246,0.08)',
     },
     {
       label: 'Cohortes activas',
       value: metrics.activeCohorts,
       icon: GraduationCap,
-      color: '#3B82F6',
+      color: '#1F77F6',
       bg: 'rgba(59,130,246,0.08)',
     },
     {
@@ -340,13 +340,13 @@ function AdminOrgDashboard() {
       label: 'Crear cohorte',
       href: '/admin/cohortes/nueva',
       icon: Plus,
-      color: '#0D9488',
+      color: '#1F77F6',
     },
     {
       label: 'Generar reporte',
       href: '/admin/reportes',
       icon: FileText,
-      color: '#3B82F6',
+      color: '#1F77F6',
     },
     {
       label: 'Descargar datos',
@@ -373,7 +373,7 @@ function AdminOrgDashboard() {
             width: 32,
             height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#0D9488',
+            borderTopColor: '#1F77F6',
             borderRadius: '50%',
           }}
         />
@@ -472,7 +472,7 @@ function AdminOrgDashboard() {
               }}
             />
           ) : (
-            <Building2 size={20} color="#0D9488" />
+            <Building2 size={20} color="#1F77F6" />
           )}
           <div>
             <h1
@@ -584,9 +584,9 @@ function AdminOrgDashboard() {
               marginBottom: '1.25rem',
             }}>
               {[
-                { label: 'Financiamiento gestionado', value: 'USD 1.2M', bg: 'rgba(255,107,74,0.08)', color: '#FF6B4A' },
-                { label: 'Tools completion rate', value: `${DEMO_ORG.toolsCompletionRate}%`, bg: 'rgba(13,148,136,0.08)', color: '#0D9488' },
-                { label: 'NPS promedio', value: DEMO_ORG.averageNps, bg: 'rgba(59,130,246,0.08)', color: '#3B82F6' },
+                { label: 'Financiamiento gestionado', value: 'USD 1.2M', bg: 'rgba(218,78,36,0.08)', color: '#DA4E24' },
+                { label: 'Tools completion rate', value: `${DEMO_ORG.toolsCompletionRate}%`, bg: 'rgba(31,119,246,0.08)', color: '#1F77F6' },
+                { label: 'NPS promedio', value: DEMO_ORG.averageNps, bg: 'rgba(59,130,246,0.08)', color: '#1F77F6' },
                 { label: 'Mentores activos', value: DEMO_ORG.mentors, bg: 'rgba(139,92,246,0.08)', color: '#8B5CF6' },
               ].map((k) => (
                 <div key={k.label} style={{
@@ -721,7 +721,7 @@ function AdminOrgDashboard() {
               gap: '0.375rem',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-xs)',
-              color: '#0D9488',
+              color: '#1F77F6',
               textDecoration: 'none',
               fontWeight: 500,
             }}
@@ -999,14 +999,14 @@ function AdminOrgDashboard() {
                             width: 28,
                             height: 28,
                             borderRadius: 'var(--radius-sm)',
-                            background: 'rgba(13,148,136,0.08)',
+                            background: 'rgba(31,119,246,0.08)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
                             fontSize: 'var(--text-2xs)',
                             fontWeight: 700,
-                            color: '#0D9488',
+                            color: '#1F77F6',
                           }}
                         >
                           {startup.name?.charAt(0).toUpperCase() || 'S'}
@@ -1044,8 +1044,8 @@ function AdminOrgDashboard() {
                           borderRadius: 999,
                           fontSize: 'var(--text-xs)',
                           fontWeight: 500,
-                          background: 'rgba(13,148,136,0.08)',
-                          color: '#0D9488',
+                          background: 'rgba(31,119,246,0.08)',
+                          color: '#1F77F6',
                         }}
                       >
                         {startup.stage || 'Sin etapa'}

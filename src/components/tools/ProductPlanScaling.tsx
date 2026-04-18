@@ -68,7 +68,7 @@ ${data.estrategiaExpansion || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={4} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={4} accentColor="#1F77F6" />
 
       <ToolSection
         number={1}
@@ -111,7 +111,7 @@ ${data.estrategiaExpansion || '(No completado)'}
             {openSections[`entry-${i}`] && <textarea value={m.entryStrategy} onChange={e => updateMarket(i, 'entryStrategy', e.target.value)} placeholder="¿Cómo planeas entrar a este mercado?" rows={3} style={textareaStyle} />}
           </div>
         ))}
-        <button onClick={addMarket} style={{ ...btnSmall, color: '#0D9488', border: '1px solid #0D948830' }}>
+        <button onClick={addMarket} style={{ ...btnSmall, color: '#1F77F6', border: '1px solid #1F77F630' }}>
           <Plus size={14} /> Agregar mercado
         </button>
       </ToolSection>

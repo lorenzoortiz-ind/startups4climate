@@ -48,7 +48,7 @@ const TYPE_LABELS: Record<ContentType, string> = {
 const TYPE_COLORS: Record<ContentType, { color: string; bg: string; border: string; accent: string }> = {
   news: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)', accent: '#2A222B' },
   regulation: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)', accent: '#2A222B' },
-  investment: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)', accent: '#0D9488' },
+  investment: { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)', accent: '#1F77F6' },
   trend: { color: '#6366F1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.2)', accent: '#6366F1' },
   event: { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)', accent: '#EC4899' },
   report: { color: '#0EA5E9', bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.2)', accent: '#0EA5E9' },
@@ -270,11 +270,11 @@ export default function RadarPage() {
           <div
             style={{
               width: 40, height: 40, borderRadius: 12,
-              background: 'rgba(13,148,136,0.08)', border: '1px solid rgba(13,148,136,0.2)',
+              background: 'rgba(31,119,246,0.08)', border: '1px solid rgba(31,119,246,0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}
           >
-            <Radio size={20} color="#0D9488" />
+            <Radio size={20} color="#1F77F6" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h1
@@ -316,11 +316,11 @@ export default function RadarPage() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                 padding: '0.5rem 1rem', borderRadius: 999,
-                border: isActive ? '1px solid rgba(13,148,136,0.3)' : '1px solid var(--color-border)',
-                background: isActive ? 'rgba(13,148,136,0.08)' : 'var(--color-bg-card)',
+                border: isActive ? '1px solid rgba(31,119,246,0.3)' : '1px solid var(--color-border)',
+                background: isActive ? 'rgba(31,119,246,0.08)' : 'var(--color-bg-card)',
                 fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                 fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#0D9488' : 'var(--color-text-secondary)',
+                color: isActive ? '#1F77F6' : 'var(--color-text-secondary)',
                 cursor: 'pointer', whiteSpace: 'nowrap',
               }}
             >
@@ -342,17 +342,17 @@ export default function RadarPage() {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.75rem 1rem', borderRadius: 12,
-              background: 'rgba(13,148,136,0.04)',
-              border: '1px solid rgba(13,148,136,0.1)',
+              background: 'rgba(31,119,246,0.04)',
+              border: '1px solid rgba(31,119,246,0.1)',
               marginBottom: '1rem',
             }}
           >
-            <Target size={14} color="#0D9488" />
+            <Target size={14} color="#1F77F6" />
             <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>
               Mostrando noticias relevantes para:{' '}
-              <strong style={{ color: '#0D9488' }}>{userVertical}</strong>
+              <strong style={{ color: '#1F77F6' }}>{userVertical}</strong>
               {startup?.country && (
-                <> en <strong style={{ color: '#0D9488' }}>{COUNTRY_LABELS[startup.country] || startup.country}</strong></>
+                <> en <strong style={{ color: '#1F77F6' }}>{COUNTRY_LABELS[startup.country] || startup.country}</strong></>
               )}
             </span>
           </motion.div>

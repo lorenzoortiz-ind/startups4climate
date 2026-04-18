@@ -144,7 +144,7 @@ export default async function PublicPassportPage({
               color: 'var(--color-text-primary)',
             }}
           >
-            Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
+            Startups<span style={{ color: '#DA4E24' }}>4</span>Climate
           </span>
           <span
             style={{

@@ -49,7 +49,7 @@ export function generateToolReport(
     month: 'long',
     year: 'numeric',
   })
-  const stageColor = tool.stageColor || '#0D9488'
+  const stageColor = tool.stageColor || '#1F77F6'
 
   const win = window.open('', '_blank')
   if (!win) return
@@ -114,7 +114,7 @@ export function generateToolReport(
   .btn-primary { background: ${stageColor}; color: white; box-shadow: 0 2px 8px ${stageColor}40; }
   .btn-primary:hover { filter: brightness(0.9); transform: translateY(-1px); }
   .btn-secondary { background: white; color: #374151; border: 1px solid #E5E7EB; }
-  .btn-secondary:hover { background: #FAF8F5; }
+  .btn-secondary:hover { background: #0E0E0E; }
 
   .disclaimer { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1.5rem; font-size: 0.8125rem; color: #92400E; line-height: 1.5; }
 

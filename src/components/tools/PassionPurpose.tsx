@@ -153,7 +153,7 @@ ${data.reclutamiento || '(No completado)'}
             <textarea value={f.gaps} onChange={e => updateFounder(i, 'gaps', e.target.value)} placeholder="Brechas o áreas de mejora" rows={2} style={{ ...textareaStyle, marginTop: '0.5rem' }} />
           </div>
         ))}
-        <button onClick={addFounder} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}>+ Agregar fundador</button>
+        <button onClick={addFounder} style={{ ...btnSmall, color: '#1F77F6', borderColor: '#1F77F630' }}>+ Agregar fundador</button>
       </ToolSection>
 
       <ToolSection

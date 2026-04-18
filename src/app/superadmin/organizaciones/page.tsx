@@ -262,8 +262,8 @@ export default function OrganizacionesPage() {
               <tbody>
                 {filtered.map((org, i) => {
                   const isActive = org.is_active !== false
-                  const statusColor = isActive ? '#0D9488' : '#EF4444'
-                  const statusBg = isActive ? 'rgba(13,148,136,0.08)' : 'rgba(239,68,68,0.08)'
+                  const statusColor = isActive ? '#1F77F6' : '#EF4444'
+                  const statusBg = isActive ? 'rgba(31,119,246,0.08)' : 'rgba(239,68,68,0.08)'
                   const statusLabel = isActive ? 'Activa' : 'Desactivada'
 
                   return (
@@ -287,9 +287,9 @@ export default function OrganizacionesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <div style={{
                             width: 28, height: 28, borderRadius: 'var(--radius-sm)',
-                            background: 'rgba(13,148,136,0.08)',
+                            background: 'rgba(31,119,246,0.08)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0, fontSize: 'var(--text-2xs)', fontWeight: 700, color: '#0D9488',
+                            flexShrink: 0, fontSize: 'var(--text-2xs)', fontWeight: 700, color: '#1F77F6',
                           }}>
                             {org.name.charAt(0).toUpperCase()}
                           </div>
@@ -316,7 +316,7 @@ export default function OrganizacionesPage() {
                           <span style={{
                             padding: '0.1875rem 0.5rem', borderRadius: 999,
                             fontSize: 'var(--text-xs)', fontWeight: 500,
-                            background: 'rgba(59,130,246,0.08)', color: '#3B82F6',
+                            background: 'rgba(59,130,246,0.08)', color: '#1F77F6',
                           }}>
                             {PLAN_LABELS[org.plan] || org.plan}
                           </span>

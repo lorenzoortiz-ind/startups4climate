@@ -221,11 +221,11 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
       style={{
         position: 'relative',
         background: plan.highlighted
-          ? 'linear-gradient(180deg, rgba(255,107,74,0.10) 0%, rgba(255,107,74,0.02) 60%, var(--color-bg-elevated) 100%)'
+          ? 'linear-gradient(180deg, rgba(218,78,36,0.10) 0%, rgba(218,78,36,0.02) 60%, var(--color-bg-elevated) 100%)'
           : 'var(--color-bg-card)',
         borderRadius: 'var(--radius-xl)',
         border: plan.highlighted
-          ? '1.5px solid rgba(255,107,74,0.45)'
+          ? '1.5px solid rgba(218,78,36,0.45)'
           : `1px solid ${hovered ? plan.accent : 'var(--color-border-strong)'}`,
         padding: '2.5rem 2rem',
         display: 'flex',
@@ -234,10 +234,10 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
         transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
         boxShadow: hovered
           ? plan.highlighted
-            ? '0 24px 48px -12px rgba(255,107,74,0.35)'
+            ? '0 24px 48px -12px rgba(218,78,36,0.35)'
             : '0 12px 32px -8px rgba(0,0,0,0.4)'
           : plan.highlighted
-            ? '0 8px 24px -8px rgba(255,107,74,0.2)'
+            ? '0 8px 24px -8px rgba(218,78,36,0.2)'
             : '0 1px 4px rgba(0,0,0,0.2)',
         flex: '1 1 300px',
         maxWidth: 400,
@@ -327,7 +327,7 @@ function PricingCard({ plan, i }: { plan: (typeof PLANS)[0]; i: number }) {
       <div
         style={{
           height: 1,
-          background: plan.highlighted ? 'rgba(255,107,74,0.18)' : 'var(--color-border)',
+          background: plan.highlighted ? 'rgba(218,78,36,0.18)' : 'var(--color-border)',
           marginBottom: '1.5rem',
         }}
       />
@@ -732,7 +732,7 @@ export default function OrganizacionesPage() {
           style={{
             marginTop: '3rem',
             background: 'rgba(31,119,246,0.10)',
-            border: '1px solid rgba(13,148,136,0.15)',
+            border: '1px solid rgba(31,119,246,0.15)',
             borderRadius: 'var(--radius-lg)',
             padding: '2rem 2.5rem',
             display: 'flex',
@@ -847,7 +847,7 @@ export default function OrganizacionesPage() {
               width: 200,
               height: 200,
               borderRadius: '50%',
-              background: 'rgba(13,148,136,0.05)',
+              background: 'rgba(31,119,246,0.05)',
               pointerEvents: 'none',
             }}
           />
@@ -957,8 +957,8 @@ export default function OrganizacionesPage() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.background = 'rgba(255,107,74,0.08)'
-                e.currentTarget.style.borderColor = 'rgba(255,107,74,0.4)'
+                e.currentTarget.style.background = 'rgba(218,78,36,0.08)'
+                e.currentTarget.style.borderColor = 'rgba(218,78,36,0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)'

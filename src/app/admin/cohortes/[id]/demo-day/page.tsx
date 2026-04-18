@@ -312,7 +312,7 @@ export default function DemoDayPage() {
         }}
       >
         <span>← / → para navegar · Esc para salir · Espacio = siguiente</span>
-        <span>Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate</span>
+        <span>Startups<span style={{ color: '#DA4E24' }}>4</span>Climate</span>
       </div>
     </div>
   )

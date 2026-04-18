@@ -223,7 +223,7 @@ export default function PlataformaPage() {
           style={{
             width: 32, height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#0D9488',
+            borderTopColor: '#1F77F6',
             borderRadius: '50%',
           }}
         />
@@ -241,7 +241,7 @@ export default function PlataformaPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <Wrench size={20} color="#0D9488" />
+          <Wrench size={20} color="#1F77F6" />
           <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
             Plataforma
           </h1>
@@ -257,10 +257,10 @@ export default function PlataformaPage() {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
             <div style={{
               width: 40, height: 40, borderRadius: 'var(--radius-md)',
-              background: maintenanceMode ? 'rgba(239,68,68,0.08)' : 'rgba(13,148,136,0.08)',
+              background: maintenanceMode ? 'rgba(239,68,68,0.08)' : 'rgba(31,119,246,0.08)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <Power size={20} color={maintenanceMode ? '#DC2626' : '#0D9488'} />
+              <Power size={20} color={maintenanceMode ? '#DC2626' : '#1F77F6'} />
             </div>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: '0.25rem' }}>
@@ -309,7 +309,7 @@ export default function PlataformaPage() {
               background: 'rgba(59,130,246,0.08)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <CreditCard size={20} color="#3B82F6" />
+              <CreditCard size={20} color="#1F77F6" />
             </div>
             <div style={{ flex: 1 }}>
               <h3 style={{ fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: '0.25rem' }}>
@@ -367,7 +367,7 @@ export default function PlataformaPage() {
                       style={{
                         width: 48, height: 26, borderRadius: 13, padding: 2,
                         border: 'none', cursor: 'pointer',
-                        background: bannerActive ? '#0D9488' : 'var(--color-border)',
+                        background: bannerActive ? '#1F77F6' : 'var(--color-border)',
                         transition: 'background 0.2s',
                         position: 'relative',
                       }}
@@ -379,7 +379,7 @@ export default function PlataformaPage() {
                         boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
                       }} />
                     </button>
-                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: bannerActive ? '#0D9488' : 'var(--color-text-secondary)', fontWeight: 500 }}>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: bannerActive ? '#1F77F6' : 'var(--color-text-secondary)', fontWeight: 500 }}>
                       {bannerActive ? 'Visible' : 'Oculto'}
                     </span>
                   </div>
@@ -408,8 +408,8 @@ export default function PlataformaPage() {
             gap: '1rem',
           }}>
             {[
-              { label: 'Usuarios totales', value: totalUsers, color: '#3B82F6' },
-              { label: 'Organizaciones', value: totalOrgs, color: '#0D9488' },
+              { label: 'Usuarios totales', value: totalUsers, color: '#1F77F6' },
+              { label: 'Organizaciones', value: totalOrgs, color: '#1F77F6' },
               { label: 'Startups', value: totalStartups, color: '#8B5CF6' },
               { label: 'Región DB', value: 'us-east-1', color: '#6B7280', isText: true },
             ].map((item) => (

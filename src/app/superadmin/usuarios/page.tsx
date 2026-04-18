@@ -61,13 +61,13 @@ const selectStyle: React.CSSProperties = {
 }
 
 const ROLE_BADGES: Record<string, { bg: string; text: string; label: string }> = {
-  founder: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6', label: 'Founder' },
+  founder: { bg: 'rgba(59,130,246,0.1)', text: '#1F77F6', label: 'Founder' },
   admin_org: { bg: 'rgba(139,92,246,0.1)', text: '#8B5CF6', label: 'Admin Org' },
   superadmin: { bg: 'rgba(220,38,38,0.1)', text: '#DC2626', label: 'Superadmin' },
 }
 
 const STATUS_BADGES: Record<string, { bg: string; text: string; label: string }> = {
-  active: { bg: 'rgba(13,148,136,0.10)', text: '#0D9488', label: 'Activo' },
+  active: { bg: 'rgba(31,119,246,0.10)', text: '#1F77F6', label: 'Activo' },
   pending: { bg: 'rgba(245,158,11,0.10)', text: '#F59E0B', label: 'Pendiente' },
   suspended: { bg: 'rgba(220,38,38,0.10)', text: '#DC2626', label: 'Suspendido' },
 }
@@ -348,16 +348,16 @@ export default function UsuariosPage() {
       const mfa = DEMO_USERS.filter((u) => u.mfa).length
       const pending = DEMO_USERS.filter((u) => u.status === 'pending').length
       return [
-        { icon: Users, label: 'Total usuarios', value: total, color: '#0D9488' },
+        { icon: Users, label: 'Total usuarios', value: total, color: '#1F77F6' },
         { icon: UserCheck, label: 'Activos', value: active, color: '#16A34A' },
-        { icon: ShieldCheck, label: 'MFA habilitado', value: `${Math.round((mfa / total) * 100)}%`, color: '#3B82F6' },
+        { icon: ShieldCheck, label: 'MFA habilitado', value: `${Math.round((mfa / total) * 100)}%`, color: '#1F77F6' },
         { icon: Clock, label: 'Invitaciones pendientes', value: pending, color: '#F59E0B' },
       ]
     }
     return [
-      { icon: Users, label: 'Total usuarios', value: totalCount, color: '#0D9488' },
+      { icon: Users, label: 'Total usuarios', value: totalCount, color: '#1F77F6' },
       { icon: UserCheck, label: 'Activos', value: '—', color: '#16A34A' },
-      { icon: ShieldCheck, label: 'MFA habilitado', value: '—', color: '#3B82F6' },
+      { icon: ShieldCheck, label: 'MFA habilitado', value: '—', color: '#1F77F6' },
       { icon: Clock, label: 'Invitaciones pendientes', value: '—', color: '#F59E0B' },
     ]
   }, [isDemo, totalCount])
@@ -384,7 +384,7 @@ export default function UsuariosPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <Users size={20} color="#0D9488" />
+          <Users size={20} color="#1F77F6" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
@@ -515,7 +515,7 @@ export default function UsuariosPage() {
               style={{
                 width: 28, height: 28,
                 border: '3px solid var(--color-border)',
-                borderTopColor: '#0D9488', borderRadius: '50%',
+                borderTopColor: '#1F77F6', borderRadius: '50%',
               }}
             />
           </div>
@@ -573,7 +573,7 @@ export default function UsuariosPage() {
                           cursor: 'pointer',
                           transition: 'background 0.12s',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(13,148,136,0.03)')}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(31,119,246,0.03)')}
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
                         <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
@@ -638,7 +638,7 @@ export default function UsuariosPage() {
                         </td>
                         <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                           {user.mfa
-                            ? <ShieldCheck size={14} color="#0D9488" />
+                            ? <ShieldCheck size={14} color="#1F77F6" />
                             : <ShieldOff size={14} color="var(--color-text-muted)" />}
                         </td>
                         <td style={{
@@ -667,7 +667,7 @@ export default function UsuariosPage() {
                               transition={{ duration: 0.2 }}
                               style={{
                                 padding: '1rem 1.5rem',
-                                background: 'rgba(13,148,136,0.02)',
+                                background: 'rgba(31,119,246,0.02)',
                                 borderTop: '1px solid var(--color-border)',
                               }}
                             >
@@ -768,7 +768,7 @@ export default function UsuariosPage() {
                                     animate={{ opacity: 1, x: 0 }}
                                     style={{
                                       fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
-                                      fontWeight: 500, color: '#0D9488',
+                                      fontWeight: 500, color: '#1F77F6',
                                     }}
                                   >
                                     Cambios guardados
@@ -829,7 +829,7 @@ export default function UsuariosPage() {
             display: 'flex', justifyContent: 'center', padding: '1rem',
             borderTop: '1px solid var(--color-border)',
           }}>
-            <Loader2 size={20} color="#0D9488" style={{ animation: 'spin 1s linear infinite' }} />
+            <Loader2 size={20} color="#1F77F6" style={{ animation: 'spin 1s linear infinite' }} />
           </div>
         )}
       </motion.div>

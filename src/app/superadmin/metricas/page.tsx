@@ -223,7 +223,7 @@ export default function MetricasPage() {
           style={{
             width: 32, height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#0D9488', borderRadius: '50%',
+            borderTopColor: '#1F77F6', borderRadius: '50%',
           }}
         />
       </div>
@@ -231,15 +231,15 @@ export default function MetricasPage() {
   }
 
   const TOP_METRICS: MetricCard[] = [
-    { label: 'Total organizaciones', value: totalOrgs, icon: Building2, color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-    { label: 'Total founders', value: totalFounders, icon: Users, color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+    { label: 'Total organizaciones', value: totalOrgs, icon: Building2, color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
+    { label: 'Total founders', value: totalFounders, icon: Users, color: '#1F77F6', bg: 'rgba(59,130,246,0.08)' },
     { label: 'Total startups', value: totalStartups, icon: Rocket, color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)' },
     { label: 'Cohortes activos', value: activeCohorts, icon: GraduationCap, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
   ]
 
   const SECOND_METRICS: MetricCard[] = [
-    { label: 'Herramientas completadas (prom.)', value: avgToolsCompleted, icon: Wrench, color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-    { label: 'Score diagnóstico (prom.)', value: avgDiagnosticScore, icon: Target, color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+    { label: 'Herramientas completadas (prom.)', value: avgToolsCompleted, icon: Wrench, color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
+    { label: 'Score diagnóstico (prom.)', value: avgDiagnosticScore, icon: Target, color: '#1F77F6', bg: 'rgba(59,130,246,0.08)' },
     { label: 'Invitaciones pendientes', value: pendingInvitations, icon: Mail, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
     { label: 'Incidencias abiertas', value: openTickets, icon: AlertCircle, color: '#DC2626', bg: 'rgba(220,38,38,0.08)' },
   ]
@@ -264,7 +264,7 @@ export default function MetricasPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <BarChart3 size={20} color="#0D9488" />
+          <BarChart3 size={20} color="#1F77F6" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
@@ -435,7 +435,7 @@ export default function MetricasPage() {
                         transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
                         style={{
                           height: '100%', borderRadius: 3,
-                          background: '#0D9488',
+                          background: '#1F77F6',
                         }}
                       />
                     </div>
@@ -508,7 +508,7 @@ export default function MetricasPage() {
                         transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
                         style={{
                           height: '100%', borderRadius: 3,
-                          background: '#3B82F6',
+                          background: '#1F77F6',
                         }}
                       />
                     </div>
@@ -565,7 +565,7 @@ export default function MetricasPage() {
                   flex: 1,
                   minWidth: 4,
                   borderRadius: '2px 2px 0 0',
-                  background: day.count > 0 ? '#0D9488' : 'var(--color-border)',
+                  background: day.count > 0 ? '#1F77F6' : 'var(--color-border)',
                   cursor: 'default',
                   transition: 'opacity 0.15s',
                 }}
@@ -778,7 +778,7 @@ export default function MetricasPage() {
                     .sort((a, b) => programLeverage(b) - programLeverage(a))
                     .map((p) => {
                       const lev = programLeverage(p)
-                      const levColor = lev >= 25_000 ? '#0D9488' : lev >= 12_000 ? '#F59E0B' : '#DC2626'
+                      const levColor = lev >= 25_000 ? '#1F77F6' : lev >= 12_000 ? '#F59E0B' : '#DC2626'
                       return (
                         <tr key={p.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                           <td style={{ padding: '0.55rem 0.5rem', color: 'var(--color-text-primary)', fontWeight: 500 }}>

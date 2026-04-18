@@ -26,7 +26,7 @@ interface BenchmarkMetric {
 function getTrend(org: number, platform: number) {
   const diff = org - platform
   const pct = platform > 0 ? ((diff / platform) * 100).toFixed(0) : '0'
-  if (diff > 0) return { icon: TrendingUp, color: '#0D9488', text: `+${pct}% vs promedio` }
+  if (diff > 0) return { icon: TrendingUp, color: '#1F77F6', text: `+${pct}% vs promedio` }
   if (diff < 0) return { icon: TrendingDown, color: '#DC2626', text: `${pct}% vs promedio` }
   return { icon: Minus, color: '#6B7280', text: 'Igual al promedio' }
 }
@@ -360,7 +360,7 @@ export default function BenchmarkingPage() {
               <Legend
                 wrapperStyle={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem' }}
               />
-              <Bar dataKey="tuOrg" name="Tu organización" fill="#0D9488" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="tuOrg" name="Tu organización" fill="#1F77F6" radius={[4, 4, 0, 0]} />
               <Bar dataKey="promedio" name="Promedio plataforma" fill="#94A3B8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -414,7 +414,7 @@ export default function BenchmarkingPage() {
                 {[...DEMO_STARTUPS]
                   .sort((a, b) => b.readiness - a.readiness)
                   .map((s) => {
-                    const statusColor = s.status === 'on_track' ? '#0D9488' : s.status === 'at_risk' ? '#F59E0B' : '#DC2626'
+                    const statusColor = s.status === 'on_track' ? '#1F77F6' : s.status === 'at_risk' ? '#F59E0B' : '#DC2626'
                     const statusLabel = s.status === 'on_track' ? 'On track' : s.status === 'at_risk' ? 'En riesgo' : 'Alerta'
                     return (
                       <tr key={s.id} style={{ borderBottom: '1px solid var(--color-border)' }}>

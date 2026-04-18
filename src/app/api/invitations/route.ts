@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
           <div style="text-align: center; margin: 32px 0;">
             <a href="${inviteUrl}" style="
               display: inline-block; padding: 14px 32px;
-              background: #FF6B4A; color: #fff; font-size: 15px;
+              background: #DA4E24; color: #fff; font-size: 15px;
               font-weight: 600; text-decoration: none; border-radius: 8px;
             ">
               Aceptar invitación

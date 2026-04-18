@@ -54,7 +54,7 @@ ${data.metricasClave || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={filledKeys.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={filledKeys.length} accentColor="#1F77F6" />
 
       <ToolSection
         number={1}
@@ -93,9 +93,9 @@ ${data.metricasClave || '(No completado)'}
         {(Number(data.clientes) > 0 || Number(data.mrr) > 0) && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.5rem', marginTop: '1rem' }}>
             {[
-              { label: 'Clientes', value: data.clientes || '0', color: '#0D9488' },
-              { label: 'MRR', value: `$${Number(data.mrr).toLocaleString()}`, color: '#FF6B4A' },
-              { label: 'Retención', value: `${data.retencion || 0}%`, color: '#0D9488' },
+              { label: 'Clientes', value: data.clientes || '0', color: '#1F77F6' },
+              { label: 'MRR', value: `$${Number(data.mrr).toLocaleString()}`, color: '#DA4E24' },
+              { label: 'Retención', value: `${data.retencion || 0}%`, color: '#1F77F6' },
               { label: 'NPS', value: String(data.nps || '\u2014'), color: '#2A222B' },
             ].map(m => (
               <div key={m.label} style={{ textAlign: 'center', padding: '0.75rem', borderRadius: 10, background: `${m.color}08`, border: `1px solid ${m.color}20` }}>

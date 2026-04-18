@@ -39,8 +39,8 @@ interface CohortRequest {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  pending: { label: 'Pendiente', color: '#D97706', bg: 'rgba(217,119,6,0.08)' },
-  approved: { label: 'Aprobada', color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
+  pending: { label: 'Pendiente', color: '#F0721D', bg: 'rgba(240,114,29,0.08)' },
+  approved: { label: 'Aprobada', color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
   rejected: { label: 'Rechazada', color: '#DC2626', bg: 'rgba(220,38,38,0.08)' },
 }
 
@@ -224,15 +224,15 @@ export default function ProgramasPage() {
           style={{
             padding: '1rem 1.25rem',
             borderRadius: 12,
-            background: 'rgba(13,148,136,0.06)',
-            border: '1px solid rgba(13,148,136,0.15)',
+            background: 'rgba(31,119,246,0.06)',
+            border: '1px solid rgba(31,119,246,0.15)',
             marginBottom: '1.5rem',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
           }}
         >
-          <CheckCircle2 size={18} color="#0D9488" style={{ flexShrink: 0 }} />
+          <CheckCircle2 size={18} color="#1F77F6" style={{ flexShrink: 0 }} />
           <div>
             <div
               style={{
@@ -354,17 +354,17 @@ export default function ProgramasPage() {
                         gap: '0.25rem',
                         padding: '0.1875rem 0.5rem',
                         borderRadius: 6,
-                        background: 'rgba(13,148,136,0.06)',
+                        background: 'rgba(31,119,246,0.06)',
                         marginBottom: '0.5rem',
                       }}
                     >
-                      <Building2 size={10} color="#0D9488" />
+                      <Building2 size={10} color="#1F77F6" />
                       <span
                         style={{
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.6875rem',
                           fontWeight: 600,
-                          color: '#0D9488',
+                          color: '#1F77F6',
                         }}
                       >
                         {orgLabel}
@@ -443,11 +443,11 @@ export default function ProgramasPage() {
                           gap: '0.375rem',
                           padding: '0.5rem 1rem',
                           borderRadius: 8,
-                          background: 'rgba(13,148,136,0.08)',
+                          background: 'rgba(31,119,246,0.08)',
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
                           fontWeight: 600,
-                          color: '#0D9488',
+                          color: '#1F77F6',
                         }}
                       >
                         <CheckCircle2 size={14} />
@@ -458,11 +458,11 @@ export default function ProgramasPage() {
                         style={{
                           padding: '0.5rem 1rem',
                           borderRadius: 8,
-                          background: 'rgba(217,119,6,0.08)',
+                          background: 'rgba(240,114,29,0.08)',
                           fontFamily: 'var(--font-body)',
                           fontSize: '0.8125rem',
                           fontWeight: 500,
-                          color: '#D97706',
+                          color: '#F0721D',
                         }}
                       >
                         Solicitud enviada

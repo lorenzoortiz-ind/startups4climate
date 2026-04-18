@@ -74,7 +74,7 @@ const revenueTypeLabels: Record<string, string> = {
   'marketplace': 'Marketplace',
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function FinancialModelBuilder({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'financial-model-builder', DEFAULT)
@@ -412,13 +412,13 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Runway estimado</span>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#0D9488' : summaryMetrics.runway >= 12 ? '#2A222B' : '#DC2626' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.runway >= 18 ? '#1F77F6' : summaryMetrics.runway >= 12 ? '#2A222B' : '#DC2626' }}>
               {summaryMetrics.runway >= 999 ? '\u221E' : `${summaryMetrics.runway} meses`}
             </span>
           </div>
           <div style={{ padding: '1rem', borderRadius: 10, background: 'var(--color-bg-muted)', textAlign: 'center' }}>
             <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.625rem', textTransform: 'uppercase', color: 'var(--color-text-muted)', fontWeight: 600, letterSpacing: '0.05em', display: 'block', marginBottom: '0.25rem' }}>Break-even</span>
-            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.breakEvenMonth ? '#0D9488' : '#6B7280' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, color: summaryMetrics.breakEvenMonth ? '#1F77F6' : '#6B7280' }}>
               {summaryMetrics.breakEvenMonth ? `Mes ${summaryMetrics.breakEvenMonth}` : 'No alcanzado'}
             </span>
           </div>
@@ -440,9 +440,9 @@ ${projections.slice(0, 12).map(p => `  Mes ${p.month}: Ingreso ${data.currency} 
               {projections.slice(0, 12).map(p => (
                 <tr key={p.month}>
                   <td style={tdStyle}>{p.month}</td>
-                  <td style={{ ...tdStyle, color: '#0D9488' }}>{data.currency} {fmt(p.revenue)}</td>
+                  <td style={{ ...tdStyle, color: '#1F77F6' }}>{data.currency} {fmt(p.revenue)}</td>
                   <td style={{ ...tdStyle, color: '#DC2626' }}>{data.currency} {fmt(p.costs)}</td>
-                  <td style={{ ...tdStyle, color: p.net >= 0 ? '#0D9488' : '#DC2626', fontWeight: 600 }}>{data.currency} {fmt(p.net)}</td>
+                  <td style={{ ...tdStyle, color: p.net >= 0 ? '#1F77F6' : '#DC2626', fontWeight: 600 }}>{data.currency} {fmt(p.net)}</td>
                 </tr>
               ))}
             </tbody>

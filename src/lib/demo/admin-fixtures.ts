@@ -77,7 +77,7 @@ export const DEMO_ORG = {
   contractEnd: '2026-12-31',
   plan: 'Enterprise',
   maxStartups: 40,
-  branding: '#0D9488',
+  branding: '#1F77F6',
   fundingRaisedUSD: 820_000,
   mrrAggregateUSD: 78_400,
   averageNps: 81,
@@ -199,9 +199,9 @@ export const DEMO_COHORTS: DemoCohort[] = [
 
 /* ─────────────────── Vertical breakdown ─────────────────── */
 export const DEMO_VERTICAL_DISTRIBUTION = [
-  { key: 'biomateriales', label: 'Biomateriales', count: 8, color: '#0D9488' },
+  { key: 'biomateriales', label: 'Biomateriales', count: 8, color: '#1F77F6' },
   { key: 'agritech', label: 'Agritech', count: 6, color: '#16A34A' },
-  { key: 'healthtech', label: 'Healthtech', count: 4, color: '#3B82F6' },
+  { key: 'healthtech', label: 'Healthtech', count: 4, color: '#1F77F6' },
   { key: 'energia', label: 'Energía', count: 3, color: '#F59E0B' },
   { key: 'otros', label: 'Otros', count: 3, color: '#94A3B8' },
 ]
@@ -209,9 +209,9 @@ export const DEMO_VERTICAL_DISTRIBUTION = [
 /* ─────────────────── Stage breakdown ─────────────────── */
 export const DEMO_STAGE_DISTRIBUTION = [
   { key: 'pre_incubation', label: 'Pre-incubación', count: 8, color: '#94A3B8' },
-  { key: 'incubation', label: 'Incubación', count: 10, color: '#3B82F6' },
-  { key: 'acceleration', label: 'Aceleración', count: 4, color: '#0D9488' },
-  { key: 'scaling', label: 'Escalamiento', count: 2, color: '#FF6B4A' },
+  { key: 'incubation', label: 'Incubación', count: 10, color: '#1F77F6' },
+  { key: 'acceleration', label: 'Aceleración', count: 4, color: '#1F77F6' },
+  { key: 'scaling', label: 'Escalamiento', count: 2, color: '#DA4E24' },
 ]
 
 /* ─────────────────── Reportes mock ─────────────────── */

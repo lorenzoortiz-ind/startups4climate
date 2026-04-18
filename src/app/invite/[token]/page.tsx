@@ -294,7 +294,7 @@ export default function InvitePage() {
 
         {mode === 'done' && (
           <div style={{ textAlign: 'center' }}>
-            <CheckCircle size={48} color="#0D9488" style={{ marginBottom: '1rem' }} />
+            <CheckCircle size={48} color="#1F77F6" style={{ marginBottom: '1rem' }} />
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '1rem',
               color: 'var(--color-text-primary)', fontWeight: 500, marginBottom: '0.5rem',

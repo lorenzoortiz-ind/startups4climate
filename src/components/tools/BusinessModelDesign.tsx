@@ -26,7 +26,7 @@ const DEFAULT: Data = {
   margenBruto: '',
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function BusinessModelDesign({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'business-model-design', DEFAULT)

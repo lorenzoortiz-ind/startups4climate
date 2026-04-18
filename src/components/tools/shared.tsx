@@ -215,7 +215,7 @@ export interface ToolActionBarProps {
   accentColor?: string
 }
 
-export function ToolActionBar({ onSave, onComplete, onReport, saved = false, accentColor = '#0D9488' }: ToolActionBarProps) {
+export function ToolActionBar({ onSave, onComplete, onReport, saved = false, accentColor = '#1F77F6' }: ToolActionBarProps) {
   return (
     <div style={{
       display: 'flex',

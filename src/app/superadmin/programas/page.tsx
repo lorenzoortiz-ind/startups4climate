@@ -31,10 +31,10 @@ const fadeUp = {
 }
 
 const STATUS_LABELS: Record<DemoProgram['status'], { label: string; bg: string; color: string }> = {
-  active: { label: 'Activo', bg: 'rgba(13,148,136,0.12)', color: '#0D9488' },
+  active: { label: 'Activo', bg: 'rgba(31,119,246,0.12)', color: '#1F77F6' },
   completed: { label: 'Completado', bg: 'rgba(107,114,128,0.12)', color: '#6B7280' },
-  planned: { label: 'Planificado', bg: 'rgba(59,130,246,0.12)', color: '#3B82F6' },
-  at_risk: { label: 'En riesgo', bg: 'rgba(255,107,74,0.12)', color: '#FF6B4A' },
+  planned: { label: 'Planificado', bg: 'rgba(59,130,246,0.12)', color: '#1F77F6' },
+  at_risk: { label: 'En riesgo', bg: 'rgba(218,78,36,0.12)', color: '#DA4E24' },
 }
 
 export default function ProgramasPage() {
@@ -95,7 +95,7 @@ export default function ProgramasPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
-          <Briefcase size={22} color="#FF6B4A" />
+          <Briefcase size={22} color="#DA4E24" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
@@ -119,9 +119,9 @@ export default function ProgramasPage() {
         gap: '0.75rem', marginBottom: '1.5rem',
       }}>
         {[
-          { label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#FF6B4A' },
-          { label: 'Startups activas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#0D9488' },
-          { label: 'Readiness promedio', value: DEMO_MINPRO_KPIS.readinessAvg, color: '#3B82F6' },
+          { label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#DA4E24' },
+          { label: 'Startups activas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#1F77F6' },
+          { label: 'Readiness promedio', value: DEMO_MINPRO_KPIS.readinessAvg, color: '#1F77F6' },
           { label: 'Tools completion', value: `${DEMO_MINPRO_KPIS.toolsCompletionPct}%`, color: '#8B5CF6' },
           { label: 'Funding levantado', value: formatUSD(DEMO_MINPRO_KPIS.fundingRaisedUSD), color: '#16A34A' },
           { label: 'Regiones', value: DEMO_MINPRO_KPIS.regions, color: '#F59E0B' },
@@ -182,8 +182,8 @@ export default function ProgramasPage() {
             fontFamily: 'var(--font-body)', fontSize: '0.75rem',
             color: 'var(--color-text-secondary)',
           }}>
-            <Legend color="#FF6B4A" label="Startups activas" />
-            <Legend color="#0D9488" label="Funding levantado (USD)" />
+            <Legend color="#DA4E24" label="Startups activas" />
+            <Legend color="#1F77F6" label="Funding levantado (USD)" />
           </div>
         </motion.div>
 
@@ -313,8 +313,8 @@ export default function ProgramasPage() {
                         <span style={{
                           padding: '0.1rem 0.4rem', borderRadius: 4,
                           fontSize: '0.65rem', fontWeight: 600,
-                          background: p.toolsCompletionPct >= 60 ? 'rgba(13,148,136,0.12)' : 'rgba(245,158,11,0.12)',
-                          color: p.toolsCompletionPct >= 60 ? '#0D9488' : '#F59E0B',
+                          background: p.toolsCompletionPct >= 60 ? 'rgba(31,119,246,0.12)' : 'rgba(245,158,11,0.12)',
+                          color: p.toolsCompletionPct >= 60 ? '#1F77F6' : '#F59E0B',
                         }}>
                           {p.toolsCompletionPct >= 60 ? 'OK' : 'Bajo'}
                         </span>
@@ -406,8 +406,8 @@ function ReachBars({ programs, maxStartups, maxFunding }: { programs: DemoProgra
             <text x={0} y={y + 14} fontFamily="var(--font-body)" fontSize={11} fill="var(--color-text-secondary)">
               {p.name.length > 28 ? `${p.name.slice(0, 27)}…` : p.name}
             </text>
-            <rect x={210} y={y + 4} width={startupsW} height={10} rx={3} fill="rgba(255,107,74,0.85)" />
-            <rect x={210} y={y + 16} width={fundingW} height={10} rx={3} fill="#0D9488" />
+            <rect x={210} y={y + 4} width={startupsW} height={10} rx={3} fill="rgba(218,78,36,0.85)" />
+            <rect x={210} y={y + 16} width={fundingW} height={10} rx={3} fill="#1F77F6" />
             <text x={210 + Math.max(startupsW, fundingW) + 6} y={y + 22} fontFamily="var(--font-body)" fontSize={10} fill="var(--color-text-secondary)">
               {p.startupsCount} · {formatUSD(p.fundingRaisedUSD)}
             </text>
@@ -475,7 +475,7 @@ function QuickLink({
       fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 500,
       textDecoration: 'none', transition: 'all 0.15s',
     }}>
-      <Icon size={14} color="#FF6B4A" />
+      <Icon size={14} color="#DA4E24" />
       {label}
     </Link>
   )

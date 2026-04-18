@@ -44,7 +44,7 @@ export default function FullLifecycleUseCase({ userId, onComplete, onGenerateRep
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={SECTIONS.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={SECTIONS.length} accentColor="#1F77F6" />
 
       <InsightPanel title="Referencia académica">
         <p style={{ margin: 0 }}>
@@ -68,7 +68,7 @@ export default function FullLifecycleUseCase({ userId, onComplete, onGenerateRep
           number={i + 1}
           title={s.title}
           subtitle={s.subtitle}
-          accentColor="#0D9488"
+          accentColor="#1F77F6"
         >
           <textarea
             value={(data as Record<string, string>)[s.key]}
@@ -85,7 +85,7 @@ export default function FullLifecycleUseCase({ userId, onComplete, onGenerateRep
         onComplete={onComplete}
         onReport={handleReport}
         saved={saved}
-        accentColor="#0D9488"
+        accentColor="#1F77F6"
       />
     </div>
   )

@@ -36,8 +36,8 @@ export default function KeyAssumptions({ userId, onComplete, onGenerateReport }:
   const addAssumption = () => setData(p => ({ ...p, assumptions: [...p.assumptions, emptyAssumption()] }))
   const removeAssumption = (i: number) => setData(p => ({ ...p, assumptions: p.assumptions.filter((_, idx) => idx !== i) }))
 
-  const riesgoColor = (r: string) => r === 'Alto' ? '#DC2626' : r === 'Medio' ? '#2A222B' : '#0D9488'
-  const resultadoColor = (r: string) => r === 'Validado' ? '#0D9488' : r === 'Invalidado' ? '#DC2626' : '#9CA3AF'
+  const riesgoColor = (r: string) => r === 'Alto' ? '#DC2626' : r === 'Medio' ? '#2A222B' : '#1F77F6'
+  const resultadoColor = (r: string) => r === 'Validado' ? '#1F77F6' : r === 'Invalidado' ? '#DC2626' : '#9CA3AF'
 
   /* ── Progress calculation ── */
   const filledCount = data.assumptions.filter(a => a.supuesto.trim() && a.experimento.trim()).length
@@ -65,7 +65,7 @@ RESUMEN:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filledCount} total={totalCount} accentColor="#0D9488" />
+      <ToolProgress filled={filledCount} total={totalCount} accentColor="#1F77F6" />
 
       {/* Summary badges */}
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 12, border: '1px solid var(--color-border)', padding: '1rem 1.25rem', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
@@ -130,7 +130,7 @@ RESUMEN:
             {openSections[`apr-${i}`] && <textarea value={a.aprendizaje} onChange={e => updateAssumption(i, 'aprendizaje', e.target.value)} placeholder="¿Qué aprendiste del resultado?" rows={2} style={textareaStyle} />}
           </div>
         ))}
-        <button onClick={addAssumption} style={{ ...btnSmall, color: '#0D9488', border: '1px solid #0D948830' }}>
+        <button onClick={addAssumption} style={{ ...btnSmall, color: '#1F77F6', border: '1px solid #1F77F630' }}>
           <Plus size={14} /> Agregar supuesto
         </button>
       </ToolSection>

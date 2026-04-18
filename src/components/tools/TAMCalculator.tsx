@@ -74,8 +74,8 @@ ${data.fuentes || '(No completado)'}
         {/* TAM display card */}
         <div style={{
           padding: '1.25rem', borderRadius: 12, textAlign: 'center',
-          background: 'linear-gradient(135deg, #0D9488, #0D9488)',
-          color: 'white', boxShadow: '0 4px 14px rgba(13,148,136,0.3)',
+          background: 'linear-gradient(135deg, #1F77F6, #1F77F6)',
+          color: 'white', boxShadow: '0 4px 14px rgba(31,119,246,0.3)',
         }}>
           <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.8, marginBottom: '0.375rem' }}>
             TAM Calculado

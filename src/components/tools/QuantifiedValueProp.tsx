@@ -54,7 +54,7 @@ ${data.comparacion || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={sectionKeys.length} accentColor="#1F77F6" />
 
       <InsightPanel title="Referencia académica">
         <p style={{ margin: 0 }}>
@@ -72,7 +72,7 @@ ${data.comparacion || '(No completado)'}
         </span>
       </InsightPanel>
 
-      <ToolSection number={1} title="Valor entregado al cliente" subtitle="Métricas cuantificables de impacto" defaultOpen accentColor="#0D9488">
+      <ToolSection number={1} title="Valor entregado al cliente" subtitle="Métricas cuantificables de impacto" defaultOpen accentColor="#1F77F6">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
           <div>
             <label style={labelStyle}>Ahorro económico (anual)</label>
@@ -98,15 +98,15 @@ ${data.comparacion || '(No completado)'}
         </div>
       </ToolSection>
 
-      <ToolSection number={2} title="Reducción de riesgo" subtitle="Valor intangible cuantificado" accentColor="#0D9488">
+      <ToolSection number={2} title="Reducción de riesgo" subtitle="Valor intangible cuantificado" accentColor="#1F77F6">
         <textarea value={data.reduccionRiesgo} onChange={e => setData(p => ({ ...p, reduccionRiesgo: e.target.value }))} placeholder="¿Qué riesgos reduces para el cliente? ¿Cómo los cuantificas?" rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={3} title="Status quo actual del cliente" subtitle="El costo de no hacer nada" accentColor="#0D9488">
+      <ToolSection number={3} title="Status quo actual del cliente" subtitle="El costo de no hacer nada" accentColor="#1F77F6">
         <textarea value={data.statusQuo} onChange={e => setData(p => ({ ...p, statusQuo: e.target.value }))} placeholder="¿Cómo resuelve el cliente este problema hoy? ¿Cuánto le cuesta en tiempo, dinero y frustración?" rows={4} style={textareaStyle} />
       </ToolSection>
 
-      <ToolSection number={4} title="Comparación cuantificada" subtitle="Antes vs después con números" accentColor="#0D9488">
+      <ToolSection number={4} title="Comparación cuantificada" subtitle="Antes vs después con números" accentColor="#1F77F6">
         <textarea value={data.comparacion} onChange={e => setData(p => ({ ...p, comparacion: e.target.value }))} placeholder="Compara numéricamente: antes vs después de usar tu solución" rows={4} style={textareaStyle} />
       </ToolSection>
 
@@ -115,7 +115,7 @@ ${data.comparacion || '(No completado)'}
         onComplete={onComplete}
         onReport={handleReport}
         saved={saved}
-        accentColor="#0D9488"
+        accentColor="#1F77F6"
       />
     </div>
   )

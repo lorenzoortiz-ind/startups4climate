@@ -96,7 +96,7 @@ ${data.topOportunidades || '(No completado)'}
             </div>
           </div>
         ))}
-        <button onClick={addSegment} style={{ ...btnSmall, color: '#0D9488', borderColor: '#0D948830' }}><Plus size={14} /> Agregar segmento</button>
+        <button onClick={addSegment} style={{ ...btnSmall, color: '#1F77F6', borderColor: '#1F77F630' }}><Plus size={14} /> Agregar segmento</button>
       </ToolSection>
 
       <ToolSection

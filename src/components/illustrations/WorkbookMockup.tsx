@@ -36,7 +36,7 @@ export default function WorkbookMockup({
       {/* Front cover */}
       <g transform="translate(0, -6) skewY(-1.5)">
         {/* Coral/orange cover background */}
-        <rect x="56" y="34" width="274" height="380" rx="8" fill="#FF6B4A" />
+        <rect x="56" y="34" width="274" height="380" rx="8" fill="#DA4E24" />
 
         {/* Gradient overlay for depth */}
         <defs>
@@ -68,7 +68,7 @@ export default function WorkbookMockup({
           opacity="0.7"
           letterSpacing="3.5"
         >
-          <tspan fill="#fff">STARTUPS</tspan><tspan fill="#FF6B4A">4</tspan><tspan fill="#fff">CLIMATE</tspan>
+          <tspan fill="#fff">STARTUPS</tspan><tspan fill="#DA4E24">4</tspan><tspan fill="#fff">CLIMATE</tspan>
         </text>
 
         {/* Thin rule below brand */}
@@ -134,10 +134,10 @@ export default function WorkbookMockup({
 
         {/* 4 stage indicators with stage colors */}
         {[
-          { cx: 120, color: '#FF6B4A', label: 'PRE-INC.' },
-          { cx: 160, color: '#0D9488', label: 'INCUB.' },
-          { cx: 200, color: '#D97706', label: 'ACELER.' },
-          { cx: 240, color: '#3B82F6', label: 'ESCAL.' },
+          { cx: 120, color: '#DA4E24', label: 'PRE-INC.' },
+          { cx: 160, color: '#1F77F6', label: 'INCUB.' },
+          { cx: 200, color: '#F0721D', label: 'ACELER.' },
+          { cx: 240, color: '#1F77F6', label: 'ESCAL.' },
         ].map((dot, i) => (
           <g key={i}>
             <circle cx={dot.cx} cy="286" r="10" fill="#fff" opacity="0.15" />

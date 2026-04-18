@@ -21,7 +21,7 @@ interface Round {
   investorName: string
 }
 
-const COLORS = ['#0D9488', '#FF6B4A', '#2A222B', '#0D9488', '#DC2626', '#0D9488']
+const COLORS = ['#1F77F6', '#DA4E24', '#2A222B', '#1F77F6', '#DC2626', '#1F77F6']
 
 export default function CapTable({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [state, setState] = useToolState(userId, 'cap-table', {

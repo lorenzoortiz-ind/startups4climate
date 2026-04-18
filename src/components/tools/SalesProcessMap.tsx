@@ -25,7 +25,7 @@ const DEFAULT: Data = {
   herramientas: '',
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function SalesProcessMap({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'sales-process-map', DEFAULT)

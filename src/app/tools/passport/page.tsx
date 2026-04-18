@@ -170,9 +170,9 @@ function getLetterGrade(score: number): string {
 }
 
 function getGradeColor(score: number): string {
-  if (score >= 70) return '#0D9488'
-  if (score >= 50) return '#D97706'
-  if (score >= 30) return '#FF6B4A'
+  if (score >= 70) return '#1F77F6'
+  if (score >= 50) return '#F0721D'
+  if (score >= 30) return '#DA4E24'
   return '#DC2626'
 }
 
@@ -381,8 +381,8 @@ function KpiCell({
   health?: 'green' | 'yellow' | 'red'
 }) {
   const healthColors = {
-    green: '#0D9488',
-    yellow: '#D97706',
+    green: '#1F77F6',
+    yellow: '#F0721D',
     red: '#DC2626',
   }
   const healthColor = health ? healthColors[health] : undefined
@@ -604,9 +604,9 @@ function MarketCircles({
   if (!tam && !sam && !som) return null
 
   const items = [
-    { label: 'TAM', value: tam, color: '#3B82F620', border: '#3B82F640', size: 140 },
-    { label: 'SAM', value: sam, color: '#0D948820', border: '#0D948840', size: 100 },
-    { label: 'SOM', value: som, color: '#FF6B4A25', border: '#FF6B4A50', size: 60 },
+    { label: 'TAM', value: tam, color: '#1F77F620', border: '#1F77F640', size: 140 },
+    { label: 'SAM', value: sam, color: '#1F77F620', border: '#1F77F640', size: 100 },
+    { label: 'SOM', value: som, color: '#DA4E2425', border: '#DA4E2450', size: 60 },
   ]
 
   return (
@@ -936,7 +936,7 @@ export default function PassportPage() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}
             >
-              <Award size={20} color="#3B82F6" />
+              <Award size={20} color="#1F77F6" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
@@ -988,7 +988,7 @@ export default function PassportPage() {
               margin: '0 auto 1.5rem',
             }}
           >
-            <Award size={28} color="#3B82F6" />
+            <Award size={28} color="#1F77F6" />
           </div>
           <p
             style={{
@@ -1011,7 +1011,7 @@ export default function PassportPage() {
               marginTop: '1.5rem',
               padding: '0.5rem 1rem',
               borderRadius: 8,
-              background: '#3B82F6',
+              background: '#1F77F6',
               color: 'white',
               fontFamily: 'var(--font-body)',
               fontSize: '0.8125rem',
@@ -1441,25 +1441,25 @@ export default function PassportPage() {
                   label="Diagnostico (25%)"
                   score={scoreBreakdown.diagnostic}
                   maxScore={25}
-                  color="#3B82F6"
+                  color="#1F77F6"
                 />
                 <ScoreBar
                   label="Herramientas completadas (20%)"
                   score={scoreBreakdown.tools}
                   maxScore={20}
-                  color="#0D9488"
+                  color="#1F77F6"
                 />
                 <ScoreBar
                   label="Unit Economics (20%)"
                   score={scoreBreakdown.unitEcon}
                   maxScore={20}
-                  color="#D97706"
+                  color="#F0721D"
                 />
                 <ScoreBar
                   label="Traccion (20%)"
                   score={scoreBreakdown.traction}
                   maxScore={20}
-                  color="#FF6B4A"
+                  color="#DA4E24"
                 />
                 <ScoreBar
                   label="Equipo (15%)"
@@ -1478,7 +1478,7 @@ export default function PassportPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             style={cardStyle}
           >
-            <SectionHeader title="Unit Economics" icon={BarChart3} color="#0D9488" />
+            <SectionHeader title="Unit Economics" icon={BarChart3} color="#1F77F6" />
 
             <div
               style={{
@@ -1522,8 +1522,8 @@ export default function PassportPage() {
                 style={{
                   padding: '0.625rem 0.75rem',
                   borderRadius: 8,
-                  background: `${ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626'}08`,
-                  border: `1px solid ${ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626'}20`,
+                  background: `${ltvCacHealth === 'green' ? '#1F77F6' : ltvCacHealth === 'yellow' ? '#F0721D' : '#DC2626'}08`,
+                  border: `1px solid ${ltvCacHealth === 'green' ? '#1F77F6' : ltvCacHealth === 'yellow' ? '#F0721D' : '#DC2626'}20`,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
@@ -1534,7 +1534,7 @@ export default function PassportPage() {
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626',
+                    background: ltvCacHealth === 'green' ? '#1F77F6' : ltvCacHealth === 'yellow' ? '#F0721D' : '#DC2626',
                   }}
                 />
                 <span
@@ -1542,7 +1542,7 @@ export default function PassportPage() {
                     fontFamily: 'var(--font-body)',
                     fontSize: 'var(--text-2xs)',
                     fontWeight: 600,
-                    color: ltvCacHealth === 'green' ? '#0D9488' : ltvCacHealth === 'yellow' ? '#D97706' : '#DC2626',
+                    color: ltvCacHealth === 'green' ? '#1F77F6' : ltvCacHealth === 'yellow' ? '#F0721D' : '#DC2626',
                   }}
                 >
                   {ltvCacHealth === 'green'
@@ -1562,7 +1562,7 @@ export default function PassportPage() {
             transition={{ duration: 0.5, delay: 0.15 }}
             style={cardStyle}
           >
-            <SectionHeader title="Traccion" icon={TrendingUp} color="#FF6B4A" />
+            <SectionHeader title="Traccion" icon={TrendingUp} color="#DA4E24" />
 
             <div
               style={{
@@ -1574,13 +1574,13 @@ export default function PassportPage() {
               <KpiCell
                 label="MRR"
                 value={formatCurrency(passportData?.mrr)}
-                color={parseFloat(String(passportData?.mrr || '0').replace(/[^0-9.-]/g, '')) > 0 ? '#0D9488' : undefined}
+                color={parseFloat(String(passportData?.mrr || '0').replace(/[^0-9.-]/g, '')) > 0 ? '#1F77F6' : undefined}
               />
               <KpiCell
                 label="Clientes pagando"
                 value={passportData?.payingCustomers || '—'}
                 color={
-                  (passportData?.payingCustomers ?? 0) > 0 ? '#0D9488' : undefined
+                  (passportData?.payingCustomers ?? 0) > 0 ? '#1F77F6' : undefined
                 }
               />
               <KpiCell
@@ -1602,7 +1602,7 @@ export default function PassportPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               style={cardStyle}
             >
-              <SectionHeader title="Oportunidad de mercado" icon={Target} color="#3B82F6" />
+              <SectionHeader title="Oportunidad de mercado" icon={Target} color="#1F77F6" />
 
               <MarketCircles
                 tam={passportData?.tam || ''}
@@ -1704,7 +1704,7 @@ export default function PassportPage() {
               transition={{ duration: 0.5, delay: 0.3 }}
               style={cardStyle}
             >
-              <SectionHeader title="Impacto & ESG" icon={Leaf} color="#0D9488" />
+              <SectionHeader title="Impacto & ESG" icon={Leaf} color="#1F77F6" />
 
               <div
                 style={{
@@ -1718,14 +1718,14 @@ export default function PassportPage() {
                   <KpiCell
                     label="CO2 evitado"
                     value={passportData.co2Avoided}
-                    color="#0D9488"
+                    color="#1F77F6"
                   />
                 )}
                 {passportData?.beneficiaries && (
                   <KpiCell
                     label="Beneficiarios"
                     value={passportData.beneficiaries}
-                    color="#0D9488"
+                    color="#1F77F6"
                   />
                 )}
               </div>
@@ -1846,7 +1846,7 @@ export default function PassportPage() {
             <SectionHeader
               title="Progreso por etapa"
               icon={BarChart3}
-              color="#0D9488"
+              color="#1F77F6"
               badge={`${completedCount}/${totalTools}`}
             />
 
@@ -1856,7 +1856,7 @@ export default function PassportPage() {
                 style={{
                   height: 6,
                   borderRadius: 3,
-                  background: 'rgba(13,148,136,0.10)',
+                  background: 'rgba(31,119,246,0.10)',
                   overflow: 'hidden',
                 }}
               >
@@ -1867,7 +1867,7 @@ export default function PassportPage() {
                   style={{
                     height: '100%',
                     borderRadius: 3,
-                    background: '#0D9488',
+                    background: '#1F77F6',
                   }}
                 />
               </div>
@@ -1885,7 +1885,7 @@ export default function PassportPage() {
             transition={{ duration: 0.5, delay: 0.45 }}
             style={cardStyle}
           >
-            <SectionHeader title="Certificados de etapa" icon={Award} color="#3B82F6" />
+            <SectionHeader title="Certificados de etapa" icon={Award} color="#1F77F6" />
 
             <div
               style={{

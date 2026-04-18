@@ -47,7 +47,7 @@ function DeltaBadge({ current, previous }: { current: number | null; previous: n
   const { pct, dir } = delta(current, previous)
   if (dir === 'none' || pct == null) return null
   const Icon = dir === 'up' ? TrendingUp : dir === 'down' ? TrendingDown : Minus
-  const color = dir === 'up' ? '#0D9488' : dir === 'down' ? '#EF4444' : 'var(--color-text-muted)'
+  const color = dir === 'up' ? '#1F77F6' : dir === 'down' ? '#EF4444' : 'var(--color-text-muted)'
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -311,10 +311,10 @@ export default function KpisPage() {
           <div
             style={{
               marginTop: 12, padding: '0.6rem 0.9rem', borderRadius: 8,
-              background: message.kind === 'ok' ? 'rgba(13,148,136,0.08)' : 'rgba(220,38,38,0.08)',
-              border: `1px solid ${message.kind === 'ok' ? 'rgba(13,148,136,0.2)' : 'rgba(220,38,38,0.2)'}`,
+              background: message.kind === 'ok' ? 'rgba(31,119,246,0.08)' : 'rgba(220,38,38,0.08)',
+              border: `1px solid ${message.kind === 'ok' ? 'rgba(31,119,246,0.2)' : 'rgba(220,38,38,0.2)'}`,
               fontFamily: 'var(--font-body)', fontSize: '0.85rem',
-              color: message.kind === 'ok' ? '#0D9488' : '#DC2626',
+              color: message.kind === 'ok' ? '#1F77F6' : '#DC2626',
             }}
           >
             {message.text}

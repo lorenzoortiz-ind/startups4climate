@@ -35,7 +35,7 @@ const variantColors: Record<ChipVariant, { bg: string; color: string; border: st
   primary: {
     bg: 'var(--color-accent-light)',
     color: 'var(--color-accent-primary)',
-    border: 'rgba(255, 107, 74, 0.25)',
+    border: 'rgba(218,78,36, 0.25)',
   },
   success: {
     bg: 'var(--color-success-light)',
@@ -53,19 +53,19 @@ const variantColors: Record<ChipVariant, { bg: string; color: string; border: st
     border: 'var(--color-info-border)',
   },
   'stage-1': {
-    bg: 'rgba(255, 107, 74, 0.08)',
+    bg: 'rgba(218,78,36, 0.08)',
     color: 'var(--color-stage-1)',
-    border: 'rgba(255, 107, 74, 0.25)',
+    border: 'rgba(218,78,36, 0.25)',
   },
   'stage-2': {
-    bg: 'rgba(13, 148, 136, 0.08)',
+    bg: 'rgba(31,119,246, 0.08)',
     color: 'var(--color-stage-2)',
-    border: 'rgba(13, 148, 136, 0.25)',
+    border: 'rgba(31,119,246, 0.25)',
   },
   'stage-3': {
-    bg: 'rgba(217, 119, 6, 0.08)',
+    bg: 'rgba(240,114,29, 0.08)',
     color: 'var(--color-stage-3)',
-    border: 'rgba(217, 119, 6, 0.25)',
+    border: 'rgba(240,114,29, 0.25)',
   },
   'stage-4': {
     bg: 'rgba(59, 130, 246, 0.08)',

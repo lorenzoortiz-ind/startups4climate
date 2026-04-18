@@ -821,11 +821,11 @@ export default function PerfilPage() {
               <div
                 style={{
                   width: 36, height: 36, borderRadius: 10,
-                  background: 'rgba(13,148,136,0.08)', border: '1px solid rgba(13,148,136,0.2)',
+                  background: 'rgba(31,119,246,0.08)', border: '1px solid rgba(31,119,246,0.2)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}
               >
-                <Share2 size={16} color="#0D9488" />
+                <Share2 size={16} color="#1F77F6" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: 4 }}>
@@ -836,7 +836,7 @@ export default function PerfilPage() {
                 </div>
               </div>
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: shareLoading ? 'wait' : 'pointer' }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: isPublic ? '#0D9488' : 'var(--color-text-muted)' }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: isPublic ? '#1F77F6' : 'var(--color-text-muted)' }}>
                   {shareLoading ? '...' : isPublic ? 'Activado' : 'Desactivado'}
                 </span>
                 <input
@@ -844,7 +844,7 @@ export default function PerfilPage() {
                   checked={isPublic}
                   disabled={shareLoading}
                   onChange={(e) => handleToggleShare(e.target.checked)}
-                  style={{ width: 20, height: 20, accentColor: '#0D9488', cursor: shareLoading ? 'wait' : 'pointer' }}
+                  style={{ width: 20, height: 20, accentColor: '#1F77F6', cursor: shareLoading ? 'wait' : 'pointer' }}
                 />
               </label>
             </div>
@@ -874,10 +874,10 @@ export default function PerfilPage() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 4,
                     padding: '0.35rem 0.7rem', borderRadius: 6,
-                    background: copied ? 'rgba(13,148,136,0.1)' : 'var(--color-bg-card)',
+                    background: copied ? 'rgba(31,119,246,0.1)' : 'var(--color-bg-card)',
                     border: '1px solid var(--color-border)',
                     fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
-                    color: copied ? '#0D9488' : 'var(--color-text-secondary)',
+                    color: copied ? '#1F77F6' : 'var(--color-text-secondary)',
                     cursor: 'pointer',
                   }}
                 >

@@ -102,7 +102,7 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
       }}>
         <div style={{
           width: 40, height: 40, borderRadius: '50%',
-          border: '3px solid #E5E7EB', borderTopColor: '#FF6B4A',
+          border: '3px solid #E5E7EB', borderTopColor: '#DA4E24',
           animation: 'spin 0.8s linear infinite',
         }} />
       </div>
@@ -163,8 +163,8 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
       {/* Role badge */}
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-        background: 'rgba(255,107,74,0.15)',
-        color: '#FF6B4A',
+        background: 'rgba(218,78,36,0.15)',
+        color: '#DA4E24',
         fontFamily: 'var(--font-body)',
         fontSize: '0.5625rem',
         fontWeight: 600,

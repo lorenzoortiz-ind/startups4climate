@@ -14,7 +14,7 @@ export default function S4CLogo({ size = 32 }: { size?: number }) {
         letterSpacing="0.5"
       >
         <tspan fill="white">s</tspan>
-        <tspan fill="#FF6B4A">4</tspan>
+        <tspan fill="#DA4E24">4</tspan>
         <tspan fill="white">c</tspan>
       </text>
     </svg>

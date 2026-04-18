@@ -70,7 +70,7 @@ ${data.recursos || '(No completado)'}
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ToolProgress filled={filled} total={total} accentColor="#0D9488" />
+      <ToolProgress filled={filled} total={total} accentColor="#1F77F6" />
 
       <ToolSection
         number={1}
@@ -86,7 +86,7 @@ ${data.recursos || '(No completado)'}
       <ToolSection number={2} title="Features incluidas" subtitle="Lo esencial que debe tener tu MVBP">
         {data.featuresIncluidas.map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <div style={{ width: 6, borderRadius: 3, background: '#0D9488', flexShrink: 0, marginTop: '0.5rem', marginBottom: '0.5rem' }} />
+            <div style={{ width: 6, borderRadius: 3, background: '#1F77F6', flexShrink: 0, marginTop: '0.5rem', marginBottom: '0.5rem' }} />
             <input value={f} onChange={e => updateList('featuresIncluidas', i, e.target.value)} placeholder={`Feature incluida ${i + 1}`} style={{ ...inputStyle, flex: 1 }} />
             {data.featuresIncluidas.length > 1 && (
               <button onClick={() => removeFromList('featuresIncluidas', i)} style={{ ...btnSmall, color: '#DC2626', border: '1px solid #DC262630' }}>
@@ -95,7 +95,7 @@ ${data.recursos || '(No completado)'}
             )}
           </div>
         ))}
-        <button onClick={() => addToList('featuresIncluidas')} style={{ ...btnSmall, color: '#0D9488', border: '1px solid #0D948830' }}>
+        <button onClick={() => addToList('featuresIncluidas')} style={{ ...btnSmall, color: '#1F77F6', border: '1px solid #1F77F630' }}>
           <Plus size={14} /> Agregar feature
         </button>
       </ToolSection>

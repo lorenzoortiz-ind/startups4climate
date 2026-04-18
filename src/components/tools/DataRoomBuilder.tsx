@@ -81,10 +81,10 @@ const DEFAULT: Data = {
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   pendiente: { bg: '#FEE2E2', color: '#DC2626', label: 'Pendiente' },
   borrador: { bg: '#FEF3C7', color: '#2A222B', label: 'Borrador' },
-  listo: { bg: '#CCFBF1', color: '#0D9488', label: 'Listo' },
+  listo: { bg: '#CCFBF1', color: '#1F77F6', label: 'Listo' },
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function DataRoomBuilder({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [data, setData] = useToolState<Data>(userId, 'data-room-builder', DEFAULT)
@@ -160,10 +160,10 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Preparación general del Data Room</span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#2A222B' : '#DC2626' }}>{overallReadiness}%</span>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.25rem', fontWeight: 700, color: overallReadiness >= 75 ? '#1F77F6' : overallReadiness >= 50 ? '#2A222B' : '#DC2626' }}>{overallReadiness}%</span>
         </div>
         <div style={{ height: 10, borderRadius: 5, background: 'var(--color-bg-muted)', overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#0D9488' : overallReadiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
+          <div style={{ height: '100%', width: `${overallReadiness}%`, borderRadius: 5, background: overallReadiness >= 75 ? '#1F77F6' : overallReadiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
         </div>
       </div>
 
@@ -182,7 +182,7 @@ ${cat.documents.map(d => `  [${statusColors[d.status].label}] ${d.name || '(Sin 
           >
             {/* Progress bar per category */}
             <div style={{ height: 6, borderRadius: 3, background: 'var(--color-bg-muted)', overflow: 'hidden', marginBottom: '1rem' }}>
-              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#0D9488' : readiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
+              <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 3, background: readiness >= 75 ? '#1F77F6' : readiness >= 50 ? '#2A222B' : '#DC2626', transition: 'width 0.3s' }} />
             </div>
 
             {cat.documents.map((doc, docIdx) => {

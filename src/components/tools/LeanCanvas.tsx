@@ -8,15 +8,15 @@ import { ToolProgress, InsightPanel } from './shared'
 
 const BLOCKS = [
   { id: 'problem', label: 'Problema', hint: 'Top 3 problemas del cliente. ¿Qué está roto? ¿Qué alternativas existen hoy?', color: '#DC2626', row: 0, col: 0, span: 1 },
-  { id: 'solution', label: 'Solución', hint: 'Top 3 características de tu solución que resuelven el problema directamente.', color: '#FF6B4A', row: 0, col: 1, span: 1 },
-  { id: 'uvp', label: 'Propuesta de Valor Única', hint: 'Un mensaje claro y convincente: ¿qué te hace diferente y por qué importa?', color: '#0D9488', row: 0, col: 2, span: 1 },
-  { id: 'advantage', label: 'Ventaja Diferencial', hint: 'Algo que no puede copiarse fácilmente: IP, red, datos exclusivos, acceso regulatorio.', color: '#0D9488', row: 0, col: 3, span: 1 },
+  { id: 'solution', label: 'Solución', hint: 'Top 3 características de tu solución que resuelven el problema directamente.', color: '#DA4E24', row: 0, col: 1, span: 1 },
+  { id: 'uvp', label: 'Propuesta de Valor Única', hint: 'Un mensaje claro y convincente: ¿qué te hace diferente y por qué importa?', color: '#1F77F6', row: 0, col: 2, span: 1 },
+  { id: 'advantage', label: 'Ventaja Diferencial', hint: 'Algo que no puede copiarse fácilmente: IP, red, datos exclusivos, acceso regulatorio.', color: '#1F77F6', row: 0, col: 3, span: 1 },
   { id: 'segments', label: 'Segmentos de Cliente', hint: '¿A quién le vendes? Define el early adopter más específico posible.', color: '#2A222B', row: 0, col: 4, span: 1 },
-  { id: 'metrics', label: 'Métricas Clave', hint: 'Las 3-5 métricas que miden la salud del negocio (TRL, MWh, tCO2eq, contratos LOI).', color: '#0D9488', row: 1, col: 0, span: 1 },
-  { id: 'channels', label: 'Canales', hint: '¿Cómo llega tu solución al cliente? Venta directa, distribuidores, partnerships.', color: '#FF6B4A', row: 1, col: 3, span: 1 },
+  { id: 'metrics', label: 'Métricas Clave', hint: 'Las 3-5 métricas que miden la salud del negocio (TRL, MWh, tCO2eq, contratos LOI).', color: '#1F77F6', row: 1, col: 0, span: 1 },
+  { id: 'channels', label: 'Canales', hint: '¿Cómo llega tu solución al cliente? Venta directa, distribuidores, partnerships.', color: '#DA4E24', row: 1, col: 3, span: 1 },
   { id: 'costs', label: 'Estructura de Costos', hint: 'Costos fijos y variables más relevantes: I+D, manufactura, ventas, capex.', color: '#DC2626', row: 2, col: 0, span: 2 },
-  { id: 'revenue', label: 'Flujo de Ingresos', hint: 'Cómo generas dinero: precio, HaaS/PPA, licencias, grants, créditos de carbono.', color: '#0D9488', row: 2, col: 2, span: 2 },
-  { id: 'impact', label: 'Impacto Ambiental', hint: 'tCO2eq reducidas/año, energía renovable generada, residuos evitados. Cuantifica.', color: '#0D9488', row: 2, col: 0, span: 1 },
+  { id: 'revenue', label: 'Flujo de Ingresos', hint: 'Cómo generas dinero: precio, HaaS/PPA, licencias, grants, créditos de carbono.', color: '#1F77F6', row: 2, col: 2, span: 2 },
+  { id: 'impact', label: 'Impacto Ambiental', hint: 'tCO2eq reducidas/año, energía renovable generada, residuos evitados. Cuantifica.', color: '#1F77F6', row: 2, col: 0, span: 1 },
   { id: 'regulatory', label: 'Contexto Regulatorio', hint: 'Normativas aplicables, subsidios disponibles, barreras de certificación y plazos.', color: '#F97316', row: 2, col: 1, span: 1 },
 ]
 
@@ -45,7 +45,7 @@ Completado: ${filled}/${BLOCKS.length} bloques (${pct}%)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* Progress */}
-      <ToolProgress filled={filled} total={BLOCKS.length} accentColor="#FF6B4A" />
+      <ToolProgress filled={filled} total={BLOCKS.length} accentColor="#DA4E24" />
 
       {/* Canvas grid — 3 columns max */}
       <div style={{ background: 'var(--color-bg-card)', borderRadius: 16, border: '1px solid var(--color-border)', padding: '1.25rem', boxShadow: 'var(--shadow-card)' }}>
@@ -73,7 +73,7 @@ Completado: ${filled}/${BLOCKS.length} bloques (${pct}%)
       </div>
 
       {/* Insight below the grid */}
-      <InsightPanel title="Referencia académica" accentColor="#FF6B4A">
+      <InsightPanel title="Referencia académica" accentColor="#DA4E24">
         <p style={{ margin: 0 }}>
           &ldquo;El Lean Canvas no es un documento — es una conversación. Cada bloque debería poder explicarse en una oración.&rdquo;
         </p>
@@ -91,9 +91,9 @@ Completado: ${filled}/${BLOCKS.length} bloques (${pct}%)
 
       <button
         onClick={handleReport}
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem', borderRadius: 12, background: '#FF6B4A', color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(255,107,74,0.3)', transition: 'all 0.2s' }}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.875rem', borderRadius: 12, background: '#DA4E24', color: 'white', fontFamily: 'var(--font-body)', fontSize: '0.9375rem', fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 14px rgba(218,78,36,0.3)', transition: 'all 0.2s' }}
         onMouseEnter={(e) => (e.currentTarget.style.background = '#6D28D9')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#FF6B4A')}
+        onMouseLeave={(e) => (e.currentTarget.style.background = '#DA4E24')}
       >
         <Download size={17} />
         Exportar Canvas Completo

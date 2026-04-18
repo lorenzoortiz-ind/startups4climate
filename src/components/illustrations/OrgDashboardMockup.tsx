@@ -43,7 +43,7 @@ export default function OrgDashboardMockup({
 
       {/* Sidebar logo */}
       <text x="32" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="9" fontWeight="700" fill="#fff">
-        S<tspan fill="#FF6B4A">4</tspan>C
+        S<tspan fill="#DA4E24">4</tspan>C
       </text>
       <text x="52" y="72" fontFamily="Mluvka, system-ui, sans-serif" fontSize="6" fontWeight="500" fill="#666">
         Admin
@@ -58,14 +58,14 @@ export default function OrgDashboardMockup({
         { y: 176, label: 'Benchmark', active: false },
       ].map((item) => (
         <g key={item.label}>
-          {item.active && <rect x="24" y={item.y - 8} width="82" height="16" rx="4" fill="rgba(255,107,74,0.15)" />}
+          {item.active && <rect x="24" y={item.y - 8} width="82" height="16" rx="4" fill="rgba(218,78,36,0.15)" />}
           <text
             x="32"
             y={item.y}
             fontFamily="Mluvka, system-ui, sans-serif"
             fontSize="7.5"
             fontWeight={item.active ? '700' : '500'}
-            fill={item.active ? '#FF6B4A' : '#888'}
+            fill={item.active ? '#DA4E24' : '#888'}
           >
             {item.label}
           </text>
@@ -83,10 +83,10 @@ export default function OrgDashboardMockup({
 
       {/* Stats cards row */}
       {[
-        { x: 126, label: 'Startups', value: '12', color: '#FF6B4A' },
-        { x: 204, label: 'Avg Score', value: '78', color: '#0D9488' },
-        { x: 282, label: 'Cohortes', value: '2', color: '#D97706' },
-        { x: 360, label: 'Reportes', value: '8', color: '#3B82F6' },
+        { x: 126, label: 'Startups', value: '12', color: '#DA4E24' },
+        { x: 204, label: 'Avg Score', value: '78', color: '#1F77F6' },
+        { x: 282, label: 'Cohortes', value: '2', color: '#F0721D' },
+        { x: 360, label: 'Reportes', value: '8', color: '#1F77F6' },
       ].map((stat) => (
         <g key={stat.label}>
           <rect x={stat.x} y="96" width="68" height="42" rx="6" fill="#fff" stroke="#e5e7eb" strokeWidth="1" />
@@ -108,10 +108,10 @@ export default function OrgDashboardMockup({
 
       {/* Bar chart */}
       {[
-        { x: 140, h: 40, color: '#FF6B4A', label: 'Pre' },
-        { x: 164, h: 55, color: '#0D9488', label: 'Inc' },
-        { x: 188, h: 30, color: '#D97706', label: 'Acc' },
-        { x: 212, h: 20, color: '#3B82F6', label: 'Esc' },
+        { x: 140, h: 40, color: '#DA4E24', label: 'Pre' },
+        { x: 164, h: 55, color: '#1F77F6', label: 'Inc' },
+        { x: 188, h: 30, color: '#F0721D', label: 'Acc' },
+        { x: 212, h: 20, color: '#1F77F6', label: 'Esc' },
       ].map((bar) => (
         <g key={bar.label}>
           <rect
@@ -145,10 +145,10 @@ export default function OrgDashboardMockup({
 
       {/* Table rows */}
       {[
-        { name: 'EcoFintech', score: '82', color: '#0D9488' },
-        { name: 'AgroSense', score: '71', color: '#D97706' },
-        { name: 'CleanGrid', score: '65', color: '#FF6B4A' },
-        { name: 'BioVerde', score: '88', color: '#3B82F6' },
+        { name: 'EcoFintech', score: '82', color: '#1F77F6' },
+        { name: 'AgroSense', score: '71', color: '#F0721D' },
+        { name: 'CleanGrid', score: '65', color: '#DA4E24' },
+        { name: 'BioVerde', score: '88', color: '#1F77F6' },
       ].map((row, i) => (
         <g key={row.name}>
           <line x1="294" y1={178 + i * 16} x2="400" y2={178 + i * 16} stroke="#f0f0f0" strokeWidth="0.5" />

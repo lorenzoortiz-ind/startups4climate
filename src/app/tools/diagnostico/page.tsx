@@ -104,8 +104,8 @@ export default function DiagnosticoPage() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,107,74,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Activity size={20} color="#FF6B4A" />
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(218,78,36,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Activity size={20} color="#DA4E24" />
           </div>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--color-ink)', margin: 0 }}>
             Diagnóstico de madurez
@@ -133,7 +133,7 @@ export default function DiagnosticoPage() {
             {delta === null ? (
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>Sin comparación</span>
             ) : delta > 0 ? (
-              <><TrendingUp size={18} color="#0D9488" /><span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 700, color: '#0D9488' }}>+{delta} pts</span></>
+              <><TrendingUp size={18} color="#1F77F6" /><span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 700, color: '#1F77F6' }}>+{delta} pts</span></>
             ) : delta < 0 ? (
               <><TrendingDown size={18} color="#DC2626" /><span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 700, color: '#DC2626' }}>{delta} pts</span></>
             ) : (
@@ -166,8 +166,8 @@ export default function DiagnosticoPage() {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '1rem 1.1rem', borderRadius: 12, marginBottom: '1.5rem',
-        background: 'linear-gradient(90deg, rgba(255,107,74,0.10), rgba(13,148,136,0.08))',
-        border: '1px solid rgba(255,107,74,0.25)',
+        background: 'linear-gradient(90deg, rgba(218,78,36,0.10), rgba(31,119,246,0.08))',
+        border: '1px solid rgba(218,78,36,0.25)',
         flexWrap: 'wrap', gap: 12,
       }}>
         <div>
@@ -186,7 +186,7 @@ export default function DiagnosticoPage() {
             background: 'var(--color-accent-primary)', color: '#fff',
             fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 700,
             border: 'none', cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(255,107,74,0.25)',
+            boxShadow: '0 4px 14px rgba(218,78,36,0.25)',
           }}
         >
           <Plus size={15} /> Nuevo diagnóstico
@@ -276,7 +276,7 @@ export default function DiagnosticoPage() {
                     {d === null ? (
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: 'var(--color-text-muted)' }}>Primer diagnóstico</span>
                     ) : d > 0 ? (
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, color: '#0D9488' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-body)', fontSize: '0.72rem', fontWeight: 700, color: '#1F77F6' }}>
                         <TrendingUp size={13} /> +{d} pts
                       </span>
                     ) : d < 0 ? (

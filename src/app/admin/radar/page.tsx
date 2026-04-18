@@ -37,7 +37,7 @@ interface ProgramItem {
 
 /* ─── Category styling ─── */
 const CATEGORY_COLORS: Record<Category, { color: string; bg: string; border: string }> = {
-  Inversión: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)', border: 'rgba(13,148,136,0.2)' },
+  Inversión: { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)' },
   Regulación: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
   Tendencia: { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' },
   Programa: { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)' },
@@ -51,7 +51,7 @@ const CATEGORY_ICONS: Record<Category, typeof TrendingUp> = {
 }
 
 const CATEGORY_ACCENT: Record<Category, string> = {
-  Inversión: '#0D9488',
+  Inversión: '#1F77F6',
   Regulación: '#2A222B',
   Tendencia: '#6366F1',
   Programa: '#EC4899',
@@ -163,11 +163,11 @@ const ACTOR_CATEGORY_LABELS: Record<string, string> = {
 }
 
 const ACTOR_CATEGORY_COLORS: Record<string, string> = {
-  incubator: '#0D9488',
+  incubator: '#1F77F6',
   fund: '#8B5CF6',
-  gov: '#3B82F6',
+  gov: '#1F77F6',
   university: '#16A34A',
-  corporate: '#FF6B4A',
+  corporate: '#DA4E24',
   media: '#F59E0B',
   event: '#EC4899',
 }
@@ -421,15 +421,15 @@ export default function AdminRadarPage() {
                 width: 40,
                 height: 40,
                 borderRadius: 12,
-                background: 'rgba(13,148,136,0.08)',
-                border: '1px solid rgba(13,148,136,0.2)',
+                background: 'rgba(31,119,246,0.08)',
+                border: '1px solid rgba(31,119,246,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Radio size={20} color="#0D9488" />
+              <Radio size={20} color="#1F77F6" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
@@ -509,13 +509,13 @@ export default function AdminRadarPage() {
                   padding: '0.5rem 1rem',
                   borderRadius: 999,
                   border: isActive
-                    ? '1px solid rgba(13,148,136,0.3)'
+                    ? '1px solid rgba(31,119,246,0.3)'
                     : '1px solid var(--color-border)',
-                  background: isActive ? 'rgba(13,148,136,0.08)' : 'var(--color-bg-card)',
+                  background: isActive ? 'rgba(31,119,246,0.08)' : 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
                   fontSize: 'var(--text-sm)',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#0D9488' : 'var(--color-text-secondary)',
+                  color: isActive ? '#1F77F6' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',
@@ -558,13 +558,13 @@ export default function AdminRadarPage() {
                       padding: '0.25rem 0.75rem',
                       borderRadius: 999,
                       border: isActive
-                        ? '1px solid rgba(13,148,136,0.3)'
+                        ? '1px solid rgba(31,119,246,0.3)'
                         : '1px solid var(--color-border)',
-                      background: isActive ? 'rgba(13,148,136,0.08)' : 'transparent',
+                      background: isActive ? 'rgba(31,119,246,0.08)' : 'transparent',
                       fontFamily: 'var(--font-body)',
                       fontSize: 'var(--text-xs)',
                       fontWeight: isActive ? 600 : 500,
-                      color: isActive ? '#0D9488' : 'var(--color-text-muted)',
+                      color: isActive ? '#1F77F6' : 'var(--color-text-muted)',
                       cursor: 'pointer',
                       whiteSpace: 'nowrap',
                       transition: 'all 0.2s ease',
@@ -657,12 +657,12 @@ export default function AdminRadarPage() {
               style={{
                 display: 'flex', alignItems: 'center', gap: '0.5rem',
                 padding: '0.75rem 1rem', borderRadius: 12,
-                background: 'rgba(13,148,136,0.04)',
-                border: '1px solid rgba(13,148,136,0.15)',
+                background: 'rgba(31,119,246,0.04)',
+                border: '1px solid rgba(31,119,246,0.15)',
                 marginBottom: '1.25rem',
               }}
             >
-              <Radio size={14} color="#0D9488" />
+              <Radio size={14} color="#1F77F6" />
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                 color: 'var(--color-text-secondary)',

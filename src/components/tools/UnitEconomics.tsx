@@ -17,7 +17,7 @@ const DEFAULT_INPUTS: Record<string, string> = {
   conversionRate: '10',
 }
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 export default function UnitEconomics({ userId, onComplete, onGenerateReport }: ToolComponentProps) {
   const [inputs, setInputs] = useToolState(userId, 'unit-economics', DEFAULT_INPUTS)
@@ -133,7 +133,7 @@ ${calc.greenPremium > 15 ? '  \u2192 Green premium alto. Cuantifica CO2 reducido
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <MetricCard label="Customer Acquisition Cost" value={`$${calc.cac.toLocaleString('es')}`} sub="Costo de adquirir un cliente" color={ACCENT} />
           <MetricCard label="Margen Bruto" value={`$${calc.grossMargin.toLocaleString('es')}`} sub={`${calc.grossMarginPct}% sobre ingresos`} color={calc.grossMarginPct > 50 ? ACCENT : '#2A222B'} />
-          <MetricCard label="Lifetime Value (LTV)" value={`$${calc.ltv.toLocaleString('es')}`} sub="Valor total del cliente" color="#FF6B4A" />
+          <MetricCard label="Lifetime Value (LTV)" value={`$${calc.ltv.toLocaleString('es')}`} sub="Valor total del cliente" color="#DA4E24" />
 
           {/* LTV/CAC Ratio */}
           <div style={{

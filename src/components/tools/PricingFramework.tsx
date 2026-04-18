@@ -17,7 +17,7 @@ interface Data {
 const DEFAULT: Data = { precio: '', frecuencia: 'Mensual', valorCliente: '', precioAlternativa: '', justificacion: '', tiers: '' }
 const FRECUENCIAS = ['Mensual', 'Anual', 'Por uso', '\u00danico']
 
-const ACCENT = '#0D9488'
+const ACCENT = '#1F77F6'
 
 const prefixStyle: React.CSSProperties = {
   position: 'absolute',
@@ -117,7 +117,7 @@ ${data.tiers || '(No completado)'}
             padding: '1rem',
             borderRadius: 12,
             textAlign: 'center',
-            background: Number(ratio) >= 3 ? 'linear-gradient(135deg, #0D9488, #0D9488)' : Number(ratio) >= 1 ? 'linear-gradient(135deg, #2A222B, #F59E0B)' : 'linear-gradient(135deg, #DC2626, #EF4444)',
+            background: Number(ratio) >= 3 ? 'linear-gradient(135deg, #1F77F6, #1F77F6)' : Number(ratio) >= 1 ? 'linear-gradient(135deg, #2A222B, #F59E0B)' : 'linear-gradient(135deg, #DC2626, #EF4444)',
             color: 'white',
           }}>
             <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.8 }}>Ratio Valor / Precio</div>

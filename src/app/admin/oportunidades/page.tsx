@@ -39,11 +39,11 @@ interface Opportunity {
 
 /* ─── Type styling ─── */
 const TYPE_CONFIG: Record<OpportunityType, { color: string; bg: string; border: string; icon: typeof DollarSign }> = {
-  Grant:        { color: '#0D9488', bg: 'rgba(13,148,136,0.08)',  border: 'rgba(13,148,136,0.2)',  icon: DollarSign },
-  Aceleradora:  { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)', border: 'rgba(255,107,74,0.2)',  icon: Rocket },
+  Grant:        { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)',  border: 'rgba(31,119,246,0.2)',  icon: DollarSign },
+  Aceleradora:  { color: '#DA4E24', bg: 'rgba(218,78,36,0.08)', border: 'rgba(218,78,36,0.2)',  icon: Rocket },
   Competencia:  { color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)',  icon: Trophy },
   Fondo:        { color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.2)',  icon: Landmark },
-  Capacitación: { color: '#3B82F6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)',  icon: GraduationCap },
+  Capacitación: { color: '#1F77F6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)',  icon: GraduationCap },
   Programa:     { color: '#EC4899', bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)',  icon: Award },
 }
 
@@ -334,7 +334,7 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
           fontFamily: 'var(--font-heading)',
           fontSize: '1rem',
           fontWeight: 700,
-          color: '#FF6B4A',
+          color: '#DA4E24',
         }}
       >
         {item.amount}
@@ -463,15 +463,15 @@ export default function AdminOportunidadesPage() {
                 width: 40,
                 height: 40,
                 borderRadius: 12,
-                background: 'rgba(255,107,74,0.08)',
-                border: '1px solid rgba(255,107,74,0.2)',
+                background: 'rgba(218,78,36,0.08)',
+                border: '1px solid rgba(218,78,36,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <Lightbulb size={20} color="#FF6B4A" />
+              <Lightbulb size={20} color="#DA4E24" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
@@ -602,13 +602,13 @@ export default function AdminOportunidadesPage() {
                   padding: '0.5rem 1rem',
                   borderRadius: 999,
                   border: isActive
-                    ? '1px solid rgba(255,107,74,0.4)'
+                    ? '1px solid rgba(218,78,36,0.4)'
                     : '1px solid var(--color-border)',
-                  background: isActive ? 'rgba(255,107,74,0.1)' : 'var(--color-bg-card)',
+                  background: isActive ? 'rgba(218,78,36,0.1)' : 'var(--color-bg-card)',
                   fontFamily: 'var(--font-body)',
                   fontSize: 'var(--text-sm)',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#FF6B4A' : 'var(--color-text-secondary)',
+                  color: isActive ? '#DA4E24' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s ease',

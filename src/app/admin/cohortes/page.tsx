@@ -25,8 +25,8 @@ interface CohortRow {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  active: { label: 'Activa', color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  planned: { label: 'Planificada', color: '#3B82F6', bg: 'rgba(59,130,246,0.08)' },
+  active: { label: 'Activa', color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
+  planned: { label: 'Planificada', color: '#1F77F6', bg: 'rgba(59,130,246,0.08)' },
   completed: { label: 'Completada', color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
   archived: { label: 'Archivada', color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)' },
 }

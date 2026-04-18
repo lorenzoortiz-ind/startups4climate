@@ -45,7 +45,7 @@ interface Organization {
 }
 
 const STATUS_CONFIG: Record<string, { bg: string; text: string; label: string }> = {
-  open: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6', label: 'Abierto' },
+  open: { bg: 'rgba(59,130,246,0.1)', text: '#1F77F6', label: 'Abierto' },
   in_progress: { bg: 'rgba(234,179,8,0.1)', text: '#CA8A04', label: 'En progreso' },
   resolved: { bg: 'rgba(34,197,94,0.1)', text: '#16A34A', label: 'Resuelto' },
   closed: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280', label: 'Cerrado' },
@@ -53,21 +53,21 @@ const STATUS_CONFIG: Record<string, { bg: string; text: string; label: string }>
 
 const PRIORITY_CONFIG: Record<string, { bg: string; text: string; label: string }> = {
   low: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280', label: 'Baja' },
-  medium: { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6', label: 'Media' },
+  medium: { bg: 'rgba(59,130,246,0.1)', text: '#1F77F6', label: 'Media' },
   high: { bg: 'rgba(249,115,22,0.1)', text: '#EA580C', label: 'Alta' },
   critical: { bg: 'rgba(239,68,68,0.1)', text: '#DC2626', label: 'Critica' },
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; color: string }> = {
-  auth: { label: 'Auth', color: '#3B82F6' },
+  auth: { label: 'Auth', color: '#1F77F6' },
   billing: { label: 'Billing', color: '#8B5CF6' },
   bug: { label: 'Bug', color: '#DC2626' },
-  data: { label: 'Datos', color: '#0D9488' },
+  data: { label: 'Datos', color: '#1F77F6' },
   ai: { label: 'AI', color: '#EC4899' },
   ui: { label: 'UI', color: '#F59E0B' },
   integraciones: { label: 'Integraciones', color: '#16A34A' },
   feature_request: { label: 'Feature', color: '#06B6D4' },
-  account: { label: 'Cuenta', color: '#3B82F6' },
+  account: { label: 'Cuenta', color: '#1F77F6' },
   other: { label: 'Otro', color: '#94A3B8' },
 }
 
@@ -429,7 +429,7 @@ export default function IncidenciasPage() {
       return days <= 7
     }).length
     return [
-      { icon: AlertCircle, label: 'Abiertas', value: open + inProgress, color: '#3B82F6' },
+      { icon: AlertCircle, label: 'Abiertas', value: open + inProgress, color: '#1F77F6' },
       { icon: AlertCircle, label: 'Críticas activas', value: critical, color: '#DC2626' },
       { icon: Timer, label: 'SLA vencidos', value: breached, color: '#EA580C' },
       { icon: CheckCircle2, label: 'Resueltas 7 d', value: resolved7d, color: '#16A34A' },
@@ -456,7 +456,7 @@ export default function IncidenciasPage() {
           style={{
             width: 32, height: 32,
             border: '3px solid var(--color-border)',
-            borderTopColor: '#0D9488',
+            borderTopColor: '#1F77F6',
             borderRadius: '50%',
           }}
         />
@@ -475,7 +475,7 @@ export default function IncidenciasPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <LifeBuoy size={20} color="#0D9488" />
+            <LifeBuoy size={20} color="#1F77F6" />
             <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-text-primary)' }}>
               Incidencias
             </h1>

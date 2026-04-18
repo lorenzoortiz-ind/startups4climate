@@ -52,7 +52,7 @@ export function SuperadminExecutiveSummary() {
         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/superadmin/organizaciones" style={{
             padding: '0.6rem 1.1rem', borderRadius: 'var(--radius-sm)',
-            background: '#FF6B4A', color: '#fff', textDecoration: 'none',
+            background: '#DA4E24', color: '#fff', textDecoration: 'none',
             fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600,
           }}>
             Ver organizaciones
@@ -96,7 +96,7 @@ export function SuperadminExecutiveSummary() {
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
-          <Briefcase size={22} color="#FF6B4A" />
+          <Briefcase size={22} color="#DA4E24" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
@@ -120,9 +120,9 @@ export function SuperadminExecutiveSummary() {
         gap: '0.75rem', marginBottom: '1.5rem',
       }}>
         {[
-          { icon: Briefcase, label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#FF6B4A' },
-          { icon: Users, label: 'Startups apoyadas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#0D9488' },
-          { icon: Gauge, label: 'Readiness promedio', value: `${DEMO_MINPRO_KPIS.readinessAvg}/100`, color: '#3B82F6' },
+          { icon: Briefcase, label: 'Programas activos', value: DEMO_MINPRO_KPIS.programsActive, color: '#DA4E24' },
+          { icon: Users, label: 'Startups apoyadas', value: DEMO_MINPRO_KPIS.startupsTotal, color: '#1F77F6' },
+          { icon: Gauge, label: 'Readiness promedio', value: `${DEMO_MINPRO_KPIS.readinessAvg}/100`, color: '#1F77F6' },
           { icon: Wrench, label: 'Tools completion', value: `${DEMO_MINPRO_KPIS.toolsCompletionPct}%`, color: '#16A34A' },
           { icon: TrendingUp, label: 'Funding levantado', value: formatUSD(DEMO_MINPRO_KPIS.fundingRaisedUSD), color: '#8B5CF6' },
           { icon: Award, label: 'Startups graduadas', value: DEMO_MINPRO_KPIS.graduatedStartups, color: '#EC4899' },
@@ -221,7 +221,7 @@ export function SuperadminExecutiveSummary() {
         {/* Alerts */}
         <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.05 }} style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-            <AlertTriangle size={18} color="#FF6B4A" />
+            <AlertTriangle size={18} color="#DA4E24" />
             <h3 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
               fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
@@ -233,7 +233,7 @@ export function SuperadminExecutiveSummary() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
             {DEMO_ALERTS.map((a) => {
               const sev = a.severity === 'high'
-                ? { bg: 'rgba(255,107,74,0.10)', color: '#FF6B4A', label: 'Alta' }
+                ? { bg: 'rgba(218,78,36,0.10)', color: '#DA4E24', label: 'Alta' }
                 : { bg: 'rgba(245,158,11,0.10)', color: '#F59E0B', label: 'Media' }
               return (
                 <Link
@@ -292,7 +292,7 @@ export function SuperadminExecutiveSummary() {
           </div>
           <Link href="/superadmin/programas" style={{
             fontFamily: 'var(--font-body)', fontSize: '0.75rem',
-            color: '#FF6B4A', textDecoration: 'none', fontWeight: 600,
+            color: '#DA4E24', textDecoration: 'none', fontWeight: 600,
           }}>
             Ver todos →
           </Link>
@@ -321,8 +321,8 @@ export function SuperadminExecutiveSummary() {
                 fontFamily: 'var(--font-body)', fontSize: '0.7rem',
                 color: 'var(--color-text-secondary)',
               }}>
-                <span>Readiness <strong style={{ color: '#0D9488' }}>{p.readinessAvg}</strong></span>
-                <span>NPS <strong style={{ color: '#3B82F6' }}>{p.nps}</strong></span>
+                <span>Readiness <strong style={{ color: '#1F77F6' }}>{p.readinessAvg}</strong></span>
+                <span>NPS <strong style={{ color: '#1F77F6' }}>{p.nps}</strong></span>
                 <span>{p.startupsCount} startups</span>
               </div>
             </Link>
@@ -351,7 +351,7 @@ export function SuperadminExecutiveSummary() {
             }}>
               <div style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.7rem',
-                fontWeight: 700, color: '#FF6B4A',
+                fontWeight: 700, color: '#DA4E24',
                 width: 78, flexShrink: 0,
                 fontVariantNumeric: 'tabular-nums',
               }}>

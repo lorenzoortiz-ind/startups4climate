@@ -6,14 +6,14 @@ import { BookOpen, CheckCircle2 } from 'lucide-react'
 import Image from 'next/image'
 
 const TOC_ITEMS = [
-  { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#FF6B4A' },
-  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#FF6B4A' },
-  { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#FF6B4A' },
-  { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#0D9488' },
-  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#0D9488' },
-  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#D97706' },
-  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#D97706' },
-  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#3B82F6' },
+  { chapter: '01', title: 'Define tu propósito', stage: 'Pre-incubación', color: '#DA4E24' },
+  { chapter: '02', title: 'Valida el problema y tu mercado', stage: 'Pre-incubación', color: '#DA4E24' },
+  { chapter: '03', title: 'Diseña tu propuesta de valor', stage: 'Pre-incubación', color: '#DA4E24' },
+  { chapter: '04', title: 'Construye tu MVP', stage: 'Incubación', color: '#1F77F6' },
+  { chapter: '05', title: 'Consigue tus primeros clientes', stage: 'Incubación', color: '#1F77F6' },
+  { chapter: '06', title: 'Define tu modelo de negocio', stage: 'Aceleración', color: '#F0721D' },
+  { chapter: '07', title: 'Estructura tu proceso de ventas', stage: 'Aceleración', color: '#F0721D' },
+  { chapter: '08', title: 'Prepara tu startup para escalar', stage: 'Escalamiento', color: '#1F77F6' },
 ]
 
 const springReveal = {
@@ -68,8 +68,8 @@ export default function WorkbookPage() {
                 gap: '0.5rem',
                 padding: '0.375rem 0.875rem',
                 borderRadius: 'var(--radius-full)',
-                background: 'rgba(255,107,74,0.08)',
-                border: '1px solid rgba(255,107,74,0.15)',
+                background: 'rgba(218,78,36,0.08)',
+                border: '1px solid rgba(218,78,36,0.15)',
                 marginBottom: '1.75rem',
               }}
             >
@@ -324,8 +324,8 @@ export default function WorkbookPage() {
                   gap: '0.5rem',
                   padding: '0.375rem 0.875rem',
                   borderRadius: 'var(--radius-full)',
-                  background: 'rgba(255,107,74,0.08)',
-                  border: '1px solid rgba(255,107,74,0.15)',
+                  background: 'rgba(218,78,36,0.08)',
+                  border: '1px solid rgba(218,78,36,0.15)',
                   marginBottom: '1.5rem',
                 }}
               >

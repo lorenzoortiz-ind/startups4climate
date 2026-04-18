@@ -50,7 +50,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
         <Link href="/superadmin/programas" style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
           fontFamily: 'var(--font-body)', fontSize: '0.85rem',
-          color: '#FF6B4A', textDecoration: 'none', marginBottom: '1rem',
+          color: '#DA4E24', textDecoration: 'none', marginBottom: '1rem',
         }}>
           <ArrowLeft size={16} /> Volver a programas
         </Link>
@@ -84,7 +84,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-          <Briefcase size={20} color="#FF6B4A" />
+          <Briefcase size={20} color="#DA4E24" />
           <h1 style={{
             fontFamily: 'var(--font-heading)', fontWeight: 700,
             fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
@@ -135,9 +135,9 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
           gap: '0.75rem', marginBottom: '1rem',
         }}>
-          <Kpi label="Startups activas" value={program.startupsCount.toString()} color="#FF6B4A" />
-          <Kpi label="Tools completion" value={`${program.toolsCompletionPct}%`} color="#0D9488" />
-          <Kpi label="Retención founders" value={`${program.retentionRate}%`} color="#3B82F6" />
+          <Kpi label="Startups activas" value={program.startupsCount.toString()} color="#DA4E24" />
+          <Kpi label="Tools completion" value={`${program.toolsCompletionPct}%`} color="#1F77F6" />
+          <Kpi label="Retención founders" value={`${program.retentionRate}%`} color="#1F77F6" />
           <Kpi label="Funding levantado" value={formatUSD(program.fundingRaisedUSD)} color="#8B5CF6" />
           <Kpi label="MRR agregado" value={formatUSD(program.mrrAggregateUSD)} color="#16A34A" />
           <Kpi label="Funding / startup" value={formatUSD(leverage)} color="#EC4899" />
@@ -163,7 +163,7 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
               transition={{ duration: 0.7, ease: 'easeOut' }}
               style={{
                 height: '100%', borderRadius: 7,
-                background: program.toolsCompletionPct >= 60 ? '#0D9488' : '#F59E0B',
+                background: program.toolsCompletionPct >= 60 ? '#1F77F6' : '#F59E0B',
               }}
             />
           </div>
@@ -188,12 +188,12 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             {program.milestones.map((m, i) => {
               const Icon = m.status === 'done' ? CheckCircle2 : Circle
-              const color = m.status === 'done' ? '#0D9488' : 'var(--color-text-muted)'
+              const color = m.status === 'done' ? '#1F77F6' : 'var(--color-text-muted)'
               return (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'flex-start', gap: '0.6rem',
                   padding: '0.6rem 0.8rem', borderRadius: 'var(--radius-sm)',
-                  background: m.status === 'done' ? 'rgba(13,148,136,0.06)' : 'var(--color-bg-muted)',
+                  background: m.status === 'done' ? 'rgba(31,119,246,0.06)' : 'var(--color-bg-muted)',
                 }}>
                   <Icon size={16} color={color} style={{ flexShrink: 0, marginTop: 2 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -227,11 +227,11 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
             Reporte de impacto
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-            <ImpactRow icon={Users} label="Empleos generados" value={program.jobsGenerated.toString()} color="#0D9488" />
+            <ImpactRow icon={Users} label="Empleos generados" value={program.jobsGenerated.toString()} color="#1F77F6" />
             <ImpactRow icon={Leaf} label="CO₂ evitado (tCO₂eq)" value={program.co2Avoided.toString()} color="#16A34A" />
             <ImpactRow icon={Heart} label="Mujeres founders" value={`${program.womenFoundersPct}%`} color="#EC4899" />
             <ImpactRow icon={MapPin} label="Founders rurales" value={`${program.ruralFoundersPct}%`} color="#F59E0B" />
-            <ImpactRow icon={TrendingUp} label="Readiness avg" value={`${program.readinessAvg} / 100`} color="#3B82F6" />
+            <ImpactRow icon={TrendingUp} label="Readiness avg" value={`${program.readinessAvg} / 100`} color="#1F77F6" />
           </div>
         </motion.div>
       </div>
@@ -309,10 +309,10 @@ export default function ProgramaDetailPage({ params }: { params: Promise<{ id: s
 
 function StatusPill({ status }: { status: 'active' | 'completed' | 'planned' | 'at_risk' }) {
   const map = {
-    active: { label: 'Activo', bg: 'rgba(13,148,136,0.12)', color: '#0D9488' },
+    active: { label: 'Activo', bg: 'rgba(31,119,246,0.12)', color: '#1F77F6' },
     completed: { label: 'Completado', bg: 'rgba(107,114,128,0.12)', color: '#6B7280' },
-    planned: { label: 'Planificado', bg: 'rgba(59,130,246,0.12)', color: '#3B82F6' },
-    at_risk: { label: 'En riesgo', bg: 'rgba(255,107,74,0.12)', color: '#FF6B4A' },
+    planned: { label: 'Planificado', bg: 'rgba(59,130,246,0.12)', color: '#1F77F6' },
+    at_risk: { label: 'En riesgo', bg: 'rgba(218,78,36,0.12)', color: '#DA4E24' },
   }
   const s = map[status]
   return (

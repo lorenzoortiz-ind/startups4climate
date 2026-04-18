@@ -350,8 +350,11 @@
     font-family: var(--font-body);
     transition: transform 0.15s var(--ease-spring), background 0.15s ease, box-shadow 0.15s ease;
   }
-  button:hover {
-    transform: translateY(-1px);
+  /* Hover lift only on devices that actually hover (avoids sticky :hover on touch) */
+  @media (hover: hover) and (pointer: fine) {
+    button:hover {
+      transform: translateY(-1px);
+    }
   }
   button:active {
     transform: translateY(1px);

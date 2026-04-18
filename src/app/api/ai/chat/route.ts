@@ -37,6 +37,36 @@ function clampUserContext(ctx: Record<string, unknown>): Record<string, unknown>
   return result
 }
 
+/**
+ * In-memory IP rate limiter for the demo path. Prevents anonymous abuse of the
+ * Gemini API since the demo cookie bypasses Supabase auth + per-user quotas.
+ * 10 requests per minute per IP. Map persists per serverless instance — good
+ * enough as a soft cap; for hard limits move to Vercel KV / Upstash later.
+ */
+const DEMO_RATE_LIMIT = 10
+const DEMO_WINDOW_MS = 60_000
+const demoIpHits = new Map<string, { count: number; resetAt: number }>()
+
+function checkDemoRateLimit(ip: string): { ok: boolean; retryAfter?: number } {
+  const now = Date.now()
+  const entry = demoIpHits.get(ip)
+  if (!entry || entry.resetAt < now) {
+    demoIpHits.set(ip, { count: 1, resetAt: now + DEMO_WINDOW_MS })
+    // Opportunistic cleanup to avoid unbounded growth
+    if (demoIpHits.size > 5000) {
+      for (const [k, v] of demoIpHits) {
+        if (v.resetAt < now) demoIpHits.delete(k)
+      }
+    }
+    return { ok: true }
+  }
+  if (entry.count >= DEMO_RATE_LIMIT) {
+    return { ok: false, retryAfter: Math.ceil((entry.resetAt - now) / 1000) }
+  }
+  entry.count += 1
+  return { ok: true }
+}
+
 const AGENT_PROMPTS: Record<string, string> = {
   mentor: MENTOR_GENERAL_PROMPT,
   radar: `Eres un analista experto del ecosistema de innovación en Latinoamérica. Respondes en español. Das información sobre tendencias, noticias, fondos de inversión, programas de aceleración y eventos relevantes para startups de impacto en la región. Tus respuestas son concisas y accionables. No uses emojis ni markdown con # headers.`,
@@ -81,6 +111,24 @@ export async function POST(request: NextRequest) {
 
     // ── Demo path: build context entirely from client-sent userContext ──
     if (demoCookie) {
+      // IP-scoped rate limit since demo bypasses auth/per-user quota
+      const ip =
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+        request.headers.get('x-real-ip') ||
+        'unknown'
+      const rl = checkDemoRateLimit(ip)
+      if (!rl.ok) {
+        return Response.json(
+          {
+            error: `Demasiadas solicitudes desde tu red. Intenta de nuevo en ${rl.retryAfter}s.`,
+          },
+          {
+            status: 429,
+            headers: { 'Retry-After': String(rl.retryAfter ?? 60) },
+          }
+        )
+      }
+
       const demoProfile =
         demoCookie === 'founder'
           ? { id: 'demo', email: 'demo.founder@s4c.demo', full_name: 'Ana Quispe', role: 'founder', org_id: null, startup_name: 'EcoBio Perú', stage: '3', diagnostic_score: 84 }

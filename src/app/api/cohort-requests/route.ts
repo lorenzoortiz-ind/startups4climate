@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
     .insert({
       cohort_id,
       startup_id: startup.id,
-      requested_by: user.id,
+      founder_id: user.id,
       message: message || null,
       status: 'pending',
     })

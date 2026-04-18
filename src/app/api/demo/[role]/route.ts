@@ -20,6 +20,15 @@ export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ role: string }> }
 ) {
+  // Production gate: demo cookie endpoints disabled unless explicitly enabled.
+  // Prevents anonymous visitors from impersonating admin/superadmin in prod.
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.NEXT_PUBLIC_DEMO_ENABLED !== 'true'
+  ) {
+    return new NextResponse('Not Found', { status: 404 })
+  }
+
   const { role } = await context.params
 
   if (!ROLE_TO_DESTINATION[role]) {

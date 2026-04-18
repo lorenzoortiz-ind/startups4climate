@@ -10,6 +10,7 @@ import {
   DEMO_PROGRAMS, DEMO_MINPRO_KPIS, DEMO_REGION_DISTRIBUTION,
   DEMO_ALERTS, DEMO_UPCOMING_MILESTONES, formatUSD,
 } from '@/lib/demo/superadmin-fixtures'
+import { useAuth } from '@/context/AuthContext'
 
 const cardStyle: React.CSSProperties = {
   background: 'var(--color-bg-card)',
@@ -26,6 +27,49 @@ const fadeUp = {
 }
 
 export function SuperadminExecutiveSummary() {
+  const { isDemo } = useAuth()
+
+  // In live mode, the superadmin executive summary is not yet populated with
+  // real cross-org aggregates. Render an empty state instead of demo fixtures.
+  if (!isDemo) {
+    return (
+      <div style={{ padding: '4rem 1.5rem', maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
+        <Briefcase size={36} color="var(--color-text-muted)" style={{ marginBottom: '1rem' }} />
+        <h1 style={{
+          fontFamily: 'var(--font-heading)', fontWeight: 700,
+          fontSize: 'var(--text-xl)', color: 'var(--color-text-primary)',
+          margin: '0 0 0.5rem',
+        }}>
+          Resumen ejecutivo
+        </h1>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
+          color: 'var(--color-text-secondary)', margin: '0 0 1.5rem',
+        }}>
+          Aún no hay programas configurados para mostrar agregados a nivel
+          superadmin. Crea organizaciones y cohortes para comenzar a ver datos consolidados.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href="/superadmin/organizaciones" style={{
+            padding: '0.6rem 1.1rem', borderRadius: 'var(--radius-sm)',
+            background: '#FF6B4A', color: '#fff', textDecoration: 'none',
+            fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600,
+          }}>
+            Ver organizaciones
+          </Link>
+          <Link href="/superadmin/programas" style={{
+            padding: '0.6rem 1.1rem', borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-text-primary)', textDecoration: 'none',
+            fontFamily: 'var(--font-body)', fontSize: '0.85rem', fontWeight: 600,
+          }}>
+            Ver programas
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const topPerformers = [...DEMO_PROGRAMS]
     .sort((a, b) => b.readinessAvg - a.readinessAvg)
     .slice(0, 4)

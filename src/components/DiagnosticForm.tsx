@@ -943,6 +943,9 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         <label style={labelStyle}>Tu nombre</label>
                         <input
                           {...register('nombre')}
+                          type="text"
+                          autoComplete="name"
+                          autoCapitalize="words"
                           placeholder="María García"
                           style={{ ...inputStyle, borderColor: errors.nombre ? '#DC2626' : 'var(--color-border)' }}
                           onFocus={handleFocus} onBlur={handleBlur('nombre')}
@@ -953,6 +956,12 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         <label style={labelStyle}>Email</label>
                         <input
                           {...register('email')}
+                          type="email"
+                          inputMode="email"
+                          autoComplete="email"
+                          autoCapitalize="off"
+                          autoCorrect="off"
+                          spellCheck={false}
                           placeholder="maria@startup.com"
                           style={{ ...inputStyle, borderColor: errors.email ? '#DC2626' : 'var(--color-border)' }}
                           onFocus={handleFocus} onBlur={handleBlur('email')}
@@ -966,6 +975,8 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         <label style={labelStyle}>Nombre de tu startup</label>
                         <input
                           {...register('startup_name')}
+                          type="text"
+                          autoComplete="organization"
                           placeholder="Mi Startup"
                           style={{ ...inputStyle, borderColor: errors.startup_name ? '#DC2626' : 'var(--color-border)' }}
                           onFocus={handleFocus} onBlur={handleBlur('startup_name')}

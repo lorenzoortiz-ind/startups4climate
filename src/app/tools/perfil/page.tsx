@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Save, User, CheckCircle2, Mail, Phone, Globe, Link2 } from 'lucide-react'
+import { ArrowLeft, Save, User, CheckCircle2, Mail, Phone, Globe, Link2, Share2, Copy, ExternalLink } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { STAGE_META } from '@/lib/tools-data'
 import { supabase } from '@/lib/supabase'
@@ -210,6 +210,10 @@ export default function PerfilPage() {
   const [saving, setSaving] = useState(false)
   const [radarNewsletter, setRadarNewsletter] = useState(false)
   const [oppsNewsletter, setOppsNewsletter] = useState(false)
+  const [isPublic, setIsPublic] = useState(false)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [shareLoading, setShareLoading] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -258,6 +262,10 @@ export default function PerfilPage() {
           if (startup.country) setCountry(startup.country)
           if (startup.website) setWebsite(startup.website)
           if (startup.team_size) setTeamSize(String(startup.team_size))
+          if (startup.is_public) setIsPublic(true)
+          if (startup.public_share_token) {
+            setShareUrl(`${window.location.origin}/passport/${startup.public_share_token}`)
+          }
           if (typeof window !== 'undefined') {
             try {
               const extraKey = appUser ? `s4c_${appUser.id}_profile_extra` : 's4c_profile_extra'
@@ -293,6 +301,34 @@ export default function PerfilPage() {
 
     loadStartupData()
   }, [user, appUser])
+
+  const handleToggleShare = async (enabled: boolean) => {
+    setShareLoading(true)
+    try {
+      const res = await fetch('/api/passport/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || 'Error')
+      setIsPublic(!!data.is_public)
+      if (data.share_url) setShareUrl(data.share_url)
+    } catch (err) {
+      console.error('[S4C Perfil] share toggle failed', err)
+    } finally {
+      setShareLoading(false)
+    }
+  }
+
+  const handleCopyShare = async () => {
+    if (!shareUrl) return
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* ignore */ }
+  }
 
   const handleSave = async () => {
     if (!user) return
@@ -769,6 +805,101 @@ export default function PerfilPage() {
                 </label>
               ))}
             </div>
+          </div>
+
+          {/* Pasaporte público */}
+          <div
+            style={{
+              padding: '1.5rem',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--color-bg-card)',
+              border: '1px solid var(--color-border)',
+              marginBottom: '1.5rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
+              <div
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  background: 'rgba(13,148,136,0.08)', border: '1px solid rgba(13,148,136,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}
+              >
+                <Share2 size={16} color="#0D9488" />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: 4 }}>
+                  Pasaporte público
+                </div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+                  Comparte una URL pública read-only con tu pitch, métricas y links. Útil para inversores o aplicaciones a fondos.
+                </div>
+              </div>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: shareLoading ? 'wait' : 'pointer' }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: isPublic ? '#0D9488' : 'var(--color-text-muted)' }}>
+                  {shareLoading ? '...' : isPublic ? 'Activado' : 'Desactivado'}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={isPublic}
+                  disabled={shareLoading}
+                  onChange={(e) => handleToggleShare(e.target.checked)}
+                  style={{ width: 20, height: 20, accentColor: '#0D9488', cursor: shareLoading ? 'wait' : 'pointer' }}
+                />
+              </label>
+            </div>
+            {isPublic && shareUrl && (
+              <div
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '0.6rem 0.8rem', borderRadius: 8,
+                  background: 'var(--color-bg-primary)',
+                  border: '1px solid var(--color-border)',
+                  marginTop: 4,
+                }}
+              >
+                <input
+                  readOnly
+                  value={shareUrl}
+                  style={{
+                    flex: 1, minWidth: 0, border: 'none', background: 'transparent',
+                    fontFamily: 'var(--font-body)', fontSize: '0.8rem',
+                    color: 'var(--color-text-primary)', outline: 'none',
+                  }}
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <button
+                  onClick={handleCopyShare}
+                  title="Copiar"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    padding: '0.35rem 0.7rem', borderRadius: 6,
+                    background: copied ? 'rgba(13,148,136,0.1)' : 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+                    color: copied ? '#0D9488' : 'var(--color-text-secondary)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Copy size={12} /> {copied ? 'Copiado' : 'Copiar'}
+                </button>
+                <a
+                  href={shareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Abrir"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center',
+                    padding: '0.35rem 0.6rem', borderRadius: 6,
+                    background: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-secondary)', textDecoration: 'none',
+                  }}
+                >
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Save button */}

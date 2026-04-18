@@ -7,7 +7,10 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type')
-  const next = searchParams.get('next') ?? '/tools'
+  const rawType = searchParams.get('type')
+  // Recovery links (password reset) must land on /auth/reset, not /tools
+  const defaultNext = rawType === 'recovery' ? '/auth/reset' : '/tools'
+  const next = searchParams.get('next') ?? defaultNext
 
   // Use env-based site URL for redirects (handles Vercel preview vs production).
   // Falls back to the request origin (works for localhost too).

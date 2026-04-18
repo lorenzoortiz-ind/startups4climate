@@ -1289,57 +1289,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }
 
               // Check for pending diagnostic results from the landing page quiz
+              // DiagnosticForm writes { total_score, perfil_etapa, dimension_scores, tags, answers, ... }
+              let pendingDiagnostic: {
+                total_score?: number
+                perfil_etapa?: number | string
+                dimension_scores?: Record<string, number>
+                answers?: Record<string, unknown>
+                tags?: Record<string, unknown>
+              } | null = null
               try {
                 const pendingRaw = localStorage.getItem('s4c_diagnostic_pending')
                 if (pendingRaw) {
-                  const pending = JSON.parse(pendingRaw) as {
-                    score: number
-                    stage: string
-                    answers: Record<string, unknown>
-                    completedAt: string
-                  }
-                  // Update profile with diagnostic stage and score
-                  await supabase
+                  pendingDiagnostic = JSON.parse(pendingRaw)
+                  const { error: profileErr } = await supabase
                     .from('profiles')
                     .update({
-                      stage: pending.stage,
-                      diagnostic_score: pending.score,
+                      stage: pendingDiagnostic?.perfil_etapa != null
+                        ? String(pendingDiagnostic.perfil_etapa)
+                        : null,
+                      diagnostic_score: pendingDiagnostic?.total_score ?? null,
+                      diagnostic_data: pendingDiagnostic?.answers ?? {},
                     })
                     .eq('id', activeUser!.id)
+                  if (profileErr) console.error('[S4C Sync] profile diagnostic update failed:', profileErr)
 
-                  // Also try to store the full answers (column may not exist yet)
-                  try {
-                    await supabase
-                      .from('profiles')
-                      .update({ diagnostic_data: pending.answers })
-                      .eq('id', activeUser!.id)
-                  } catch {
-                    // Column doesn't exist yet — that's fine
+                  // También guardar como diagnostics row vinculado al user
+                  if (pendingDiagnostic?.total_score != null) {
+                    await supabase.from('diagnostics').insert({
+                      user_id: activeUser!.id,
+                      score: pendingDiagnostic.total_score,
+                      profile: String(pendingDiagnostic.perfil_etapa ?? ''),
+                      answers: pendingDiagnostic.answers ?? {},
+                      dimension_scores: pendingDiagnostic.dimension_scores ?? {},
+                    })
                   }
 
-                  // Clear from localStorage
                   localStorage.removeItem('s4c_diagnostic_pending')
-
-                  // Re-load profile so the UI reflects the new stage
                   profile = await loadProfile(activeUser!.id)
                 }
-              } catch {
-                // localStorage or parse error — continue silently
+              } catch (err) {
+                console.error('[S4C Sync] pending diagnostic hydration failed:', err)
               }
 
-              // Ensure a startup row exists so the founder appears in cohorts/reports
-              await supabase.from('startups').upsert({
+              // Ensure a startup row exists. startups requires NOT NULL vertical & country.
+              // Derive defaults from the pending diagnostic answers if present.
+              const pendingAnswers = (pendingDiagnostic?.answers ?? {}) as Record<string, unknown>
+              const derivedVertical =
+                (typeof pendingAnswers.vertical === 'string' && pendingAnswers.vertical) ||
+                'impact'
+              const derivedCountry =
+                (typeof pendingAnswers.country === 'string' && pendingAnswers.country) ||
+                'PE'
+              const { error: startupErr } = await supabase.from('startups').upsert({
                 founder_id: activeUser!.id,
                 name: startup,
-                stage: null,
-                vertical: 'other',
-                country: null,
+                stage: pendingDiagnostic?.perfil_etapa != null
+                  ? String(pendingDiagnostic.perfil_etapa)
+                  : null,
+                vertical: derivedVertical,
+                country: derivedCountry,
+                diagnostic_score: pendingDiagnostic?.total_score ?? null,
+                diagnostic_answers: pendingDiagnostic?.answers ?? null,
+                score_by_dimension: pendingDiagnostic?.dimension_scores ?? null,
               }, { onConflict: 'founder_id' })
+              if (startupErr) console.error('[S4C Sync] startup upsert failed:', startupErr)
+
               if (profile) {
                 setAppUser(profile)
               }
-            } catch {
-              // Minimal user already set — ignore
+            } catch (err) {
+              console.error('[S4C Sync] register post-signup hydration threw:', err)
             } finally {
               loginInProgressRef.current = false
             }

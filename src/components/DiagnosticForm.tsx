@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Loader2, CheckCircle2, Info, AlertTriangle, Sparkles, Target, Wrench } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Loader2, CheckCircle2, Info, AlertTriangle, Sparkles, Target, Wrench, Mail, MessageCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation'
 
 /* ════════════════════════════════════════════════════════════════════
    Startups4Climate · DiagnosticForm v2.1
@@ -538,6 +540,12 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
   const [phoneCountryCode, setPhoneCountryCode] = useState('+52')
   const [comoNosConocio, setComoNosConocio] = useState('')
 
+  // Auth integration for result CTAs
+  const { user, openAuthModal } = useAuth()
+  const router = useRouter()
+  const [emailSendStatus, setEmailSendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [emailSendError, setEmailSendError] = useState<string | null>(null)
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactData>({
     resolver: zodResolver(contactSchema),
   })
@@ -675,12 +683,12 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
     setProfile(matched)
     setInconsistencies(incs)
 
-    /* DB inserts — fail-soft */
+    /* DB inserts — log errors para que leads no se pierdan silenciosamente */
     const insertLead = async () => {
       try {
-        await supabase.from('diagnostic_leads').insert({
+        const { error } = await supabase.from('diagnostic_leads').insert({
           nombre: answers.nombre,
-          email: answers.email,
+          email: (answers.email || '').toLowerCase(),
           startup_name: answers.startup_name,
           startup_description: answers.startup_description || null,
           vertical: answers.vertical || null,
@@ -689,21 +697,25 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
           website: answers.website || null,
           score: total,
           profile: matched.tag,
-          answers: JSON.stringify({
+          answers: {
             ...answers,
             como_nos_conocio: comoNosConocio,
             inconsistencias: incs,
             adaptive_overrides: adaptiveOverrides,
             perfil_etapa: matched.etapa,
             diagnostic_version: '2.1',
-          }),
-          tags: JSON.stringify({
+          },
+          tags: {
             modelo_negocio: tags.modelo_negocio,
             equipo_tamano: tags.equipo_tamano,
             cuello_botella: tags.cuello_botella,
-          }),
+          },
+          source: embedded ? 'tools' : 'landing',
         })
-      } catch { /* noop */ }
+        if (error) console.error('[S4C Sync] diagnostic_leads insert failed:', error)
+      } catch (err) {
+        console.error('[S4C Sync] diagnostic_leads insert threw:', err)
+      }
     }
 
     const insertDiagnostic = async () => {
@@ -716,19 +728,28 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
           equipo: scores.equipo || 0,
           data_room: scores.data_room || 0,
         }
-        const { data: userData } = await supabase
-          .from('users')
-          .select('id')
-          .eq('email', (answers.email || '').toLowerCase())
-          .maybeSingle()
-        await supabase.from('diagnostics').insert({
-          user_id: userData?.id || null,
+        // Solo intentar vincular a profile si hay sesión autenticada
+        let foundUserId: string | null = null
+        const { data: authData } = await supabase.auth.getUser()
+        if (authData?.user?.id) {
+          const { data: profileRow } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', authData.user.id)
+            .maybeSingle()
+          foundUserId = profileRow?.id ?? null
+        }
+        const { error } = await supabase.from('diagnostics').insert({
+          user_id: foundUserId,
           score: total,
           profile: matched.tag,
           answers,
           dimension_scores: dimensionScores,
         })
-      } catch { /* noop */ }
+        if (error) console.error('[S4C Sync] diagnostics insert failed:', error)
+      } catch (err) {
+        console.error('[S4C Sync] diagnostics insert threw:', err)
+      }
     }
 
     const fetchPercentil = async () => {
@@ -1517,14 +1538,22 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     )}
                     {!embedded && (
                     <>
-                    <a
-                      href={`/tools?source=diagnostic&score=${totalScore}&etapa=${profile.etapa}`}
+                    {/* Primary CTA: si hay sesión → ir a /tools; si no → abrir registro */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (user) {
+                          router.push(`/tools?source=diagnostic&score=${totalScore}&etapa=${profile.etapa}`)
+                        } else {
+                          openAuthModal('register')
+                        }
+                      }}
                       style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                         width: '100%', padding: '1rem', borderRadius: 'var(--radius-full)',
                         background: 'var(--color-accent-primary)', color: '#fff',
                         fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
-                        textDecoration: 'none',
+                        border: 'none', cursor: 'pointer',
                         boxShadow: '0 4px 16px rgba(218,78,36,0.25), 0 1px 2px rgba(0,0,0,0.4)',
                         transition: 'background 0.2s, transform 0.2s var(--ease-spring)',
                         letterSpacing: '-0.01em',
@@ -1532,27 +1561,96 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                       onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-accent-hover)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
                       onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-accent-primary)'; e.currentTarget.style.transform = 'translateY(0)' }}
                     >
-                      Acceder a mis Herramientas <ArrowRight size={18} />
-                    </a>
+                      {user ? 'Acceder a mis Herramientas' : 'Crear cuenta y desbloquear herramientas'} <ArrowRight size={18} />
+                    </button>
+
+                    {/* Secondary CTA: enviar resultados por email */}
+                    <button
+                      type="button"
+                      disabled={emailSendStatus === 'sending' || emailSendStatus === 'sent'}
+                      onClick={async () => {
+                        if (!answers.email) {
+                          setEmailSendError('No tenemos tu email para enviar los resultados.')
+                          setEmailSendStatus('error')
+                          return
+                        }
+                        setEmailSendStatus('sending')
+                        setEmailSendError(null)
+                        try {
+                          const res = await fetch('/api/diagnostic/email-results', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              email: (answers.email || '').toLowerCase(),
+                              nombre: answers.nombre,
+                              startup_name: answers.startup_name,
+                              total_score: totalScore,
+                              perfil_nombre: profile.name,
+                              perfil_etapa: profile.etapa,
+                              dimension_scores: scores,
+                              recommended_tools: recommendedTools,
+                              roadmap: roadmap.bullets,
+                              inconsistencias: inconsistencies.map(id => INC_MESSAGES[id]),
+                            }),
+                          })
+                          if (!res.ok) {
+                            const data = await res.json().catch(() => ({}))
+                            throw new Error(data.error || 'No se pudo enviar el email')
+                          }
+                          setEmailSendStatus('sent')
+                        } catch (err) {
+                          console.error('[S4C Sync] email-results client failed:', err)
+                          setEmailSendError(err instanceof Error ? err.message : 'Error desconocido')
+                          setEmailSendStatus('error')
+                        }
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                        width: '100%', padding: '0.9rem', borderRadius: 'var(--radius-full)',
+                        background: emailSendStatus === 'sent' ? 'rgba(31,119,246,0.08)' : 'transparent',
+                        border: `1.5px solid ${emailSendStatus === 'sent' ? '#1F77F6' : 'var(--color-ink)'}`,
+                        color: emailSendStatus === 'sent' ? '#1F77F6' : 'var(--color-ink)',
+                        fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700,
+                        cursor: emailSendStatus === 'sending' || emailSendStatus === 'sent' ? 'default' : 'pointer',
+                        transition: 'all 0.2s var(--ease-smooth)',
+                        letterSpacing: '-0.01em',
+                        opacity: emailSendStatus === 'sending' ? 0.7 : 1,
+                      }}
+                    >
+                      {emailSendStatus === 'sending' && (<><Loader2 size={16} className="animate-spin" /> Enviando...</>)}
+                      {emailSendStatus === 'sent' && (<><CheckCircle2 size={16} /> Resultados enviados a tu email</>)}
+                      {(emailSendStatus === 'idle' || emailSendStatus === 'error') && (<><Mail size={16} /> Enviarme los resultados por email</>)}
+                    </button>
+                    {emailSendStatus === 'error' && emailSendError && (
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: '#DA4E24', textAlign: 'center', margin: 0 }}>
+                        {emailSendError}
+                      </p>
+                    )}
+
+                    {/* Tertiary CTA: sesión estratégica por WhatsApp */}
                     <a
-                      href="https://calendly.com"
+                      href={`https://wa.me/51989338401?text=${encodeURIComponent(
+                        `Hola, soy ${answers.nombre || ''} de ${answers.startup_name || 'una startup de impacto'}. ` +
+                        `Acabo de completar el diagnóstico S4C (perfil: ${profile.name}, etapa ${profile.etapa}, score ${totalScore}). ` +
+                        `Quiero agendar una sesión estratégica con el equipo de Startups4Climate.`
+                      )}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        width: '100%', padding: '1rem', borderRadius: 'var(--radius-full)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                        width: '100%', padding: '0.9rem', borderRadius: 'var(--radius-full)',
                         background: 'transparent',
-                        border: '1.5px solid var(--color-ink)',
-                        color: 'var(--color-ink)',
+                        border: '1.5px solid rgba(37,211,102,0.8)',
+                        color: '#25D366',
                         fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 700,
                         textDecoration: 'none',
                         transition: 'all 0.2s var(--ease-smooth)',
                         letterSpacing: '-0.01em',
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-ink)' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#25D366'; e.currentTarget.style.color = '#ffffff' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#25D366' }}
                     >
-                      Agenda una sesión estratégica
+                      <MessageCircle size={16} /> Agenda una sesión estratégica por WhatsApp
                     </a>
                     </>
                     )}

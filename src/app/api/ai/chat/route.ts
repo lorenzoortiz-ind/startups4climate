@@ -5,6 +5,13 @@ import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
+// Allow long-running streamed completions. Default Vercel timeout (10s) was
+// chopping mentor responses mid-sentence; bump to 60s which is the Pro plan
+// ceiling for serverless functions. If you upgrade to Pro+ this can go to 300.
+export const maxDuration = 60
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 /**
  * Strip or truncate heavy fields from the client-sent userContext so the
  * combined system prompt stays under ~6 000 tokens (≈24 KB of UTF-8 text).
@@ -156,7 +163,7 @@ export async function POST(request: NextRequest) {
         const readable = new ReadableStream({
           async start(controller) {
             try {
-              const aiStream = await chatCompletionStream(messages, { max_tokens: 1500 })
+              const aiStream = await chatCompletionStream(messages, { max_tokens: 2500 })
               for await (const chunk of aiStream) {
                 const delta = chunk.choices?.[0]?.delta?.content
                 if (delta) {
@@ -196,7 +203,7 @@ export async function POST(request: NextRequest) {
       // Non-streaming fallback for demo (legacy callers)
       let aiResponse: string
       try {
-        const completion = await chatCompletion(messages, { stream: false, max_tokens: 1500 })
+        const completion = await chatCompletion(messages, { stream: false, max_tokens: 2500 })
         aiResponse = 'choices' in completion
           ? completion.choices[0]?.message?.content || 'No pude generar una respuesta. Intenta de nuevo.'
           : 'No pude generar una respuesta. Intenta de nuevo.'
@@ -308,7 +315,7 @@ export async function POST(request: NextRequest) {
         async start(controller) {
           let aiResponse = ''
           try {
-            const aiStream = await chatCompletionStream(messages, { max_tokens: 1000 })
+            const aiStream = await chatCompletionStream(messages, { max_tokens: 2500 })
             for await (const chunk of aiStream) {
               const delta = chunk.choices?.[0]?.delta?.content
               if (delta) {
@@ -381,7 +388,7 @@ export async function POST(request: NextRequest) {
     try {
       const completion = await chatCompletion(messages, {
         stream: false,
-        max_tokens: 1000,
+        max_tokens: 2500,
       })
 
       aiResponse =

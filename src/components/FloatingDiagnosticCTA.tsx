@@ -54,30 +54,29 @@ export default function FloatingDiagnosticCTA() {
           onClick={handleClick}
           style={{
             position: 'fixed',
-            bottom: '2rem',
-            right: '2rem',
+            bottom: '1.5rem',
+            right: '1.5rem',
             zIndex: 999,
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.875rem 1.5rem',
-            backgroundColor: 'var(--color-accent-primary)',
+            padding: '0.7rem 1.1rem',
+            background: 'linear-gradient(180deg, #FF8918 0%, #DA4E24 100%)',
             color: '#fff',
-            border: 'none',
-            borderRadius: 12,
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 999,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.75rem',
+            fontSize: '0.85rem',
             fontWeight: 600,
+            letterSpacing: '-0.005em',
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(255,107,74,0.30), 0 1px 2px rgba(0,0,0,0.4)',
+            boxShadow:
+              'inset 0 1px 0 rgba(255,255,255,0.25), 0 12px 30px -8px rgba(218,78,36,0.55), 0 0 0 1px rgba(218,78,36,0.45)',
           }}
-          whileHover={{
-            backgroundColor: 'var(--color-accent-hover)',
-            scale: 1.02,
-          }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
         >
-          Realiza tu diagnóstico <ArrowRight size={18} />
+          Realiza tu diagnóstico <ArrowRight size={16} />
         </motion.button>
       )}
     </AnimatePresence>

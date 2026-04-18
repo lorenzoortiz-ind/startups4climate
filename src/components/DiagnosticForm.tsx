@@ -847,20 +847,22 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
   }
 
   return (
-    <section id="diagnostico" style={{ padding: '3.2rem 0 4.8rem', background: 'var(--color-bg-primary)' }}>
-      <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 1.5rem' }}>
-        <div style={{
-          background: 'var(--color-paper)',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-float)',
+    <section id="diagnostico" style={{ position: 'relative', padding: 'clamp(4rem, 8vw, 6rem) 0', background: 'var(--color-bg-primary)', overflow: 'hidden' }}>
+      <div className="orb orb-ember orb-sm" style={{ top: '20%', right: '-200px', opacity: 0.18 }} aria-hidden />
+      <div className="orb orb-electric orb-sm" style={{ bottom: '10%', left: '-200px', opacity: 0.18 }} aria-hidden />
+      <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1 }}>
+        <div className="glass-card" style={{
+          borderRadius: 24,
           overflow: 'hidden',
           position: 'relative',
+          border: '1px solid rgba(218,78,36,0.35)',
+          background: 'rgba(14, 14, 14, 0.85)',
+          boxShadow: 'inset 0 0 14px rgba(217,119,87,0.30), inset 0 0 28px rgba(217,119,87,0.12), 0 30px 80px -20px rgba(0,0,0,0.6)',
         }}>
           {/* Top gradient accent */}
           <div style={{
-            height: 4,
-            background: 'linear-gradient(90deg, #FF6B4A, #0D9488, #D97706, #3B82F6)',
+            height: 3,
+            background: 'linear-gradient(90deg, #DA4E24, #FF8918, #1F77F6)',
           }} />
 
           {/* Progress bar */}

@@ -29,29 +29,29 @@ const FEATURES = [
     icon: Users,
     title: 'Gestión de cohortes',
     description: 'Crea cohortes, invita founders por email y organiza tus programas sin hojas de cálculo.',
-    accent: '#0D9488',
-    accentBg: 'rgba(13,148,136,0.06)',
+    accent: '#5C9BFF',
+    accentBg: 'rgba(31,119,246,0.10)',
   },
   {
     icon: Mail,
     title: 'Invitación por email',
     description: 'Envía invitaciones directas a founders. Se registran y quedan vinculados a tu cohorte automáticamente.',
-    accent: '#3B82F6',
-    accentBg: 'rgba(59,130,246,0.06)',
+    accent: '#5C9BFF',
+    accentBg: 'rgba(31,119,246,0.10)',
   },
   {
     icon: LayoutDashboard,
     title: 'Dashboard en tiempo real',
     description: 'Visualiza el progreso de cada startup y de la cohorte completa con métricas actualizadas al instante.',
-    accent: '#FF6B4A',
-    accentBg: 'rgba(255,107,74,0.06)',
+    accent: '#FF8918',
+    accentBg: 'rgba(218,78,36,0.10)',
   },
   {
     icon: Download,
     title: 'Reportes Excel descargables',
     description: 'Genera reportes detallados en Excel listos para compartir con stakeholders y equipos directivos.',
-    accent: '#D97706',
-    accentBg: 'rgba(217,119,6,0.06)',
+    accent: '#FF8918',
+    accentBg: 'rgba(218,78,36,0.10)',
   },
   {
     icon: Wrench,
@@ -82,8 +82,8 @@ const PLANS = [
     price: 'Gratis',
     priceSub: null,
     description: 'Para incubadoras y aceleradoras regionales (fuera de Lima) o en zonas con poblaciones vulnerables',
-    accent: '#0D9488',
-    accentBg: 'rgba(13,148,136,0.06)',
+    accent: '#5C9BFF',
+    accentBg: 'rgba(31,119,246,0.10)',
     features: [
       'Hasta 20 startups por programa',
       'Acceso a todas las herramientas',
@@ -101,8 +101,8 @@ const PLANS = [
     price: '$300',
     priceSub: 'USD / año',
     description: 'Para incubadoras y aceleradoras en Lima',
-    accent: '#FF6B4A',
-    accentBg: 'rgba(255,107,74,0.06)',
+    accent: '#FF8918',
+    accentBg: 'rgba(218,78,36,0.10)',
     features: [
       'Hasta 30 startups por programa',
       'Todo lo del plan Regional',
@@ -731,7 +731,7 @@ export default function OrganizacionesPage() {
           transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.2 }}
           style={{
             marginTop: '3rem',
-            background: 'rgba(13,148,136,0.06)',
+            background: 'rgba(31,119,246,0.10)',
             border: '1px solid rgba(13,148,136,0.15)',
             borderRadius: 'var(--radius-lg)',
             padding: '2rem 2.5rem',
@@ -743,7 +743,7 @@ export default function OrganizacionesPage() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 300px' }}>
-            <MapPin size={24} color="#0D9488" strokeWidth={1.5} />
+            <MapPin size={24} color="#FF8918" strokeWidth={1.5} />
             <div>
               <p
                 style={{
@@ -779,7 +779,7 @@ export default function OrganizacionesPage() {
               gap: '0.625rem',
               padding: '0.875rem 1.75rem',
               borderRadius: 'var(--radius-full)',
-              background: '#0D9488',
+              background: '#DA4E24',
               color: '#fff',
               fontFamily: 'var(--font-body)',
               fontSize: 'var(--text-body)',
@@ -835,7 +835,7 @@ export default function OrganizacionesPage() {
               width: 300,
               height: 300,
               borderRadius: '50%',
-              background: 'rgba(255,107,74,0.06)',
+              background: 'rgba(218,78,36,0.10)',
               pointerEvents: 'none',
             }}
           />

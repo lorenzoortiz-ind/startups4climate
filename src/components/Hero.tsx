@@ -24,10 +24,9 @@ export default function Hero() {
       className="hero-stage"
       style={{
         position: 'relative',
-        minHeight: '100vh',
         background: 'var(--color-bg-primary)',
-        paddingTop: 'clamp(7rem, 14vh, 10rem)',
-        paddingBottom: 'clamp(4rem, 8vh, 7rem)',
+        paddingTop: 'clamp(5rem, 9vh, 7rem)',
+        paddingBottom: 'clamp(3rem, 6vh, 5rem)',
         overflow: 'hidden',
       }}
     >
@@ -67,7 +66,7 @@ export default function Hero() {
           }}
         >
           {/* Pill ember */}
-          <motion.div variants={reveal} style={{ marginBottom: '2rem' }}>
+          <motion.div variants={reveal} style={{ marginBottom: '1.25rem' }}>
             <span className="pill-ember">
               <span className="dot" />
               Plataforma all-in-one para climate founders
@@ -79,12 +78,12 @@ export default function Hero() {
             variants={reveal}
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2.6rem, 7vw, 5.2rem)',
+              fontSize: 'clamp(2.4rem, 6vw, 4.6rem)',
               fontWeight: 500,
               lineHeight: 1.0,
               letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              margin: '0 0 1.5rem 0',
+              margin: '0 0 1.25rem 0',
             }}
           >
             La infraestructura que tu{' '}
@@ -101,8 +100,8 @@ export default function Hero() {
               fontWeight: 400,
               lineHeight: 1.55,
               color: 'var(--color-text-secondary)',
-              maxWidth: 640,
-              margin: '0 auto 2.5rem',
+              maxWidth: 600,
+              margin: '0 auto 1.75rem',
               letterSpacing: '-0.005em',
             }}
           >
@@ -119,7 +118,7 @@ export default function Hero() {
               alignItems: 'center',
               justifyContent: 'center',
               flexWrap: 'wrap',
-              marginBottom: '4rem',
+              marginBottom: '2.5rem',
             }}
           >
             <button
@@ -251,7 +250,7 @@ export default function Hero() {
               display: 'flex',
               justifyContent: 'center',
               gap: 'clamp(2rem, 5vw, 4rem)',
-              marginTop: '3.5rem',
+              marginTop: '2.5rem',
               flexWrap: 'wrap',
             }}
           >

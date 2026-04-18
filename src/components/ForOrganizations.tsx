@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { LayoutDashboard, Users, FileText, TrendingUp, ArrowRight } from 'lucide-react'
 
@@ -9,94 +8,75 @@ const features = [
     icon: LayoutDashboard,
     title: 'Panel de portafolio',
     description: 'Dashboard centralizado con métricas en tiempo real de todas las startups de tu programa.',
-    accent: 'var(--color-accent-primary)',
-    accentBg: 'rgba(255,107,74,0.06)',
+    accent: 'ember' as const,
   },
   {
     icon: Users,
     title: 'Gestión de cohortes',
     description: 'Crea cohortes, asigna startups y define milestones. Sin hojas de cálculo ni cadenas de correos.',
-    accent: 'var(--color-accent-secondary)',
-    accentBg: 'rgba(13,148,136,0.06)',
+    accent: 'electric' as const,
   },
   {
     icon: FileText,
     title: 'Reportes automáticos',
-    description: 'Genera reportes PDF de progreso por cohorte o por startup. Listos para compartir con stakeholders.',
-    accent: 'var(--color-accent-primary)',
-    accentBg: 'rgba(255,107,74,0.06)',
+    description: 'Genera reportes Excel de progreso por cohorte o startup. Listos para compartir con stakeholders.',
+    accent: 'ember' as const,
   },
   {
     icon: TrendingUp,
     title: 'Benchmarking regional',
     description: 'Compara el desempeño de tus startups contra promedios por vertical, país y etapa.',
-    accent: 'var(--color-accent-secondary)',
-    accentBg: 'rgba(13,148,136,0.06)',
+    accent: 'electric' as const,
   },
 ]
 
-const springReveal = {
-  initial: { opacity: 0, y: 60 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-100px' },
-  transition: { type: 'spring', damping: 20, stiffness: 100 } as any,
-}
-
 function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number }) {
-  const [hovered, setHovered] = useState(false)
-  const IconComp = feature.icon
+  const Icon = feature.icon
+  const isEmber = feature.accent === 'ember'
+  const accentColor = isEmber ? '#FF8918' : '#5C9BFF'
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.1 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      transition={{ duration: 0.5, delay: i * 0.06 }}
+      className="glass-card"
       style={{
-        background: 'var(--color-bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: `1px solid ${hovered ? feature.accent + '55' : 'var(--color-border)'}`,
-        padding: '3rem 2.5rem',
+        padding: '2rem',
+        borderRadius: 18,
         display: 'flex',
         flexDirection: 'column',
-        transition: 'transform 0.15s var(--ease-spring), box-shadow 0.15s ease, border-color 0.15s ease',
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
-        boxShadow: hovered ? 'var(--shadow-card-hover)' : 'var(--shadow-card)',
-        cursor: 'default',
+        gap: '1rem',
+        border: `1px solid ${accentColor}30`,
       }}
     >
       <div
         style={{
-          width: 60,
-          height: 60,
-          borderRadius: 'var(--radius-md)',
-          background: hovered ? feature.accentBg : 'rgba(255,255,255,0.03)',
-          border: `1px solid ${hovered ? feature.accent + '40' : 'var(--color-border-strong)'}`,
+          width: 44,
+          height: 44,
+          borderRadius: 12,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '2rem',
-          transition: 'background 0.15s ease, border-color 0.15s ease',
+          background: isEmber
+            ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+            : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
+          border: `1px solid ${accentColor}55`,
+          color: accentColor,
         }}
       >
-        <IconComp
-          size={28}
-          strokeWidth={1.5}
-          color={hovered ? feature.accent : 'var(--color-text-secondary)'}
-          style={{ transition: 'color 0.15s ease' }}
-        />
+        <Icon size={20} strokeWidth={2} />
       </div>
       <h3
         style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: 'var(--text-heading-md)',
-          fontWeight: 700,
+          fontSize: '1.2rem',
+          fontWeight: 500,
           color: 'var(--color-ink)',
-          marginBottom: '1rem',
-          letterSpacing: '-0.03em',
-          lineHeight: 1.1,
+          margin: 0,
+          letterSpacing: '-0.02em',
+          lineHeight: 1.2,
         }}
       >
         {feature.title}
@@ -104,10 +84,10 @@ function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number })
       <p
         style={{
           fontFamily: 'var(--font-body)',
-          fontSize: 'var(--text-body-lg)',
-          lineHeight: 1.6,
+          fontSize: '0.92rem',
+          lineHeight: 1.55,
           color: 'var(--color-text-secondary)',
-          letterSpacing: '-0.01em',
+          margin: 0,
         }}
       >
         {feature.description}
@@ -121,64 +101,71 @@ export default function ForOrganizations() {
     <section
       id="organizaciones"
       style={{
-        padding: 'var(--section-py) 0',
-        background: 'var(--color-bg-primary)',
         position: 'relative',
+        padding: 'clamp(5rem, 10vw, 8rem) 0',
+        background: 'var(--color-bg-primary)',
+        overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
+      <div
+        className="orb orb-ember orb-sm"
+        style={{ top: '10%', right: '-220px', opacity: 0.22 }}
+        aria-hidden
+      />
 
-        {/* Section header */}
-        <motion.div {...springReveal} style={{ maxWidth: 880, margin: '0 auto 5rem' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.6rem',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent-primary)',
-              marginBottom: '1.5rem',
-            }}
-          >
-            Para organizaciones
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: '0 auto',
+          padding: '0 clamp(1.25rem, 4vw, 3rem)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          style={{ maxWidth: 760, margin: '0 auto 3rem', textAlign: 'center' }}
+        >
+          <span className="pill-ember" style={{ marginBottom: '1.25rem' }}>
+            <span className="dot" /> Para organizaciones
           </span>
           <h2
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-display-md)',
-              fontWeight: 700,
+              fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
+              fontWeight: 500,
               lineHeight: 1.05,
-              letterSpacing: '-0.04em',
+              letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              marginBottom: '1.5rem',
+              margin: '1rem 0 1.25rem',
             }}
           >
-            La tecnología que tu programa<br />de innovación necesita
+            La tecnología que tu programa{' '}
+            <span className="text-ember">de innovación necesita</span>
           </h2>
           <p
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-body-lg)',
-              lineHeight: 1.6,
+              fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
+              lineHeight: 1.55,
               color: 'var(--color-text-secondary)',
-              maxWidth: 640,
-              letterSpacing: '-0.01em',
+              margin: 0,
             }}
           >
             Incubadoras, aceleradoras y gobiernos usan nuestra plataforma para gestionar cohortes,
-            medir progreso y generar reportes con datos reales de sus startups.
+            medir progreso y generar reportes con datos reales.
           </p>
         </motion.div>
 
-        {/* Feature cards: 2x2 grid */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '1.5rem',
-            marginBottom: '5rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: '1.25rem',
+            marginBottom: '4rem',
           }}
         >
           {features.map((feature, i) => (
@@ -186,113 +173,62 @@ export default function ForOrganizations() {
           ))}
         </div>
 
-        {/* Dark CTA block */}
+        {/* Ember CTA card */}
         <motion.div
-          {...springReveal}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          className="glass-card"
           style={{
-            background: 'linear-gradient(180deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%)',
-            border: '1px solid var(--color-border-strong)',
-            borderRadius: 'var(--radius-xl)',
-            padding: 'clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 4rem)',
+            padding: 'clamp(2.5rem, 5vw, 4rem)',
+            borderRadius: 24,
             textAlign: 'center',
             maxWidth: 920,
             margin: '0 auto',
-            color: 'var(--color-text-primary)',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            border: '1px solid rgba(218,78,36,0.45)',
+            background: 'rgba(14, 14, 14, 0.85)',
+            boxShadow:
+              'inset 0 0 14px rgba(217,119,87,0.40), inset 0 0 28px rgba(217,119,87,0.18), 0 30px 80px -20px rgba(218,78,36,0.40)',
           }}
         >
-          {/* Decorative accent */}
-          <div
-            style={{
-              position: 'absolute',
-              top: -80,
-              right: -80,
-              width: 300,
-              height: 300,
-              borderRadius: '50%',
-              background: 'rgba(255,107,74,0.06)',
-              pointerEvents: 'none',
-            }}
-          />
-
-          <span
-            style={{
-              display: 'inline-block',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.6rem',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent-primary)',
-              marginBottom: '1.25rem',
-            }}
-          >
-            Agenda una llamada
+          <span className="pill-ember" style={{ marginBottom: '1.25rem' }}>
+            <span className="dot" /> Agenda una llamada
           </span>
-
           <h3
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-display-md)',
-              fontWeight: 700,
-              letterSpacing: '-0.04em',
-              lineHeight: 1.05,
-              marginBottom: '1.25rem',
-              color: 'var(--color-text-primary)',
+              fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)',
+              fontWeight: 500,
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+              margin: '1rem 0 1rem',
+              color: 'var(--color-ink)',
             }}
           >
-            ¿Gestionas un programa de<br />incubación o aceleración?
+            ¿Gestionas un programa{' '}
+            <span className="text-ember">de incubación?</span>
           </h3>
           <p
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-body-lg)',
-              lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.6)',
-              maxWidth: 560,
-              margin: '0 auto 2.5rem',
-              letterSpacing: '-0.01em',
+              fontSize: '1rem',
+              lineHeight: 1.55,
+              color: 'var(--color-text-secondary)',
+              maxWidth: 520,
+              margin: '0 auto 2rem',
             }}
           >
-            Agenda una llamada y te mostramos cómo la plataforma puede integrarse a tu operación.
+            Te mostramos en 30 minutos cómo la plataforma puede integrarse a tu operación.
           </p>
           <a
             href="https://calendly.com/redesignlab"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: '1.05rem 2rem',
-              borderRadius: 12,
-              background: 'var(--color-accent-primary)',
-              color: '#fff',
-              fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-body-lg)',
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(255,107,74,0.25)',
-              transition: 'background 0.15s ease, transform 0.15s var(--ease-spring), box-shadow 0.15s ease',
-              textDecoration: 'none',
-              letterSpacing: '-0.01em',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-accent-hover)'
-              e.currentTarget.style.transform = 'translateY(-1px)'
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(255,107,74,0.35)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-accent-primary)'
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(255,107,74,0.25)'
-            }}
+            className="btn-ember"
           >
             Agenda una llamada
-            <ArrowRight size={20} strokeWidth={2.5} />
+            <ArrowRight size={16} strokeWidth={2.4} />
           </a>
         </motion.div>
       </div>

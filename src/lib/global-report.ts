@@ -177,7 +177,7 @@ export function generateGlobalReport(user: GlobalReportUser): void {
       <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:#1F77F6;color:white;font-family:'Mluvka',sans-serif;font-size:0.875rem;font-weight:600;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(31,119,246,0.3)">Imprimir / Guardar PDF</button>
       <a href="mailto:?subject=Reporte%20Global%20-%20${encodeURIComponent(user.startup)}&body=Adjunto%20el%20reporte%20global%20de%20Startups4Climate" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:white;color:#1F77F6;font-family:'Mluvka',sans-serif;font-size:0.875rem;font-weight:600;border:1px solid rgba(31,119,246,0.3);text-decoration:none;cursor:pointer">Enviar por email</a>
     </div>
-    <p style="text-align:center;font-family:'Mluvka',monospace;font-size:0.6875rem;color:#9CA3AF;margin-top:16px">Generado por Startups4Climate | startups4climate.com</p>
+    <p style="text-align:center;font-family:'Mluvka',monospace;font-size:0.6875rem;color:#9CA3AF;margin-top:16px">Generado por Startups4Climate | startups4climate.org</p>
   </div>
 </body>
 </html>`

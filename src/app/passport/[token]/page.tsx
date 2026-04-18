@@ -395,10 +395,10 @@ export default async function PublicPassportPage({
             })}
           </div>
           <a
-            href="https://startups4climate.com"
+            href="https://startups4climate.org"
             style={{ color: 'var(--color-text-muted)', textDecoration: 'none' }}
           >
-            startups4climate.com
+            startups4climate.org
           </a>
         </div>
       </div>

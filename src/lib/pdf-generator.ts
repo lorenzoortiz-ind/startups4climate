@@ -163,10 +163,10 @@ export function generateToolReport(
   </div>
 
   <div class="footer no-print">
-    <p>Generado por Startups4Climate | startups4climate.com</p>
+    <p>Generado por Startups4Climate | startups4climate.org</p>
     <div class="actions">
       <button class="btn btn-primary" onclick="window.print()">Imprimir / Guardar PDF</button>
-      <a class="btn btn-secondary" href="mailto:${user.email}?subject=${encodeURIComponent('Reporte: ' + tool.name + ' — ' + user.startup)}&body=${encodeURIComponent('Adjunto el reporte de ' + tool.name + ' generado en Startups4Climate.\n\nPara ver el reporte completo, accede a la plataforma en startups4climate.com/tools/' + toolId)}">Enviar por email</a>
+      <a class="btn btn-secondary" href="mailto:${user.email}?subject=${encodeURIComponent('Reporte: ' + tool.name + ' — ' + user.startup)}&body=${encodeURIComponent('Adjunto el reporte de ' + tool.name + ' generado en Startups4Climate.\n\nPara ver el reporte completo, accede a la plataforma en startups4climate.org/tools/' + toolId)}">Enviar por email</a>
     </div>
   </div>
 </div>

@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   try {
     if (!resend) throw new Error('RESEND_API_KEY not configured')
     await resend.emails.send({
-      from: 'Startups4Climate <noreply@startups4climate.com>',
+      from: 'Startups4Climate <noreply@startups4climate.org>',
       to: email.toLowerCase().trim(),
       subject: `${escapeHtml(profile.full_name)} te invita a ${escapeHtml(orgName)} en Startups4Climate`,
       html: `

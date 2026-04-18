@@ -150,7 +150,7 @@ export async function POST(req: Request) {
     const { subject, html, text } = renderEmail(body)
 
     const { data, error } = await resend.emails.send({
-      from: 'Startups4Climate <noreply@startups4climate.com>',
+      from: 'Startups4Climate <noreply@startups4climate.org>',
       to: body.email,
       replyTo: 'hello@redesignlab.org',
       subject,

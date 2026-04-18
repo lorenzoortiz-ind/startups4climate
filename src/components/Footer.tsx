@@ -24,8 +24,8 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--color-bg-dark)', color: 'var(--color-text-primary)', padding: '6rem 0 3rem', borderTop: '1px solid var(--color-border)' }}>
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
+    <footer style={{ background: 'var(--color-bg-primary)', color: 'var(--color-text-primary)', padding: '5rem 0 2.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 clamp(1.25rem, 4vw, 3rem)' }}>
 
         {/* Top: Info + Logo & Links Grid */}
         <div style={{
@@ -42,12 +42,12 @@ export default function Footer() {
               <S4CLogo size={32} />
               <span style={{
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: '1.25rem',
+                fontWeight: 600,
+                fontSize: '1.15rem',
                 color: 'var(--color-text-primary)',
                 letterSpacing: '-0.02em',
               }}>
-                Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
+                Startups<span className="text-ember">4</span>Climate
               </span>
             </div>
             <p style={{

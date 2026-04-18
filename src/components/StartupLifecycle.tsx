@@ -31,8 +31,6 @@ import {
   Expand,
   Presentation,
   Wallet,
-  FolderOpen,
-  TrendingUp as ScaleIcon,
 } from 'lucide-react'
 
 const stages = [
@@ -41,18 +39,15 @@ const stages = [
     icon: FlaskConical,
     number: '01',
     title: 'Pre-incubación',
-    subtitle: 'Ideación y Descubrimiento',
     focus: 'Define tu propósito, descubre tu mercado y entiende a tu usuario',
-    stageColor: '#FF6B4A',
-    stageBg: 'rgba(255,107,74,0.07)',
-    stageBorder: 'rgba(255,107,74,0.18)',
+    accent: 'ember' as const,
     tools: [
-      { name: 'Propósito & Equipo', category: 'EQUIPO', icon: Users, desc: 'Define por qué existes como startup y evalúa las brechas de tu equipo fundador.' },
-      { name: 'Segmentación', category: 'MERCADO', icon: BarChart3, desc: 'Explora y lista todos los posibles segmentos de mercado donde tu idea podría crear valor.' },
-      { name: 'Mercado inicial', category: 'MERCADO', icon: Target, desc: 'Elige tu primer mercado de entrada, el nicho donde ganarás tu primera batalla.' },
-      { name: 'Usuario Final', category: 'MERCADO', icon: UserCircle, desc: 'Construye un perfil detallado de quién es el usuario final de tu producto.' },
-      { name: 'Cálculo del TAM', category: 'FINANZAS', icon: Calculator, desc: 'Calcula el tamaño de tu mercado usando análisis bottom-up.' },
-      { name: 'Persona', category: 'MERCADO', icon: Map, desc: 'Crea una persona concreta y representativa de tu mercado inicial.' },
+      { name: 'Propósito & Equipo', icon: Users, desc: 'Define por qué existes y evalúa brechas del equipo fundador.' },
+      { name: 'Segmentación', icon: BarChart3, desc: 'Explora todos los posibles segmentos donde tu idea crea valor.' },
+      { name: 'Mercado inicial', icon: Target, desc: 'Elige tu primer mercado de entrada, donde ganarás tu primera batalla.' },
+      { name: 'Usuario final', icon: UserCircle, desc: 'Construye un perfil detallado de quién es el usuario final.' },
+      { name: 'Cálculo del TAM', icon: Calculator, desc: 'Calcula el tamaño de tu mercado con análisis bottom-up.' },
+      { name: 'Persona', icon: Map, desc: 'Crea una persona concreta y representativa de tu mercado.' },
     ],
   },
   {
@@ -60,18 +55,15 @@ const stages = [
     icon: Rocket,
     number: '02',
     title: 'Incubación',
-    subtitle: 'Validación y Producto',
     focus: 'Valida tu propuesta de valor y diseña tu producto mínimo viable',
-    stageColor: '#0D9488',
-    stageBg: 'rgba(13,148,136,0.07)',
-    stageBorder: 'rgba(13,148,136,0.18)',
+    accent: 'electric' as const,
     tools: [
-      { name: 'Ciclo de Uso', category: 'PRODUCTO', icon: Layers, desc: 'Mapea cómo tu Persona descubre, adquiere, usa y recomienda tu producto.' },
-      { name: 'Especificación', category: 'PRODUCTO', icon: FileText, desc: 'Define qué hace tu producto y qué NO hace con una brochure visual.' },
-      { name: 'Propuesta de Valor', category: 'ESTRATEGIA', icon: Lightbulb, desc: 'Cuantifica en números concretos el valor que tu producto entrega al cliente.' },
-      { name: 'Primeros 10 Clientes', category: 'VENTAS', icon: Handshake, desc: 'Identifica con nombre y apellido a tus primeros 10 clientes potenciales.' },
-      { name: 'Core & Competencia', category: 'ESTRATEGIA', icon: Shield, desc: 'Define tu ventaja competitiva sostenible y mapea tu posición vs. la competencia.' },
-      { name: 'Lean Canvas', category: 'ESTRATEGIA', icon: PieChart, desc: 'Modelo de negocio en una página que sintetiza problema, solución y métricas.' },
+      { name: 'Ciclo de uso', icon: Layers, desc: 'Mapea cómo tu Persona descubre, adquiere, usa y recomienda.' },
+      { name: 'Especificación', icon: FileText, desc: 'Define qué hace tu producto y qué NO hace.' },
+      { name: 'Propuesta de valor', icon: Lightbulb, desc: 'Cuantifica en números el valor que entregas al cliente.' },
+      { name: 'Primeros 10 clientes', icon: Handshake, desc: 'Identifica con nombre y apellido a tus primeros 10 clientes.' },
+      { name: 'Core & Competencia', icon: Shield, desc: 'Define tu ventaja competitiva sostenible y mapea la competencia.' },
+      { name: 'Lean Canvas', icon: PieChart, desc: 'Modelo de negocio en una página que sintetiza problema y solución.' },
     ],
   },
   {
@@ -79,18 +71,15 @@ const stages = [
     icon: Building2,
     number: '03',
     title: 'Aceleración',
-    subtitle: 'Modelo de Negocio y Crecimiento',
     focus: 'Estructura tu modelo de negocio, pricing y proceso de ventas',
-    stageColor: '#F59E0B',
-    stageBg: 'rgba(245,158,11,0.10)',
-    stageBorder: 'rgba(245,158,11,0.25)',
+    accent: 'ember' as const,
     tools: [
-      { name: 'DMU', category: 'VENTAS', icon: Briefcase, desc: 'Identifica todas las personas que influyen en la decisión de compra.' },
-      { name: 'Adquisición', category: 'MARKETING', icon: Megaphone, desc: 'Mapea paso a paso cómo un cliente pasa de no conocerte a comprar.' },
-      { name: 'Modelo de Negocio', category: 'ESTRATEGIA', icon: Layers, desc: 'Elige y estructura cómo tu startup genera, entrega y captura valor.' },
-      { name: 'Pricing', category: 'FINANZAS', icon: DollarSign, desc: 'Define tu estructura de precios basándote en el valor que entregas.' },
-      { name: 'LTV & Economics', category: 'FINANZAS', icon: LineChart, desc: 'Calcula el Lifetime Value de tus clientes, COCA y métricas clave.' },
-      { name: 'Proceso de Ventas', category: 'VENTAS', icon: Handshake, desc: 'Diseña tu proceso de ventas de principio a fin para que sea escalable.' },
+      { name: 'DMU', icon: Briefcase, desc: 'Identifica todas las personas que influyen en la decisión de compra.' },
+      { name: 'Adquisición', icon: Megaphone, desc: 'Mapea paso a paso cómo un cliente pasa de no conocerte a comprar.' },
+      { name: 'Modelo de negocio', icon: Layers, desc: 'Estructura cómo tu startup genera, entrega y captura valor.' },
+      { name: 'Pricing', icon: DollarSign, desc: 'Define tu estructura de precios basada en valor entregado.' },
+      { name: 'LTV & Economics', icon: LineChart, desc: 'Calcula LTV, COCA y métricas clave de tus clientes.' },
+      { name: 'Proceso de ventas', icon: Handshake, desc: 'Diseña tu proceso de ventas para que sea escalable.' },
     ],
   },
   {
@@ -98,160 +87,154 @@ const stages = [
     icon: TrendingUp,
     number: '04',
     title: 'Escalamiento',
-    subtitle: 'Producto, Plan y Fundraising',
     focus: 'Valida tu tracción, construye tu producto y prepara tu ronda de inversión',
-    stageColor: '#0D9488',
-    stageBg: 'rgba(13,148,136,0.07)',
-    stageBorder: 'rgba(13,148,136,0.18)',
+    accent: 'electric' as const,
     tools: [
-      { name: 'Supuestos Clave', category: 'ESTRATEGIA', icon: Beaker, desc: 'Lista y prioriza los supuestos más riesgosos y diseña experimentos rápidos.' },
-      { name: 'Producto Min. Viable', category: 'PRODUCTO', icon: Package, desc: 'Define la versión más pequeña de tu producto que entrega valor suficiente.' },
-      { name: 'Validación', category: 'VENTAS', icon: ShieldCheck, desc: 'Demuestra con evidencia real que los clientes quieren y pagan por tu producto.' },
-      { name: 'Plan & Expansión', category: 'PRODUCTO', icon: Expand, desc: 'Desarrolla tu roadmap de producto y mapea mercados adyacentes.' },
-      { name: 'Pitch Deck', category: 'MARKETING', icon: Presentation, desc: 'Construye tu narrativa para inversores con los 12 slides esenciales.' },
-      { name: 'Cap Table', category: 'FINANZAS', icon: Wallet, desc: 'Simula tu estructura accionaria en múltiples rondas de inversión.' },
+      { name: 'Supuestos clave', icon: Beaker, desc: 'Lista y prioriza los supuestos más riesgosos con experimentos rápidos.' },
+      { name: 'Producto mínimo viable', icon: Package, desc: 'Define la versión más pequeña de tu producto que entrega valor.' },
+      { name: 'Validación', icon: ShieldCheck, desc: 'Demuestra con evidencia que los clientes quieren y pagan.' },
+      { name: 'Plan & Expansión', icon: Expand, desc: 'Desarrolla tu roadmap de producto y mercados adyacentes.' },
+      { name: 'Pitch deck', icon: Presentation, desc: 'Construye tu narrativa para inversores con los 12 slides esenciales.' },
+      { name: 'Cap table', icon: Wallet, desc: 'Simula tu estructura accionaria en múltiples rondas de inversión.' },
     ],
   },
 ]
 
-const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
-  ESTRATEGIA: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  MERCADO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  PRODUCTO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-  FINANZAS: { color: '#F59E0B', bg: 'rgba(245,158,11,0.10)' },
-  VENTAS: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  MARKETING: { color: '#FF6B4A', bg: 'rgba(255,107,74,0.08)' },
-  EQUIPO: { color: '#0D9488', bg: 'rgba(13,148,136,0.08)' },
-}
-
 export default function StartupLifecycle() {
   const [activeStage, setActiveStage] = useState(0)
   const stage = stages[activeStage]
+  const isEmber = stage.accent === 'ember'
+  const accentColor = isEmber ? '#FF8918' : '#5C9BFF'
 
   return (
     <section
       id="ciclo-de-vida"
       style={{
-        padding: 'var(--section-py) 0',
+        position: 'relative',
+        padding: 'clamp(5rem, 10vw, 8rem) 0',
         background: 'var(--color-bg-primary)',
-        borderTop: '1px solid var(--color-border)',
+        overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
-
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: '0 auto',
+          padding: '0 clamp(1.25rem, 4vw, 3rem)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 60 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          style={{ textAlign: 'left', maxWidth: 900, marginBottom: 'clamp(3rem, 6vw, 5rem)' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 3.5rem' }}
         >
-          <h2 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-display-md)',
-            fontWeight: 700,
-            lineHeight: 1.05,
-            letterSpacing: '-0.03em',
-            color: 'var(--color-ink)',
-            marginBottom: '1.5rem',
-          }}>
-            El <span style={{ color: 'var(--color-accent-primary)' }}>Toolkit</span> que necesitas para crecer y escalar
+          <span className="pill-ember" style={{ marginBottom: '1.5rem' }}>
+            <span className="dot" /> Toolkit por etapa
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
+              fontWeight: 500,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: 'var(--color-ink)',
+              margin: '1rem 0 1.25rem',
+            }}
+          >
+            +30 herramientas para{' '}
+            <span className="text-ember">crecer y escalar</span>
           </h2>
-          <p style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-body-lg)',
-            lineHeight: 1.5,
-            color: 'var(--color-text-secondary)',
-            maxWidth: 600,
-          }}>
-            +30 herramientas organizadas en las 4 etapas clave del desarrollo de tu startup.
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
+              lineHeight: 1.55,
+              color: 'var(--color-text-secondary)',
+              margin: 0,
+            }}
+          >
+            Organizadas en las 4 etapas clave del desarrollo de tu startup.
           </p>
         </motion.div>
 
-        {/* Stage selector tabs */}
+        {/* Stage tabs */}
         <div
           style={{
-            display: 'flex',
-            gap: '1rem',
-            marginBottom: '3rem',
-            overflowX: 'auto',
-            paddingBottom: '0.5rem',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '0.75rem',
+            marginBottom: '2.5rem',
           }}
         >
           {stages.map((s, i) => {
             const isActive = activeStage === i
+            const sIsEmber = s.accent === 'ember'
+            const sAccent = sIsEmber ? '#FF8918' : '#5C9BFF'
             return (
-            <button
-              key={s.id}
-              onClick={() => setActiveStage(i)}
-              style={{
-                flex: '1 0 200px',
-                padding: '1.5rem',
-                borderRadius: 'var(--radius-md)',
-                border: isActive ? `1px solid ${s.stageColor}55` : '1px solid var(--color-border)',
-                background: isActive ? 'var(--color-bg-elevated)' : 'var(--color-bg-card)',
-                color: 'var(--color-text-primary)',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.15s var(--ease-smooth)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem',
-                boxShadow: isActive ? `0 0 0 1px ${s.stageColor}30, 0 4px 14px rgba(0,0,0,0.4)` : 'none',
-              }}
-            >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isActive ? s.stageColor : 'var(--color-text-secondary)' }}>
-                  <s.icon size={18} strokeWidth={2} />
-                  <span style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.6rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.05em',
-                    textTransform: 'uppercase' as const,
-                  }}>
-                    {s.number}
+              <button
+                key={s.id}
+                onClick={() => setActiveStage(i)}
+                style={{
+                  padding: '1.1rem 1.25rem',
+                  borderRadius: 14,
+                  border: isActive
+                    ? `1px solid ${sAccent}55`
+                    : '1px solid rgba(255,255,255,0.08)',
+                  background: isActive
+                    ? sIsEmber
+                      ? 'rgba(218,78,36,0.08)'
+                      : 'rgba(31,119,246,0.08)'
+                    : 'rgba(14,14,14,0.6)',
+                  color: 'var(--color-text-primary)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s var(--ease-smooth)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: isActive ? sAccent : 'var(--color-text-muted)',
+                  }}
+                >
+                  <s.icon size={16} strokeWidth={2} />
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.65rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Etapa {s.number}
                   </span>
                 </div>
-                <span style={{
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: isActive ? `${s.stageColor}15` : 'rgba(255,255,255,0.04)',
-                  border: `1px solid ${isActive ? s.stageColor + '33' : 'var(--color-border)'}`,
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.65rem',
-                  fontWeight: 600,
-                  color: isActive ? s.stageColor : 'var(--color-text-muted)',
-                  letterSpacing: '0.02em',
-                  whiteSpace: 'nowrap' as const,
-                }}>
-                  6 herramientas
+                <span
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.05rem',
+                    fontWeight: 500,
+                    letterSpacing: '-0.02em',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  {s.title}
                 </span>
-              </div>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-heading-md)',
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                margin: 0,
-                lineHeight: 1.2,
-                color: 'var(--color-text-primary)',
-              }}>
-                {s.title}
-              </h3>
-              <div style={{
-                width: '100%',
-                height: 3,
-                borderRadius: 2,
-                background: isActive ? s.stageColor : 'transparent',
-                transition: 'background 0.2s ease',
-              }} />
-            </button>
+              </button>
             )
           })}
         </div>
@@ -260,154 +243,121 @@ export default function StartupLifecycle() {
         <AnimatePresence mode="wait">
           <motion.div
             key={stage.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 100, duration: 0.3 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
           >
-            {/* Stage subtitle */}
-            <div style={{
-              marginBottom: '2rem',
-              borderBottom: '1px solid var(--color-border)',
-              paddingBottom: '1.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-            }}>
-              <div style={{
-                width: 40,
-                height: 40,
-                borderRadius: 'var(--radius-sm)',
-                background: stage.stageBg,
-                border: `1px solid ${stage.stageBorder}`,
+            {/* Focus banner */}
+            <div
+              className="glass-card"
+              style={{
+                padding: '1.25rem 1.5rem',
+                borderRadius: 14,
+                marginBottom: '1.5rem',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}>
-                <stage.icon size={20} color={stage.stageColor} />
+                gap: '1rem',
+                border: `1px solid ${accentColor}33`,
+              }}
+            >
+              <div
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 10,
+                  background: isEmber
+                    ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+                    : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
+                  border: `1px solid ${accentColor}55`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: accentColor,
+                  flexShrink: 0,
+                }}
+              >
+                <stage.icon size={18} />
               </div>
-              <div>
-                <span style={{
+              <p
+                style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  color: stage.stageColor,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}>
-                  Etapa {stage.number}
-                </span>
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body-lg)',
+                  fontSize: '0.95rem',
                   color: 'var(--color-text-secondary)',
                   margin: 0,
-                }}>
-                  {stage.focus}
-                </p>
-              </div>
+                  lineHeight: 1.4,
+                }}
+              >
+                {stage.focus}
+              </p>
             </div>
 
-            {/* Tools grid - 3 columns */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1.25rem',
-            }}
-            className="tools-landing-grid"
+            {/* Tools grid */}
+            <div
+              className="lc-tools-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1rem',
+              }}
             >
               {stage.tools.map((tool, i) => {
-                const catColor = CATEGORY_COLORS[tool.category] || { color: 'var(--color-ink)', bg: 'rgba(0,0,0,0.06)' }
                 const ToolIcon = tool.icon
                 return (
                   <motion.div
                     key={tool.name}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.06 }}
-                    whileHover={{ y: -3, boxShadow: '0 12px 28px -8px rgba(0,0,0,0.5)' }}
+                    transition={{ duration: 0.4, delay: i * 0.04 }}
+                    className="glass-card"
                     style={{
-                      padding: '1.75rem',
-                      borderRadius: 12,
-                      border: '1px solid var(--color-border)',
-                      background: 'var(--color-bg-card)',
+                      padding: '1.5rem',
+                      borderRadius: 14,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.875rem',
-                      cursor: 'default',
-                      transition: 'box-shadow 0.15s var(--ease-smooth), transform 0.15s var(--ease-smooth), border-color 0.15s ease',
-                      boxShadow: 'var(--shadow-card)',
-                      position: 'relative',
-                      overflow: 'hidden',
+                      gap: '0.75rem',
                     }}
                   >
-                    {/* Subtle gradient overlay */}
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      width: 120,
-                      height: 120,
-                      background: `radial-gradient(circle at top right, ${stage.stageBg}, transparent)`,
-                      pointerEvents: 'none',
-                    }} />
-
-                    {/* Top row: icon + badges */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
-                      <div style={{
-                        width: 42,
-                        height: 42,
-                        borderRadius: 'var(--radius-sm)',
-                        background: stage.stageBg,
-                        border: `1px solid ${stage.stageBorder}`,
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 10,
+                        background: isEmber
+                          ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+                          : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
+                        border: `1px solid ${accentColor}40`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        color: accentColor,
                         flexShrink: 0,
-                      }}>
-                        <ToolIcon size={20} color={stage.stageColor} strokeWidth={1.8} />
-                      </div>
-                      <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
-                        <span style={{
-                          padding: '3px 10px',
-                          borderRadius: 'var(--radius-full)',
-                          background: catColor.bg,
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '0.65rem',
-                          fontWeight: 700,
-                          color: catColor.color,
-                          letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
-                        }}>
-                          {tool.category}
-                        </span>
-                      </div>
+                      }}
+                    >
+                      <ToolIcon size={16} strokeWidth={2} />
                     </div>
-
-                    {/* Tool name */}
-                    <h4 style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-heading-md)',
-                      fontWeight: 700,
-                      color: 'var(--color-ink)',
-                      letterSpacing: '-0.02em',
-                      margin: 0,
-                      lineHeight: 1.2,
-                      position: 'relative',
-                    }}>
+                    <h4
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1.05rem',
+                        fontWeight: 500,
+                        color: 'var(--color-ink)',
+                        letterSpacing: '-0.02em',
+                        margin: 0,
+                        lineHeight: 1.2,
+                      }}
+                    >
                       {tool.name}
                     </h4>
-
-                    {/* Description */}
-                    <p style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.75rem',
-                      lineHeight: 1.55,
-                      color: 'var(--color-text-secondary)',
-                      margin: 0,
-                      position: 'relative',
-                    }}>
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.82rem',
+                        lineHeight: 1.5,
+                        color: 'var(--color-text-secondary)',
+                        margin: 0,
+                      }}
+                    >
                       {tool.desc}
                     </p>
                   </motion.div>
@@ -415,62 +365,25 @@ export default function StartupLifecycle() {
               })}
             </div>
 
-            {/* CTA link */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              style={{
-                marginTop: '2.5rem',
-                textAlign: 'center',
-              }}
-            >
-              <Link
-                href="/tools"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  color: '#fff',
-                  textDecoration: 'none',
-                  padding: '0.875rem 1.75rem',
-                  borderRadius: 12,
-                  background: 'var(--color-accent-primary)',
-                  border: 'none',
-                  boxShadow: '0 4px 14px rgba(255,107,74,0.25)',
-                  transition: 'all 0.15s ease',
-                }}
-                className="tools-cta-link"
-              >
-                Ver todas las herramientas
-                <ArrowRight size={18} />
+            <div style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+              <Link href="/tools" className="btn-ember">
+                Ver todas las herramientas <ArrowRight size={16} />
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       <style>{`
-        .tools-landing-grid {
-          grid-template-columns: repeat(3, 1fr) !important;
-        }
         @media (max-width: 900px) {
-          .tools-landing-grid {
+          .lc-tools-grid {
             grid-template-columns: repeat(2, 1fr) !important;
           }
         }
         @media (max-width: 600px) {
-          .tools-landing-grid {
+          .lc-tools-grid {
             grid-template-columns: 1fr !important;
           }
-        }
-        .tools-cta-link:hover {
-          background-color: var(--color-accent-hover) !important;
-          color: #fff !important;
-          transform: translateY(-1px);
         }
       `}</style>
     </section>

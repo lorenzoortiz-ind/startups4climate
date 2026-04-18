@@ -23,7 +23,7 @@ export default function Navbar() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -41,115 +41,146 @@ export default function Navbar() {
 
   return (
     <>
-      <nav
+      <div
         style={{
           position: 'fixed',
-          top: 0,
+          top: scrolled ? '0.85rem' : '1.25rem',
           left: 0,
           right: 0,
           zIndex: 1000,
-          backgroundColor: scrolled ? 'rgba(11, 14, 20, 0.72)' : 'rgba(11, 14, 20, 0.0)',
-          backdropFilter: scrolled ? 'blur(12px) saturate(160%)' : 'blur(6px)',
-          WebkitBackdropFilter: scrolled ? 'blur(12px) saturate(160%)' : 'blur(6px)',
-          borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
-          padding: '1rem 0',
-          transition: 'all 0.3s var(--ease-smooth)',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0 1rem',
+          pointerEvents: 'none',
+          transition: 'top 0.3s var(--ease-smooth)',
         }}
       >
-        <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 48 }}>
-            
-            {/* Logo */}
-            <a
-              href="/"
-              onClick={(e) => {
-                e.preventDefault()
-                if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
-                else router.push('/')
+        <nav
+          style={{
+            pointerEvents: 'auto',
+            width: '100%',
+            maxWidth: 1080,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.55rem 0.75rem 0.55rem 1.25rem',
+            borderRadius: 999,
+            background: 'rgba(14, 14, 14, 0.72)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(18px) saturate(160%)',
+            WebkitBackdropFilter: 'blur(18px) saturate(160%)',
+            boxShadow: scrolled
+              ? '0 18px 50px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)'
+              : '0 10px 30px -16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+            transition: 'all 0.3s var(--ease-smooth)',
+          }}
+        >
+          {/* Logo */}
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault()
+              if (pathname === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+              else router.push('/')
+            }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
+          >
+            <S4CLogo size={26} />
+            <span
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: '1rem',
+                color: 'var(--color-text-primary)',
+                letterSpacing: '-0.02em',
               }}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}
             >
-              <S4CLogo size={32} />
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  fontSize: '1.2rem',
-                  color: 'var(--color-text-primary)',
-                  letterSpacing: '-0.03em',
-                }}
-              >
-                Startups<span style={{ color: '#FF6B4A' }}>4</span>Climate
-              </span>
-            </a>
+              Startups<span className="text-ember">4</span>Climate
+            </span>
+          </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '2rem', flex: 1, justifyContent: 'center' }}>
-              {navLinks.map((link) => {
-                const linkStyle: React.CSSProperties = {
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.9rem',
-                  fontWeight: 500,
-                  color: 'var(--color-text-secondary)',
-                  textDecoration: 'none',
-                  transition: 'color 0.15s ease',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }
+          {/* Desktop Navigation */}
+          <div
+            className="hidden md:flex"
+            style={{ alignItems: 'center', gap: '1.75rem' }}
+          >
+            {navLinks.map((link) => {
+              const linkStyle: React.CSSProperties = {
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                color: 'var(--color-text-secondary)',
+                textDecoration: 'none',
+                transition: 'color 0.15s ease',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }
 
-                if (link.isPage) {
-                  return (
-                    <Link key={link.href} href={link.href} className="nav-hover" style={linkStyle}>
-                      {link.label}
-                    </Link>
-                  )
-                }
-
+              if (link.isPage) {
                 return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="nav-hover"
-                    onClick={(e) => { e.preventDefault(); handleNavClick(link.href) }}
-                    style={linkStyle}
-                  >
+                  <Link key={link.href} href={link.href} className="nav-hover" style={linkStyle}>
                     {link.label}
-                  </a>
+                  </Link>
                 )
-              })}
-            </div>
+              }
 
-            {/* Desktop CTAs */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
-              {user ? (
-                <button
-                  onClick={() => { window.location.href = '/tools' }}
-                  className="typeform-btn"
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="nav-hover"
+                  onClick={(e) => { e.preventDefault(); handleNavClick(link.href) }}
+                  style={linkStyle}
                 >
-                  Dashboard <ArrowRight size={18} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => openAuthModal('login')}
-                  className="typeform-btn"
-                >
-                  Ingresar
-                </button>
-              )}
-            </div>
-
-            {/* Mobile hamburger */}
-            <button
-              className="md:hidden"
-              onClick={() => setMobileOpen(true)}
-              aria-label="Abrir menú"
-              style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', cursor: 'pointer' }}
-            >
-              <Menu size={28} />
-            </button>
+                  {link.label}
+                </a>
+              )
+            })}
           </div>
-        </div>
-      </nav>
+
+          {/* Desktop CTA */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
+            {user ? (
+              <button
+                onClick={() => { window.location.href = '/tools' }}
+                className="btn-ember"
+                style={{ padding: '0.55rem 1.1rem', fontSize: '0.85rem' }}
+              >
+                Dashboard <ArrowRight size={15} />
+              </button>
+            ) : (
+              <button
+                onClick={() => openAuthModal('login')}
+                className="btn-ember"
+                style={{ padding: '0.55rem 1.1rem', fontSize: '0.85rem' }}
+              >
+                Ingresar <ArrowRight size={15} />
+              </button>
+            )}
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Abrir menú"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: 'var(--color-text-primary)',
+              cursor: 'pointer',
+              borderRadius: 999,
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Menu size={20} />
+          </button>
+        </nav>
+      </div>
 
       <AnimatePresence>
         {mobileOpen && (
@@ -165,59 +196,53 @@ export default function Navbar() {
               backgroundColor: 'var(--color-bg-primary)',
               display: 'flex',
               flexDirection: 'column',
-              padding: '2rem var(--container-px)',
+              padding: '2rem 1.5rem',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '3rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+              <S4CLogo size={28} />
               <button
                 onClick={() => setMobileOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', cursor: 'pointer' }}
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-text-primary)', cursor: 'pointer', borderRadius: 999, width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <X size={32} />
+                <X size={20} />
               </button>
             </div>
-            
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={(e) => { 
+                  onClick={(e) => {
                     if (!link.isPage) {
-                      e.preventDefault(); handleNavClick(link.href) 
+                      e.preventDefault(); handleNavClick(link.href)
                     } else {
                       setMobileOpen(false)
                     }
                   }}
                   style={{
-                    fontSize: 'var(--text-display-md)',
+                    fontSize: '2rem',
                     fontFamily: 'var(--font-heading)',
-                    fontWeight: 700,
+                    fontWeight: 500,
                     color: 'var(--color-text-primary)',
                     textDecoration: 'none',
-                    letterSpacing: '-0.02em',
+                    letterSpacing: '-0.025em',
+                    lineHeight: 1.05,
                   }}
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
-            
+
             <div style={{ marginTop: 'auto', paddingBottom: '2rem' }}>
               <button
                 onClick={() => { setMobileOpen(false); user ? window.location.href = '/tools' : openAuthModal('login') }}
-                style={{
-                  width: '100%',
-                  padding: '1.5rem',
-                  fontSize: '1.25rem',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--color-accent-primary)',
-                  color: '#fff',
-                  border: 'none',
-                  fontWeight: 700,
-                }}
+                className="btn-ember"
+                style={{ width: '100%', justifyContent: 'center', padding: '1rem' }}
               >
-                {user ? 'Dashboard' : 'Ingresar'}
+                {user ? 'Dashboard' : 'Ingresar'} <ArrowRight size={18} />
               </button>
             </div>
           </motion.div>
@@ -226,26 +251,6 @@ export default function Navbar() {
 
       <style>{`
         .nav-hover:hover { color: var(--color-text-primary) !important; }
-        .typeform-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 9px 18px;
-          border-radius: 8px;
-          background-color: var(--color-accent-primary);
-          color: #fff;
-          font-family: var(--font-body);
-          font-size: 0.875rem;
-          font-weight: 600;
-          border: none;
-          cursor: pointer;
-          white-space: nowrap;
-          box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-          transition: background 0.15s ease;
-        }
-        .typeform-btn:hover {
-          background-color: var(--color-accent-hover);
-        }
       `}</style>
     </>
   )

@@ -1,149 +1,124 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Sparkles } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
-
-function AnimatedCounter({ value, label }: { value: string; label: string }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-      <span
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
-          fontWeight: 700,
-          letterSpacing: '-0.04em',
-          lineHeight: 1,
-          color: 'var(--color-ink)',
-        }}
-      >
-        {value}
-      </span>
-      <span
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.7rem',
-          fontWeight: 500,
-          color: 'var(--color-text-secondary)',
-          letterSpacing: '-0.01em',
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  )
-}
 
 export default function Hero() {
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
 
-  const springReveal = {
-    initial: { opacity: 0, y: 60 },
+  const reveal = {
+    initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { type: 'spring', damping: 20, stiffness: 100 } as any,
   }
 
-  const containerVars = {
+  const stagger = {
     initial: {},
-    animate: {
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
+    animate: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
   }
 
   return (
     <section
       className="hero-stage"
       style={{
+        position: 'relative',
         minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         background: 'var(--color-bg-primary)',
-        paddingTop: '80px',
+        paddingTop: 'clamp(7rem, 14vh, 10rem)',
+        paddingBottom: 'clamp(4rem, 8vh, 7rem)',
+        overflow: 'hidden',
       }}
     >
-      {/* Orbs decorativos firma — ember (cobre) abajo-izq, electric (azul) abajo-der */}
+      {/* Orbs firma — ember (cobre) abajo-izq, electric (azul) abajo-der */}
       <div
         className="orb orb-ember orb-lg"
-        style={{ bottom: '-340px', left: '-280px' }}
+        style={{ bottom: '-380px', left: '-300px' }}
         aria-hidden
       />
       <div
         className="orb orb-electric orb-lg"
-        style={{ bottom: '-340px', right: '-280px' }}
+        style={{ bottom: '-380px', right: '-300px' }}
         aria-hidden
       />
 
+      {/* Container centrado */}
       <div
         style={{
-          maxWidth: 'var(--container-max)',
-          margin: '0 auto',
-          padding: '0 var(--container-px)',
-          width: '100%',
+          maxWidth: 1280,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          paddingLeft: 'clamp(1.25rem, 4vw, 3rem)',
+          paddingRight: 'clamp(1.25rem, 4vw, 3rem)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <motion.div
-          variants={containerVars}
+          variants={stagger}
           initial="initial"
           animate="animate"
           style={{
-            maxWidth: 1000,
-            textAlign: 'left',
+            maxWidth: 880,
+            textAlign: 'center',
+            marginLeft: 'auto',
+            marginRight: 'auto',
           }}
         >
-          {/* Pill ember con glow inset */}
-          <motion.div variants={springReveal} style={{ marginBottom: '1.75rem' }}>
+          {/* Pill ember */}
+          <motion.div variants={reveal} style={{ marginBottom: '2rem' }}>
             <span className="pill-ember">
               <span className="dot" />
               Plataforma all-in-one para climate founders
             </span>
           </motion.div>
 
-          {/* Colossal Heading — General Sans 500, line-height 1.0 */}
+          {/* Hero h1 — General Sans 500, gigante, line-height 1.0 */}
           <motion.h1
-            variants={springReveal}
+            variants={reveal}
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-display-xl)',
+              fontSize: 'clamp(2.6rem, 7vw, 5.2rem)',
               fontWeight: 500,
               lineHeight: 1.0,
-              letterSpacing: '-0.025em',
+              letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              margin: '0 0 2rem 0',
+              margin: '0 0 1.5rem 0',
             }}
           >
-            Tu startup de impacto merece la mejor infraestructura{' '}
-            <span className="text-ember">para escalar globalmente</span>
+            La infraestructura que tu{' '}
+            <span className="text-ember">startup climática</span>{' '}
+            merece para escalar
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            variants={springReveal}
+            variants={reveal}
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-heading-lg)',
+              fontSize: 'clamp(1rem, 1.4vw, 1.2rem)',
               fontWeight: 400,
-              lineHeight: 1.4,
+              lineHeight: 1.55,
               color: 'var(--color-text-secondary)',
-              maxWidth: 750,
-              marginBottom: '3rem',
+              maxWidth: 640,
+              margin: '0 auto 2.5rem',
+              letterSpacing: '-0.005em',
             }}
           >
-            Herramientas interactivas, mentores AI personalizados, oportunidades y más. Todo en un solo lugar, diseñado para founders en Latinoamérica.
+            Herramientas interactivas, mentor AI personalizado, oportunidades y métricas en
+            tiempo real. Todo lo que necesitas para construir tu startup de impacto.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs centrados */}
           <motion.div
-            variants={springReveal}
+            variants={reveal}
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1rem',
+              gap: '0.75rem',
               alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
               marginBottom: '4rem',
             }}
           >
@@ -151,32 +126,169 @@ export default function Hero() {
               onClick={() => user ? router.push('/tools') : openAuthModal('register')}
               className="btn-ember"
             >
-              {user ? 'Ir a mi plataforma' : 'Acceder gratis'} <ArrowRight size={18} />
+              {user ? 'Ir a mi plataforma' : 'Empezar gratis'}
+              <ArrowRight size={18} />
             </button>
-
             <a href="/organizaciones" className="btn-ghost">
               Para organizaciones
             </a>
           </motion.div>
 
-          {/* Stats */}
+          {/* Hero visual mockup — chat AI floating card (estilo FusionAI) */}
           <motion.div
-            variants={springReveal}
+            variants={reveal}
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 'clamp(2rem, 5vw, 4rem)',
-              paddingTop: '2rem',
-              borderTop: '1px solid var(--color-border)',
+              position: 'relative',
+              maxWidth: 720,
+              margin: '0 auto',
             }}
           >
-            <AnimatedCounter value="+30" label="Herramientas" />
-            <AnimatedCounter value="AI" label="Personalizado" />
-            <AnimatedCounter value="100%" label="Gratuito para founders" />
+            <div
+              className="glass-card"
+              style={{
+                padding: '1rem 1.25rem',
+                borderRadius: 16,
+                background: 'rgba(14, 14, 14, 0.85)',
+                border: '1px solid rgba(218, 78, 36, 0.50)',
+                boxShadow:
+                  'inset 0 0 12px rgba(217,119,87,0.45), inset 0 0 24px rgba(217,119,87,0.20), 0 30px 80px -20px rgba(218,78,36,0.35)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  paddingBottom: '0.875rem',
+                  borderBottom: '1px solid var(--color-border)',
+                  marginBottom: '0.875rem',
+                }}
+              >
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #DA4E24, #FF8918)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Sparkles size={14} color="#fff" strokeWidth={2.4} />
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.78rem',
+                    color: 'var(--color-text-secondary)',
+                    fontWeight: 500,
+                    flex: 1,
+                    textAlign: 'left',
+                  }}
+                >
+                  Mentor AI · Gemini 2.5
+                </span>
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#10B981',
+                    boxShadow: '0 0 8px #10B981',
+                  }}
+                />
+              </div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.95rem',
+                  color: 'var(--color-text-primary)',
+                  textAlign: 'left',
+                  margin: 0,
+                  lineHeight: 1.5,
+                }}
+              >
+                Diseña mi modelo de revenue para vender créditos de carbono a empresas
+                en Perú con margen 40%
+              </p>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  marginTop: '0.875rem',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {['Unit Economics', 'Pitch Deck', 'Lean Canvas'].map((chip) => (
+                  <span
+                    key={chip}
+                    style={{
+                      padding: '0.3rem 0.75rem',
+                      borderRadius: 999,
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--color-border-strong)',
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.72rem',
+                      color: 'var(--color-text-secondary)',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Stats discretas debajo del mockup */}
+          <motion.div
+            variants={reveal}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 'clamp(2rem, 5vw, 4rem)',
+              marginTop: '3.5rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            {[
+              { v: '+30', l: 'Herramientas' },
+              { v: 'AI', l: 'Personalizado' },
+              { v: '100%', l: 'Gratis para founders' },
+            ].map((s) => (
+              <div key={s.l} style={{ textAlign: 'center' }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+                    fontWeight: 500,
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.03em',
+                    lineHeight: 1,
+                  }}
+                >
+                  {s.v}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.72rem',
+                    color: 'var(--color-text-muted)',
+                    marginTop: '0.4rem',
+                    letterSpacing: '-0.005em',
+                  }}
+                >
+                  {s.l}
+                </div>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
-
     </section>
   )
 }

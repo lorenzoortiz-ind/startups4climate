@@ -1,28 +1,29 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Users, Building2, BarChart3 } from 'lucide-react'
 
 const problems = [
   {
-    number: '01',
+    icon: Users,
     title: 'Founders sin infraestructura',
     description:
-      'Hay talento de sobra en LATAM para construir startups de impacto. Lo que falta son herramientas estructuradas y acompañamiento accesible.',
-    accentColor: 'var(--color-accent-primary)',
+      'Hay talento de sobra en LATAM. Lo que falta son herramientas estructuradas y acompañamiento accesible para construir startups de impacto.',
+    accent: 'ember' as const,
   },
   {
-    number: '02',
+    icon: Building2,
     title: 'Incubadoras sin tecnología',
     description:
-      'Muchas gestionan cohortes con hojas de cálculo y correos. Sin visibilidad real del progreso, el acompañamiento pierde precisión y escala.',
-    accentColor: 'var(--color-accent-secondary)',
+      'Cohortes gestionadas con hojas de cálculo y correos. Sin visibilidad real del progreso, el acompañamiento pierde precisión y escala.',
+    accent: 'electric' as const,
   },
   {
-    number: '03',
+    icon: BarChart3,
     title: 'Gobiernos sin visibilidad',
     description:
-      'Los programas de innovación canalizan recursos importantes, pero carecen de herramientas para medir impacto real y mejorar políticas.',
-    accentColor: 'var(--color-accent-primary)',
+      'Programas de innovación canalizan recursos importantes, pero carecen de herramientas para medir impacto real y mejorar políticas.',
+    accent: 'ember' as const,
   },
 ]
 
@@ -31,45 +32,62 @@ export default function ProblemSection() {
     <section
       id="problema"
       style={{
-        padding: 'var(--section-py) 0',
+        position: 'relative',
+        padding: 'clamp(5rem, 10vw, 8rem) 0',
         background: 'var(--color-bg-primary)',
-        borderTop: '1px solid var(--color-border)',
+        overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto', padding: '0 var(--container-px)' }}>
+      <div
+        className="orb orb-electric orb-sm"
+        style={{ top: '10%', left: '-200px', opacity: 0.25 }}
+        aria-hidden
+      />
 
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: '0 auto',
+          padding: '0 clamp(1.25rem, 4vw, 3rem)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 60 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          style={{ textAlign: 'left', marginBottom: 'clamp(4rem, 8vw, 8rem)' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6 }}
+          style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 4rem' }}
         >
+          <span className="pill-electric" style={{ marginBottom: '1.5rem' }}>
+            <span className="dot" /> El problema
+          </span>
           <h2
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-display-lg)',
-              fontWeight: 700,
+              fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
+              fontWeight: 500,
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              maxWidth: 900,
-              marginBottom: '2rem',
+              margin: '1rem 0 1.25rem',
             }}
           >
-            Tres brechas que frenan la innovación en la región
+            Tres brechas frenan la innovación{' '}
+            <span className="text-electric">en la región</span>
           </h2>
           <p
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'var(--text-heading-lg)',
-              lineHeight: 1.4,
+              fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
+              lineHeight: 1.55,
               color: 'var(--color-text-secondary)',
-              maxWidth: 700,
+              margin: 0,
             }}
           >
-            En Latinoamérica sobra talento emprendedor. Lo que falta es la infraestructura para desarrollarlo.
+            En Latinoamérica sobra talento emprendedor. Lo que falta es la infraestructura para desarrollarlo a escala.
           </p>
         </motion.div>
 
@@ -77,88 +95,80 @@ export default function ProblemSection() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '1.25rem',
           }}
         >
-          {problems.map((problem, i) => (
-            <motion.div
-              key={problem.title}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ type: 'spring', damping: 20, stiffness: 100, delay: i * 0.1 }}
-              whileHover={{ y: -4, boxShadow: '0 12px 32px -8px rgba(0,0,0,0.5)' }}
-              style={{
-                background: 'var(--color-paper)',
-                borderRadius: 'var(--radius-lg)',
-                border: '1px solid var(--color-border)',
-                padding: '2.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                overflow: 'hidden',
-                cursor: 'default',
-                transition: 'box-shadow 0.2s var(--ease-smooth)',
-              }}
-            >
-              {/* Top accent line */}
-              <div
+          {problems.map((p, i) => {
+            const Icon = p.icon
+            const isEmber = p.accent === 'ember'
+            return (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="glass-card"
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 3,
-                  background: problem.accentColor,
-                  borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-                }}
-              />
-
-              {/* Large decorative number */}
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(3.2rem, 8vw, 5.6rem)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.05em',
-                  lineHeight: 1,
-                  color: 'var(--color-border)',
-                  marginBottom: '1.5rem',
-                  display: 'block',
-                  userSelect: 'none',
+                  padding: '2rem',
+                  borderRadius: 20,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  border: isEmber
+                    ? '1px solid rgba(218,78,36,0.25)'
+                    : '1px solid rgba(31,119,246,0.25)',
                 }}
               >
-                {problem.number}
-              </span>
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: isEmber
+                      ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+                      : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
+                    border: isEmber
+                      ? '1px solid rgba(218,78,36,0.35)'
+                      : '1px solid rgba(31,119,246,0.35)',
+                    color: isEmber ? '#FF8918' : '#5C9BFF',
+                  }}
+                >
+                  <Icon size={20} strokeWidth={2} />
+                </div>
 
-              <h3
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-heading-lg)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  color: 'var(--color-ink)',
-                  marginBottom: '1rem',
-                  lineHeight: 1.2,
-                }}
-              >
-                {problem.title}
-              </h3>
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.35rem',
+                    fontWeight: 500,
+                    letterSpacing: '-0.02em',
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                    lineHeight: 1.15,
+                  }}
+                >
+                  {p.title}
+                </h3>
 
-              <p
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body-lg)',
-                  lineHeight: 1.6,
-                  color: 'var(--color-text-secondary)',
-                  margin: 0,
-                }}
-              >
-                {problem.description}
-              </p>
-            </motion.div>
-          ))}
+                <p
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.95rem',
+                    lineHeight: 1.55,
+                    color: 'var(--color-text-secondary)',
+                    margin: 0,
+                  }}
+                >
+                  {p.description}
+                </p>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

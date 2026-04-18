@@ -61,7 +61,7 @@ export default function FloatingDiagnosticCTA() {
             alignItems: 'center',
             gap: '0.5rem',
             padding: '0.7rem 1.1rem',
-            background: 'linear-gradient(180deg, #FF8918 0%, #DA4E24 100%)',
+            background: 'linear-gradient(180deg, #F0721D 0%, #DA4E24 100%)',
             color: '#fff',
             border: '1px solid rgba(255,255,255,0.12)',
             borderRadius: 999,

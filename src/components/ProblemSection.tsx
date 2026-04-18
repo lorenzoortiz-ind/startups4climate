@@ -135,7 +135,7 @@ export default function ProblemSection() {
                     border: isEmber
                       ? '1px solid rgba(218,78,36,0.35)'
                       : '1px solid rgba(31,119,246,0.35)',
-                    color: isEmber ? '#FF8918' : '#5C9BFF',
+                    color: isEmber ? '#F0721D' : '#5C9BFF',
                   }}
                 >
                   <Icon size={20} strokeWidth={2} />

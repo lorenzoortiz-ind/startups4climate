@@ -160,7 +160,7 @@ export default function AboutRedesignLab() {
                     fontWeight: 500,
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
-                    color: '#FF8918',
+                    color: '#F0721D',
                     marginBottom: '0.75rem',
                   }}
                 >

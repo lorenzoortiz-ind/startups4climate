@@ -104,7 +104,7 @@ export default function StartupLifecycle() {
   const [activeStage, setActiveStage] = useState(0)
   const stage = stages[activeStage]
   const isEmber = stage.accent === 'ember'
-  const accentColor = isEmber ? '#FF8918' : '#5C9BFF'
+  const accentColor = isEmber ? '#F0721D' : '#5C9BFF'
 
   return (
     <section
@@ -175,7 +175,7 @@ export default function StartupLifecycle() {
           {stages.map((s, i) => {
             const isActive = activeStage === i
             const sIsEmber = s.accent === 'ember'
-            const sAccent = sIsEmber ? '#FF8918' : '#5C9BFF'
+            const sAccent = sIsEmber ? '#F0721D' : '#5C9BFF'
             return (
               <button
                 key={s.id}

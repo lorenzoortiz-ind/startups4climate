@@ -19,7 +19,7 @@
   /* === ACENTO PRIMARIO: Climate Ember (cobre/naranja) === */
   --ember-50:            #FFE5D6;
   --ember-100:           #FFCFB0;
-  --ember-300:           #FF8918;
+  --ember-300:           #F0721D;
   --ember-400:           #D77655;   /* cobre claro */
   --ember-500:           #DA4E24;   /* signature S4C v2 */
   --ember-600:           #A22904;
@@ -28,7 +28,7 @@
   --ember-900:           #3D0E00;
 
   --color-accent-primary:   #DA4E24;
-  --color-accent-hover:     #FF8918;
+  --color-accent-hover:     #F0721D;
   --color-accent-secondary: #1F77F6;
 
   /* === ACENTO SECUNDARIO: Tech Electric (azul) === */
@@ -55,14 +55,14 @@
 
   /* === GRADIENTES FIRMA === */
   --grad-fusion: linear-gradient(163deg,
-    #FF8918 28%, #A22904 54%, #000000 68%, #0098F3 100%);
+    #F0721D 28%, #A22904 54%, #000000 68%, #0098F3 100%);
   --grad-fusion-h: linear-gradient(90deg,
     #693300 0%, #801E00 33%, #000000 54%, #0069A6 100%);
   --grad-orb-ember: radial-gradient(circle,
     #FFFFFF 0%, #DA4E24 18%, #8C3602 40%, transparent 70%);
   --grad-orb-electric: radial-gradient(circle,
     #FFFFFF 0%, #1F77F6 18%, #0069A6 40%, transparent 70%);
-  --grad-text-ember: linear-gradient(180deg, #FFFFFF 0%, #FF8918 100%);
+  --grad-text-ember: linear-gradient(180deg, #FFFFFF 0%, #F0721D 100%);
   --grad-text-electric: linear-gradient(180deg, #FFFFFF 0%, #5BB4FF 100%);
 
   /* === GLOWS / SHADOWS firma === */
@@ -133,7 +133,7 @@
   /* === STAGES (ember + electric variants) === */
   --color-stage-1:        #DA4E24;
   --color-stage-2:        #1F77F6;
-  --color-stage-3:        #FF8918;
+  --color-stage-3:        #F0721D;
   --color-stage-4:        #5BB4FF;
 
   /* === GRISES === */
@@ -604,10 +604,11 @@
   overflow: hidden;
   isolation: isolate;
 }
-.hero-stage > * {
+.hero-stage > *:not(.orb) {
   position: relative;
   z-index: 1;
 }
-.hero-stage .orb {
+.hero-stage > .orb {
+  position: absolute;
   z-index: 0;
 }

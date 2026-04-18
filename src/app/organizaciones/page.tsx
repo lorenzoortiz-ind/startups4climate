@@ -43,14 +43,14 @@ const FEATURES = [
     icon: LayoutDashboard,
     title: 'Dashboard en tiempo real',
     description: 'Visualiza el progreso de cada startup y de la cohorte completa con métricas actualizadas al instante.',
-    accent: '#FF8918',
+    accent: '#F0721D',
     accentBg: 'rgba(218,78,36,0.10)',
   },
   {
     icon: Download,
     title: 'Reportes Excel descargables',
     description: 'Genera reportes detallados en Excel listos para compartir con stakeholders y equipos directivos.',
-    accent: '#FF8918',
+    accent: '#F0721D',
     accentBg: 'rgba(218,78,36,0.10)',
   },
   {
@@ -101,7 +101,7 @@ const PLANS = [
     price: '$300',
     priceSub: 'USD / año',
     description: 'Para incubadoras y aceleradoras en Lima',
-    accent: '#FF8918',
+    accent: '#F0721D',
     accentBg: 'rgba(218,78,36,0.10)',
     features: [
       'Hasta 30 startups por programa',
@@ -743,7 +743,7 @@ export default function OrganizacionesPage() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 300px' }}>
-            <MapPin size={24} color="#FF8918" strokeWidth={1.5} />
+            <MapPin size={24} color="#F0721D" strokeWidth={1.5} />
             <div>
               <p
                 style={{

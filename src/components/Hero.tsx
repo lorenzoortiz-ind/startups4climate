@@ -87,7 +87,7 @@ export default function Hero() {
             }}
           >
             La infraestructura que tu{' '}
-            <span className="text-ember">startup climática</span>{' '}
+            <span className="text-ember">startup de impacto</span>{' '}
             merece para escalar
           </motion.h1>
 
@@ -170,7 +170,7 @@ export default function Hero() {
                     width: 28,
                     height: 28,
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #DA4E24, #FF8918)',
+                    background: 'linear-gradient(135deg, #DA4E24, #F0721D)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

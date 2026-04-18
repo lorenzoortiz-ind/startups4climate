@@ -862,7 +862,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
           {/* Top gradient accent */}
           <div style={{
             height: 3,
-            background: 'linear-gradient(90deg, #DA4E24, #FF8918, #1F77F6)',
+            background: 'linear-gradient(90deg, #DA4E24, #F0721D, #1F77F6)',
           }} />
 
           {/* Progress bar */}

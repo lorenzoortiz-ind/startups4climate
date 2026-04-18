@@ -33,7 +33,7 @@ const features = [
 function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number }) {
   const Icon = feature.icon
   const isEmber = feature.accent === 'ember'
-  const accentColor = isEmber ? '#FF8918' : '#5C9BFF'
+  const accentColor = isEmber ? '#F0721D' : '#5C9BFF'
 
   return (
     <motion.div

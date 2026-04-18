@@ -15,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
           '/auth/',
           '/invite/',
           '/tools/',
-          '/organizaciones/',
+          '/demo/',
         ],
       },
     ],

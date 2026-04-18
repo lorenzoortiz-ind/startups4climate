@@ -28,15 +28,18 @@ const mluvka = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.startups4climate.org'),
-  title: 'S4C | Ecosistema para startups de impacto en LATAM',
-  description: 'Plataforma gratuita con +30 herramientas, mentores AI por vertical y oportunidades personalizadas para founders en Latinoamérica.',
+  title: 'Startups4Climate | Plataforma all-in-one para startups de impacto',
+  description: 'Startups4Climate es una plataforma all-in-one para startups de impacto. Nuestra misión es democratizar el emprendimiento de impacto en América Latina y el Caribe.',
   keywords: [
-    'startups LATAM', 'herramientas para startups', 'incubadora virtual',
-    'aceleradora startups', 'emprendimiento latinoamérica', 'startup tools',
+    'startups de impacto', 'emprendimiento de impacto', 'América Latina y el Caribe',
+    'startups LATAM', 'plataforma all-in-one startups', 'herramientas para startups',
+    'incubadora virtual', 'aceleradora startups', 'emprendimiento latinoamérica',
     'mentor AI startups', 'grants startups', 'lean canvas español',
-    'plataforma emprendimiento', 'startups de impacto'
+    'climate tech LATAM', 'impact startups LAC', 'Redesign Lab'
   ],
   authors: [{ name: 'Redesign Lab' }],
+  creator: 'Redesign Lab',
+  publisher: 'Redesign Lab',
   robots: {
     index: true,
     follow: true,
@@ -49,20 +52,76 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'es_ES',
+    locale: 'es_PE',
+    alternateLocale: ['es_MX', 'es_CO', 'es_AR', 'es_CL', 'es_ES'],
     url: 'https://www.startups4climate.org',
-    title: 'S4C | Ecosistema para startups de impacto en LATAM',
-    description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
+    title: 'Startups4Climate | Plataforma all-in-one para startups de impacto',
+    description: 'Plataforma all-in-one para startups de impacto. Democratizamos el emprendimiento de impacto en América Latina y el Caribe.',
     siteName: 'Startups4Climate',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'S4C | Ecosistema para startups de impacto en LATAM',
-    description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
+    title: 'Startups4Climate | Plataforma all-in-one para startups de impacto',
+    description: 'Plataforma all-in-one para startups de impacto. Democratizamos el emprendimiento de impacto en América Latina y el Caribe.',
   },
   alternates: {
     canonical: 'https://www.startups4climate.org',
   },
+}
+
+const SITE_URL = 'https://www.startups4climate.org'
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: 'Startups4Climate',
+  alternateName: 'S4C',
+  url: SITE_URL,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/s4c-logo-corporate.png`,
+    width: 512,
+    height: 512,
+  },
+  description:
+    'Plataforma all-in-one para startups de impacto. Democratizamos el emprendimiento de impacto en América Latina y el Caribe.',
+  foundingDate: '2025',
+  areaServed: [
+    { '@type': 'Place', name: 'América Latina y el Caribe' },
+  ],
+  knowsLanguage: ['es', 'es-419'],
+  parentOrganization: {
+    '@type': 'Organization',
+    name: 'Redesign Lab',
+    url: 'https://redesignlab.org',
+    sameAs: [
+      'https://www.linkedin.com/company/redesignlab',
+      'https://www.instagram.com/re.design_lab',
+    ],
+  },
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'hello@redesignlab.org',
+      telephone: '+51-989-338-401',
+      areaServed: 'LATAM',
+      availableLanguage: ['Spanish'],
+    },
+  ],
+}
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: 'Startups4Climate',
+  description:
+    'Plataforma all-in-one para startups de impacto en América Latina y el Caribe.',
+  inLanguage: 'es-419',
+  publisher: { '@id': `${SITE_URL}/#organization` },
 }
 
 export default function RootLayout({
@@ -72,10 +131,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="es"
+      lang="es-419"
       className={`${mluvka.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <AuthProvider>
           <StartupProvider>
             <LayoutShell>{children}</LayoutShell>

@@ -141,21 +141,23 @@ export default function InvitePage() {
           .single()
 
         if (startup) {
-          await supabase
+          const { error: linkErr } = await supabase
             .from('cohort_startups')
             .insert({
               cohort_id: invitation.cohort_id,
               startup_id: startup.id,
             })
+          if (linkErr) console.error('[S4C Sync] cohort_startups link failed:', linkErr)
         }
       }
     }
 
     // Mark invitation as accepted
-    await supabase
+    const { error: acceptErr } = await supabase
       .from('invitations')
       .update({ status: 'accepted', accepted_at: new Date().toISOString() })
       .eq('id', invitation.id)
+    if (acceptErr) console.error('[S4C Sync] invitation accept failed:', acceptErr)
 
     setMode('done')
     setTimeout(() => router.push(isAdminOrgInvite ? '/admin' : '/tools'), 2000)
@@ -185,12 +187,13 @@ export default function InvitePage() {
 
       // Create startup row only for founder invitations
       if (!isAdminOrgInvite && startupName.trim()) {
-        await supabase.from('startups').insert({
+        const { error: startupErr } = await supabase.from('startups').upsert({
           founder_id: user.id,
           name: startupName.trim(),
-          vertical: 'other',
+          vertical: 'impact',
           country: 'PE',
-        })
+        }, { onConflict: 'founder_id' })
+        if (startupErr) console.error('[S4C Sync] invite startup upsert failed:', startupErr)
       }
 
       await acceptInvitation(user.id)

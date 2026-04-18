@@ -383,10 +383,12 @@ export default function CohortDetailPage() {
       .from('cohort_startups')
       .insert({ cohort_id: cohortId, startup_id: startupId })
 
-    if (!addError) {
-      setShowAddStartup(false)
-      loadCohort()
+    if (addError) {
+      console.error('[S4C Admin] cohort_startups insert failed:', addError)
+      return
     }
+    setShowAddStartup(false)
+    loadCohort()
   }
 
   if (loading) {

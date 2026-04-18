@@ -27,6 +27,7 @@ const mluvka = localFont({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.startups4climate.org'),
   title: 'S4C | Ecosistema para startups de impacto en LATAM',
   description: 'Plataforma gratuita con +30 herramientas, mentores AI por vertical y oportunidades personalizadas para founders en Latinoamérica.',
   keywords: [
@@ -36,9 +37,20 @@ export const metadata: Metadata = {
     'plataforma emprendimiento', 'startups de impacto'
   ],
   authors: [{ name: 'Redesign Lab' }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     type: 'website',
-    url: 'https://startups4climate.vercel.app',
+    locale: 'es_ES',
+    url: 'https://www.startups4climate.org',
     title: 'S4C | Ecosistema para startups de impacto en LATAM',
     description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
     siteName: 'Startups4Climate',
@@ -49,9 +61,8 @@ export const metadata: Metadata = {
     description: '+30 herramientas gratuitas, mentores AI y oportunidades personalizadas para founders en Latinoamérica.',
   },
   alternates: {
-    canonical: 'https://startups4climate.vercel.app',
+    canonical: 'https://www.startups4climate.org',
   },
-  metadataBase: new URL('https://startups4climate.vercel.app'),
 }
 
 export default function RootLayout({

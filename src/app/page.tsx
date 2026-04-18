@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import MethodologiesMarquee from '@/components/MethodologiesMarquee'
 import ProblemSection from '@/components/ProblemSection'
 import ValueProp from '@/components/ValueProp'
 import StartupLifecycle from '@/components/StartupLifecycle'
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <MethodologiesMarquee />
       <ProblemSection />
       <DiagnosticFeature />
       <DiagnosticForm />

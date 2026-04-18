@@ -25,8 +25,8 @@ export default function Hero() {
       style={{
         position: 'relative',
         background: 'var(--color-bg-primary)',
-        paddingTop: 'clamp(6.5rem, 10vh, 8rem)',
-        paddingBottom: 'clamp(2rem, 4vh, 3.5rem)',
+        paddingTop: 'clamp(12rem, 18vh, 14.5rem)',
+        paddingBottom: 'clamp(8rem, 13vh, 10.5rem)',
         overflow: 'hidden',
       }}
     >
@@ -45,7 +45,7 @@ export default function Hero() {
       {/* Container centrado */}
       <div
         style={{
-          maxWidth: 1280,
+          maxWidth: 1400,
           marginLeft: 'auto',
           marginRight: 'auto',
           paddingLeft: 'clamp(1.25rem, 4vw, 3rem)',
@@ -59,7 +59,7 @@ export default function Hero() {
           initial="initial"
           animate="animate"
           style={{
-            maxWidth: 880,
+            maxWidth: 1040,
             textAlign: 'center',
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -70,17 +70,18 @@ export default function Hero() {
             variants={reveal}
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.9rem, 4.6vw, 3.6rem)',
+              fontSize: 'clamp(2rem, 5vw, 4.2rem)',
               fontWeight: 500,
-              lineHeight: 1.05,
+              lineHeight: 1.08,
               letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              margin: '0 0 1rem 0',
+              margin: '0 0 1.25rem 0',
+              textWrap: 'balance',
             }}
           >
-            La infraestructura que tu{' '}
-            <span className="text-ember">startup de impacto</span>{' '}
-            merece para escalar
+            Democratizamos el{' '}
+            <span className="text-ember">emprendimiento de impacto</span>
+            {'\u00A0'}en América Latina y el Caribe
           </motion.h1>
 
           {/* Subtitle */}
@@ -88,17 +89,17 @@ export default function Hero() {
             variants={reveal}
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'clamp(0.92rem, 1.15vw, 1.05rem)',
+              fontSize: 'clamp(1rem, 1.3vw, 1.2rem)',
               fontWeight: 400,
-              lineHeight: 1.5,
+              lineHeight: 1.55,
               color: 'var(--color-text-secondary)',
-              maxWidth: 560,
-              margin: '0 auto 1.5rem',
+              maxWidth: 680,
+              margin: '0 auto 1.75rem',
               letterSpacing: '-0.005em',
             }}
           >
-            Herramientas interactivas, mentor AI personalizado, oportunidades y métricas en
-            tiempo real. Todo lo que necesitas para construir tu startup de impacto.
+            La plataforma all-in-one con herramientas interactivas, mentores AI personalizados,
+            mapeo en tiempo real de oportunidades de financiamiento y mucho más.
           </motion.p>
 
           {/* CTAs centrados */}
@@ -130,7 +131,7 @@ export default function Hero() {
             variants={reveal}
             style={{
               position: 'relative',
-              maxWidth: 620,
+              maxWidth: 760,
               margin: '0 auto',
             }}
           >
@@ -196,7 +197,7 @@ export default function Hero() {
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
+                  fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)',
                   color: 'var(--color-text-primary)',
                   textAlign: 'left',
                   margin: 0,
@@ -255,7 +256,7 @@ export default function Hero() {
                 <div
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+                    fontSize: 'clamp(1.6rem, 3.4vw, 2.4rem)',
                     fontWeight: 500,
                     color: 'var(--color-ink)',
                     letterSpacing: '-0.03em',
@@ -267,9 +268,9 @@ export default function Hero() {
                 <div
                   style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '0.72rem',
+                    fontSize: '0.8rem',
                     color: 'var(--color-text-muted)',
-                    marginTop: '0.4rem',
+                    marginTop: '0.45rem',
                     letterSpacing: '-0.005em',
                   }}
                 >

@@ -20,6 +20,7 @@ import {
   User,
   Building2,
   Users,
+  Activity,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -678,6 +679,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Featured tools */}
       {[
+        { label: 'Diagnóstico', icon: Activity, href: '/tools/diagnostico', color: '#FF6B4A' },
         { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#0D9488' },
         { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#FF6B4A' },
         { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0D9488' },

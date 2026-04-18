@@ -480,15 +480,49 @@ const halfColStyle = { flex: '1 1 220px', minWidth: 0 }
 
 const LOCAL_PROGRESS_KEY = 's4c_diagnostic_progress'
 const LOCAL_PENDING_KEY = 's4c_diagnostic_pending'
+const historyKey = (userId: string) => `s4c_${userId}_diagnostic_history`
+
+export interface DiagnosticHistoryEntry {
+  id: string
+  created_at: string
+  score: number
+  profile_tag: string
+  profile_etapa: 1 | 2 | 3 | 4
+  profile_name: string
+  profile_emoji: string
+  profile_color: string
+  dimension_scores: Record<string, number>
+  tags: Record<string, string>
+  inconsistencias: string[]
+}
+
+export interface DiagnosticFormProps {
+  embedded?: boolean
+  userId?: string | null
+  prefilledContact?: {
+    nombre?: string
+    email?: string
+    startup_name?: string
+    vertical?: string
+    startup_description?: string
+    phone?: string
+    website?: string
+    country?: string
+    como_nos_conocio?: string
+  }
+  onBack?: () => void
+}
 
 /* ═══════════════════════════════════════════════════════════════════ */
 /* Component                                                            */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-export default function DiagnosticForm() {
+export default function DiagnosticForm({ embedded = false, userId = null, prefilledContact, onBack }: DiagnosticFormProps = {}) {
   // Paso 0..9 = contact + 9 questions; 10 = loading; 11 = results
-  const [step, setStep] = useState(0)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [step, setStep] = useState(embedded ? 1 : 0)
+  const [answers, setAnswers] = useState<Record<string, string>>(
+    embedded && prefilledContact ? { ...prefilledContact } as Record<string, string> : {}
+  )
   const [scores, setScores] = useState<Record<string, number>>({})
   const [tags, setTags] = useState<Record<string, string>>({})
   const [adaptiveOverrides, setAdaptiveOverrides] = useState<string[]>([])
@@ -511,6 +545,7 @@ export default function DiagnosticForm() {
   /* ─── Restore progress from localStorage on mount ─── */
   const [restorePrompt, setRestorePrompt] = useState<null | { paso: number }>(null)
   useEffect(() => {
+    if (embedded) return
     try {
       const raw = localStorage.getItem(LOCAL_PROGRESS_KEY)
       if (!raw) return
@@ -518,7 +553,7 @@ export default function DiagnosticForm() {
       if (data?.version !== '2.1' || !data?.paso_actual || data.paso_actual === 0) return
       setRestorePrompt({ paso: data.paso_actual })
     } catch { /* noop */ }
-  }, [])
+  }, [embedded])
 
   const resumeProgress = () => {
     try {
@@ -546,6 +581,7 @@ export default function DiagnosticForm() {
 
   /* ─── Persist progress on every change ─── */
   useEffect(() => {
+    if (embedded) return
     if (step === 0 || step >= 10) return
     try {
       localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify({
@@ -708,19 +744,40 @@ export default function DiagnosticForm() {
     fetchPercentil()
 
     try {
-      localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify({
-        version: '2.1',
-        timestamp: new Date().toISOString(),
-        total_score: total,
-        perfil_etapa: matched.etapa,
-        perfil_nombre: matched.name,
-        dimension_scores: scores,
-        tags,
-        inconsistencias: incs,
-        answers: { ...answers, como_nos_conocio: comoNosConocio },
-      }))
-      // clear in-progress form now that we have a pending result
-      localStorage.removeItem(LOCAL_PROGRESS_KEY)
+      if (!embedded) {
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify({
+          version: '2.1',
+          timestamp: new Date().toISOString(),
+          total_score: total,
+          perfil_etapa: matched.etapa,
+          perfil_nombre: matched.name,
+          dimension_scores: scores,
+          tags,
+          inconsistencias: incs,
+          answers: { ...answers, como_nos_conocio: comoNosConocio },
+        }))
+        // clear in-progress form now that we have a pending result
+        localStorage.removeItem(LOCAL_PROGRESS_KEY)
+      }
+      // Append to per-user history (only when we know the user)
+      if (userId) {
+        const k = historyKey(userId)
+        const prev: DiagnosticHistoryEntry[] = JSON.parse(localStorage.getItem(k) || '[]')
+        const entry: DiagnosticHistoryEntry = {
+          id: `diag-${Date.now()}`,
+          created_at: new Date().toISOString(),
+          score: total,
+          profile_tag: matched.tag,
+          profile_etapa: matched.etapa,
+          profile_name: matched.name,
+          profile_emoji: matched.emoji,
+          profile_color: matched.color,
+          dimension_scores: { ...scores },
+          tags: { ...tags },
+          inconsistencias: incs,
+        }
+        localStorage.setItem(k, JSON.stringify([entry, ...prev]))
+      }
     } catch { /* noop */ }
 
     // Minimum 3s for analysis effect
@@ -729,7 +786,7 @@ export default function DiagnosticForm() {
       setStep(11)
     }, 3000)
     return () => clearTimeout(t)
-  }, [step, submitted, scores, tags, answers, adaptiveOverrides, comoNosConocio])
+  }, [step, submitted, scores, tags, answers, adaptiveOverrides, comoNosConocio, embedded, userId])
 
   /* ─── Count-up animation ─── */
   useEffect(() => {
@@ -1429,6 +1486,24 @@ export default function DiagnosticForm() {
 
                   {/* BLOQUE 8 — CTAs */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {embedded && onBack && (
+                      <button
+                        onClick={onBack}
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                          width: '100%', padding: '1rem', borderRadius: 'var(--radius-full)',
+                          background: 'var(--color-accent-primary)', color: '#fff',
+                          fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 700,
+                          border: 'none', cursor: 'pointer',
+                          boxShadow: '0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4)',
+                          letterSpacing: '-0.01em',
+                        }}
+                      >
+                        Volver al historial de diagnósticos <ArrowRight size={18} />
+                      </button>
+                    )}
+                    {!embedded && (
+                    <>
                     <a
                       href={`/tools?source=diagnostic&score=${totalScore}&etapa=${profile.etapa}`}
                       style={{
@@ -1466,14 +1541,18 @@ export default function DiagnosticForm() {
                     >
                       Agenda una sesión estratégica
                     </a>
+                    </>
+                    )}
                   </div>
 
                   {/* Confirmación de recibido */}
-                  <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                      <CheckCircle2 size={14} color="#0D9488" /> Guardamos tu diagnóstico. Si te registras, podrás seguir tu evolución en el tiempo.
-                    </p>
-                  </div>
+                  {!embedded && (
+                    <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        <CheckCircle2 size={14} color="#0D9488" /> Guardamos tu diagnóstico. Si te registras, podrás seguir tu evolución en el tiempo.
+                      </p>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>

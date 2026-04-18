@@ -109,7 +109,7 @@ export function isDemoUserId(id: string | null | undefined): boolean {
 /** Seed some example tool progress into localStorage so demo founder has content. */
 function seedDemoFounderData() {
   if (typeof window === 'undefined') return
-  const SEED_VERSION = '3'  // Bump this when seed data changes
+  const SEED_VERSION = '4'  // Bump this when seed data changes
   const versionKey = `s4c_${DEMO_FOUNDER_ID}_seed_version`
   try {
     const currentVersion = localStorage.getItem(versionKey)
@@ -920,6 +920,57 @@ function seedDemoFounderData() {
       completedAt: now,
     }))
   } catch { /* ignore */ }
+
+  // Seed 3 mock diagnostic history entries showing maturity evolution over time
+  try {
+    const diagHistoryKey = `s4c_${DEMO_FOUNDER_ID}_diagnostic_history`
+    const diagHistory = [
+      // Most recent — Etapa 3 Aceleración (score 20)
+      {
+        id: 'diag-demo-003',
+        created_at: new Date(Date.now() - 28 * 86400000).toISOString(), // ~1 month ago
+        score: 20,
+        profile_tag: 'Crecimiento',
+        profile_etapa: 3 as const,
+        profile_name: 'ETAPA 3: Aceleración',
+        profile_emoji: '🚀',
+        profile_color: '#D97706',
+        dimension_scores: { madurez: 4, validacion: 3, impacto: 3, financiamiento: 3, equipo: 3, data_room: 4 },
+        tags: { modelo_negocio: 'venta', equipo_tamano: 'tres', cuello_botella: 'inversion' },
+        inconsistencias: [] as string[],
+      },
+      // 4 months ago — Etapa 3 Aceleración (score 17)
+      {
+        id: 'diag-demo-002',
+        created_at: new Date(Date.now() - 120 * 86400000).toISOString(),
+        score: 17,
+        profile_tag: 'Crecimiento',
+        profile_etapa: 3 as const,
+        profile_name: 'ETAPA 3: Aceleración',
+        profile_emoji: '🚀',
+        profile_color: '#D97706',
+        dimension_scores: { madurez: 3, validacion: 3, impacto: 3, financiamiento: 3, equipo: 3, data_room: 2 },
+        tags: { modelo_negocio: 'venta', equipo_tamano: 'tres', cuello_botella: 'clientes' },
+        inconsistencias: [] as string[],
+      },
+      // 9 months ago — Etapa 2 Incubación (score 12)
+      {
+        id: 'diag-demo-001',
+        created_at: new Date(Date.now() - 270 * 86400000).toISOString(),
+        score: 12,
+        profile_tag: 'Validación',
+        profile_etapa: 2 as const,
+        profile_name: 'ETAPA 2: Incubación',
+        profile_emoji: '🔬',
+        profile_color: '#0D9488',
+        dimension_scores: { madurez: 2, validacion: 2, impacto: 2, financiamiento: 2, equipo: 2, data_room: 2 },
+        tags: { modelo_negocio: 'venta', equipo_tamano: 'dos', cuello_botella: 'pmf' },
+        inconsistencias: [] as string[],
+      },
+    ]
+    localStorage.setItem(diagHistoryKey, JSON.stringify(diagHistory))
+  } catch { /* ignore */ }
+
   try {
     localStorage.setItem(versionKey, SEED_VERSION)
   } catch { /* ignore */ }

@@ -25,8 +25,6 @@ export default function Hero() {
       style={{
         position: 'relative',
         background: 'var(--color-bg-primary)',
-        paddingTop: 'clamp(12rem, 18vh, 14.5rem)',
-        paddingBottom: 'clamp(8rem, 13vh, 10.5rem)',
         overflow: 'hidden',
       }}
     >

@@ -594,6 +594,8 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  padding-top: clamp(12rem, 18vh, 14.5rem);
+  padding-bottom: clamp(8rem, 13vh, 10.5rem);
 }
 .hero-stage > *:not(.orb) {
   position: relative;
@@ -602,4 +604,17 @@
 .hero-stage > .orb {
   position: absolute;
   z-index: 0;
+}
+/* Mobile: padding compacto para que el contenido del hero no se empuje fuera de la vista */
+@media (max-width: 640px) {
+  .hero-stage {
+    padding-top: 6.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .hero-stage {
+    padding-top: 8rem;
+    padding-bottom: 5rem;
+  }
 }

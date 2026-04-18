@@ -68,13 +68,29 @@ export async function middleware(request: NextRequest) {
 
   // Refresh session — important for keeping tokens valid
   let user = null
+  let authError = false
   try {
     const { data } = await supabase.auth.getUser()
     user = data.user
   } catch {
-    // If getUser fails (e.g. network/DB error), allow the request through
-    // and let client-side auth handle it
-    return supabaseResponse
+    authError = true
+  }
+
+  // Fail-closed: if the auth probe failed AND we're heading into a privileged
+  // surface, redirect to login instead of letting the client-side guard race.
+  // Public/founder paths (/tools) keep the previous fail-soft behavior since
+  // the AuthProvider gates them anyway.
+  if (
+    authError &&
+    (pathname.startsWith('/admin') || pathname.startsWith('/superadmin'))
+  ) {
+    const demoCookie = request.cookies.get('s4c_demo')?.value
+    if (demoCookie !== 'admin_org' && demoCookie !== 'superadmin') {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/'
+      redirectUrl.searchParams.set('auth', 'login')
+      return NextResponse.redirect(redirectUrl)
+    }
   }
 
   const demoRole = request.cookies.get('s4c_demo')?.value as 'founder' | 'admin_org' | 'superadmin' | undefined

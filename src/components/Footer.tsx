@@ -151,23 +151,28 @@ export default function Footer() {
               background: 'rgba(255, 255, 255, 0.2)',
               display: 'inline-block',
             }} />
-            <a
-              href="https://www.redesignlab.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.8125rem',
-                color: 'rgba(255, 255, 255, 0.45)',
-                textDecoration: 'none',
-                letterSpacing: '-0.005em',
-                transition: 'color 0.2s ease',
-              }}
-              onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
-              onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
-            >
-              Creado por Redesign <span style={{ color: '#E63946' }}>Lab.</span>
-            </a>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8125rem',
+              color: 'rgba(255, 255, 255, 0.45)',
+              letterSpacing: '-0.005em',
+            }}>
+              Diseño y desarrollo por{' '}
+              <a
+                href="https://www.thousandfold.la/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'rgba(255, 255, 255, 0.45)',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease',
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.85)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+              >
+                Thousandfold
+              </a>
+            </span>
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>

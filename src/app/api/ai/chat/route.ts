@@ -5,12 +5,14 @@ import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
-// Allow long-running streamed completions. Default Vercel timeout (10s) was
-// chopping mentor responses mid-sentence; bump to 60s which is the Pro plan
-// ceiling for serverless functions. If you upgrade to Pro+ this can go to 300.
-export const maxDuration = 60
-export const runtime = 'nodejs'
+// Stream long mentor completions without hitting the Hobby plan's 10s
+// serverless timeout. Edge runtime keeps the response open for the full
+// generation (Vercel allows ~25s initial response + indefinite streaming on
+// Hobby, much longer on Pro). All deps used here (next/headers cookies,
+// @supabase/ssr, OpenAI SDK over fetch) are edge-compatible.
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60
 
 /**
  * Strip or truncate heavy fields from the client-sent userContext so the

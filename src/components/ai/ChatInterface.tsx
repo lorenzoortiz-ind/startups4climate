@@ -60,6 +60,10 @@ export default function ChatInterface({
       setMessages((prev) => [...prev, userMsg])
       setLoading(true)
 
+      // Pre-create the assistant message so streamed deltas can append into it.
+      const assistantId = crypto.randomUUID()
+      let appendedAssistant = false
+
       try {
         const res = await fetch('/api/ai/chat', {
           method: 'POST',
@@ -69,29 +73,82 @@ export default function ChatInterface({
             agentType,
             conversationId,
             userContext: userContext || {},
+            stream: true,
           }),
         })
 
-        const data = await res.json()
-
         if (!res.ok) {
+          // Server returned JSON error (e.g. rate limit) — parse and bail.
+          const data = await res.json().catch(() => ({}))
           setError(data.error || 'Error al enviar el mensaje.')
           setLoading(false)
           return
         }
 
-        if (data.conversationId && !conversationId) {
-          setConversationId(data.conversationId)
+        const reader = res.body?.getReader()
+        if (!reader) {
+          setError('Tu navegador no soporta streaming. Recarga e intenta de nuevo.')
+          setLoading(false)
+          return
         }
 
-        const assistantMsg: Message = {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          content: data.response,
-          timestamp: formatTime(),
-        }
+        const decoder = new TextDecoder()
+        let buffer = ''
 
-        setMessages((prev) => [...prev, assistantMsg])
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          buffer += decoder.decode(value, { stream: true })
+          // SSE frames are separated by a blank line
+          const frames = buffer.split('\n\n')
+          buffer = frames.pop() || ''
+
+          for (const frame of frames) {
+            const line = frame.trim()
+            if (!line.startsWith('data:')) continue
+            const payload = line.slice(5).trim()
+            if (!payload) continue
+            try {
+              const evt = JSON.parse(payload) as {
+                delta?: string
+                done?: boolean
+                conversationId?: string
+              }
+
+              if (evt.delta) {
+                if (!appendedAssistant) {
+                  appendedAssistant = true
+                  setMessages((prev) => [
+                    ...prev,
+                    {
+                      id: assistantId,
+                      role: 'assistant',
+                      content: evt.delta!,
+                      timestamp: formatTime(),
+                    },
+                  ])
+                  // Hide the typing indicator as soon as first token arrives
+                  setLoading(false)
+                } else {
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === assistantId
+                        ? { ...m, content: m.content + evt.delta }
+                        : m
+                    )
+                  )
+                }
+              }
+
+              if (evt.done && evt.conversationId && !conversationId) {
+                setConversationId(evt.conversationId)
+              }
+            } catch {
+              // Ignore malformed frames
+            }
+          }
+        }
       } catch {
         setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
       } finally {

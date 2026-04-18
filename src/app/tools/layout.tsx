@@ -21,6 +21,7 @@ import {
   Building2,
   Users,
   Activity,
+  LineChart,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -683,6 +684,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         { label: 'RADAR', icon: Radio, href: '/tools/radar', color: '#0D9488' },
         { label: 'Oportunidades', icon: Target, href: '/tools/oportunidades', color: '#FF6B4A' },
         { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#0D9488' },
+        { label: 'KPIs semanales', icon: LineChart, href: '/tools/kpis', color: '#6366F1' },
       ].map((item) => {
         const active = pathname === item.href
         const IconComp = item.icon

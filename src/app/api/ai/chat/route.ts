@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { createSupabaseServer } from '@/lib/supabase-server'
-import { chatCompletion } from '@/lib/ai/client'
+import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
@@ -88,11 +88,12 @@ export async function POST(request: NextRequest) {
     const demoCookie = cookieStore.get('s4c_demo')?.value
 
     const body = await request.json()
-    const { message, agentType, conversationId, userContext } = body as {
+    const { message, agentType, conversationId, userContext, stream } = body as {
       message: string
       agentType: string
       conversationId?: string
       userContext?: Record<string, unknown>
+      stream?: boolean
     }
 
     if (!message || !agentType) {
@@ -251,7 +252,84 @@ export async function POST(request: NextRequest) {
       { role: 'user', content: message },
     ]
 
-    // Call AI
+    // ── Streaming branch ──
+    // Emits SSE chunks ("data: <json>\n\n") with incremental tokens, then a
+    // final {done:true,conversationId} chunk after persisting the conversation.
+    if (stream) {
+      const encoder = new TextEncoder()
+      const readable = new ReadableStream({
+        async start(controller) {
+          let aiResponse = ''
+          try {
+            const aiStream = await chatCompletionStream(messages, { max_tokens: 1000 })
+            for await (const chunk of aiStream) {
+              const delta = chunk.choices?.[0]?.delta?.content
+              if (delta) {
+                aiResponse += delta
+                controller.enqueue(
+                  encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`)
+                )
+              }
+            }
+          } catch (apiError) {
+            console.error('[S4C AI] Gemini stream error:', apiError)
+            aiResponse =
+              aiResponse ||
+              'El servicio de AI no está disponible en este momento. Intenta de nuevo en unos minutos.'
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ delta: aiResponse })}\n\n`)
+            )
+          }
+
+          // Persist (best-effort; don't block the stream close on DB errors)
+          const newMessages = [
+            ...history,
+            { role: 'user', content: message, timestamp: new Date().toISOString() },
+            { role: 'assistant', content: aiResponse, timestamp: new Date().toISOString() },
+          ]
+          let convId = conversationId
+          try {
+            if (conversationId) {
+              await supabase
+                .from('ai_conversations')
+                .update({ messages: newMessages, updated_at: new Date().toISOString() })
+                .eq('id', conversationId)
+                .eq('user_id', user.id)
+            } else {
+              const { data: newConv } = await supabase
+                .from('ai_conversations')
+                .insert({
+                  user_id: user.id,
+                  agent_type: agentType,
+                  title: message.slice(0, 100),
+                  messages: newMessages,
+                })
+                .select('id')
+                .single()
+              convId = newConv?.id || crypto.randomUUID()
+            }
+          } catch (dbErr) {
+            console.error('[S4C AI] Stream DB persist failed:', dbErr)
+          }
+
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ done: true, conversationId: convId })}\n\n`)
+          )
+          controller.close()
+        },
+      })
+
+      return new Response(readable, {
+        headers: {
+          'Content-Type': 'text/event-stream; charset=utf-8',
+          'Cache-Control': 'no-cache, no-transform',
+          'Connection': 'keep-alive',
+          'X-Accel-Buffering': 'no',
+        },
+      })
+    }
+
+    // ── Non-streaming branch (legacy / fallback) ──
     let aiResponse: string
     try {
       const completion = await chatCompletion(messages, {

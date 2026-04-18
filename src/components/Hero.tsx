@@ -25,8 +25,8 @@ export default function Hero() {
       style={{
         position: 'relative',
         background: 'var(--color-bg-primary)',
-        paddingTop: 'clamp(5rem, 9vh, 7rem)',
-        paddingBottom: 'clamp(3rem, 6vh, 5rem)',
+        paddingTop: 'clamp(4.5rem, 7vh, 5.5rem)',
+        paddingBottom: 'clamp(2rem, 4vh, 3.5rem)',
         overflow: 'hidden',
       }}
     >
@@ -78,12 +78,12 @@ export default function Hero() {
             variants={reveal}
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2.4rem, 6vw, 4.6rem)',
+              fontSize: 'clamp(1.9rem, 4.6vw, 3.6rem)',
               fontWeight: 500,
-              lineHeight: 1.0,
+              lineHeight: 1.05,
               letterSpacing: '-0.03em',
               color: 'var(--color-ink)',
-              margin: '0 0 1.25rem 0',
+              margin: '0 0 1rem 0',
             }}
           >
             La infraestructura que tu{' '}
@@ -96,12 +96,12 @@ export default function Hero() {
             variants={reveal}
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 'clamp(1rem, 1.4vw, 1.2rem)',
+              fontSize: 'clamp(0.92rem, 1.15vw, 1.05rem)',
               fontWeight: 400,
-              lineHeight: 1.55,
+              lineHeight: 1.5,
               color: 'var(--color-text-secondary)',
-              maxWidth: 600,
-              margin: '0 auto 1.75rem',
+              maxWidth: 560,
+              margin: '0 auto 1.5rem',
               letterSpacing: '-0.005em',
             }}
           >
@@ -118,7 +118,7 @@ export default function Hero() {
               alignItems: 'center',
               justifyContent: 'center',
               flexWrap: 'wrap',
-              marginBottom: '2.5rem',
+              marginBottom: '2rem',
             }}
           >
             <button
@@ -138,7 +138,7 @@ export default function Hero() {
             variants={reveal}
             style={{
               position: 'relative',
-              maxWidth: 720,
+              maxWidth: 620,
               margin: '0 auto',
             }}
           >
@@ -250,7 +250,7 @@ export default function Hero() {
               display: 'flex',
               justifyContent: 'center',
               gap: 'clamp(2rem, 5vw, 4rem)',
-              marginTop: '2.5rem',
+              marginTop: '2rem',
               flexWrap: 'wrap',
             }}
           >

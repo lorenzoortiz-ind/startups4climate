@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -17,7 +16,6 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const { user, openAuthModal } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -29,7 +27,6 @@ export default function Navbar() {
   }, [])
 
   const handleNavClick = (href: string) => {
-    setMobileOpen(false)
     const hash = href.startsWith('/') ? href.slice(1) : href
     if (pathname === '/') {
       const el = document.querySelector(hash)
@@ -159,95 +156,31 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile hamburger */}
-          <button
+          {/* Mobile CTA only — hamburger removido por no ser relevante */}
+          <div
             className="md:hidden"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Abrir menú"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: 'var(--color-text-primary)',
-              cursor: 'pointer',
-              borderRadius: 999,
-              width: 40,
-              height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            style={{ display: 'flex', alignItems: 'center' }}
           >
-            <Menu size={20} />
-          </button>
+            {user ? (
+              <button
+                onClick={() => { window.location.href = '/tools' }}
+                className="btn-ember"
+                style={{ padding: '0.5rem 0.9rem', fontSize: '0.8rem' }}
+              >
+                Dashboard
+              </button>
+            ) : (
+              <button
+                onClick={() => openAuthModal('login')}
+                className="btn-ember"
+                style={{ padding: '0.5rem 0.9rem', fontSize: '0.8rem' }}
+              >
+                Ingresar
+              </button>
+            )}
+          </div>
         </nav>
       </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 1001,
-              backgroundColor: 'var(--color-bg-primary)',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '2rem 1.5rem',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-              <S4CLogo size={28} />
-              <button
-                onClick={() => setMobileOpen(false)}
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-text-primary)', cursor: 'pointer', borderRadius: 999, width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    if (!link.isPage) {
-                      e.preventDefault(); handleNavClick(link.href)
-                    } else {
-                      setMobileOpen(false)
-                    }
-                  }}
-                  style={{
-                    fontSize: '2rem',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 500,
-                    color: 'var(--color-text-primary)',
-                    textDecoration: 'none',
-                    letterSpacing: '-0.025em',
-                    lineHeight: 1.05,
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            <div style={{ marginTop: 'auto', paddingBottom: '2rem' }}>
-              <button
-                onClick={() => { setMobileOpen(false); user ? window.location.href = '/tools' : openAuthModal('login') }}
-                className="btn-ember"
-                style={{ width: '100%', justifyContent: 'center', padding: '1rem' }}
-              >
-                {user ? 'Dashboard' : 'Ingresar'} <ArrowRight size={18} />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <style>{`
         .nav-hover:hover { color: var(--color-text-primary) !important; }

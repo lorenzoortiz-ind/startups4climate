@@ -1,110 +1,156 @@
 @import "tailwindcss";
 
 :root {
-  /* ─── S4C Professional Dark Mode (Linear / Vercel / Stripe inspired) ─── */
+  /* ─── S4C v2 — "Forge × Climate" (inspirado en fusionai.framer.website) ─── */
 
-  /* Palette (legacy aliases — kept so existing JSX continues to work) */
-  --color-ink:           #F1F5F9; /* Was the dark text color in light mode — now becomes the primary text on dark */
-  --color-ink-light:     #E2E8F0;
-  --color-paper:         #13171F; /* Cards / surfaces */
-  --color-cream:         #0B0E14; /* Page background */
-  --color-off-white:     #1A1F2A;
+  /* === BASES (negro absoluto + escalas oscuras) === */
+  --color-bg-primary:    #000000;   /* negro puro como FusionAI */
+  --color-bg-card:       #0E0E0E;
+  --color-bg-elevated:   #191919;
+  --color-bg-dark:       #000000;
+  --color-bg-muted:      #060606;
+
+  /* Legacy aliases que siguen usando los componentes existentes */
+  --color-paper:         #0E0E0E;
+  --color-cream:         #000000;
+  --color-off-white:     #191919;
   --color-mid-gray:      #6B7280;
 
-  /* Brand Accents */
-  --color-accent-primary:   #FF6B4A; /* Coral */
-  --color-accent-hover:     #FF8266;
-  --color-accent-secondary: #FF6B4A;
+  /* === ACENTO PRIMARIO: Climate Ember (cobre/naranja) === */
+  --ember-50:            #FFE5D6;
+  --ember-100:           #FFCFB0;
+  --ember-300:           #FF8918;
+  --ember-400:           #D77655;   /* cobre claro */
+  --ember-500:           #DA4E24;   /* signature S4C v2 */
+  --ember-600:           #A22904;
+  --ember-700:           #801E00;
+  --ember-800:           #693300;
+  --ember-900:           #3D0E00;
 
-  /* Backgrounds */
-  --color-bg-primary:    #0B0E14;
-  --color-bg-card:       #13171F;
-  --color-bg-elevated:   #1E2330;
-  --color-bg-dark:       #07090E;
-  --color-bg-muted:      #1A1F2A;
+  --color-accent-primary:   #DA4E24;
+  --color-accent-hover:     #FF8918;
+  --color-accent-secondary: #1F77F6;
 
-  /* Text */
-  --color-text-primary:   #F1F5F9;
-  --color-text-secondary: #9CA3AF;
-  --color-text-muted:     #6B7280;
-  --color-text-on-dark:   #F1F5F9;
+  /* === ACENTO SECUNDARIO: Tech Electric (azul) === */
+  --electric-300:        #5BB4FF;
+  --electric-500:        #1F77F6;   /* signature secundario */
+  --electric-600:        #0098F3;
+  --electric-700:        #0069A6;
 
-  /* Form & Borders */
+  /* === TEXTO === */
+  --color-ink:           #FFFFFF;
+  --color-ink-light:     rgba(255,255,255,0.92);
+  --color-text-primary:   #FFFFFF;
+  --color-text-secondary: rgba(255,255,255,0.72);
+  --color-text-muted:     rgba(255,255,255,0.50);
+  --color-text-on-dark:   #FFFFFF;
+  --color-text-hover:     #FFFFFF;
+
+  /* === BORDES === */
   --color-border:         rgba(255, 255, 255, 0.06);
   --color-border-strong:  rgba(255, 255, 255, 0.10);
-  --color-input-bg:       #13171F;
-  --color-input-focus:    #FF6B4A;
+  --border-ember:         rgba(218, 78, 36, 0.40);
+  --color-input-bg:       #0E0E0E;
+  --color-input-focus:    #DA4E24;
 
-  /* Dimensions & Spacing */
+  /* === GRADIENTES FIRMA === */
+  --grad-fusion: linear-gradient(163deg,
+    #FF8918 28%, #A22904 54%, #000000 68%, #0098F3 100%);
+  --grad-fusion-h: linear-gradient(90deg,
+    #693300 0%, #801E00 33%, #000000 54%, #0069A6 100%);
+  --grad-orb-ember: radial-gradient(circle,
+    #FFFFFF 0%, #DA4E24 18%, #8C3602 40%, transparent 70%);
+  --grad-orb-electric: radial-gradient(circle,
+    #FFFFFF 0%, #1F77F6 18%, #0069A6 40%, transparent 70%);
+  --grad-text-ember: linear-gradient(180deg, #FFFFFF 0%, #FF8918 100%);
+  --grad-text-electric: linear-gradient(180deg, #FFFFFF 0%, #5BB4FF 100%);
+
+  /* === GLOWS / SHADOWS firma === */
+  --glow-ember-inset:
+    inset 0 0 10px rgba(217,119,87,0.5),
+    inset 0 0 20px rgba(217,119,87,0.3),
+    inset 0 0 30px rgba(217,119,87,0.1);
+  --glow-electric-inset:
+    inset 0 0 10px rgba(91,180,255,0.5),
+    inset 0 0 20px rgba(91,180,255,0.3),
+    inset 0 0 30px rgba(91,180,255,0.1);
+  --glow-ember-outer: 0 0 40px rgba(218,78,36,0.35);
+  --glow-electric-outer: 0 0 40px rgba(31,119,246,0.35);
+  --shadow-card:
+    0 0.6px 1.6px -1.5px rgba(0,0,0,0.17),
+    0 2.3px 6px -3px rgba(0,0,0,0.14),
+    0 10px 26px -4.5px rgba(0,0,0,0.02);
+  --shadow-card-hover:
+    0 0.6px 1.6px -1.5px rgba(0,0,0,0.20),
+    0 6px 16px -4px rgba(0,0,0,0.30),
+    0 24px 48px -8px rgba(218,78,36,0.10);
+  --shadow-float: 0 20px 50px -10px rgba(0,0,0,0.70);
+  --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.40);
+
+  /* === DIMENSIONES === */
   --radius-xs:  4px;
   --radius-sm:  8px;
   --radius-md:  12px;
   --radius-lg:  20px;
   --radius-xl:  28px;
   --radius-full: 9999px;
+  --radius-default: 12px;
+  --radius-card: 16px;
 
   --section-py: clamp(3.2rem, 6.4vw, 6.4rem);
   --section-py-sm: clamp(2.4rem, 4.8vw, 4rem);
   --container-max: 1400px;
   --container-px: clamp(1.5rem, 5vw, 6rem);
 
-  /* Typography Scales — marketing pages (-20%). App layouts override below. */
-  --text-display-xl: clamp(2.24rem, 4.8vw, 4.4rem);
-  --text-display-lg: clamp(1.76rem, 4vw, 3.2rem);
-  --text-display-md: clamp(1.28rem, 2.8vw, 2.24rem);
+  /* === TIPOGRAFÍA === */
+  --text-display-xl: clamp(2.8rem, 6.4vw, 5.5rem);
+  --text-display-lg: clamp(2rem, 4.8vw, 3.8rem);
+  --text-display-md: clamp(1.4rem, 3vw, 2.4rem);
   --text-heading-lg: clamp(1.2rem, 2.4vw, 2rem);
   --text-heading-md: clamp(0.96rem, 1.6vw, 1.44rem);
-  --text-body-lg: clamp(0.95rem, 1.2vw, 1.04rem);
+  --text-body-lg: clamp(1rem, 1.2vw, 1.1rem);
   --text-body: 1rem;
 
-  /* ─── Semantic Colors (dark-tuned) ─── */
+  /* === SEMÁNTICOS === */
   --color-success:        #10B981;
   --color-success-light:  rgba(16, 185, 129, 0.12);
   --color-success-border: rgba(16, 185, 129, 0.30);
   --color-success-dark:   #059669;
-
   --color-danger:         #EF4444;
   --color-danger-light:   rgba(239, 68, 68, 0.12);
   --color-danger-border:  rgba(239, 68, 68, 0.30);
   --color-danger-hover:   #FCA5A5;
   --color-danger-dark:    #DC2626;
-
   --color-warning:        #F59E0B;
   --color-warning-light:  rgba(245, 158, 11, 0.12);
   --color-warning-border: rgba(245, 158, 11, 0.30);
+  --color-info:           #1F77F6;
+  --color-info-light:     rgba(31, 119, 246, 0.12);
+  --color-info-border:    rgba(31, 119, 246, 0.30);
+  --color-accent-light:   rgba(218, 78, 36, 0.10);
+  --color-accent-soft:    rgba(218, 78, 36, 0.08);
 
-  --color-info:           #3B82F6;
-  --color-info-light:     rgba(59, 130, 246, 0.12);
-  --color-info-border:    rgba(59, 130, 246, 0.30);
+  /* === STAGES (ember + electric variants) === */
+  --color-stage-1:        #DA4E24;
+  --color-stage-2:        #1F77F6;
+  --color-stage-3:        #FF8918;
+  --color-stage-4:        #5BB4FF;
 
-  --color-accent-light:   rgba(255, 107, 74, 0.08);
-  --color-accent-soft:    rgba(255, 107, 74, 0.08);
-
-  /* ─── Stage Colors ─── */
-  --color-stage-1:        #FF6B4A;
-  --color-stage-2:        #10B981;
-  --color-stage-3:        #F59E0B;
-  --color-stage-4:        #3B82F6;
-
-  /* ─── Neutral Extended (dark-tuned) ─── */
-  --color-gray-50:        #1A1F2A;
-  --color-gray-100:       #1E2330;
-  --color-gray-200:       #252B38;
+  /* === GRISES === */
+  --color-gray-50:        #0E0E0E;
+  --color-gray-100:       #191919;
+  --color-gray-200:       #252525;
   --color-gray-400:       #6B7280;
   --color-gray-500:       #9CA3AF;
   --color-gray-600:       #CBD5E1;
 
-  /* ─── Additional Radius ─── */
-  --radius-default:       10px;
-  --radius-card:          12px;
-
-  /* ─── Font Weights ─── */
+  /* === FONT WEIGHTS === */
   --fw-normal:            400;
   --fw-medium:            500;
   --fw-semibold:          600;
   --fw-bold:              700;
 
-  /* ─── Font Sizes (App Scale) ─── */
+  /* === FONT SIZES (App Scale) === */
   --text-2xs:             0.625rem;
   --text-xs:              0.6875rem;
   --text-sm:              0.8125rem;
@@ -115,7 +161,7 @@
   --text-2xl:             1.5rem;
   --text-3xl:             1.875rem;
 
-  /* ─── Spacing Scale ─── */
+  /* === SPACING === */
   --space-0:  0;
   --space-1:  0.25rem;
   --space-2:  0.5rem;
@@ -127,80 +173,75 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
 
-  /* Extra palette */
+  /* === EXTRA PALETTE (legacy compat) === */
   --color-plum:           #2A222B;
-  --color-purple:         #8B5CF6;
-  --color-pink:           #EC4899;
-  --color-indigo:         #6366F1;
-  --color-text-hover:     #F1F5F9;
+  --color-purple:         #1F77F6;   /* re-mapeado a electric para mantener buttons existentes */
+  --color-pink:           #DA4E24;   /* re-mapeado a ember */
+  --color-indigo:         #1F77F6;
 
-  /* Admin / Tools Sidebar */
-  --color-admin-sidebar-bg:      #0B0E14;
-  --color-admin-sidebar-active:  #FF6B4A;
-  --color-admin-sidebar-text:    #9CA3AF;
+  /* === ADMIN / TOOLS SIDEBAR === */
+  --color-admin-sidebar-bg:      #000000;
+  --color-admin-sidebar-active:  #DA4E24;
+  --color-admin-sidebar-text:    rgba(255,255,255,0.60);
 
-  /* Card shadow (dark-tuned, sutil) */
-  --shadow-card:        0 1px 2px rgba(0, 0, 0, 0.30);
-  --shadow-card-hover:  0 4px 12px rgba(0, 0, 0, 0.40);
-
-  /* Shadows */
-  --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.55);
-  --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.30);
-
-  /* Easings */
+  /* === EASINGS === */
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
   --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
 
   color-scheme: dark;
 }
 
-/* ─── App layouts (Tools + Admin) — same palette, just lock it in ─── */
+/* ─── App layouts (Tools + Admin) ─── */
 [data-app-layout] {
-  --color-bg-primary: #0B0E14;
-  --color-bg-card: #13171F;
-  --color-bg-elevated: #1E2330;
-  --color-bg-dark: #07090E;
-  --color-bg-muted: #1A1F2A;
+  --color-bg-primary: #000000;
+  --color-bg-card: #0E0E0E;
+  --color-bg-elevated: #191919;
+  --color-bg-dark: #000000;
+  --color-bg-muted: #060606;
 
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #9CA3AF;
-  --color-text-muted: #6B7280;
-  --color-text-on-dark: #F1F5F9;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: rgba(255,255,255,0.72);
+  --color-text-muted: rgba(255,255,255,0.50);
+  --color-text-on-dark: #FFFFFF;
 
-  --color-ink: #F1F5F9;
-  --color-ink-light: #E2E8F0;
+  --color-ink: #FFFFFF;
+  --color-ink-light: rgba(255,255,255,0.92);
 
   --color-border: rgba(255, 255, 255, 0.06);
   --color-border-strong: rgba(255, 255, 255, 0.10);
 
-  --color-input-bg: #1A1F2A;
-  --color-input-focus: #FF6B4A;
+  --color-input-bg: #0E0E0E;
+  --color-input-focus: #DA4E24;
 
-  --color-paper: #13171F;
-  --color-cream: #0B0E14;
-  --color-off-white: #1A1F2A;
+  --color-paper: #0E0E0E;
+  --color-cream: #000000;
+  --color-off-white: #191919;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.30);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.40);
-  --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.55);
-  --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-card:
+    0 0.6px 1.6px -1.5px rgba(0,0,0,0.17),
+    0 2.3px 6px -3px rgba(0,0,0,0.14),
+    0 10px 26px -4.5px rgba(0,0,0,0.02);
+  --shadow-card-hover:
+    0 0.6px 1.6px -1.5px rgba(0,0,0,0.20),
+    0 6px 16px -4px rgba(0,0,0,0.30),
+    0 24px 48px -8px rgba(218,78,36,0.10);
+  --shadow-float: 0 20px 50px -10px rgba(0,0,0,0.70);
 
-  --color-gray-50: #1A1F2A;
-  --color-gray-100: #1E2330;
-  --color-gray-200: #252B38;
+  --color-gray-50: #0E0E0E;
+  --color-gray-100: #191919;
+  --color-gray-200: #252525;
   --color-gray-400: #6B7280;
   --color-gray-500: #9CA3AF;
   --color-gray-600: #CBD5E1;
 
-  --color-accent-light: rgba(255, 107, 74, 0.08);
+  --color-accent-light: rgba(218, 78, 36, 0.10);
   --color-success-light: rgba(16, 185, 129, 0.12);
   --color-danger-light: rgba(239, 68, 68, 0.12);
   --color-warning-light: rgba(245, 158, 11, 0.12);
-  --color-info-light: rgba(59, 130, 246, 0.12);
+  --color-info-light: rgba(31, 119, 246, 0.12);
 
-  --color-admin-sidebar-bg: #0B0E14;
+  --color-admin-sidebar-bg: #000000;
 
-  /* Preserve original typography & section scales inside the app (tools/admin don't shrink). */
   --text-display-xl: clamp(2.8rem, 6vw, 5.5rem);
   --text-display-lg: clamp(2.2rem, 5vw, 4rem);
   --text-display-md: clamp(1.6rem, 3.5vw, 2.8rem);
@@ -220,7 +261,7 @@
 [data-app-layout] select {
   background: var(--color-input-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--color-text-primary);
   font-size: var(--text-base);
   padding: 0.75rem 1rem;
@@ -230,7 +271,7 @@
 [data-app-layout] textarea:focus,
 [data-app-layout] select:focus {
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 2px rgba(255, 107, 74, 0.18);
+  box-shadow: 0 0 0 2px rgba(218, 78, 36, 0.25);
 }
 
 [data-app-layout] input::placeholder,
@@ -238,7 +279,6 @@
   color: var(--color-text-muted);
 }
 
-/* Dark scrollbar for app layouts */
 [data-app-layout] ::-webkit-scrollbar-track { background: var(--color-bg-primary); }
 [data-app-layout] ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.10); }
 [data-app-layout] ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.18); }
@@ -248,21 +288,18 @@
   color: white;
 }
 
-/* Prevent button hover "jump" in dark mode app layouts */
-[data-app-layout] button:hover {
-  transform: none;
-}
-[data-app-layout] button:active {
-  transform: none;
-}
+[data-app-layout] button:hover { transform: none; }
+[data-app-layout] button:active { transform: none; }
 
 @theme inline {
-  --font-heading: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
-  --font-body: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
-  --font-display: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
-  --font-sans: var(--font-mluvka), 'Mluvka', system-ui, sans-serif;
-  --font-serif: var(--font-mluvka), 'Mluvka', Georgia, serif;
-  --font-mono: var(--font-mluvka), 'Mluvka', ui-monospace, SFMono-Regular, monospace;
+  --font-heading: 'General Sans', var(--font-inter), system-ui, sans-serif;
+  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-display: 'General Sans', var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-serif: 'General Sans', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+  /* Compat con código viejo que referenciaba --font-mluvka */
+  --font-mluvka: 'General Sans', var(--font-inter), system-ui, sans-serif;
 }
 
 @layer base {
@@ -274,12 +311,11 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 96px; /* navbar offset for in-page anchors */
+    scroll-padding-top: 96px;
     text-rendering: optimizeLegibility;
     background-color: var(--color-bg-primary);
   }
 
-  /* Sections that may be anchor targets keep enough room for the fixed navbar */
   section[id] {
     scroll-margin-top: 96px;
   }
@@ -296,24 +332,23 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.011em;
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.0;
     color: var(--color-text-primary);
   }
 
-  h1 { font-size: var(--text-display-xl); line-height: 1.1; }
-  h2 { font-size: var(--text-display-lg); line-height: 1.1; }
-  h3 { font-size: var(--text-display-md); line-height: 1.15; }
-  h4 { font-size: var(--text-heading-lg); line-height: 1.2; }
+  h1 { font-size: var(--text-display-xl); line-height: 1.0; }
+  h2 { font-size: var(--text-display-lg); line-height: 1.05; }
+  h3 { font-size: var(--text-display-md); line-height: 1.1; }
+  h4 { font-size: var(--text-heading-lg); line-height: 1.15; }
 
-  /* Override global heading sizes in app layouts */
   [data-app-layout] h1,
   [data-app-layout] h2,
   [data-app-layout] h3,
@@ -323,7 +358,7 @@
     letter-spacing: inherit;
   }
 
-  /* Inputs (public site — Typeform style underline) */
+  /* Inputs públicos */
   input, textarea, select {
     background: transparent;
     border: none;
@@ -343,25 +378,17 @@
     color: var(--color-text-muted);
   }
 
-  a {
-    transition: color 0.15s ease;
-  }
+  a { transition: color 0.15s ease; }
   button {
     font-family: var(--font-body);
     transition: transform 0.15s var(--ease-spring), background 0.15s ease, box-shadow 0.15s ease;
   }
-  /* Hover lift only on devices that actually hover (avoids sticky :hover on touch) */
   @media (hover: hover) and (pointer: fine) {
-    button:hover {
-      transform: translateY(-1px);
-    }
+    button:hover { transform: translateY(-1px); }
   }
-  button:active {
-    transform: translateY(1px);
-  }
+  button:active { transform: translateY(1px); }
 }
 
-/* Dark Custom Scrollbar (global) */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-bg-primary); }
 ::-webkit-scrollbar-thumb {
@@ -377,9 +404,210 @@
 }
 
 .gradient-text {
-  color: var(--color-accent-primary);
+  background: var(--grad-text-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   ─── HELPERS S4C v2 — "Forge × Climate" ────────────────────────
+   ═════════════════════════════════════════════════════════════════ */
+
+/* Pill eyebrow tag con borde ember glow (estilo "SUPERCHARGE YOUR AI WORKFLOWS") */
+.pill-ember {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-full);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border-ember);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: var(--glow-ember-inset);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.pill-ember .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ember-500);
+  box-shadow: 0 0 8px var(--ember-500);
+  display: inline-block;
+}
+
+.pill-electric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-full);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(31,119,246,0.40);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: var(--glow-electric-inset);
+  backdrop-filter: blur(10px);
+}
+
+/* Botón primario con ember glow inset (estilo "Get Started") */
+.btn-ember {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, #1A0A05 0%, #000000 100%);
+  border: 1px solid var(--border-ember);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--glow-ember-inset);
+  transition: box-shadow 0.25s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.btn-ember:hover {
+  box-shadow: var(--glow-ember-inset), var(--glow-ember-outer);
+  border-color: var(--ember-500);
+  transform: translateY(-1px);
+}
+.btn-ember:active {
+  transform: translateY(0);
+}
+
+.btn-electric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, #051622 0%, #000000 100%);
+  border: 1px solid rgba(31,119,246,0.40);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--glow-electric-inset);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+.btn-electric:hover {
+  box-shadow: var(--glow-electric-inset), var(--glow-electric-outer);
+  transform: translateY(-1px);
+}
+
+/* Botón ghost outline (secundario) */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--color-border-strong);
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.05);
+  color: #FFFFFF;
+}
+
+/* Glass card — fondo translúcido + blur */
+.glass-card {
+  background: rgba(14, 14, 14, 0.6);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.glass-card:hover {
+  border-color: var(--border-ember);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* Orbs decorativos — ember (cobre) y electric (azul) */
+.orb {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  filter: blur(80px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 0;
+  animation: orb-float 12s ease-in-out infinite;
+}
+.orb-ember { background: var(--grad-orb-ember); }
+.orb-electric { background: var(--grad-orb-electric); animation-delay: -6s; }
+
+.orb-sm { width: 420px; height: 420px; filter: blur(60px); opacity: 0.45; }
+.orb-lg { width: 900px; height: 900px; filter: blur(100px); opacity: 0.55; }
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(20px, -30px) scale(1.05); }
+}
+
+/* Fondo "fusion" — el gradiente icónico naranja→negro→azul */
+.bg-fusion {
+  background: var(--grad-fusion);
+}
+.bg-fusion-h {
+  background: var(--grad-fusion-h);
+}
+
+/* Texto con gradiente */
+.text-ember {
+  background: var(--grad-text-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-electric {
+  background: var(--grad-text-electric);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Wrapper hero relativo para contener orbs */
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-stage > * {
+  position: relative;
+  z-index: 1;
+}
+.hero-stage .orb {
+  z-index: 0;
 }

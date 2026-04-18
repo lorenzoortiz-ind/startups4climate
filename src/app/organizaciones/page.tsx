@@ -436,12 +436,27 @@ export default function OrganizacionesPage() {
       {/*  HERO                                                        */}
       {/* ============================================================ */}
       <section
+        className="hero-stage"
         style={{
           padding: 'clamp(3rem, 6vw, 6rem) var(--container-px) clamp(2rem, 4vw, 4rem)',
-          maxWidth: 'var(--container-max)',
-          margin: '0 auto',
         }}
       >
+        <div
+          className="orb orb-ember orb-lg"
+          style={{ bottom: '-340px', left: '-280px' }}
+          aria-hidden
+        />
+        <div
+          className="orb orb-electric orb-lg"
+          style={{ bottom: '-340px', right: '-280px' }}
+          aria-hidden
+        />
+        <div
+          style={{
+            maxWidth: 'var(--container-max)',
+            margin: '0 auto',
+          }}
+        >
         <div
           style={{
             display: 'flex',
@@ -455,30 +470,10 @@ export default function OrganizacionesPage() {
             {...springReveal}
             style={{ flex: '1 1 340px', maxWidth: 600 }}
           >
-            {/* Eyebrow */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.375rem 0.875rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(255,107,74,0.08)',
-                border: '1px solid rgba(255,107,74,0.15)',
-                marginBottom: '1.75rem',
-              }}
-            >
-              <Building2 size={14} color="var(--color-accent-primary)" />
-              <span
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.6rem',
-                  fontWeight: 700,
-                  color: 'var(--color-accent-primary)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                }}
-              >
+            {/* Eyebrow ember */}
+            <div style={{ marginBottom: '1.75rem' }}>
+              <span className="pill-ember">
+                <Building2 size={12} />
                 Para organizaciones
               </span>
             </div>
@@ -487,15 +482,15 @@ export default function OrganizacionesPage() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: 'var(--text-display-lg)',
-                fontWeight: 700,
+                fontWeight: 500,
                 color: 'var(--color-ink)',
-                letterSpacing: '-0.04em',
-                lineHeight: 1.05,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.0,
                 marginBottom: '1.5rem',
               }}
             >
               Gestiona tu{' '}
-              <span style={{ color: 'var(--color-accent-primary)' }}>programa de innovación</span>{' '}
+              <span className="text-ember">programa de innovación</span>{' '}
               con datos reales
             </h1>
 
@@ -554,56 +549,13 @@ export default function OrganizacionesPage() {
                 href={`https://wa.me/51989338401?text=${encodeURIComponent('Hola, me interesa S4C para mi programa de innovación.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.625rem',
-                  padding: '1rem 2rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'var(--color-accent-primary)',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body)',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  transition: 'transform 0.2s var(--ease-spring), opacity 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                }}
+                className="btn-ember"
               >
                 <MessageCircle size={18} strokeWidth={2} />
                 Hablar por WhatsApp
               </a>
-              <a
-                href="#precios"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '1rem 2rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'transparent',
-                  color: 'var(--color-ink)',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body)',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  border: '1px solid var(--color-border)',
-                  transition: 'border-color 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--color-ink)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--color-border)'
-                }}
-              >
-                Ver planes
-                <ChevronRight size={16} />
+              <a href="#precios" className="btn-ghost">
+                Ver planes <ChevronRight size={16} />
               </a>
             </div>
           </motion.div>
@@ -622,6 +574,7 @@ export default function OrganizacionesPage() {
           >
             <OrgDashboardMockup width="100%" />
           </motion.div>
+        </div>
         </div>
       </section>
 

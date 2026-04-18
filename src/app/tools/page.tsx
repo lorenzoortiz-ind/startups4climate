@@ -375,28 +375,23 @@ export default function ToolsDashboard() {
         <Card
           variant="elevated"
           padding="none"
+          className="hero-stage"
           style={{
             padding: 'clamp(1.5rem, 3vw, 2.5rem)',
-            background:
-              'linear-gradient(135deg, rgba(255,107,74,0.08), rgba(139,92,246,0.06))',
+            background: 'linear-gradient(135deg, rgba(218,78,36,0.08), rgba(31,119,246,0.06))',
             border: '1px solid var(--color-border)',
-            position: 'relative',
-            overflow: 'hidden',
           }}
         >
-          {/* Decorative corner accent */}
+          {/* Orb decorativos firma */}
           <div
+            className="orb orb-ember"
+            style={{ top: -240, right: -200, width: 480, height: 480, opacity: 0.35 }}
             aria-hidden
-            style={{
-              position: 'absolute',
-              top: -60,
-              right: -60,
-              width: 240,
-              height: 240,
-              background:
-                'radial-gradient(circle, rgba(255,107,74,0.12), transparent 70%)',
-              pointerEvents: 'none',
-            }}
+          />
+          <div
+            className="orb orb-electric"
+            style={{ bottom: -240, left: -200, width: 480, height: 480, opacity: 0.30 }}
+            aria-hidden
           />
 
           <div
@@ -411,39 +406,21 @@ export default function ToolsDashboard() {
           >
             {/* Left: greeting + identity */}
             <div style={{ minWidth: 0 }}>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-2xs)',
-                  fontWeight: 700,
-                  color: 'var(--color-accent-primary)',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  marginBottom: '0.875rem',
-                }}
-              >
-                <span
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: 'var(--color-accent-primary)',
-                  }}
-                />
-                Founder Dashboard
+              <div style={{ marginBottom: '0.875rem' }}>
+                <span className="pill-ember">
+                  <span className="dot" />
+                  Founder Dashboard
+                </span>
               </div>
 
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: 'var(--color-ink)',
-                  letterSpacing: '-0.035em',
-                  lineHeight: 1.1,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.05,
                   marginBottom: '0.625rem',
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
@@ -460,7 +437,7 @@ export default function ToolsDashboard() {
                 >
                   ·
                 </span>
-                <span style={{ color: 'var(--color-accent-primary)' }}>{startupName}</span>
+                <span className="text-ember">{startupName}</span>
               </h1>
 
               <p

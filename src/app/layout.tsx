@@ -1,28 +1,14 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { Inter } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { StartupProvider } from '@/context/StartupContext'
 import LayoutShell from '@/components/LayoutShell'
 import './globals.css'
 
-const mluvka = localFont({
-  src: [
-    { path: '../../public/mluvka/Mluvka-ExtraLight-BF65518ac7eb0fe.otf', weight: '200', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-ExtraLightItalic-BF65518ac82ac8a.otf', weight: '200', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-Light-BF65518ac849790.otf', weight: '300', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-LightItalic-BF65518ac8bc189.otf', weight: '300', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-Regular-BF65518ac8463f5.otf', weight: '400', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-Italic-BF65518ac838b27.otf', weight: '400', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-Medium-BF65518ac864edb.otf', weight: '500', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-MediumItalic-BF65518ac8bbcba.otf', weight: '500', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-SemiBold-BF65518ac864155.otf', weight: '600', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-SemiBoldItalic-BF65518ac86ed6c.otf', weight: '600', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-Bold-BF65518ac8cff8c.otf', weight: '700', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-BoldItalic-BF65518ac840460.otf', weight: '700', style: 'italic' },
-    { path: '../../public/mluvka/Mluvka-ExtraBold-BF65518ac86bc69.otf', weight: '800', style: 'normal' },
-    { path: '../../public/mluvka/Mluvka-ExtraBoldItalic-BF65518ac8b0001.otf', weight: '800', style: 'italic' },
-  ],
-  variable: '--font-mluvka',
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 })
 
@@ -132,8 +118,15 @@ export default function RootLayout({
   return (
     <html
       lang="es-419"
-      className={`${mluvka.variable} h-full`}
+      className={`${inter.variable} h-full`}
     >
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
+        />
+      </head>
       <body className="min-h-full flex flex-col antialiased">
         <script
           type="application/ld+json"

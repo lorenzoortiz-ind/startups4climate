@@ -56,8 +56,8 @@ export default function Hero() {
 
   return (
     <section
+      className="hero-stage"
       style={{
-        position: 'relative',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -66,6 +66,18 @@ export default function Hero() {
         paddingTop: '80px',
       }}
     >
+      {/* Orbs decorativos firma — ember (cobre) abajo-izq, electric (azul) abajo-der */}
+      <div
+        className="orb orb-ember orb-lg"
+        style={{ bottom: '-340px', left: '-280px' }}
+        aria-hidden
+      />
+      <div
+        className="orb orb-electric orb-lg"
+        style={{ bottom: '-340px', right: '-280px' }}
+        aria-hidden
+      />
+
       <div
         style={{
           maxWidth: 'var(--container-max)',
@@ -83,51 +95,29 @@ export default function Hero() {
             textAlign: 'left',
           }}
         >
-          {/* Badge */}
-          <motion.div variants={springReveal} style={{ marginBottom: '1.5rem' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.5rem 1.25rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid var(--color-border-strong)',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.65rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              <span style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: 'var(--color-accent-primary)',
-                display: 'inline-block',
-                flexShrink: 0,
-              }} />
-              Ecosistema all-in-one para startups de impacto
+          {/* Pill ember con glow inset */}
+          <motion.div variants={springReveal} style={{ marginBottom: '1.75rem' }}>
+            <span className="pill-ember">
+              <span className="dot" />
+              Plataforma all-in-one para climate founders
             </span>
           </motion.div>
 
-          {/* Colossal Heading */}
+          {/* Colossal Heading — General Sans 500, line-height 1.0 */}
           <motion.h1
             variants={springReveal}
             style={{
               fontFamily: 'var(--font-heading)',
               fontSize: 'var(--text-display-xl)',
-              fontWeight: 700,
-              lineHeight: 1.05,
-              letterSpacing: '-0.04em',
+              fontWeight: 500,
+              lineHeight: 1.0,
+              letterSpacing: '-0.025em',
               color: 'var(--color-ink)',
               margin: '0 0 2rem 0',
             }}
           >
             Tu startup de impacto merece la mejor infraestructura{' '}
-            <span style={{ color: 'var(--color-accent-primary)' }}>para escalar globalmente</span>
+            <span className="text-ember">para escalar globalmente</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -159,15 +149,12 @@ export default function Hero() {
           >
             <button
               onClick={() => user ? router.push('/tools') : openAuthModal('register')}
-              className="hero-primary-btn"
+              className="btn-ember"
             >
-              {user ? 'Ir a mi plataforma' : 'Acceder gratis'} <ArrowRight size={20} />
+              {user ? 'Ir a mi plataforma' : 'Acceder gratis'} <ArrowRight size={18} />
             </button>
 
-            <a
-              href="/organizaciones"
-              className="hero-secondary-link"
-            >
+            <a href="/organizaciones" className="btn-ghost">
               Para organizaciones
             </a>
           </motion.div>
@@ -190,48 +177,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <style>{`
-        .hero-primary-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.75rem;
-          padding: 1.05rem 2rem;
-          border-radius: 12px;
-          background-color: var(--color-accent-primary);
-          color: #fff;
-          font-family: var(--font-body);
-          font-size: var(--text-body-lg);
-          font-weight: 600;
-          border: none;
-          cursor: pointer;
-          box-shadow: 0 4px 16px rgba(255,107,74,0.25), 0 1px 2px rgba(0,0,0,0.4);
-          transition: background-color 0.15s ease, transform 0.15s var(--ease-spring), box-shadow 0.15s ease;
-        }
-        .hero-primary-btn:hover {
-          background-color: var(--color-accent-hover);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(255,107,74,0.35), 0 2px 4px rgba(0,0,0,0.4);
-        }
-        .hero-secondary-link {
-          display: inline-flex;
-          align-items: center;
-          padding: 1.05rem 1.5rem;
-          color: var(--color-text-secondary);
-          font-family: var(--font-body);
-          font-size: var(--text-body-lg);
-          font-weight: 500;
-          text-decoration: none;
-          border-radius: 12px;
-          border: 1px solid var(--color-border-strong);
-          background: rgba(255,255,255,0.02);
-          transition: all 0.15s ease;
-        }
-        .hero-secondary-link:hover {
-          color: var(--color-text-primary);
-          border-color: rgba(255,255,255,0.18);
-          background: rgba(255,255,255,0.04);
-        }
-      `}</style>
     </section>
   )
 }

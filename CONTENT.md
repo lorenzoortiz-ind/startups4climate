@@ -187,7 +187,7 @@ Países LATAM: Argentina · Bolivia · Brasil · Chile · Colombia · Costa Rica
 **Eyebrow:** La plataforma
 
 **Heading:**
-> Un ecosistema completo para desarrollar tu startup
+> Una plataforma integral para desarrollar tu startup
 
 **Subtítulo:**
 > Sin costo, sin aplicaciones, sin esperas. Crea tu cuenta y accede a la Plataforma para desarrollar tu startup de impacto.

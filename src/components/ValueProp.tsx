@@ -144,7 +144,7 @@ export default function ValueProp() {
               marginBottom: '1.5rem',
             }}
           >
-            Un <span style={{ color: 'var(--color-accent-primary)' }}>ecosistema completo</span> para desarrollar tu startup
+            Una <span style={{ color: 'var(--color-accent-primary)' }}>plataforma integral</span> para desarrollar tu startup
           </h2>
           <p
             style={{

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Radio,
@@ -11,10 +11,12 @@ import {
   Scale,
   Lightbulb,
   Award,
+  ExternalLink,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { DEMO_ECOSYSTEM_ACTORS } from '@/lib/demo/admin-fixtures'
+import { supabase } from '@/lib/supabase'
 
 /* ─── Types ─── */
 type Category = 'Inversión' | 'Regulación' | 'Tendencia' | 'Programa'
@@ -26,6 +28,7 @@ interface NewsItem {
   date: string
   category: Category
   excerpt: string
+  url?: string | null
 }
 
 interface ProgramItem {
@@ -263,16 +266,37 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
       >
         {item.excerpt}
       </p>
-      <span
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: 'var(--text-xs)',
-          color: 'var(--color-text-muted)',
-          fontStyle: 'italic',
-        }}
-      >
-        Fuente: {item.source}
-      </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+        <span
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--color-text-muted)',
+            fontStyle: 'italic',
+          }}
+        >
+          Fuente: {item.source}
+        </span>
+        {item.url && (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-xs)',
+              fontWeight: 600,
+              color: accent,
+              textDecoration: 'none',
+            }}
+          >
+            Leer más <ExternalLink size={11} />
+          </a>
+        )}
+      </div>
     </motion.div>
   )
 }
@@ -378,6 +402,43 @@ export default function AdminRadarPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [activeCategory, setActiveCategory] = useState<Category | 'Todos'>('Todos')
+  const [liveNews, setLiveNews] = useState<NewsItem[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('news_items')
+        .select('title, source_name, source_url, published_at, content_type, summary, tags')
+        .eq('is_active', true)
+        .order('published_at', { ascending: false })
+        .limit(40)
+      if (cancelled || error || !data) return
+      const mapType = (t: string | null, tags: string[] | null): Category => {
+        const tagStr = (tags || []).join(' ').toLowerCase()
+        if (t === 'funding' || tagStr.includes('inversión') || tagStr.includes('fondo')) return 'Inversión'
+        if (t === 'regulation' || tagStr.includes('regulación') || tagStr.includes('ley')) return 'Regulación'
+        if (t === 'program' || tagStr.includes('convocatoria') || tagStr.includes('aceleradora')) return 'Programa'
+        return 'Tendencia'
+      }
+      const fmt = (iso: string) => {
+        const d = new Date(iso)
+        const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+      }
+      setLiveNews(
+        data.map((r: Record<string, unknown>) => ({
+          title: r.title as string,
+          source: (r.source_name as string) || 'Fuente desconocida',
+          date: fmt(r.published_at as string),
+          category: mapType(r.content_type as string | null, r.tags as string[] | null),
+          excerpt: (r.summary as string) || '',
+          url: (r.source_url as string) || null,
+        }))
+      )
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
     router.replace('/admin')
@@ -387,10 +448,11 @@ export default function AdminRadarPage() {
   // Filter out actores tab when not in demo mode
   const visibleTabs = isDemo ? TABS : TABS.filter((t) => t.id !== 'actores')
 
+  const newsSource = liveNews && liveNews.length > 0 ? liveNews : NEWS_ITEMS
   const filteredNews =
     activeCategory === 'Todos'
-      ? NEWS_ITEMS
-      : NEWS_ITEMS.filter((item) => item.category === activeCategory)
+      ? newsSource
+      : newsSource.filter((item) => item.category === activeCategory)
 
   return (
     <div

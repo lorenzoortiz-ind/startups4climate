@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Lightbulb,
@@ -15,11 +15,13 @@ import {
   CalendarDays,
   MapPin,
   ChevronRight,
+  ExternalLink,
   Users,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { DEMO_OPPORTUNITIES } from '@/lib/demo/admin-fixtures'
+import { supabase } from '@/lib/supabase'
 
 /* ─── Types ─── */
 type OpportunityType = 'Grant' | 'Aceleradora' | 'Competencia' | 'Fondo' | 'Capacitación' | 'Programa'
@@ -35,6 +37,7 @@ interface Opportunity {
   description: string
   eligibility: string
   region: string
+  url?: string | null
 }
 
 /* ─── Type styling ─── */
@@ -386,26 +389,50 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
           <CalendarDays size={12} />
           Cierra: {item.deadline}
         </span>
-        <button
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-            padding: '0.5rem 1rem',
-            borderRadius: 8,
-            background: 'var(--color-bg-primary)',
-            border: '1px solid var(--color-border)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.8125rem',
-            fontWeight: 600,
-            color: 'var(--color-ink)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          Gestionar
-          <ChevronRight size={12} />
-        </button>
+        {item.url ? (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              padding: '0.5rem 1rem',
+              borderRadius: 8,
+              background: config.color,
+              border: `1px solid ${config.color}`,
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              color: '#fff',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            Ver convocatoria
+            <ExternalLink size={12} />
+          </a>
+        ) : (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              padding: '0.5rem 1rem',
+              borderRadius: 8,
+              background: 'var(--color-bg-primary)',
+              border: '1px solid var(--color-border)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            Próximamente
+            <ChevronRight size={12} />
+          </span>
+        )}
       </div>
     </motion.div>
   )
@@ -417,13 +444,62 @@ export default function AdminOportunidadesPage() {
   const router = useRouter()
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('Todos')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Vigentes')
+  const [liveOpps, setLiveOpps] = useState<Opportunity[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('opportunities')
+        .select('title, organization, type, amount_min, amount_max, currency, deadline, application_url, eligible_countries, eligible_verticals, eligible_stages, description')
+        .eq('is_active', true)
+        .order('deadline', { ascending: true, nullsFirst: false })
+        .limit(60)
+      if (cancelled || error || !data) return
+      const TYPE_MAP: Record<string, OpportunityType> = {
+        grant: 'Grant',
+        fund: 'Fondo',
+        accelerator: 'Aceleradora',
+        competition: 'Competencia',
+        program: 'Programa',
+        training: 'Capacitación',
+      }
+      const fmtAmount = (min: number | null, max: number | null, cur: string | null): string => {
+        const c = cur || 'USD'
+        if (!min && !max) return 'Variable'
+        if (min && max) return `${c} ${(min/1000).toFixed(0)}K - ${(max/1000).toFixed(0)}K`
+        const v = (min || max)!
+        return `${c} ${(v/1000).toFixed(0)}K`
+      }
+      setLiveOpps(
+        data.map((r: Record<string, unknown>) => ({
+          name: r.title as string,
+          organization: (r.organization as string) || '—',
+          type: TYPE_MAP[(r.type as string) || ''] || 'Programa',
+          amount: fmtAmount(r.amount_min as number | null, r.amount_max as number | null, r.currency as string | null),
+          deadline: r.deadline ? fmtDeadline(r.deadline as string) : 'Rolling',
+          description: (r.description as string) || 'Convocatoria del ecosistema regional.',
+          eligibility: [
+            (r.eligible_verticals as string[] | null)?.join(', '),
+            (r.eligible_stages as string[] | null)?.join(', '),
+            (r.eligible_countries as string[] | null)?.join(', '),
+          ].filter(Boolean).join(' · ') || 'Ver convocatoria para detalles',
+          region: ((r.eligible_countries as string[] | null) || []).slice(0, 2).join(', ') || 'LATAM',
+          url: (r.application_url as string) || null,
+        }))
+      )
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
     router.replace('/admin')
     return null
   }
 
-  const sourceList = isDemo ? DEMO_OPPORTUNITIES_MAPPED : OPPORTUNITIES
+  const sourceList = isDemo
+    ? DEMO_OPPORTUNITIES_MAPPED
+    : (liveOpps && liveOpps.length > 0 ? liveOpps : OPPORTUNITIES)
   const filtered = sourceList
     .filter((o) => typeFilter === 'Todos' || o.type === typeFilter)
     .filter((o) => {

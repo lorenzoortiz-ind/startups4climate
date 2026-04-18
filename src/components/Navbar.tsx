@@ -135,8 +135,8 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.5rem' }}>
+          {/* CTA (una sola instancia para evitar duplicados por breakpoints) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {user ? (
               <button
                 onClick={() => { window.location.href = '/tools' }}
@@ -152,30 +152,6 @@ export default function Navbar() {
                 style={{ padding: '0.55rem 1.1rem', fontSize: '0.85rem' }}
               >
                 Ingresar <ArrowRight size={15} />
-              </button>
-            )}
-          </div>
-
-          {/* Mobile CTA only — hamburger removido por no ser relevante */}
-          <div
-            className="md:hidden"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            {user ? (
-              <button
-                onClick={() => { window.location.href = '/tools' }}
-                className="btn-ember"
-                style={{ padding: '0.5rem 0.9rem', fontSize: '0.8rem' }}
-              >
-                Dashboard
-              </button>
-            ) : (
-              <button
-                onClick={() => openAuthModal('login')}
-                className="btn-ember"
-                style={{ padding: '0.5rem 0.9rem', fontSize: '0.8rem' }}
-              >
-                Ingresar
               </button>
             )}
           </div>

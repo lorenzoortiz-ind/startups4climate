@@ -25,7 +25,7 @@ export default function Hero() {
       style={{
         position: 'relative',
         background: 'var(--color-bg-primary)',
-        paddingTop: 'clamp(4.5rem, 7vh, 5.5rem)',
+        paddingTop: 'clamp(6.5rem, 10vh, 8rem)',
         paddingBottom: 'clamp(2rem, 4vh, 3.5rem)',
         overflow: 'hidden',
       }}
@@ -65,14 +65,6 @@ export default function Hero() {
             marginRight: 'auto',
           }}
         >
-          {/* Pill ember */}
-          <motion.div variants={reveal} style={{ marginBottom: '1.25rem' }}>
-            <span className="pill-ember">
-              <span className="dot" />
-              Plataforma all-in-one para climate founders
-            </span>
-          </motion.div>
-
           {/* Hero h1 — General Sans 500, gigante, line-height 1.0 */}
           <motion.h1
             variants={reveal}

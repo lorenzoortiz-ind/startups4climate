@@ -146,6 +146,54 @@ export async function POST(request: NextRequest) {
         { role: 'user', content: message },
       ]
 
+      // ── Demo streaming branch ──
+      // The client always requests stream:true and parses SSE frames. Keeping
+      // the demo path on plain JSON broke the chat (deltas never arrived, so
+      // the assistant message never rendered). Mirror the auth streaming flow.
+      if (stream) {
+        const encoder = new TextEncoder()
+        const convId = conversationId || crypto.randomUUID()
+        const readable = new ReadableStream({
+          async start(controller) {
+            try {
+              const aiStream = await chatCompletionStream(messages, { max_tokens: 1500 })
+              for await (const chunk of aiStream) {
+                const delta = chunk.choices?.[0]?.delta?.content
+                if (delta) {
+                  controller.enqueue(
+                    encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`)
+                  )
+                }
+              }
+            } catch (apiError) {
+              const errMsg = apiError instanceof Error ? apiError.message : String(apiError)
+              console.error('[S4C AI] Gemini stream error (demo):', errMsg)
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    delta: `Lo siento, el servicio AI tuvo un problema técnico. (${errMsg.slice(0, 120)})`,
+                  })}\n\n`
+                )
+              )
+            }
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ done: true, conversationId: convId })}\n\n`)
+            )
+            controller.close()
+          },
+        })
+
+        return new Response(readable, {
+          headers: {
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-cache, no-transform',
+            'Connection': 'keep-alive',
+            'X-Accel-Buffering': 'no',
+          },
+        })
+      }
+
+      // Non-streaming fallback for demo (legacy callers)
       let aiResponse: string
       try {
         const completion = await chatCompletion(messages, { stream: false, max_tokens: 1500 })
@@ -155,7 +203,6 @@ export async function POST(request: NextRequest) {
       } catch (apiError) {
         const errMsg = apiError instanceof Error ? apiError.message : String(apiError)
         console.error('[S4C AI] Gemini API error (demo):', errMsg)
-        // Surface a cleaner error in demo so we can diagnose during presentations
         aiResponse = `Lo siento, el servicio AI tuvo un problema técnico. (${errMsg.slice(0, 120)})`
       }
 

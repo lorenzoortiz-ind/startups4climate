@@ -224,7 +224,7 @@ export default function StartupLifecycle() {
                   background: isActive ? `${s.stageColor}15` : 'rgba(255,255,255,0.04)',
                   border: `1px solid ${isActive ? s.stageColor + '33' : 'var(--color-border)'}`,
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.5rem',
+                  fontSize: '0.65rem',
                   fontWeight: 600,
                   color: isActive ? s.stageColor : 'var(--color-text-muted)',
                   letterSpacing: '0.02em',
@@ -290,7 +290,7 @@ export default function StartupLifecycle() {
               <div>
                 <span style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.55rem',
+                  fontSize: '0.65rem',
                   fontWeight: 700,
                   color: stage.stageColor,
                   textTransform: 'uppercase',
@@ -374,7 +374,7 @@ export default function StartupLifecycle() {
                           borderRadius: 'var(--radius-full)',
                           background: catColor.bg,
                           fontFamily: 'var(--font-body)',
-                          fontSize: '0.45rem',
+                          fontSize: '0.65rem',
                           fontWeight: 700,
                           color: catColor.color,
                           letterSpacing: '0.06em',

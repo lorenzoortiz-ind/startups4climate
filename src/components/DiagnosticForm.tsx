@@ -1267,10 +1267,10 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                       />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.375rem' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-text-muted)' }}>Incubación</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>Pre-incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>Incubación</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>Aceleración</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', color: 'var(--color-text-muted)' }}>Escalamiento</span>
                     </div>
                   </div>
 
@@ -1281,7 +1281,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                   }}>
                     {puntosFaltantes !== null && (
                       <div style={{ flex: '1 1 200px', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', background: 'var(--color-bg-primary)', border: '1px solid var(--color-border)' }}>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', fontWeight: 700, color: 'var(--color-text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Para la siguiente etapa</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 700, color: 'var(--color-text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Para la siguiente etapa</p>
                         <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-ink)' }}>
                           Te faltan <span style={{ color: profile.color, fontWeight: 800 }}>{puntosFaltantes}</span> puntos para alcanzar la Etapa {profile.etapa + 1}
                         </p>
@@ -1289,7 +1289,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     )}
                     {percentil !== null && (
                       <div style={{ flex: '1 1 200px', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', background: 'var(--color-bg-primary)', border: '1px solid var(--color-border)' }}>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', fontWeight: 700, color: 'var(--color-text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Tu posición</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 700, color: 'var(--color-text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Tu posición</p>
                         <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-ink)' }}>
                           Estás en el percentil <span style={{ color: profile.color, fontWeight: 800 }}>{percentil}</span> de startups que completaron este diagnóstico
                         </p>
@@ -1305,7 +1305,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                     border: `1px solid ${profile.color}25`,
                     marginBottom: '1.5rem',
                   }}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.55rem', fontWeight: 700, color: profile.color, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.65rem', fontWeight: 700, color: profile.color, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                       Tu etapa
                     </p>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', lineHeight: 1.7, color: 'var(--color-ink)' }}>

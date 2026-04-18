@@ -258,8 +258,8 @@ function StageSidebarSection({
                         background: 'rgba(255,255,255,0.06)',
                         color: SB.textMuted,
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.5rem',
-                        fontWeight: 500,
+                        fontSize: '0.6rem',
+                        fontWeight: 600,
                         lineHeight: 1.6,
                         flexShrink: 0,
                       }}

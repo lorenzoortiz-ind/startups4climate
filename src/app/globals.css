@@ -404,10 +404,7 @@
 }
 
 .gradient-text {
-  background: var(--grad-text-ember);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #F0721D;
 }
 
 @keyframes spin {
@@ -586,16 +583,10 @@
 
 /* Texto con gradiente */
 .text-ember {
-  background: var(--grad-text-ember);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #F0721D;
 }
 .text-electric {
-  background: var(--grad-text-electric);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #5BB4FF;
 }
 
 /* Wrapper hero relativo para contener orbs */

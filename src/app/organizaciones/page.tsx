@@ -459,16 +459,16 @@ export default function OrganizacionesPage() {
         >
         <div
           style={{
-            display: 'flex',
+            display: 'grid',
             alignItems: 'center',
             gap: 'clamp(2rem, 5vw, 5rem)',
-            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           }}
         >
           {/* Left: editorial text */}
           <motion.div
             {...springReveal}
-            style={{ flex: '1 1 340px', maxWidth: 600 }}
+            style={{ maxWidth: 600 }}
           >
             {/* Eyebrow ember */}
             <div style={{ marginBottom: '1.75rem' }}>
@@ -566,13 +566,15 @@ export default function OrganizacionesPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
             style={{
-              flex: '0 1 480px',
               display: 'flex',
-              justifyContent: 'flex-end',
-              paddingLeft: isMobile ? 0 : '2rem',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
             }}
           >
-            <OrgDashboardMockup width="100%" />
+            <div style={{ width: '100%', maxWidth: 520 }}>
+              <OrgDashboardMockup width="100%" />
+            </div>
           </motion.div>
         </div>
         </div>

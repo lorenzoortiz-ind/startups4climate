@@ -49,16 +49,16 @@ export default function WorkbookPage() {
       >
         <div
           style={{
-            display: 'flex',
+            display: 'grid',
             alignItems: 'center',
             gap: 'clamp(2rem, 5vw, 5rem)',
-            flexWrap: isMobile ? 'wrap' : 'nowrap',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           }}
         >
           {/* Left: editorial text */}
           <motion.div
             {...springReveal}
-            style={{ flex: '1 1 340px', maxWidth: 600 }}
+            style={{ maxWidth: 600 }}
           >
             {/* Eyebrow */}
             <div
@@ -160,10 +160,10 @@ export default function WorkbookPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
             style={{
-              flex: 1,
-              minWidth: 0,
               display: 'flex',
               justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
             }}
           >
             <Image

@@ -89,7 +89,7 @@ function FeatureCard({ feature, delay }: { feature: typeof features[0]; delay: n
         <h3
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: '1.2rem',
+            fontSize: '1.125rem',
             fontWeight: 500,
             color: 'var(--color-ink)',
             marginBottom: '0.5rem',
@@ -178,9 +178,10 @@ export default function ValueProp() {
         </motion.div>
 
         <div
+          className="vp-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '1.25rem',
           }}
         >
@@ -189,6 +190,15 @@ export default function ValueProp() {
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .vp-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 560px) {
+          .vp-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   )
 }

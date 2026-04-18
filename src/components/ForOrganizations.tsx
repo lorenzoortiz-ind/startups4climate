@@ -71,7 +71,7 @@ function FeatureCard({ feature, i }: { feature: typeof features[0]; i: number })
       <h3
         style={{
           fontFamily: 'var(--font-heading)',
-          fontSize: '1.2rem',
+          fontSize: '1.125rem',
           fontWeight: 500,
           color: 'var(--color-ink)',
           margin: 0,
@@ -161,9 +161,10 @@ export default function ForOrganizations() {
         </motion.div>
 
         <div
+          className="org-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '1.25rem',
             marginBottom: '4rem',
           }}
@@ -172,6 +173,15 @@ export default function ForOrganizations() {
             <FeatureCard key={feature.title} feature={feature} i={i} />
           ))}
         </div>
+
+        <style>{`
+          @media (max-width: 1000px) {
+            .org-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          @media (max-width: 520px) {
+            .org-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
 
         {/* Ember CTA card */}
         <motion.div

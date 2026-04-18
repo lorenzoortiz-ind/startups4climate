@@ -114,7 +114,7 @@ export default function DiagnosticFeature() {
                 <h3
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1.1rem',
+                    fontSize: '1.125rem',
                     fontWeight: 500,
                     letterSpacing: '-0.02em',
                     marginBottom: '0.35rem',

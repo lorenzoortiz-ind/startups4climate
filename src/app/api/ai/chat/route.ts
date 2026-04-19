@@ -1,9 +1,22 @@
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
+import { z } from 'zod'
 import { createSupabaseServer } from '@/lib/supabase-server'
 import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
+
+const VALID_AGENT_TYPES = ['mentor', 'radar'] as const
+
+const chatBodySchema = z.object({
+  message: z.string().min(1).max(4000),
+  agentType: z.enum(VALID_AGENT_TYPES),
+  conversationId: z.string().uuid().optional(),
+  userContext: z.record(z.unknown()).optional(),
+  stream: z.boolean().optional(),
+})
+
+const MAX_CONTEXT_BYTES = 8_192
 
 // Stream long mentor completions without hitting the Hobby plan's 10s
 // serverless timeout. Edge runtime keeps the response open for the full
@@ -96,25 +109,20 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies()
     const demoCookie = cookieStore.get('s4c_demo')?.value
 
-    const body = await request.json()
-    const { message, agentType, conversationId, userContext, stream } = body as {
-      message: string
-      agentType: string
-      conversationId?: string
-      userContext?: Record<string, unknown>
-      stream?: boolean
-    }
-
-    if (!message || !agentType) {
+    const rawBody = await request.json()
+    const parsed = chatBodySchema.safeParse(rawBody)
+    if (!parsed.success) {
       return Response.json(
-        { error: 'Faltan campos requeridos: message, agentType' },
+        { error: parsed.error.issues[0]?.message ?? 'Datos inválidos' },
         { status: 400 }
       )
     }
+    const { message, agentType, conversationId, userContext, stream } = parsed.data
 
-    if (message.length > 4000) {
+    // Guard against oversized userContext payloads (prompt injection / token abuse)
+    if (userContext && JSON.stringify(userContext).length > MAX_CONTEXT_BYTES) {
       return Response.json(
-        { error: 'El mensaje es demasiado largo. Máximo 4000 caracteres.' },
+        { error: 'El contexto enviado es demasiado grande.' },
         { status: 400 }
       )
     }

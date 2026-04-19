@@ -1,11 +1,26 @@
 import OpenAI from 'openai'
+import { requireEnv } from '@/lib/env'
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY || '',
+  apiKey: requireEnv('GEMINI_API_KEY'),
   baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
 })
 
 const GEMINI_MODEL = 'gemini-2.5-flash'
+
+// Gemini 2.5 Flash pricing (USD per 1M tokens, as of 2025)
+const PRICE_INPUT_PER_M = 0.075
+const PRICE_OUTPUT_PER_M = 0.30
+
+function logUsage(usage: OpenAI.CompletionUsage | undefined, label: string) {
+  if (!usage) return
+  const costUsd =
+    (usage.prompt_tokens / 1_000_000) * PRICE_INPUT_PER_M +
+    (usage.completion_tokens / 1_000_000) * PRICE_OUTPUT_PER_M
+  console.log(
+    `[S4C AI] ${label} | in=${usage.prompt_tokens} out=${usage.completion_tokens} cost=$${costUsd.toFixed(5)}`
+  )
+}
 
 /**
  * Calls the Gemini chat completion endpoint via OpenAI-compatible API.
@@ -13,7 +28,7 @@ const GEMINI_MODEL = 'gemini-2.5-flash'
  */
 export async function chatCompletion(
   messages: Array<{ role: string; content: string }>,
-  options?: { stream?: boolean; max_tokens?: number }
+  options?: { stream?: boolean; max_tokens?: number; label?: string }
 ): Promise<OpenAI.Chat.Completions.ChatCompletion> {
   const params = {
     model: GEMINI_MODEL,
@@ -23,13 +38,17 @@ export async function chatCompletion(
   }
 
   try {
-    return await client.chat.completions.create(params)
+    const completion = await client.chat.completions.create(params)
+    logUsage(completion.usage, options?.label ?? 'chat')
+    return completion
   } catch (err) {
     const status = (err as { status?: number }).status
     // Retry once on transient 503/502 from Gemini
     if (status === 503 || status === 502) {
       await new Promise((r) => setTimeout(r, 1500))
-      return client.chat.completions.create(params)
+      const completion = await client.chat.completions.create(params)
+      logUsage(completion.usage, options?.label ?? 'chat-retry')
+      return completion
     }
     throw err
   }

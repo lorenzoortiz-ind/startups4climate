@@ -28,8 +28,9 @@ export async function middleware(request: NextRequest) {
       response.cookies.set('s4c_demo', role, {
         path: '/',
         maxAge: 60 * 60 * 24, // 24 hours (matches /api/demo/[role] behavior)
-        httpOnly: false,
-        sameSite: 'lax',
+        httpOnly: false, // Must be readable by AuthContext client-side
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
       })
       // Prevent any CDN/browser caching of demo entry HTML so the cookie
       // is always sent on the first load.
@@ -111,7 +112,7 @@ export async function middleware(request: NextRequest) {
       const { data: profile } = await Promise.race([
         supabase.from('profiles').select('role').eq('id', user.id).single(),
         new Promise<{ data: null; error: { message: string } }>((resolve) =>
-          setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+          setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 8000)
         ),
       ])
 
@@ -144,7 +145,7 @@ export async function middleware(request: NextRequest) {
     const { data: profile } = await Promise.race([
       supabase.from('profiles').select('role').eq('id', user.id).single(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>
-        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 8000)
       ),
     ])
 

@@ -70,12 +70,13 @@ export default function CohortesPage() {
       setError(null)
 
       try {
-        // Fetch cohorts for this org
+        // Fetch cohorts for this org — specific columns to reduce egress
         const { data: cohortsData, error: cohortErr } = await supabase
           .from('cohorts')
-          .select('*')
+          .select('id, name, description, start_date, end_date, status, created_at')
           .eq('org_id', appUser!.org_id!)
           .order('created_at', { ascending: false })
+          .limit(100)
 
         if (cohortErr) throw cohortErr
 

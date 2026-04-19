@@ -4,6 +4,23 @@ import { Resend } from 'resend'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
+// Soft rate limit: max 20 invitations per org per hour (in-memory per serverless instance)
+const inviteRateLimit = new Map<string, { count: number; resetAt: number }>()
+const INVITE_MAX_PER_HOUR = 20
+const INVITE_WINDOW_MS = 60 * 60 * 1000
+
+function checkInviteRateLimit(orgId: string): boolean {
+  const now = Date.now()
+  const entry = inviteRateLimit.get(orgId)
+  if (!entry || entry.resetAt < now) {
+    inviteRateLimit.set(orgId, { count: 1, resetAt: now + INVITE_WINDOW_MS })
+    return true
+  }
+  if (entry.count >= INVITE_MAX_PER_HOUR) return false
+  entry.count += 1
+  return true
+}
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://startups4climate.vercel.app'
 
 function escapeHtml(str: string): string {
@@ -28,6 +45,13 @@ export async function POST(request: NextRequest) {
 
   if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
+  }
+
+  if (!checkInviteRateLimit(profile.org_id)) {
+    return NextResponse.json(
+      { error: 'Has alcanzado el límite de invitaciones por hora. Intenta de nuevo más tarde.' },
+      { status: 429 }
+    )
   }
 
   const body = await request.json()
@@ -118,9 +142,9 @@ export async function POST(request: NextRequest) {
         </div>
       `,
     })
-  } catch {
+  } catch (emailErr) {
     // Email failed but invitation was created — log but don't fail
-    console.error('Failed to send invitation email')
+    console.error('[S4C Admin] Failed to send invitation email:', emailErr)
   }
 
   return NextResponse.json({ success: true, invitation_id: invitation.id })

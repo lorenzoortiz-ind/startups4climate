@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase-server'
 import * as XLSX from 'xlsx'
 
+// Soft rate limit: 1 report per 30 seconds per user (in-memory, per serverless instance)
+const reportRateLimit = new Map<string, number>()
+const REPORT_COOLDOWN_MS = 30_000
+
 const STAGE_LABELS: Record<string, string> = {
   pre_incubation: 'Pre-incubación',
   incubation: 'Incubación',
@@ -41,6 +45,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
   }
 
+  // Rate limit: 1 report per 30 seconds per admin
+  const lastReport = reportRateLimit.get(user.id)
+  if (lastReport && Date.now() - lastReport < REPORT_COOLDOWN_MS) {
+    const retryAfter = Math.ceil((REPORT_COOLDOWN_MS - (Date.now() - lastReport)) / 1000)
+    return NextResponse.json(
+      { error: `Espera ${retryAfter}s antes de generar otro reporte.` },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+  reportRateLimit.set(user.id, Date.now())
+
   const body = await request.json()
   const { cohortId } = body
 
@@ -72,10 +87,10 @@ export async function POST(request: NextRequest) {
 
   const startupIds = assignments.map((a) => a.startup_id)
 
-  // Get startup data
+  // Get startup data — specific columns only to reduce egress
   const { data: startups } = await supabase
     .from('startups')
-    .select('*')
+    .select('id, name, vertical, stage, diagnostic_score, tools_completed, founder_id, country, team_size, monthly_revenue, tam_usd, has_mvp, has_paying_customers, paying_customers_count')
     .in('id', startupIds)
 
   // Get founder profiles

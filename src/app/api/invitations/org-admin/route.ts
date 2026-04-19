@@ -133,9 +133,9 @@ export async function POST(request: NextRequest) {
         </div>
       `,
     })
-  } catch {
+  } catch (emailErr) {
     // Email failed but invitation was created — log but don't fail
-    console.error('Failed to send org-admin invitation email')
+    console.error('[S4C Admin] Failed to send org-admin invitation email:', emailErr)
   }
 
   return NextResponse.json({ success: true, invitation })

@@ -6,13 +6,11 @@ import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
 
-const VALID_AGENT_TYPES = ['mentor', 'radar'] as const
-
 const chatBodySchema = z.object({
   message: z.string().min(1).max(4000),
-  agentType: z.enum(VALID_AGENT_TYPES),
-  conversationId: z.string().uuid().optional(),
-  userContext: z.record(z.unknown()).optional(),
+  agentType: z.enum(['mentor', 'radar']),
+  conversationId: z.string().optional(),
+  userContext: z.record(z.string(), z.unknown()).optional(),
   stream: z.boolean().optional(),
 })
 

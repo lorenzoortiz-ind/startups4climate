@@ -6,7 +6,7 @@ import { buildStartupContext } from '@/lib/ai/context-builder'
 
 const feedbackBodySchema = z.object({
   toolId: z.string().min(1).max(100),
-  toolData: z.record(z.unknown()),
+  toolData: z.record(z.string(), z.unknown()),
 })
 
 // In-memory feedback cache: key = `${userId}:${toolId}:${dataHash}`

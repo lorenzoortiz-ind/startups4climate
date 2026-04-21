@@ -4,6 +4,11 @@ import { createSupabaseServer } from '@/lib/supabase-server'
 import { chatCompletion, chatCompletionStream } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
 import { MENTOR_GENERAL_PROMPT } from '@/lib/ai/prompts/mentor-general'
+import {
+  checkAndLogAIUsage,
+  rateLimitHeaders,
+  type RateLimitRole,
+} from '@/lib/rate-limit'
 
 // Stream long mentor completions without hitting the Hobby plan's 10s
 // serverless timeout. Edge runtime keeps the response open for the full
@@ -235,23 +240,34 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Rate limit: max 30 conversations per day
-    const today = new Date().toISOString().split('T')[0]
-    const { count } = await supabase
-      .from('ai_conversations')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .gte('created_at', today + 'T00:00:00Z')
+    // Load role for rate-limit tier
+    const { data: roleRow } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
 
-    if ((count || 0) >= 30) {
+    const role: RateLimitRole =
+      roleRow?.role === 'admin_org' || roleRow?.role === 'superadmin'
+        ? roleRow.role
+        : 'founder'
+
+    const rateLimit = await checkAndLogAIUsage(supabase, user.id, 'chat', role)
+    if (!rateLimit.allowed) {
+      const minutes = Math.max(
+        1,
+        Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)
+      )
       return Response.json(
         {
-          error:
-            'Has alcanzado el limite diario de 30 mensajes. Intenta de nuevo manana.',
+          error: `Has alcanzado el límite de ${rateLimit.limit} consultas por hora al mentor AI. Intenta en ${minutes} min.`,
+          remaining: 0,
+          resetAt: rateLimit.resetAt.toISOString(),
         },
-        { status: 429 }
+        { status: 429, headers: rateLimitHeaders(rateLimit) }
       )
     }
+    const rlHeaders = rateLimitHeaders(rateLimit)
 
     // Load startup context (startups table uses founder_id, not user_id)
     const { data: startup } = await supabase
@@ -381,6 +397,7 @@ export async function POST(request: NextRequest) {
           'Cache-Control': 'no-cache, no-transform',
           'Connection': 'keep-alive',
           'X-Accel-Buffering': 'no',
+          ...rlHeaders,
         },
       })
     }
@@ -437,10 +454,13 @@ export async function POST(request: NextRequest) {
       convId = newConv?.id || crypto.randomUUID()
     }
 
-    return Response.json({
-      response: aiResponse,
-      conversationId: convId,
-    })
+    return Response.json(
+      {
+        response: aiResponse,
+        conversationId: convId,
+      },
+      { headers: rlHeaders }
+    )
   } catch (err) {
     console.error('AI chat error:', err)
     return Response.json(

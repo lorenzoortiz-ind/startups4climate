@@ -2,6 +2,11 @@ import { NextRequest } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase-server'
 import { chatCompletion } from '@/lib/ai/client'
 import { buildStartupContext } from '@/lib/ai/context-builder'
+import {
+  checkAndLogAIUsage,
+  rateLimitHeaders,
+  type RateLimitRole,
+} from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +22,35 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       )
     }
+
+    // Rate-limit per role
+    const { data: roleRow } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    const role: RateLimitRole =
+      roleRow?.role === 'admin_org' || roleRow?.role === 'superadmin'
+        ? roleRow.role
+        : 'founder'
+
+    const rateLimit = await checkAndLogAIUsage(supabase, user.id, 'feedback', role)
+    if (!rateLimit.allowed) {
+      const minutes = Math.max(
+        1,
+        Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)
+      )
+      return Response.json(
+        {
+          error: `Has alcanzado el límite de ${rateLimit.limit} generaciones de feedback por hora. Intenta en ${minutes} min.`,
+          remaining: 0,
+          resetAt: rateLimit.resetAt.toISOString(),
+        },
+        { status: 429, headers: rateLimitHeaders(rateLimit) }
+      )
+    }
+    const rlHeaders = rateLimitHeaders(rateLimit)
 
     const body = await request.json()
     const { toolId, toolData } = body as {
@@ -84,7 +118,7 @@ export async function POST(request: NextRequest) {
       feedback = 'El servicio de AI no está disponible en este momento. Por favor intenta de nuevo en unos minutos.'
     }
 
-    return Response.json({ feedback })
+    return Response.json({ feedback }, { headers: rlHeaders })
   } catch (err) {
     console.error('AI feedback error:', err)
     return Response.json(

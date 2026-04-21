@@ -44,11 +44,13 @@ export const metadata: Metadata = {
     title: 'Startups4Climate | Plataforma all-in-one para startups de impacto',
     description: 'Plataforma all-in-one para startups de impacto. Democratizamos el emprendimiento de impacto en América Latina y el Caribe.',
     siteName: 'Startups4Climate',
+    // OG image dinámica generada por src/app/opengraph-image.tsx
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Startups4Climate | Plataforma all-in-one para startups de impacto',
     description: 'Plataforma all-in-one para startups de impacto. Democratizamos el emprendimiento de impacto en América Latina y el Caribe.',
+    // Twitter image también se toma de opengraph-image.tsx por convención de Next
   },
   alternates: {
     canonical: 'https://www.startups4climate.org',
@@ -128,6 +130,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col antialiased">
+        <a href="#main-content" className="skip-to-content">
+          Saltar al contenido
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

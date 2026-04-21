@@ -430,7 +430,7 @@ export default function OrganizacionesPage() {
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
 
       {/* ============================================================ */}
       {/*  HERO                                                        */}

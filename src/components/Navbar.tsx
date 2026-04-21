@@ -102,20 +102,35 @@ export default function Navbar() {
             style={{ alignItems: 'center', gap: '1.75rem' }}
           >
             {navLinks.map((link) => {
+              const isActive = link.isPage
+                ? pathname === link.href || pathname.startsWith(`${link.href}/`)
+                : false
+
               const linkStyle: React.CSSProperties = {
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.85rem',
-                fontWeight: 500,
-                color: 'var(--color-text-secondary)',
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? 'var(--color-ink)' : 'var(--color-text-secondary)',
                 textDecoration: 'none',
                 transition: 'color 0.15s ease',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
+                position: 'relative',
+                paddingBottom: '2px',
+                borderBottom: isActive
+                  ? '1px solid var(--color-accent-primary)'
+                  : '1px solid transparent',
               }
 
               if (link.isPage) {
                 return (
-                  <Link key={link.href} href={link.href} className="nav-hover" style={linkStyle}>
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="nav-hover"
+                    style={linkStyle}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
                     {link.label}
                   </Link>
                 )

@@ -79,13 +79,21 @@
   --shadow-card:
     0 0.6px 1.6px -1.5px rgba(0,0,0,0.17),
     0 2.3px 6px -3px rgba(0,0,0,0.14),
-    0 10px 26px -4.5px rgba(0,0,0,0.02);
+    0 10px 26px -4.5px rgba(218,78,36,0.06);
   --shadow-card-hover:
     0 0.6px 1.6px -1.5px rgba(0,0,0,0.20),
     0 6px 16px -4px rgba(0,0,0,0.30),
     0 24px 48px -8px rgba(218,78,36,0.10);
   --shadow-float: 0 20px 50px -10px rgba(0,0,0,0.70);
   --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.40);
+
+  /* === Z-INDEX SCALE === */
+  --z-base: 1;
+  --z-dropdown: 20;
+  --z-nav: 50;
+  --z-modal-backdrop: 90;
+  --z-modal: 100;
+  --z-toast: 200;
 
   /* === DIMENSIONES === */
   --radius-xs:  4px;
@@ -220,7 +228,7 @@
   --shadow-card:
     0 0.6px 1.6px -1.5px rgba(0,0,0,0.17),
     0 2.3px 6px -3px rgba(0,0,0,0.14),
-    0 10px 26px -4.5px rgba(0,0,0,0.02);
+    0 10px 26px -4.5px rgba(218,78,36,0.06);
   --shadow-card-hover:
     0 0.6px 1.6px -1.5px rgba(0,0,0,0.20),
     0 6px 16px -4px rgba(0,0,0,0.30),
@@ -342,7 +350,53 @@
     letter-spacing: -0.025em;
     line-height: 1.0;
     color: var(--color-text-primary);
+    text-wrap: balance;
   }
+
+  p { text-wrap: pretty; }
+
+  /* === FOCUS-VISIBLE GLOBAL (a11y) === */
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 3px;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 3px rgba(218, 78, 36, 0.15);
+  }
+
+  /* === SKIP TO CONTENT (a11y) === */
+  .skip-to-content {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: var(--z-toast, 200);
+  }
+  .skip-to-content:focus-visible {
+    left: 1rem;
+    top: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-accent-primary);
+    color: #fff;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  /* === SMOOTH SCROLL ANCHOR === */
+  html { scroll-behavior: smooth; }
 
   h1 { font-size: var(--text-display-xl); line-height: 1.0; }
   h2 { font-size: var(--text-display-lg); line-height: 1.05; }
@@ -404,7 +458,11 @@
 }
 
 .gradient-text {
-  color: #F0721D;
+  background: var(--grad-text-ember);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 @keyframes spin {

@@ -368,7 +368,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     return (
       <div
         style={{
-          minHeight: '100vh',
+          minHeight: '100dvh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -851,7 +851,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       data-app-layout
       style={{
         display: 'flex',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
       }}
     >
@@ -972,7 +972,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       <main
         style={{
           flex: 1,
-          minHeight: '100vh',
+          minHeight: '100dvh',
           minWidth: 0,
           overflowX: 'hidden',
           overflowWrap: 'break-word' as const,
@@ -998,7 +998,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       fallback={
         <div
           style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

@@ -457,7 +457,7 @@ export default function AdminRadarPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
         padding: '2rem',
       }}

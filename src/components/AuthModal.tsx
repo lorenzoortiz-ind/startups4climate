@@ -125,7 +125,7 @@ export default function AuthModal() {
         style={{
           position: 'fixed',
           inset: 0,
-          zIndex: 9999,
+          zIndex: 'var(--z-modal, 100)',
           backgroundColor: 'rgba(0,0,0,0.72)',
           backdropFilter: 'blur(16px) saturate(140%)',
           WebkitBackdropFilter: 'blur(16px) saturate(140%)',
@@ -147,7 +147,7 @@ export default function AuthModal() {
           style={{
             width: '100%',
             maxWidth: 480,
-            maxHeight: 'calc(100vh - 2rem)',
+            maxHeight: 'calc(100dvh - 2rem)',
             overflowY: 'auto',
             background: 'rgba(14, 14, 14, 0.92)',
             border: '1px solid rgba(218, 78, 36, 0.35)',

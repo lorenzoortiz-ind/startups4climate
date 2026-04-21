@@ -12,7 +12,7 @@ export default function MentorPage() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
         padding: '2rem',
       }}

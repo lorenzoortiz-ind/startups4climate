@@ -120,7 +120,7 @@ export default async function PublicPassportPage({
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
         padding: '3rem 1.25rem',
       }}

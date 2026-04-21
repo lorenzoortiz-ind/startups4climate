@@ -378,7 +378,7 @@ export default function PerfilPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
         padding: '2.5rem 1.75rem',
       }}

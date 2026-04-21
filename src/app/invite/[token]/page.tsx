@@ -229,7 +229,7 @@ export default function InvitePage() {
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: 'var(--color-bg-primary)',
       }}>
         <Loader2 size={32} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
@@ -240,7 +240,7 @@ export default function InvitePage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'var(--color-bg-primary)', padding: '2rem 1rem',
     }}>
       <motion.div

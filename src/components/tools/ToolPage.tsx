@@ -155,7 +155,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
     : `Esta herramienta es clave para avanzar en ${displayStageName?.toLowerCase() ?? 'tu etapa actual'}. Tómate el tiempo para responder con datos reales, no con suposiciones.`
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
       {/* Top bar */}
       <div
         style={{

@@ -115,7 +115,7 @@ export default function DemoDayPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
         color: '#F8FAFC',
         display: 'flex', flexDirection: 'column',

@@ -513,7 +513,7 @@ export default function AdminOportunidadesPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         background: 'var(--color-bg-primary)',
         padding: '2rem 1.5rem',
       }}

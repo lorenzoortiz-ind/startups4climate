@@ -85,7 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -274,7 +274,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <SuperadminProvider>
-    <div data-app-layout style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
+    <div data-app-layout style={{ display: 'flex', minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
       {/* Desktop sidebar */}
       <aside
         className="hidden lg:flex"
@@ -356,7 +356,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Main content area */}
       <main
-        style={{ flex: 1, minHeight: '100vh' }}
+        style={{ flex: 1, minHeight: '100dvh' }}
         className="lg:ml-[260px] pt-14 lg:pt-0"
       >
         {/* Top header bar */}

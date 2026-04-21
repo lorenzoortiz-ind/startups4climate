@@ -19,7 +19,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     <>
       {!hideChrome && <Navbar />}
       <AuthModal />
-      <main className="flex-grow">{children}</main>
+      <main id="main-content" className="flex-grow">{children}</main>
       {!hideChrome && <Footer />}
     </>
   )

@@ -112,7 +112,7 @@ export default function MentorWidget() {
               right: 20,
               width: 400,
               height: 500,
-              maxHeight: 'calc(100vh - 120px)',
+              maxHeight: 'calc(100dvh - 120px)',
               zIndex: 1000,
               borderRadius: 16,
               overflow: 'hidden',
@@ -329,8 +329,8 @@ export default function MentorWidget() {
             width: calc(100vw - 16px) !important;
             right: 8px !important;
             bottom: 80px !important;
-            height: calc(100vh - 100px) !important;
-            max-height: calc(100vh - 100px) !important;
+            height: calc(100dvh - 100px) !important;
+            max-height: calc(100dvh - 100px) !important;
           }
         }
       `}</style>

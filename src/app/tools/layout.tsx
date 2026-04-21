@@ -31,6 +31,7 @@ import { getProgress, hydrateProgressFromSupabase } from '@/lib/progress'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { supabase } from '@/lib/supabase'
 import DemoLinkRewriter from '@/components/DemoLinkRewriter'
+import OnboardingTour from '@/components/OnboardingTour'
 
 const STAGE_CONFIG = {
   1: { label: 'Pre-incubación', color: '#DA4E24' },
@@ -985,6 +986,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Floating Mentor AI Widget */}
       <MentorWidget />
+
+      {/* First-visit onboarding tour (founders only, once per user) */}
+      <OnboardingTour />
 
       {/* Keep browser URL within /demo-tools/* during demo sessions */}
       <DemoLinkRewriter />

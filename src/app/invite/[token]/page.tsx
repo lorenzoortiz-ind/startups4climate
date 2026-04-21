@@ -52,43 +52,53 @@ export default function InvitePage() {
     async function loadInvitation() {
       setLoading(true)
 
-      // Use service role or public query — invitations have RLS
-      // For unauthenticated users, we query by token directly
-      const { data, error: fetchError } = await supabase
-        .from('invitations')
-        .select('id, org_id, cohort_id, email, status, expires_at, invitation_type')
-        .eq('token', token)
-        .single()
+      // Server-side lookup via SECURITY DEFINER RPC (works for anon too)
+      const { data: rpcData, error: fetchError } = await supabase
+        .rpc('lookup_invitation', { p_token: token })
 
-      if (fetchError || !data) {
+      const payload = rpcData as {
+        ok: boolean
+        error?: string
+        email?: string
+        status?: string
+        expires_at?: string
+        invitation_type?: string
+        org_id?: string
+        cohort_id?: string | null
+        org_name?: string
+      } | null
+
+      if (fetchError || !payload || !payload.ok) {
         setError('Invitación no encontrada o enlace inválido.')
         setMode('error')
         setLoading(false)
         return
       }
 
-      if (data.status !== 'pending') {
+      if (payload.status !== 'pending') {
         setError('Esta invitación ya fue utilizada o revocada.')
         setMode('error')
         setLoading(false)
         return
       }
 
-      if (new Date(data.expires_at) < new Date()) {
+      if (payload.expires_at && new Date(payload.expires_at) < new Date()) {
         setError('Esta invitación ha expirado.')
         setMode('error')
         setLoading(false)
         return
       }
 
-      // Get org name
-      const { data: org } = await supabase
-        .from('organizations')
-        .select('name')
-        .eq('id', data.org_id)
-        .single()
-
-      setInvitation({ ...data, org_name: org?.name || 'la organización' })
+      setInvitation({
+        id: '', // not exposed; not needed client-side
+        org_id: payload.org_id!,
+        cohort_id: payload.cohort_id ?? null,
+        email: payload.email!,
+        status: payload.status!,
+        expires_at: payload.expires_at!,
+        invitation_type: payload.invitation_type ?? null,
+        org_name: payload.org_name,
+      })
       setLoading(false)
     }
 
@@ -115,49 +125,21 @@ export default function InvitePage() {
 
   const isAdminOrgInvite = invitation?.invitation_type === 'admin_org'
 
-  async function acceptInvitation(userId: string) {
+  async function acceptInvitation(_userId: string) {
     if (!invitation) return
     setMode('accepting')
 
-    if (invitation.invitation_type === 'admin_org') {
-      // Admin org invitation: set role and org_id
-      await supabase
-        .from('profiles')
-        .update({ org_id: invitation.org_id, role: 'admin_org' })
-        .eq('id', userId)
-    } else {
-      // Founder invitation (default): set org_id only
-      await supabase
-        .from('profiles')
-        .update({ org_id: invitation.org_id })
-        .eq('id', userId)
+    // All validation + profile update + cohort link + invitation mark
+    // happens atomically server-side via SECURITY DEFINER RPC.
+    const { data, error: rpcErr } = await supabase.rpc('accept_invitation', { p_token: token })
+    const payload = data as { ok: boolean; error?: string; invitation_type?: string } | null
 
-      // If cohort specified, link startup to cohort
-      if (invitation.cohort_id) {
-        const { data: startup } = await supabase
-          .from('startups')
-          .select('id')
-          .eq('founder_id', userId)
-          .single()
-
-        if (startup) {
-          const { error: linkErr } = await supabase
-            .from('cohort_startups')
-            .insert({
-              cohort_id: invitation.cohort_id,
-              startup_id: startup.id,
-            })
-          if (linkErr) console.error('[S4C Sync] cohort_startups link failed:', linkErr)
-        }
-      }
+    if (rpcErr || !payload || !payload.ok) {
+      console.error('[S4C Sync] accept_invitation failed:', rpcErr || payload?.error)
+      setError('No se pudo aceptar la invitación. ' + (payload?.error || 'Intenta de nuevo.'))
+      setMode('error')
+      return
     }
-
-    // Mark invitation as accepted
-    const { error: acceptErr } = await supabase
-      .from('invitations')
-      .update({ status: 'accepted', accepted_at: new Date().toISOString() })
-      .eq('id', invitation.id)
-    if (acceptErr) console.error('[S4C Sync] invitation accept failed:', acceptErr)
 
     setMode('done')
     setTimeout(() => router.push(isAdminOrgInvite ? '/admin' : '/tools'), 2000)

@@ -1010,6 +1010,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         <label style={labelStyle}>Vertical</label>
                         <select
                           {...register('vertical')}
+                          aria-label="Vertical de tu startup"
                           defaultValue=""
                           style={{
                             ...inputStyle,
@@ -1047,6 +1048,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                         <select
                           value={phoneCountryCode}
                           onChange={(e) => setPhoneCountryCode(e.target.value)}
+                          aria-label="Código de país para WhatsApp"
                           style={{
                             ...inputStyle,
                             appearance: 'none',
@@ -1088,6 +1090,7 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
                       <select
                         value={comoNosConocio}
                         onChange={(e) => setComoNosConocio(e.target.value)}
+                        aria-label="¿Cómo nos conociste?"
                         style={{
                           ...inputStyle,
                           appearance: 'none',

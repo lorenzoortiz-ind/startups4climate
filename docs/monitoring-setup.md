@@ -103,7 +103,29 @@ pg_dump "postgresql://..." > s4c_backup_$(date +%Y%m%d).sql
 
 Al saltar a Pro ($25/mo) se activa PITR de 7 días automáticamente.
 
-## 5. Checklist pre-launch
+## 5. Performance: eliminar redirect apex → www
+
+Lighthouse reportó **1.45 s de latencia** por el redirect `startups4climate.org → www.startups4climate.org`. Esto es el golpe #1 en Performance.
+
+**Fix en Vercel (1 minuto):**
+1. Vercel Dashboard → Project → Settings → Domains
+2. Identifica cuál está marcado como **Primary**
+3. Cambia primary a `startups4climate.org` (apex) o actualiza DNS para que el apex sirva directamente y `www` sea el redirect (no al revés)
+4. Alternativa: si prefieres `www` como canónico, actualiza DNS del apex con un A record hacia Vercel en vez de un redirect HTTP
+
+Meta: 0 redirects en la request inicial.
+
+## 6. Performance: code splitting framer-motion
+
+Lighthouse reportó 1.36 s en "unused JavaScript". Probable causa: landing carga `framer-motion` entero aunque sólo se use en secciones below-the-fold.
+
+Opciones:
+- Dinamic import de componentes con animaciones complejas
+- Reemplazar framer-motion por CSS animations en componentes simples
+
+No bloqueante para launch; target post-MVP.
+
+## 7. Checklist pre-launch
 
 - [ ] UptimeRobot monitor en `/api/health`
 - [ ] Sentry wizard ejecutado + DSN en Vercel

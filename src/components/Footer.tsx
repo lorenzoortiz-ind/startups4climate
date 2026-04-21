@@ -68,13 +68,13 @@ export default function Footer() {
                 marginTop: '1rem',
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.8125rem',
-                color: 'rgba(255, 255, 255, 0.45)',
+                color: 'rgba(255, 255, 255, 0.7)',
                 textDecoration: 'none',
                 letterSpacing: '-0.005em',
                 transition: 'color 0.2s ease',
               }}
-              onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.85)'}
-              onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.45)'}
+              onMouseOver={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.95)'}
+              onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
             >
               powered by Redesign <span style={{ color: '#E63946' }}>Lab.</span>
             </a>
@@ -88,17 +88,18 @@ export default function Footer() {
           }}>
             {Object.entries(footerLinks).map(([title, links]) => (
               <div key={title} style={{ minWidth: 160 }}>
-                <h4 style={{
+                <h3 style={{
                   fontFamily: 'var(--font-body)',
                   fontSize: '0.6875rem',
                   fontWeight: 600,
-                  color: 'rgba(255, 255, 255, 0.4)',
+                  color: 'rgba(255, 255, 255, 0.72)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.12em',
                   marginBottom: '1.5rem',
+                  margin: '0 0 1.5rem',
                 }}>
                   {title}
-                </h4>
+                </h3>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {links.map(link => (
                     <li key={link.label}>

@@ -67,6 +67,7 @@ export default function NuevaCohorte() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [milestones, setMilestones] = useState<Milestone[]>([])
+  const [accessMode, setAccessMode] = useState<'open' | 'closed'>('open')
 
   const addMilestone = () => {
     setMilestones((prev) => [
@@ -106,9 +107,11 @@ export default function NuevaCohorte() {
           .filter((m) => m.name.trim())
           .map(({ name, stage, deadline }) => ({ name, stage, deadline })),
         status: 'planned',
+        access_mode: accessMode,
       })
 
       if (insertError) {
+        console.error('[S4C Admin] cohort insert failed:', insertError)
         setError('Error al crear la cohorte. Intenta de nuevo.')
       } else {
         router.push('/admin/cohortes')
@@ -222,6 +225,48 @@ export default function NuevaCohorte() {
                 onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
               />
+            </div>
+          </div>
+
+          <div style={{ marginTop: '1rem' }}>
+            <label style={labelStyle}>Modo de acceso</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              {([
+                { value: 'open', title: 'Abierto', desc: 'Los founders pueden descubrirlo y solicitar ingreso. Tú apruebas.' },
+                { value: 'closed', title: 'Cerrado', desc: 'Solo tú puedes asignar startups manualmente.' },
+              ] as const).map((opt) => {
+                const selected = accessMode === opt.value
+                return (
+                  <button
+                    type="button"
+                    key={opt.value}
+                    onClick={() => setAccessMode(opt.value)}
+                    style={{
+                      textAlign: 'left',
+                      padding: '0.75rem 0.875rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: selected ? '1px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
+                      background: selected ? 'rgba(31,119,246,0.06)' : 'var(--color-bg-card)',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <div style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
+                      color: selected ? 'var(--color-accent-primary)' : 'var(--color-text-primary)',
+                      marginBottom: '0.25rem',
+                    }}>
+                      {opt.title}
+                    </div>
+                    <div style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                      color: 'var(--color-text-secondary)', lineHeight: 1.4,
+                    }}>
+                      {opt.desc}
+                    </div>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>

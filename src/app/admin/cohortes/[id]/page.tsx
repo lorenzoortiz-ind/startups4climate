@@ -32,6 +32,7 @@ interface CohortData {
   status: string
   milestones: { name: string; stage: string; deadline: string }[]
   org_id: string
+  access_mode: 'open' | 'closed'
 }
 
 interface StartupInCohort {
@@ -51,6 +52,7 @@ interface AvailableStartup {
   name: string
   founder_name: string
   vertical: string
+  unaffiliated: boolean
 }
 
 const STATUS_OPTIONS = [
@@ -125,7 +127,16 @@ export default function CohortDetailPage() {
   const [startups, setStartups] = useState<StartupInCohort[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
-  const [editForm, setEditForm] = useState({ name: '', description: '', start_date: '', end_date: '' })
+  const [editForm, setEditForm] = useState<{
+    name: string
+    description: string
+    start_date: string
+    end_date: string
+    access_mode: 'open' | 'closed'
+  }>({ name: '', description: '', start_date: '', end_date: '', access_mode: 'closed' })
+  const [statusError, setStatusError] = useState<string | null>(null)
+  const [addStartupError, setAddStartupError] = useState<string | null>(null)
+  const [addingStartupId, setAddingStartupId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -157,6 +168,7 @@ export default function CohortDetailPage() {
         end_date: demoCohort.endDate,
         status: demoCohort.status,
         org_id: 'demo-org-bioinnova',
+        access_mode: 'closed',
         milestones: demoCohort.milestones.map((m) => ({
           name: m.title,
           stage: m.status === 'done' ? 'completed' : 'pending',
@@ -168,6 +180,7 @@ export default function CohortDetailPage() {
         description: demoCohort.description,
         start_date: demoCohort.startDate,
         end_date: demoCohort.endDate,
+        access_mode: 'closed',
       })
       const demoStartups = startupsByCohort(cohortId)
       setStartups(
@@ -191,23 +204,28 @@ export default function CohortDetailPage() {
       .from('cohorts')
       .select('*')
       .eq('id', cohortId)
-      .single()
+      .maybeSingle()
 
     if (cohortError || !cohortData) {
+      if (cohortError) console.error('[S4C Admin] cohort load failed:', cohortError)
       setError('No se encontró la cohorte.')
       setLoading(false)
       return
     }
 
+    const accessMode: 'open' | 'closed' = cohortData.access_mode === 'open' ? 'open' : 'closed'
+
     setCohort({
       ...cohortData,
       milestones: (cohortData.milestones as CohortData['milestones']) || [],
+      access_mode: accessMode,
     })
     setEditForm({
       name: cohortData.name,
       description: cohortData.description || '',
       start_date: cohortData.start_date || '',
       end_date: cohortData.end_date || '',
+      access_mode: accessMode,
     })
 
     // Load startups in this cohort
@@ -274,10 +292,12 @@ export default function CohortDetailPage() {
         description: editForm.description.trim() || null,
         start_date: editForm.start_date || null,
         end_date: editForm.end_date || null,
+        access_mode: editForm.access_mode,
       })
       .eq('id', cohortId)
 
     if (updateError) {
+      console.error('[S4C Admin] cohort update failed:', updateError)
       setError('Error al guardar los cambios.')
     } else {
       setEditing(false)
@@ -291,13 +311,21 @@ export default function CohortDetailPage() {
       if (cohort) setCohort({ ...cohort, status: newStatus })
       return
     }
+    if (!cohort) return
+    const prevStatus = cohort.status
+    // Optimistic update
+    setCohort({ ...cohort, status: newStatus })
+    setStatusError(null)
     const { error: updateError } = await supabase
       .from('cohorts')
       .update({ status: newStatus })
       .eq('id', cohortId)
 
-    if (!updateError && cohort) {
-      setCohort({ ...cohort, status: newStatus })
+    if (updateError) {
+      console.error('[S4C Admin] cohort status update failed:', updateError)
+      // Revert
+      setCohort({ ...cohort, status: prevStatus })
+      setStatusError(`No se pudo actualizar el estado: ${updateError.message}`)
     }
   }
 
@@ -344,12 +372,20 @@ export default function CohortDetailPage() {
     }
     const currentIds = startups.map((s) => s.startup_id)
 
-    // Get startups from the org's founders only
-    const { data: orgProfiles } = await supabase
+    // Get founders in admin's org OR unaffiliated founders (org_id IS NULL)
+    const orgId = appUser?.org_id
+    const profilesQuery = supabase
       .from('profiles')
-      .select('id, full_name')
-      .eq('org_id', appUser?.org_id)
+      .select('id, full_name, org_id')
       .eq('role', 'founder')
+
+    const { data: orgProfiles, error: profilesError } = orgId
+      ? await profilesQuery.or(`org_id.eq.${orgId},org_id.is.null`)
+      : await profilesQuery.is('org_id', null)
+
+    if (profilesError) {
+      console.error('[S4C Admin] profiles load failed:', profilesError)
+    }
 
     const orgFounderIds = (orgProfiles || []).map((p) => p.id)
     const { data: allStartups } = orgFounderIds.length > 0
@@ -357,18 +393,24 @@ export default function CohortDetailPage() {
       : { data: [] }
 
     if (allStartups) {
-      const profileMap: Record<string, string> = {}
-      orgProfiles?.forEach((p) => { profileMap[p.id] = p.full_name })
+      const profileMap: Record<string, { full_name: string; org_id: string | null }> = {}
+      orgProfiles?.forEach((p) => {
+        profileMap[p.id] = { full_name: p.full_name, org_id: p.org_id }
+      })
 
       setAvailableStartups(
         allStartups
           .filter((s) => !currentIds.includes(s.id))
-          .map((s) => ({
-            id: s.id,
-            name: s.name,
-            founder_name: profileMap[s.founder_id] || 'Sin founder',
-            vertical: s.vertical,
-          }))
+          .map((s) => {
+            const prof = profileMap[s.founder_id]
+            return {
+              id: s.id,
+              name: s.name,
+              founder_name: prof?.full_name || 'Sin founder',
+              vertical: s.vertical,
+              unaffiliated: !prof?.org_id,
+            }
+          })
       )
     }
     setLoadingStartups(false)
@@ -379,14 +421,26 @@ export default function CohortDetailPage() {
       setShowAddStartup(false)
       return
     }
+    setAddStartupError(null)
+    setAddingStartupId(startupId)
     const { error: addError } = await supabase
       .from('cohort_startups')
       .insert({ cohort_id: cohortId, startup_id: startupId })
 
     if (addError) {
       console.error('[S4C Admin] cohort_startups insert failed:', addError)
+      const code = addError.code
+      let msg = 'No se pudo agregar. Intenta de nuevo.'
+      if (code === '23505') msg = 'Esta startup ya está en el cohorte.'
+      else if (code === '42501' || /row-level security|permission/i.test(addError.message)) {
+        msg = 'No tienes permiso para agregar esta startup.'
+      }
+      setAddStartupError(`No se pudo agregar: ${msg}`)
+      setAddingStartupId(null)
       return
     }
+    setAddingStartupId(null)
+    setAddStartupError(null)
     setShowAddStartup(false)
     loadCohort()
   }
@@ -510,6 +564,47 @@ export default function CohortDetailPage() {
                 />
               </div>
             </div>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={labelStyle}>Modo de acceso</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                {([
+                  { value: 'open', title: 'Abierto', desc: 'Los founders pueden descubrirlo y solicitar ingreso. Tú apruebas.' },
+                  { value: 'closed', title: 'Cerrado', desc: 'Solo tú puedes asignar startups manualmente.' },
+                ] as const).map((opt) => {
+                  const selected = editForm.access_mode === opt.value
+                  return (
+                    <button
+                      type="button"
+                      key={opt.value}
+                      onClick={() => setEditForm({ ...editForm, access_mode: opt.value })}
+                      style={{
+                        textAlign: 'left',
+                        padding: '0.75rem 0.875rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: selected ? '1px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
+                        background: selected ? 'rgba(31,119,246,0.06)' : 'var(--color-bg-card)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <div style={{
+                        fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
+                        color: selected ? 'var(--color-accent-primary)' : 'var(--color-text-primary)',
+                        marginBottom: '0.25rem',
+                      }}>
+                        {opt.title}
+                      </div>
+                      <div style={{
+                        fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                        color: 'var(--color-text-secondary)', lineHeight: 1.4,
+                      }}>
+                        {opt.desc}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setEditing(false)}
@@ -567,6 +662,14 @@ export default function CohortDetailPage() {
                       <option key={s.value} value={s.value}>{s.label}</option>
                     ))}
                   </select>
+                  {statusError && (
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem',
+                      color: '#DC2626',
+                    }}>
+                      {statusError}
+                    </span>
+                  )}
                 </div>
                 {cohort.description && (
                   <p style={{
@@ -799,7 +902,7 @@ export default function CohortDetailPage() {
             Startups ({startups.length})
           </h2>
           <button
-            onClick={() => { setShowAddStartup(true); loadAvailableStartups() }}
+            onClick={() => { setShowAddStartup(true); setAddStartupError(null); loadAvailableStartups() }}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
               padding: '0.5rem 0.875rem', borderRadius: 'var(--radius-sm)',
@@ -974,7 +1077,7 @@ export default function CohortDetailPage() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: '1rem',
             }}
-            onClick={() => setShowAddStartup(false)}
+            onClick={() => { setShowAddStartup(false); setAddStartupError(null) }}
           >
             <motion.div
               initial={{ scale: 0.95 }}
@@ -1001,12 +1104,23 @@ export default function CohortDetailPage() {
                   Agregar startup a la cohorte
                 </h3>
                 <button
-                  onClick={() => setShowAddStartup(false)}
+                  onClick={() => { setShowAddStartup(false); setAddStartupError(null) }}
                   style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}
                 >
                   <X size={18} />
                 </button>
               </div>
+
+              {addStartupError && (
+                <div style={{
+                  padding: '0.625rem 0.875rem', borderRadius: 'var(--radius-sm)',
+                  background: '#FEF2F2', border: '1px solid #FECACA',
+                  color: '#DC2626', fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                  marginBottom: '0.875rem',
+                }}>
+                  {addStartupError}
+                </div>
+              )}
 
               {/* Invite by email */}
               <div style={{
@@ -1103,10 +1217,23 @@ export default function CohortDetailPage() {
                     >
                       <div>
                         <div style={{
+                          display: 'flex', alignItems: 'center', gap: '0.375rem',
                           fontFamily: 'var(--font-body)', fontSize: '0.875rem',
                           fontWeight: 500, color: 'var(--color-text-primary)',
+                          flexWrap: 'wrap',
                         }}>
                           {s.name}
+                          {s.unaffiliated && (
+                            <span style={{
+                              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                              fontWeight: 500, color: 'var(--color-text-muted)',
+                              background: 'var(--color-bg-muted)',
+                              padding: '0.125rem 0.5rem',
+                              borderRadius: 'var(--radius-xl)',
+                            }}>
+                              Sin org
+                            </span>
+                          )}
                         </div>
                         <div style={{
                           fontFamily: 'var(--font-body)', fontSize: '0.75rem',
@@ -1117,14 +1244,16 @@ export default function CohortDetailPage() {
                       </div>
                       <button
                         onClick={() => handleAddStartup(s.id)}
+                        disabled={addingStartupId === s.id}
                         style={{
                           padding: '0.375rem 0.75rem', borderRadius: 'var(--radius-sm)',
                           background: 'var(--color-accent-primary)', color: '#fff',
                           fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
                           border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+                          opacity: addingStartupId === s.id ? 0.7 : 1,
                         }}
                       >
-                        Agregar
+                        {addingStartupId === s.id ? 'Agregando...' : 'Agregar'}
                       </button>
                     </div>
                   ))}

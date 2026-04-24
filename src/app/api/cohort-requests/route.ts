@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase-server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const supabase = await createSupabaseServer()
 
   // Auth check
@@ -14,18 +14,26 @@ export async function GET() {
     .from('profiles')
     .select('role, org_id')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile) {
     return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 })
   }
 
+  const statusParam = request.nextUrl.searchParams.get('status')
+  const validStatuses = ['pending', 'approved', 'rejected']
+  const statusFilter = statusParam && validStatuses.includes(statusParam) ? statusParam : null
+
   if (profile.role === 'superadmin') {
     // Superadmin: list all requests
-    const { data: requests, error } = await supabase
+    let query = supabase
       .from('cohort_requests')
-      .select('*, cohorts(id, name, org_id), startups(id, name)')
+      .select('*, cohorts(id, name, org_id, start_date, end_date), startups(id, name), profiles:founder_id(id, full_name, email)')
       .order('created_at', { ascending: false })
+
+    if (statusFilter) query = query.eq('status', statusFilter)
+
+    const { data: requests, error } = await query
 
     if (error) {
       return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })
@@ -47,11 +55,15 @@ export async function GET() {
       return NextResponse.json({ requests: [] })
     }
 
-    const { data: requests, error } = await supabase
+    let query = supabase
       .from('cohort_requests')
-      .select('*, cohorts(id, name), startups(id, name)')
+      .select('*, cohorts(id, name, start_date, end_date), startups(id, name), profiles:founder_id(id, full_name, email)')
       .in('cohort_id', cohortIds)
       .order('created_at', { ascending: false })
+
+    if (statusFilter) query = query.eq('status', statusFilter)
+
+    const { data: requests, error } = await query
 
     if (error) {
       return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })
@@ -65,17 +77,21 @@ export async function GET() {
     .from('startups')
     .select('id')
     .eq('founder_id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!startup) {
     return NextResponse.json({ requests: [] })
   }
 
-  const { data: requests, error } = await supabase
+  let founderQuery = supabase
     .from('cohort_requests')
     .select('*, cohorts(id, name)')
     .eq('startup_id', startup.id)
     .order('created_at', { ascending: false })
+
+  if (statusFilter) founderQuery = founderQuery.eq('status', statusFilter)
+
+  const { data: requests, error } = await founderQuery
 
   if (error) {
     return NextResponse.json({ error: 'Error al obtener solicitudes' }, { status: 500 })

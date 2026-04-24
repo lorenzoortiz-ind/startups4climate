@@ -18,6 +18,7 @@ import {
   Lightbulb,
   BookOpen,
   Building2,
+  Inbox,
 } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import S4CLogo from '@/components/S4CLogo'
@@ -29,6 +30,7 @@ import DemoLinkRewriter from '@/components/DemoLinkRewriter'
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/cohortes', label: 'Cohortes', icon: Users },
+  { href: '/admin/cohort-requests', label: 'Solicitudes', icon: Inbox },
   { href: '/admin/reportes', label: 'Reportes', icon: FileBarChart },
   { href: '/admin/benchmarking', label: 'Benchmarking', icon: BarChart3 },
   { href: '/admin/radar', label: 'RADAR', icon: Radar },
@@ -44,6 +46,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [mobileOpen, setMobileOpen] = useState(false)
   const [orgLogo, setOrgLogo] = useState<string | null>(null)
   const [orgName, setOrgName] = useState<string | null>(null)
+  const [pendingRequests, setPendingRequests] = useState<number>(0)
 
   useEffect(() => {
     setMobileOpen(false)
@@ -65,6 +68,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
       })
   }, [appUser?.org_id, isDemo])
+
+  // Pending cohort_requests badge count — admin_org only, skip in demo mode
+  useEffect(() => {
+    if (isDemo) return
+    if (!appUser || appUser.role !== 'admin_org') return
+    let cancelled = false
+    fetch('/api/cohort-requests?status=pending', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((json: { requests?: unknown[] }) => {
+        if (cancelled) return
+        setPendingRequests(Array.isArray(json.requests) ? json.requests.length : 0)
+      })
+      .catch((err) => {
+        console.error('[S4C Admin] Error loading pending cohort_requests count:', err)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [appUser, isDemo, pathname])
 
   // Route guards — admin_org only. Superadmin has its own tree at /superadmin.
   useEffect(() => {
@@ -175,6 +197,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href)
           const Icon = item.icon
+          const showBadge = item.href === '/admin/cohort-requests' && pendingRequests > 0
           return (
             <Link
               key={item.href}
@@ -203,9 +226,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '0.75rem',
                 fontWeight: active ? 600 : 400,
+                flex: 1,
               }}>
                 {item.label}
               </span>
+              {showBadge && (
+                <span
+                  aria-label={`${pendingRequests} solicitudes pendientes`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: 18,
+                    height: 18,
+                    padding: '0 5px',
+                    borderRadius: 999,
+                    background: '#DC2626',
+                    color: '#fff',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.625rem',
+                    fontWeight: 700,
+                    lineHeight: 1,
+                  }}
+                >
+                  {pendingRequests > 99 ? '99+' : pendingRequests}
+                </span>
+              )}
             </Link>
           )
         })}

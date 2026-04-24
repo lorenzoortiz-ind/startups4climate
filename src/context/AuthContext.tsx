@@ -1333,19 +1333,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
               // Ensure a startup row exists. startups requires NOT NULL vertical & country.
               // Derive defaults from the pending diagnostic answers if present.
+              // CHECK constraints:
+              //  - vertical ∈ fintech|healthtech|edtech|agritech_foodtech|cleantech_climatech|
+              //    biotech_deeptech|logistics_mobility|saas_enterprise|social_impact|other
+              //  - stage ∈ pre_incubation|incubation|acceleration|scaling (nullable)
+              const ALLOWED_VERTICALS = new Set([
+                'fintech', 'healthtech', 'edtech', 'agritech_foodtech',
+                'cleantech_climatech', 'biotech_deeptech', 'logistics_mobility',
+                'saas_enterprise', 'social_impact', 'other',
+              ])
+              const ALLOWED_STAGES = new Set([
+                'pre_incubation', 'incubation', 'acceleration', 'scaling',
+              ])
               const pendingAnswers = (pendingDiagnostic?.answers ?? {}) as Record<string, unknown>
-              const derivedVertical =
-                (typeof pendingAnswers.vertical === 'string' && pendingAnswers.vertical) ||
-                'impact'
+              const rawVertical =
+                (typeof pendingAnswers.vertical === 'string' && pendingAnswers.vertical) || null
+              const derivedVertical = rawVertical && ALLOWED_VERTICALS.has(rawVertical)
+                ? rawVertical
+                : 'other'
               const derivedCountry =
                 (typeof pendingAnswers.country === 'string' && pendingAnswers.country) ||
                 'PE'
+              const rawStage = pendingDiagnostic?.perfil_etapa != null
+                ? String(pendingDiagnostic.perfil_etapa)
+                : null
+              const derivedStage = rawStage && ALLOWED_STAGES.has(rawStage) ? rawStage : null
               const { error: startupErr } = await supabase.from('startups').upsert({
                 founder_id: activeUser!.id,
                 name: startup,
-                stage: pendingDiagnostic?.perfil_etapa != null
-                  ? String(pendingDiagnostic.perfil_etapa)
-                  : null,
+                stage: derivedStage,
                 vertical: derivedVertical,
                 country: derivedCountry,
                 diagnostic_score: pendingDiagnostic?.total_score ?? null,

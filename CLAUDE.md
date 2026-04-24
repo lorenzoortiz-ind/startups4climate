@@ -103,14 +103,16 @@ Todas configuradas en Vercel (Production, Preview, Development).
 - Fallback en español si la API falla
 - Costo estimado: ~$27/mes a escala de 200 founders
 
-## Usuarios actuales (demo)
+## Usuarios actuales
 
-Password universal de demo: `S4c2026demo!`
+Password universal: `S4c2026demo!`
 
-- **Superadmin**: lorenzo.ortiz@redesignlab.org
-- **Admins org**: admin@bioinnova.pe, admin@unamad.edu.pe, admin@wiener.edu.pe, admin@demo-incubadora.org
-- **Founders demo**: 17 founders distribuidos entre las 3 universidades (UNAMAD, Wiener, BioInnova)
-- **Botones demo en navbar (solo dev)**: "Demo BioInnova" (→ admin), "Demo Founder" (Ana Quispe → tools)
+- **Superadmins**: lorenzo.ortiz@redesignlab.org, eddie@redesignlab.org
+- **Demo admin_org**: admin@demo.startups4climate.org (org: "Universidad Demo — Startups4Climate")
+- **Demo founder**: founder@demo.startups4climate.org (startup: EcoBio Perú, sin org → puede pedir ingreso a cohorts)
+- **Founders orgánicos**: 13 founders reales registrados desde la landing (sin org asignada aún)
+- **Cohort demo**: "Cohorte Innovación Climática 2026" — active, access_mode='open', org demo
+- **Solicitud pre-cargada**: founder demo ya tiene una solicitud `pending` en el cohort demo para mostrar el flujo de aprobación
 
 ## Identidad visual
 

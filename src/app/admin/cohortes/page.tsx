@@ -22,6 +22,8 @@ interface CohortRow {
   end_date: string | null
   status: string
   created_at: string
+  startup_count: number
+  pending_requests_count: number
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
@@ -38,7 +40,7 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
-const MOCK_DEMO_COHORTS: (CohortRow & { startupsCount: number })[] = DEMO_COHORTS.map((c) => ({
+const MOCK_DEMO_COHORTS: CohortRow[] = DEMO_COHORTS.map((c) => ({
   id: c.id,
   name: c.name,
   description: c.description,
@@ -46,12 +48,13 @@ const MOCK_DEMO_COHORTS: (CohortRow & { startupsCount: number })[] = DEMO_COHORT
   end_date: c.endDate,
   status: c.status,
   created_at: c.startDate,
-  startupsCount: c.startupIds.length,
+  startup_count: c.startupIds.length,
+  pending_requests_count: 0,
 }))
 
 export default function CohortesPage() {
   const { appUser, isDemo } = useAuth()
-  const [cohorts, setCohorts] = useState<(CohortRow & { startupsCount: number })[]>([])
+  const [cohorts, setCohorts] = useState<CohortRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -70,39 +73,16 @@ export default function CohortesPage() {
       setError(null)
 
       try {
-        // Fetch cohorts for this org
+        // Single query against the cohorts_with_counts view (RLS inherited via security_invoker)
         const { data: cohortsData, error: cohortErr } = await supabase
-          .from('cohorts')
-          .select('*')
+          .from('cohorts_with_counts')
+          .select('id, name, description, start_date, end_date, status, created_at, startup_count, pending_requests_count')
           .eq('org_id', appUser!.org_id!)
           .order('created_at', { ascending: false })
 
         if (cohortErr) throw cohortErr
 
-        if (!cohortsData || cohortsData.length === 0) {
-          setCohorts([])
-          setLoading(false)
-          return
-        }
-
-        // Get startup counts per cohort
-        const cohortIds = cohortsData.map((c) => c.id)
-        const { data: assignments } = await supabase
-          .from('cohort_startups')
-          .select('cohort_id')
-          .in('cohort_id', cohortIds)
-
-        const countMap: Record<string, number> = {}
-        assignments?.forEach((a) => {
-          countMap[a.cohort_id] = (countMap[a.cohort_id] || 0) + 1
-        })
-
-        setCohorts(
-          cohortsData.map((c) => ({
-            ...c,
-            startupsCount: countMap[c.id] || 0,
-          }))
-        )
+        setCohorts((cohortsData ?? []) as CohortRow[])
       } catch (err) {
         console.error('[S4C Admin] Error loading cohorts:', err)
         setError('No se pudieron cargar las cohortes. Intenta recargar la página.')
@@ -338,7 +318,7 @@ export default function CohortesPage() {
                           fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
                           color: 'var(--color-text-secondary)',
                         }}>
-                          {cohort.startupsCount} startups
+                          {cohort.startup_count} startups
                         </span>
                       </div>
                       {cohort.start_date && cohort.end_date && (

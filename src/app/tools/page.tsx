@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle2,
@@ -21,8 +22,10 @@ import {
   FileText,
   Target,
   Sparkles,
+  Calendar,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
+import { supabase } from '@/lib/supabase'
 import {
   Button,
   Card,
@@ -240,11 +243,58 @@ function ToolCard({
 }
 
 /* ─── Main dashboard ─── */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+interface ActiveCohort {
+  cohortId: string
+  name: string
+  status: string
+  startDate: string | null
+  endDate: string | null
+  orgName: string | null
+  orgLogoUrl: string | null
+}
+
+const SPANISH_MONTHS = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+] as const
+
+function formatCohortDateRange(start: string | null, end: string | null): string | null {
+  if (!start && !end) return null
+  const fmt = (iso: string, withYear: boolean): string => {
+    const d = new Date(iso)
+    if (Number.isNaN(d.getTime())) return ''
+    const day = d.getUTCDate()
+    const month = SPANISH_MONTHS[d.getUTCMonth()]
+    return withYear ? `${day} ${month} ${d.getUTCFullYear()}` : `${day} ${month}`
+  }
+  if (start && end) {
+    const sd = new Date(start)
+    const ed = new Date(end)
+    const sameYear = sd.getUTCFullYear() === ed.getUTCFullYear()
+    return `${fmt(start, !sameYear)} – ${fmt(end, true)}`
+  }
+  return fmt((start || end) as string, true)
+}
+
+function cohortProgressPct(start: string | null, end: string | null): number | null {
+  if (!start || !end) return null
+  const s = new Date(start).getTime()
+  const e = new Date(end).getTime()
+  if (Number.isNaN(s) || Number.isNaN(e) || e <= s) return null
+  const now = Date.now()
+  if (now <= s) return 0
+  if (now >= e) return 100
+  return Math.round(((now - s) / (e - s)) * 100)
+}
+
 export default function ToolsDashboard() {
   const { user, isDemo } = useAuth()
   const [progress, setProgress] = useState<ProgressMap>({})
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'Todos'>('Todos')
   const [demoBannerDismissed, setDemoBannerDismissed] = useState(false)
+  const [activeCohort, setActiveCohort] = useState<ActiveCohort | null>(null)
 
   useEffect(() => {
     if (user) {
@@ -255,6 +305,81 @@ export default function ToolsDashboard() {
           setProgress(getProgress(user.id))
         }
       })
+    }
+  }, [user, isDemo])
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadActiveCohort() {
+      if (!user || isDemo) return
+      if (!UUID_RE.test(user.id)) return
+      try {
+        const { data: startupRow, error: startupErr } = await supabase
+          .from('startups')
+          .select('id')
+          .eq('founder_id', user.id)
+          .maybeSingle()
+        if (startupErr) {
+          console.error('[S4C Sync] active cohort: startup lookup', startupErr)
+          return
+        }
+        if (!startupRow?.id) return
+
+        const { data, error } = await supabase
+          .from('cohort_startups')
+          .select(
+            'cohorts!inner(id, name, status, start_date, end_date, organizations(name, logo_url))'
+          )
+          .eq('startup_id', startupRow.id)
+
+        if (error) {
+          console.error('[S4C Sync] active cohort: cohort_startups query', error)
+          return
+        }
+        if (cancelled) return
+
+        type CohortEmbed = {
+          id: string
+          name: string
+          status: string
+          start_date: string | null
+          end_date: string | null
+          organizations: { name: string; logo_url: string | null } | { name: string; logo_url: string | null }[] | null
+        }
+        type Row = { cohorts: CohortEmbed | CohortEmbed[] | null }
+
+        const rows = (data ?? []) as Row[]
+        const candidates: ActiveCohort[] = []
+        for (const r of rows) {
+          const cohortRaw = Array.isArray(r.cohorts) ? r.cohorts[0] : r.cohorts
+          if (!cohortRaw) continue
+          if (cohortRaw.status !== 'active' && cohortRaw.status !== 'planned') continue
+          const orgRaw = Array.isArray(cohortRaw.organizations)
+            ? cohortRaw.organizations[0]
+            : cohortRaw.organizations
+          candidates.push({
+            cohortId: cohortRaw.id,
+            name: cohortRaw.name,
+            status: cohortRaw.status,
+            startDate: cohortRaw.start_date,
+            endDate: cohortRaw.end_date,
+            orgName: orgRaw?.name ?? null,
+            orgLogoUrl: orgRaw?.logo_url ?? null,
+          })
+        }
+        candidates.sort((a, b) => {
+          const aTs = a.startDate ? new Date(a.startDate).getTime() : 0
+          const bTs = b.startDate ? new Date(b.startDate).getTime() : 0
+          return bTs - aTs
+        })
+        if (candidates.length > 0) setActiveCohort(candidates[0])
+      } catch (err) {
+        console.error('[S4C Sync] active cohort: unexpected', err)
+      }
+    }
+    loadActiveCohort()
+    return () => {
+      cancelled = true
     }
   }, [user, isDemo])
 
@@ -567,6 +692,179 @@ export default function ToolsDashboard() {
           />
         </div>
       </motion.section>
+
+      {/* ─── Tu cohorte actual ─── */}
+      {activeCohort && (
+        <motion.section
+          {...springReveal}
+          transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.12 }}
+          style={{ marginBottom: '1.5rem' }}
+        >
+          <Card
+            variant="default"
+            accent="var(--color-accent-secondary)"
+            padding="none"
+            style={{
+              padding: '1.5rem 1.75rem',
+              background: 'linear-gradient(135deg, rgba(31,119,246,0.06), var(--color-paper))',
+              border: '1px solid rgba(31,119,246,0.2)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'var(--color-accent-secondary)',
+                  color: 'var(--color-paper)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Building2 size={20} strokeWidth={2} />
+              </div>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 700,
+                    color: 'var(--color-accent-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  Tu cohorte actual
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 700,
+                    color: 'var(--color-ink)',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.25,
+                    marginBottom: '0.375rem',
+                  }}
+                >
+                  {activeCohort.name}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.625rem',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {activeCohort.orgName && (
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.375rem',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-sm)',
+                        color: 'var(--color-text-secondary)',
+                      }}
+                    >
+                      {activeCohort.orgLogoUrl ? (
+                        <Image
+                          src={activeCohort.orgLogoUrl}
+                          alt={activeCohort.orgName}
+                          width={18}
+                          height={18}
+                          style={{ borderRadius: 3, objectFit: 'contain' }}
+                        />
+                      ) : (
+                        <Building2 size={13} color="var(--color-text-muted)" />
+                      )}
+                      {activeCohort.orgName}
+                    </span>
+                  )}
+                  <Chip
+                    variant={activeCohort.status === 'active' ? 'success' : 'info'}
+                    size="xs"
+                  >
+                    {activeCohort.status === 'active' ? 'Activa' : 'Próxima'}
+                  </Chip>
+                  {formatCohortDateRange(activeCohort.startDate, activeCohort.endDate) && (
+                    <Chip variant="default" size="xs" icon={Calendar}>
+                      {formatCohortDateRange(activeCohort.startDate, activeCohort.endDate)}
+                    </Chip>
+                  )}
+                </div>
+              </div>
+              <Link
+                href={`/tools/programas/${activeCohort.cohortId}`}
+                style={{ textDecoration: 'none', flexShrink: 0 }}
+              >
+                <Button variant="secondary" size="sm" icon={<ArrowRight size={14} />}>
+                  Ver detalles
+                </Button>
+              </Link>
+            </div>
+
+            {cohortProgressPct(activeCohort.startDate, activeCohort.endDate) !== null && (
+              <div
+                style={{
+                  paddingTop: '0.75rem',
+                  borderTop: '1px solid var(--color-border)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    fontWeight: 600,
+                    color: 'var(--color-text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                  }}
+                >
+                  <span>Progreso del programa</span>
+                  <span>{cohortProgressPct(activeCohort.startDate, activeCohort.endDate)}%</span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: 4,
+                    borderRadius: 'var(--radius-full)',
+                    background: 'var(--color-border)',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{
+                      width: `${cohortProgressPct(activeCohort.startDate, activeCohort.endDate)}%`,
+                    }}
+                    transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+                    style={{
+                      height: '100%',
+                      background: 'var(--color-accent-secondary)',
+                      borderRadius: 'var(--radius-full)',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </Card>
+        </motion.section>
+      )}
 
       {/* ─── Passport + Continue row ─── */}
       <motion.section

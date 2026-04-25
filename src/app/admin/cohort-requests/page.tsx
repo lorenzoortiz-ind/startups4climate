@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Check, Inbox, Loader2, X } from 'lucide-react'
@@ -68,6 +69,8 @@ function formatDateTime(value: string | null | undefined): string {
 }
 
 export default function AdminCohortRequestsPage() {
+  const pathname = usePathname()
+  const adminBase = pathname.startsWith('/demo-admin') ? '/demo-admin' : '/admin'
   const [activeTab, setActiveTab] = useState<RequestStatus>('pending')
   const [rows, setRows] = useState<CohortRequestRow[]>([])
   const [counts, setCounts] = useState<CountsMap>({ pending: 0, approved: 0, rejected: 0 })
@@ -342,7 +345,7 @@ export default function AdminCohortRequestsPage() {
                 Cuando un founder postule a una cohorte abierta, aparecerá aquí para que la revises.
               </p>
               <Link
-                href="/admin/cohortes"
+                href={`${adminBase}/cohortes`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

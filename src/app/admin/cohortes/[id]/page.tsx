@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -120,6 +120,8 @@ const labelStyle: React.CSSProperties = {
 export default function CohortDetailPage() {
   const params = useParams()
   const router = useRouter()
+  const pathname = usePathname()
+  const cohortsHref = pathname.startsWith('/demo-admin') ? '/demo-admin/cohortes' : '/admin/cohortes'
   const { appUser, isDemo } = useAuth()
   const cohortId = params.id as string
 
@@ -332,7 +334,7 @@ export default function CohortDetailPage() {
   const handleDelete = async () => {
     if (isDemo) {
       setShowDeleteConfirm(false)
-      router.push('/admin/cohortes')
+      router.push(cohortsHref)
       return
     }
     setDeleting(true)
@@ -344,7 +346,7 @@ export default function CohortDetailPage() {
       setError('Error al eliminar la cohorte.')
       setDeleting(false)
     } else {
-      router.push('/admin/cohortes')
+      router.push(cohortsHref)
     }
   }
 
@@ -460,7 +462,7 @@ export default function CohortDetailPage() {
         <p style={{ fontFamily: 'var(--font-body)', color: 'var(--color-text-secondary)' }}>
           {error || 'Cohorte no encontrada.'}
         </p>
-        <Link href="/admin/cohortes" style={{
+        <Link href={cohortsHref} style={{
           color: 'var(--color-accent-primary)', fontFamily: 'var(--font-body)',
           fontSize: '0.875rem', marginTop: '1rem', display: 'inline-block',
         }}>
@@ -481,7 +483,7 @@ export default function CohortDetailPage() {
     >
       {/* Back link */}
       <Link
-        href="/admin/cohortes"
+        href={cohortsHref}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
@@ -700,7 +702,7 @@ export default function CohortDetailPage() {
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <Link
-                  href={`/admin/cohortes/${cohort.id}/demo-day`}
+                  href={`${cohortsHref}/${cohort.id}/demo-day`}
                   style={{
                     padding: '0.5rem 0.875rem', borderRadius: 'var(--radius-sm)',
                     border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.08)',

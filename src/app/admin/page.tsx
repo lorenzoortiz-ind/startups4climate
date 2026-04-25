@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -150,6 +151,8 @@ export default function AdminDashboard() {
 
 function AdminOrgDashboard() {
   const { appUser, isDemo } = useAuth()
+  const pathname = usePathname()
+  const adminBase = pathname.startsWith('/demo-admin') ? '/demo-admin' : '/admin'
   const [metrics, setMetrics] = useState<OrgMetrics>({
     totalStartups: 0,
     activeCohorts: 0,
@@ -714,7 +717,7 @@ function AdminOrgDashboard() {
             </h3>
           </div>
           <Link
-            href="/admin/cohortes/nueva"
+            href={`${adminBase}/cohortes/nueva`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',

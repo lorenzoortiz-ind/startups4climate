@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   ChevronLeft,
@@ -59,6 +59,8 @@ const cardStyle: React.CSSProperties = {
 
 export default function NuevaCohorte() {
   const router = useRouter()
+  const pathname = usePathname()
+  const cohortsHref = pathname.startsWith('/demo-admin') ? '/demo-admin/cohortes' : '/admin/cohortes'
   const { appUser } = useAuth()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -114,7 +116,7 @@ export default function NuevaCohorte() {
         console.error('[S4C Admin] cohort insert failed:', insertError)
         setError('Error al crear la cohorte. Intenta de nuevo.')
       } else {
-        router.push('/admin/cohortes')
+        router.push(cohortsHref)
       }
     } catch {
       setError('Error inesperado. Intenta de nuevo.')
@@ -132,7 +134,7 @@ export default function NuevaCohorte() {
     >
       {/* Back link */}
       <Link
-        href="/admin/cohortes"
+        href={cohortsHref}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
@@ -421,7 +423,7 @@ export default function NuevaCohorte() {
           gap: '0.75rem',
         }}>
           <Link
-            href="/admin/cohortes"
+            href={cohortsHref}
             style={{
               display: 'inline-flex', alignItems: 'center',
               padding: '0.625rem 1.25rem', borderRadius: 'var(--radius-sm)',

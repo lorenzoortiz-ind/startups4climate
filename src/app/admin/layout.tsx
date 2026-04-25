@@ -127,9 +127,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!appUser) return null
   if (appUser.role !== 'admin_org') return null
 
+  // When browsing under /demo-admin/*, the browser URL has that prefix
+  // but nav hrefs use /admin/*. Normalize the pathname for comparisons
+  // and build hrefs dynamically so DemoLinkRewriter isn't load-bearing.
+  const demoPrefix = pathname.startsWith('/demo-admin') ? '/demo-admin'
+    : pathname.startsWith('/demo-tools') ? '/demo-tools'
+    : null
+  const normPath = demoPrefix
+    ? '/admin' + pathname.slice(demoPrefix.length)
+    : pathname
+  const navHref = (adminHref: string) =>
+    demoPrefix ? demoPrefix + adminHref.slice('/admin'.length) : adminHref
+
   const isActive = (href: string) => {
-    if (href === '/admin') return pathname === '/admin'
-    return pathname.startsWith(href)
+    if (href === '/admin') return normPath === '/admin'
+    return normPath.startsWith(href)
   }
 
   const sidebarContent = (
@@ -201,7 +213,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={navHref(item.href)}
               style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
                 padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-full)',
@@ -285,7 +297,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        <Link href="/tools" style={{
+        <Link href={demoPrefix === '/demo-admin' ? '/demo-tools' : '/tools'} style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)',
           textDecoration: 'none', transition: 'color 0.15s',

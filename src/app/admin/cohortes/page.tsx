@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -54,6 +55,8 @@ const MOCK_DEMO_COHORTS: CohortRow[] = DEMO_COHORTS.map((c) => ({
 
 export default function CohortesPage() {
   const { appUser, isDemo } = useAuth()
+  const pathname = usePathname()
+  const adminBase = pathname.startsWith('/demo-admin') ? '/demo-admin' : '/admin'
   const [cohorts, setCohorts] = useState<CohortRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -195,7 +198,7 @@ export default function CohortesPage() {
           </p>
         </div>
         <Link
-          href="/admin/cohortes/nueva"
+          href={`${adminBase}/cohortes/nueva`}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             padding: '0.5rem 1rem', borderRadius: 8,
@@ -242,7 +245,7 @@ export default function CohortesPage() {
             Crea tu primera cohorte para comenzar a agrupar y dar seguimiento a las startups de tu programa.
           </p>
           <Link
-            href="/admin/cohortes/nueva"
+            href={`${adminBase}/cohortes/nueva`}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.5rem 1rem', borderRadius: 8,
@@ -262,7 +265,7 @@ export default function CohortesPage() {
             return (
               <Link
                 key={cohort.id}
-                href={`/admin/cohortes/${cohort.id}`}
+                href={`${adminBase}/cohortes/${cohort.id}`}
                 style={{ textDecoration: 'none' }}
               >
                 <motion.div

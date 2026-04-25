@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -467,6 +468,8 @@ function OpportunityCard({
 
 /* ─── Main page ─── */
 export default function OportunidadesPage() {
+  const pathname = usePathname()
+  const toolsBase = pathname.startsWith('/demo-tools') ? '/demo-tools' : '/tools'
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('Todas')
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('Vigentes')
   // apiScores maps opportunityId → { matchScore, matchBreakdown, aiBlurb? }
@@ -571,7 +574,7 @@ export default function OportunidadesPage() {
   return (
     <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
       <Link
-        href="/tools"
+        href={toolsBase}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',

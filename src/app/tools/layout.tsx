@@ -283,6 +283,9 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   const { user, appUser, loading, logout, isDemo } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const demoPrefix = pathname.startsWith('/demo-tools') ? '/demo-tools' : null
+  const toolsNavHref = (href: string) =>
+    demoPrefix ? demoPrefix + href.slice('/tools'.length) : href
   const searchParams = useSearchParams()
   const stageParam = searchParams.get('stage')
   const currentSearchStage = stageParam ? parseInt(stageParam, 10) : null
@@ -548,7 +551,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {profileIncomplete && (
         <Link
-          href="/tools/perfil"
+          href={toolsNavHref('/tools/perfil')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -617,7 +620,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           </div>
         ) : (
           <Link
-            href="/tools/programas"
+            href={toolsNavHref('/tools/programas')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -687,12 +690,13 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         { label: 'Passport', icon: FileText, href: '/tools/passport', color: '#1F77F6' },
         { label: 'KPIs semanales', icon: LineChart, href: '/tools/kpis', color: '#6366F1' },
       ].map((item) => {
-        const active = pathname === item.href
+        const normPathname = demoPrefix ? '/tools' + pathname.slice(demoPrefix.length) : pathname
+        const active = normPathname === item.href
         const IconComp = item.icon
         return (
           <Link
             key={item.href}
-            href={item.href}
+            href={toolsNavHref(item.href)}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -728,33 +732,39 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       })}
 
       {/* Recursos */}
-      <Link
-        href="/tools/recursos"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.5rem 0.75rem',
-          borderRadius: 9999,
-          background: pathname === '/tools/recursos' ? '#DA4E24' : 'transparent',
-          textDecoration: 'none',
-          color: pathname === '/tools/recursos' ? '#FFFFFF' : SB.text,
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.6875rem',
-          fontWeight: pathname === '/tools/recursos' ? 600 : 400,
-          transition: 'all 0.15s',
-          marginBottom: '0.125rem',
-        }}
-        onMouseEnter={(e) => {
-          if (pathname !== '/tools/recursos') e.currentTarget.style.background = SB.hoverBg
-        }}
-        onMouseLeave={(e) => {
-          if (pathname !== '/tools/recursos') e.currentTarget.style.background = 'transparent'
-        }}
-      >
+      {(() => {
+        const normPathname = demoPrefix ? '/tools' + pathname.slice(demoPrefix.length) : pathname
+        const recursosActive = normPathname === '/tools/recursos'
+        return (
+        <Link
+          href={toolsNavHref('/tools/recursos')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: 9999,
+            background: recursosActive ? '#DA4E24' : 'transparent',
+            textDecoration: 'none',
+            color: recursosActive ? '#FFFFFF' : SB.text,
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.6875rem',
+            fontWeight: recursosActive ? 600 : 400,
+            transition: 'all 0.15s',
+            marginBottom: '0.125rem',
+          }}
+          onMouseEnter={(e) => {
+            if (!recursosActive) e.currentTarget.style.background = SB.hoverBg
+          }}
+          onMouseLeave={(e) => {
+            if (!recursosActive) e.currentTarget.style.background = 'transparent'
+          }}
+        >
         <BookOpen size={18} />
         Recursos
-      </Link>
+        </Link>
+        )
+      })()}
 
       <div style={{ height: 1, background: SB.divider, margin: '0.375rem 0.5rem 0.5rem' }} />
 
@@ -792,7 +802,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
         {/* Perfil */}
         <Link
-          href="/tools/perfil"
+          href={toolsNavHref('/tools/perfil')}
           style={{
             display: 'flex',
             alignItems: 'center',

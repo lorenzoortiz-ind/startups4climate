@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -162,6 +163,8 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
 
 export default function RadarPage() {
   const { appUser } = useAuth()
+  const pathname = usePathname()
+  const toolsBase = pathname.startsWith('/demo-tools') ? '/demo-tools' : '/tools'
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [items, setItems] = useState<NewsRow[]>([])
   const [startup, setStartup] = useState<{ vertical: string | null; country: string | null } | null>(null)
@@ -358,7 +361,7 @@ export default function RadarPage() {
   return (
     <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
       <Link
-        href="/tools"
+        href={toolsBase}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
           fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',

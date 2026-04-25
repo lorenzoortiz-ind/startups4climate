@@ -15,7 +15,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { DEMO_ECOSYSTEM_ACTORS } from '@/lib/demo/admin-fixtures'
 import { supabase } from '@/lib/supabase'
 
@@ -227,6 +227,8 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
 export default function AdminRadarPage() {
   const { appUser, isDemo } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
+  const adminBase = pathname.startsWith('/demo-admin') ? '/demo-admin' : '/admin'
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [activeCategory, setActiveCategory] = useState<Category | 'Todos'>('Todos')
   const [liveNews, setLiveNews] = useState<NewsItem[] | null>(null)
@@ -358,7 +360,7 @@ export default function AdminRadarPage() {
   }, [appUser?.org_id])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
-    router.replace('/admin')
+    router.replace(adminBase)
     return null
   }
 

@@ -19,7 +19,7 @@ import {
   Users,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 /* ─── Types ─── */
@@ -345,6 +345,8 @@ interface LiveOpportunity extends Opportunity {
 export default function AdminOportunidadesPage() {
   const { appUser, isDemo } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
+  const adminBase = pathname.startsWith('/demo-admin') ? '/demo-admin' : '/admin'
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('Todos')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Vigentes')
   const [liveOpps, setLiveOpps] = useState<LiveOpportunity[] | null>(null)
@@ -441,7 +443,7 @@ export default function AdminOportunidadesPage() {
   }, [appUser])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
-    router.replace('/admin')
+    router.replace(adminBase)
     return null
   }
 

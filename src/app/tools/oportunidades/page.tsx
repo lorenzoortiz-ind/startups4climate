@@ -56,9 +56,6 @@ interface OpportunityRow {
   application_url: string | null
   deadline: string | null
   is_rolling: boolean | null
-  geographic_scope: string | null
-  vertical_tags: string[] | null
-  stage_requirements: string[] | null
 }
 
 interface ScoredApiOpportunity extends OpportunityRow {
@@ -484,7 +481,7 @@ export default function OportunidadesPage() {
       const { data: oppsData, error: oppsError } = await supabase
         .from('opportunities')
         .select(
-          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling,geographic_scope,vertical_tags,stage_requirements'
+          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
         )
         .eq('is_active', true)
         .order('deadline', { ascending: true, nullsFirst: false })
@@ -553,9 +550,6 @@ export default function OportunidadesPage() {
             score_bonus: 0,
           },
           aiBlurb: scored?.aiBlurb,
-          geographic_scope: r.geographic_scope,
-          vertical_tags: r.vertical_tags,
-          stage_requirements: r.stage_requirements,
         }
       }),
     [rows, apiScores]

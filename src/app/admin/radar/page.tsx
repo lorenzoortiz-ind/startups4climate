@@ -240,7 +240,7 @@ export default function AdminRadarPage() {
     ;(async () => {
       const { data, error } = await supabase
         .from('news_items')
-        .select('title, source_name, source_url, published_at, content_type, summary, tags, vertical_tags, created_at')
+        .select('title, source_name, source_url, published_at, content_type, summary, tags, vertical, scraped_at')
         .eq('is_active', true)
         .order('published_at', { ascending: false })
         .limit(40)
@@ -290,12 +290,11 @@ export default function AdminRadarPage() {
         return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
       }
 
-      const isRelevantForCohort = (verticalTagsField: string[] | null) => {
-        if (verticals.length === 0 || !verticalTagsField || verticalTagsField.length === 0) return false
-        return verticals.some((v) =>
-          verticalTagsField.some(
-            (t) => t.toLowerCase().includes(v.toLowerCase()) || v.toLowerCase().includes(t.toLowerCase())
-          )
+      const isRelevantForCohort = (itemVertical: string | null) => {
+        if (verticals.length === 0 || !itemVertical) return false
+        const v = itemVertical.toLowerCase()
+        return verticals.some(
+          (cv) => v.includes(cv.toLowerCase()) || cv.toLowerCase().includes(v)
         )
       }
 
@@ -306,8 +305,8 @@ export default function AdminRadarPage() {
         category: mapType(r.content_type as string | null, r.tags as string[] | null),
         excerpt: (r.summary as string) || '',
         url: (r.source_url as string) || null,
-        relevantForCohort: isRelevantForCohort(r.vertical_tags as string[] | null),
-        verticalTags: (r.vertical_tags as string[] | null) ?? null,
+        relevantForCohort: isRelevantForCohort(r.vertical as string | null),
+        verticalTags: r.vertical ? [r.vertical as string] : null,
       }))
 
       // Sort cohort-relevant items first
@@ -319,8 +318,8 @@ export default function AdminRadarPage() {
 
       if (!cancelled) {
         setLiveNews(mapped)
-        if (data[0]?.created_at) {
-          const ts = data[0].created_at as string
+        if (data[0]?.scraped_at) {
+          const ts = data[0].scraped_at as string
           setLastUpdated(
             new Date(ts).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })
           )

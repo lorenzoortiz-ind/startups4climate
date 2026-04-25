@@ -23,9 +23,6 @@ interface OpportunityRow {
   application_url: string | null
   deadline: string | null
   is_rolling: boolean | null
-  geographic_scope: string | null
-  vertical_tags: string[] | null
-  stage_requirements: string[] | null
 }
 
 interface MatchBreakdown {
@@ -53,8 +50,8 @@ function scoreOpportunity(
   op: OpportunityRow,
   startup: StartupProfile
 ): { score: number; breakdown: MatchBreakdown } {
-  // vertical_match: use vertical_tags if present, else eligible_verticals
-  const verticalTags: string[] = op.vertical_tags ?? op.eligible_verticals ?? []
+  // vertical_match: use eligible_verticals
+  const verticalTags: string[] = op.eligible_verticals ?? []
   let vertical_match = 0
   if (startup.vertical) {
     const v = startup.vertical.toLowerCase()
@@ -69,8 +66,8 @@ function scoreOpportunity(
     }
   }
 
-  // stage_match: use stage_requirements if present, else eligible_stages
-  const stageReqs: string[] = op.stage_requirements ?? op.eligible_stages ?? []
+  // stage_match: use eligible_stages
+  const stageReqs: string[] = op.eligible_stages ?? []
   let stage_match = 0
   if (stageReqs.length === 0) {
     // Open to all stages
@@ -84,15 +81,11 @@ function scoreOpportunity(
   // country_match: use eligible_countries
   const countries: string[] = op.eligible_countries ?? []
   let country_match = 0
-  const geoScope = op.geographic_scope ?? ''
   if (startup.country) {
     if (countries.includes(startup.country)) {
       country_match = 20
-    } else if (
-      countries.length === 0 ||
-      geoScope.toLowerCase().includes('latam') ||
-      geoScope.toLowerCase().includes('regional')
-    ) {
+    } else if (countries.length === 0) {
+      // Open to all countries — treat as LATAM match
       country_match = 15
     }
   } else {
@@ -166,7 +159,7 @@ export async function POST(request: NextRequest) {
       const { data: opps, error: oppsError } = await supabase
         .from('opportunities')
         .select(
-          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling,geographic_scope,vertical_tags,stage_requirements'
+          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
         )
         .eq('is_active', true)
         .order('deadline', { ascending: true, nullsFirst: false })
@@ -203,7 +196,7 @@ export async function POST(request: NextRequest) {
     let oppsQuery = supabase
       .from('opportunities')
       .select(
-        'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling,geographic_scope,vertical_tags,stage_requirements'
+        'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
       )
       .eq('is_active', true)
 

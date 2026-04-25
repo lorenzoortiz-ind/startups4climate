@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import {
   Radio,
@@ -29,13 +29,8 @@ interface NewsItem {
   category: Category
   excerpt: string
   url?: string | null
-}
-
-interface ProgramItem {
-  title: string
-  source: string
-  date: string
-  excerpt: string
+  relevantForCohort?: boolean
+  verticalTags?: string[] | null
 }
 
 /* ─── Category styling ─── */
@@ -59,93 +54,6 @@ const CATEGORY_ACCENT: Record<Category, string> = {
   Tendencia: '#6366F1',
   Programa: '#EC4899',
 }
-
-/* ─── Placeholder data ─── */
-const NEWS_ITEMS: NewsItem[] = [
-  {
-    title: 'BID Lab anuncia fondo de $50M para startups de impacto en LATAM',
-    source: 'TechCrunch LATAM',
-    date: '25 Mar 2026',
-    category: 'Inversión',
-    excerpt: 'El fondo se enfocará en startups de climatech, fintech inclusivo y healthtech con operaciones en al menos dos países de la región.',
-  },
-  {
-    title: 'Chile lanza nuevo programa de visas para founders internacionales',
-    source: 'Diario Financiero',
-    date: '24 Mar 2026',
-    category: 'Regulación',
-    excerpt: 'La visa Start-Up Chile Global permitirá a emprendedores de cualquier nacionalidad residir y operar sus startups desde Chile por 2 años.',
-  },
-  {
-    title: 'El mercado de créditos de carbono en LATAM crecerá 340% para 2030',
-    source: 'Bloomberg Línea',
-    date: '23 Mar 2026',
-    category: 'Tendencia',
-    excerpt: 'Un nuevo reporte de McKinsey proyecta que Latinoamérica se posicionará como el mayor proveedor de créditos de carbono del mundo.',
-  },
-  {
-    title: 'Google for Startups abre convocatoria para aceleradora climática regional',
-    source: 'Contxto',
-    date: '22 Mar 2026',
-    category: 'Programa',
-    excerpt: 'El programa de 12 semanas incluye $200K en créditos cloud, mentoría y acceso a la red global de Google para startups de impacto ambiental.',
-  },
-  {
-    title: 'Colombia aprueba ley de sandbox regulatorio para fintechs',
-    source: 'La República',
-    date: '21 Mar 2026',
-    category: 'Regulación',
-    excerpt: 'El nuevo marco permite a startups fintech operar bajo supervisión reducida durante 24 meses mientras validan sus modelos de negocio.',
-  },
-  {
-    title: 'SoftBank LATAM Fund III cierra en $1.2B con foco en AI y clima',
-    source: 'Reuters',
-    date: '20 Mar 2026',
-    category: 'Inversión',
-    excerpt: 'El tercer fondo regional de SoftBank priorizará inversiones en inteligencia artificial aplicada y soluciones climáticas escalables.',
-  },
-  {
-    title: 'Startups de agritech en LATAM recaudan récord de $800M en 2025',
-    source: 'AgFunder News',
-    date: '19 Mar 2026',
-    category: 'Tendencia',
-    excerpt: 'Brasil, Argentina y México lideran la inversión en tecnología agrícola, con soluciones de agricultura regenerativa captando el mayor interés.',
-  },
-  {
-    title: 'CORFO lanza programa Semilla Inicia 2026 con $40K por startup',
-    source: 'Pulso',
-    date: '18 Mar 2026',
-    category: 'Programa',
-    excerpt: 'El programa ofrece financiamiento no reembolsable de hasta $40,000 USD para startups en etapa temprana con operaciones en Chile.',
-  },
-]
-
-const PROGRAM_ITEMS: ProgramItem[] = [
-  {
-    title: 'IADB publica guía actualizada de mejores prácticas para programas de incubación en LATAM',
-    source: 'Inter-American Development Bank',
-    date: '24 Mar 2026',
-    excerpt: 'La guía incluye marcos de medición de impacto, modelos de sostenibilidad financiera y estrategias de vinculación con el sector privado.',
-  },
-  {
-    title: 'Convocatoria abierta: fondos de matching para aceleradoras que apoyen startups climáticas',
-    source: 'Climate Policy Initiative',
-    date: '22 Mar 2026',
-    excerpt: 'Programas de incubación y aceleración en LATAM pueden postular a fondos de co-inversión de hasta $500K para apoyar startups de su portafolio.',
-  },
-  {
-    title: 'Nuevo estándar de medición de impacto para programas de apoyo a emprendimiento',
-    source: 'ANDE (Aspen Network)',
-    date: '20 Mar 2026',
-    excerpt: 'El marco ANDE 2026 propone métricas estandarizadas para medir el impacto de incubadoras y aceleradoras en el ecosistema.',
-  },
-  {
-    title: 'México anuncia incentivos fiscales para organizaciones que operen programas de aceleración',
-    source: 'El Economista',
-    date: '18 Mar 2026',
-    excerpt: 'Las organizaciones que operen programas certificados de aceleración podrán deducir hasta el 150% de su inversión en apoyo a startups.',
-  },
-]
 
 const CATEGORIES: (Category | 'Todos')[] = ['Todos', 'Inversión', 'Regulación', 'Tendencia', 'Programa']
 
@@ -233,6 +141,19 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
         <CategoryPill category={item.category} />
+        {item.relevantForCohort && (
+          <span
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.2rem',
+              padding: '0.1rem 0.45rem', borderRadius: 999,
+              background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)',
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
+              fontWeight: 600, color: '#6366F1', whiteSpace: 'nowrap',
+            }}
+          >
+            Relevante para tu cohorte
+          </span>
+        )}
         <span
           style={{
             fontFamily: 'var(--font-body)',
@@ -301,101 +222,6 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
   )
 }
 
-function ProgramCard({ item, index }: { item: ProgramItem; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: 0.05 + index * 0.06, ease: 'easeOut' }}
-      style={{
-        padding: '1.25rem',
-        borderRadius: 12,
-        background: 'var(--color-bg-card)',
-        borderTop: '1px solid var(--color-border)',
-        borderRight: '1px solid var(--color-border)',
-        borderBottom: '1px solid var(--color-border)',
-        borderLeft: '3px solid #6366F1',
-        boxShadow: 'var(--shadow-card)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-        cursor: 'default',
-        transition: 'all 0.2s ease',
-        overflowWrap: 'break-word',
-        wordBreak: 'break-word',
-      }}
-      whileHover={{
-        boxShadow: 'var(--shadow-card-hover)',
-        y: -2,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-            padding: '0.125rem 0.5rem',
-            borderRadius: 999,
-            background: 'rgba(99,102,241,0.08)',
-            border: '1px solid rgba(99,102,241,0.2)',
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-2xs)',
-            fontWeight: 600,
-            color: '#6366F1',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Target size={10} />
-          Programas
-        </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 'var(--text-2xs)',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          {item.date}
-        </span>
-      </div>
-      <h3
-        style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '0.875rem',
-          fontWeight: 600,
-          color: 'var(--color-ink)',
-          lineHeight: 1.35,
-          margin: 0,
-        }}
-      >
-        {item.title}
-      </h3>
-      <p
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: '0.8125rem',
-          color: 'var(--color-text-secondary)',
-          lineHeight: 1.6,
-          margin: 0,
-        }}
-      >
-        {item.excerpt}
-      </p>
-      <span
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: 'var(--text-xs)',
-          color: 'var(--color-text-muted)',
-          fontStyle: 'italic',
-        }}
-      >
-        Fuente: {item.source}
-      </span>
-    </motion.div>
-  )
-}
-
 /* ─── Main page ─── */
 export default function AdminRadarPage() {
   const { appUser, isDemo } = useAuth()
@@ -403,17 +229,54 @@ export default function AdminRadarPage() {
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [activeCategory, setActiveCategory] = useState<Category | 'Todos'>('Todos')
   const [liveNews, setLiveNews] = useState<NewsItem[] | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null)
+  const [cohortVerticals, setCohortVerticals] = useState<string[]>([])
+  const [aiDigest, setAiDigest] = useState<string | null>(null)
+  const [aiDigestLoading, setAiDigestLoading] = useState(false)
+  const digestFetched = useRef(false)
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
       const { data, error } = await supabase
         .from('news_items')
-        .select('title, source_name, source_url, published_at, content_type, summary, tags')
+        .select('title, source_name, source_url, published_at, content_type, summary, tags, vertical_tags, created_at')
         .eq('is_active', true)
         .order('published_at', { ascending: false })
         .limit(40)
       if (cancelled || error || !data) return
+
+      // Load cohort founders' verticals if org is known
+      let verticals: string[] = []
+      const orgId = appUser?.org_id
+      if (orgId) {
+        const { data: cohortsData } = await supabase
+          .from('cohorts')
+          .select('id')
+          .eq('org_id', orgId)
+          .eq('status', 'active')
+        const cohortIds = (cohortsData ?? []).map((c: { id: string }) => c.id)
+        if (cohortIds.length > 0) {
+          const { data: csData } = await supabase
+            .from('cohort_startups')
+            .select('startup_id')
+            .in('cohort_id', cohortIds)
+          const startupIds = (csData ?? []).map((cs: { startup_id: string }) => cs.startup_id)
+          if (startupIds.length > 0) {
+            const { data: startupRows } = await supabase
+              .from('startups')
+              .select('vertical')
+              .in('id', startupIds)
+              .not('vertical', 'is', null)
+            const raw = (startupRows ?? [])
+              .map((s: { vertical: string | null }) => s.vertical)
+              .filter((v): v is string => v !== null && v.trim() !== '')
+            verticals = [...new Set(raw)]
+          }
+        }
+      }
+      if (!cancelled) setCohortVerticals(verticals)
+
       const mapType = (t: string | null, tags: string[] | null): Category => {
         const tagStr = (tags || []).join(' ').toLowerCase()
         if (t === 'funding' || tagStr.includes('inversión') || tagStr.includes('fondo')) return 'Inversión'
@@ -426,19 +289,71 @@ export default function AdminRadarPage() {
         const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
         return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
       }
-      setLiveNews(
-        data.map((r: Record<string, unknown>) => ({
-          title: r.title as string,
-          source: (r.source_name as string) || 'Fuente desconocida',
-          date: fmt(r.published_at as string),
-          category: mapType(r.content_type as string | null, r.tags as string[] | null),
-          excerpt: (r.summary as string) || '',
-          url: (r.source_url as string) || null,
-        }))
-      )
+
+      const isRelevantForCohort = (verticalTagsField: string[] | null) => {
+        if (verticals.length === 0 || !verticalTagsField || verticalTagsField.length === 0) return false
+        return verticals.some((v) =>
+          verticalTagsField.some(
+            (t) => t.toLowerCase().includes(v.toLowerCase()) || v.toLowerCase().includes(t.toLowerCase())
+          )
+        )
+      }
+
+      const mapped: NewsItem[] = data.map((r: Record<string, unknown>) => ({
+        title: r.title as string,
+        source: (r.source_name as string) || 'Fuente desconocida',
+        date: fmt(r.published_at as string),
+        category: mapType(r.content_type as string | null, r.tags as string[] | null),
+        excerpt: (r.summary as string) || '',
+        url: (r.source_url as string) || null,
+        relevantForCohort: isRelevantForCohort(r.vertical_tags as string[] | null),
+        verticalTags: (r.vertical_tags as string[] | null) ?? null,
+      }))
+
+      // Sort cohort-relevant items first
+      mapped.sort((a, b) => {
+        if (a.relevantForCohort && !b.relevantForCohort) return -1
+        if (!a.relevantForCohort && b.relevantForCohort) return 1
+        return 0
+      })
+
+      if (!cancelled) {
+        setLiveNews(mapped)
+        if (data[0]?.created_at) {
+          const ts = data[0].created_at as string
+          setLastUpdated(
+            new Date(ts).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })
+          )
+        }
+      }
     })()
     return () => { cancelled = true }
-  }, [])
+  }, [appUser?.org_id])
+
+  // Fetch AI org digest once per session, only if user has an org
+  useEffect(() => {
+    if (digestFetched.current) return
+    if (!appUser?.org_id) return
+    digestFetched.current = true
+
+    setAiDigestLoading(true)
+    fetch('/api/ai/radar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'org_digest' }),
+    })
+      .then(async (res) => {
+        if (!res.ok) return
+        const json = (await res.json()) as { insight?: string }
+        if (json.insight) setAiDigest(json.insight)
+      })
+      .catch((err) => {
+        console.error('[S4C AI] radar org digest fetch failed:', err)
+      })
+      .finally(() => {
+        setAiDigestLoading(false)
+      })
+  }, [appUser?.org_id])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
     router.replace('/admin')
@@ -448,7 +363,7 @@ export default function AdminRadarPage() {
   // Filter out actores tab when not in demo mode
   const visibleTabs = isDemo ? TABS : TABS.filter((t) => t.id !== 'actores')
 
-  const newsSource = liveNews && liveNews.length > 0 ? liveNews : NEWS_ITEMS
+  const newsSource = liveNews ?? []
   const filteredNews =
     activeCategory === 'Todos'
       ? newsSource
@@ -539,7 +454,9 @@ export default function AdminRadarPage() {
                 color: 'var(--color-text-muted)',
               }}
             >
-              Última actualización: 27 Mar 2026, 09:00 AM
+              {lastUpdated
+                ? `Última actualización: ${lastUpdated}`
+                : 'Actualizando…'}
             </span>
           </div>
         </motion.div>
@@ -593,6 +510,81 @@ export default function AdminRadarPage() {
         {/* Tab content */}
         {activeTab === 'noticias' && (
           <div>
+            {/* AI Digest card */}
+            {(aiDigestLoading || aiDigest) && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                style={{
+                  marginBottom: '1.5rem',
+                  padding: '1.25rem 1.5rem',
+                  borderRadius: 14,
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(31,119,246,0.05) 100%)',
+                  border: '1px solid rgba(99,102,241,0.2)',
+                  boxShadow: 'var(--shadow-card)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '1.1rem', lineHeight: 1, flexShrink: 0 }}>✨</span>
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '0.875rem',
+                        fontWeight: 700,
+                        color: '#6366F1',
+                        letterSpacing: '-0.01em',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      Digest del ecosistema para tu cohorte
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'var(--text-xs)',
+                        color: 'var(--color-text-muted)',
+                        marginTop: '0.15rem',
+                      }}
+                    >
+                      Generado con IA basado en los sectores de tus founders
+                      {cohortVerticals.length > 0 && (
+                        <> · <strong style={{ color: 'var(--color-text-secondary)' }}>{cohortVerticals.join(', ')}</strong></>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {aiDigestLoading ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {[100, 88, 75, 60].map((w, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          height: 14,
+                          borderRadius: 7,
+                          background: 'rgba(99,102,241,0.12)',
+                          width: `${w}%`,
+                          animation: 'pulse 1.5s ease-in-out infinite',
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.875rem',
+                      color: 'var(--color-text-secondary)',
+                      lineHeight: 1.65,
+                      margin: 0,
+                    }}
+                  >
+                    {aiDigest}
+                  </p>
+                )}
+              </motion.div>
+            )}
             {/* Category filter pills */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -651,17 +643,38 @@ export default function AdminRadarPage() {
               ))}
             </div>
 
-            {filteredNews.length === 0 && (
+            {liveNews === null && (
               <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-sm)',
-                    color: 'var(--color-text-muted)',
-                  }}
-                >
-                  No hay noticias en esta categoría.
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  Cargando noticias…
                 </p>
+              </div>
+            )}
+            {liveNews !== null && filteredNews.length === 0 && (
+              <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                <p style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-muted)',
+                  marginBottom: '0.5rem',
+                }}>
+                  {activeCategory === 'Todos'
+                    ? 'No hay datos disponibles aún.'
+                    : 'No hay noticias en esta categoría.'}
+                </p>
+                {activeCategory === 'Todos' && (
+                  <p style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--color-text-muted)',
+                  }}>
+                    El cron de actualización se ejecuta diariamente a las 10:00 UTC.
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -696,16 +709,22 @@ export default function AdminRadarPage() {
                 <strong style={{ color: '#6366F1' }}>Programas de incubación y aceleración</strong>
               </span>
             </motion.div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
-                gap: '1rem',
-              }}
-            >
-              {PROGRAM_ITEMS.map((item, i) => (
-                <ProgramCard key={item.title} item={item} index={i} />
-              ))}
+            <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+              <p style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--color-text-muted)',
+                marginBottom: '0.5rem',
+              }}>
+                No hay datos disponibles aún.
+              </p>
+              <p style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--text-xs)',
+                color: 'var(--color-text-muted)',
+              }}>
+                El cron de actualización se ejecuta diariamente a las 10:00 UTC.
+              </p>
             </div>
           </div>
         )}

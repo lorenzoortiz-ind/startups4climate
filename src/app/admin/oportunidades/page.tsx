@@ -53,110 +53,6 @@ const TYPE_CONFIG: Record<OpportunityType, { color: string; bg: string; border: 
 const TYPE_FILTERS: TypeFilter[] = ['Todos', 'Grant', 'Aceleradora', 'Competencia', 'Fondo', 'Capacitación', 'Programa']
 const STATUS_FILTERS: StatusFilter[] = ['Vigentes', 'Por vencer', 'Todas']
 
-/* ─── Data ─── */
-const OPPORTUNITIES: Opportunity[] = [
-  {
-    name: 'Green Climate Fund - Convocatoria abierta',
-    organization: 'Green Climate Fund (GCF)',
-    type: 'Grant',
-    amount: 'USD 50K - 500K',
-    deadline: '15 Jun 2026',
-    description: 'Financiamiento climático para proyectos de mitigación y adaptación en países en desarrollo. Apoya startups con soluciones escalables en energía, transporte, agricultura y resiliencia urbana.',
-    eligibility: 'Startups con al menos 2 años de operación en países en desarrollo, proyecto alineado con NDCs nacionales',
-    region: 'Global',
-  },
-  {
-    name: 'ClimateLaunch LATAM 2026',
-    organization: 'ClimateLaunch',
-    type: 'Competencia',
-    amount: 'USD 25K premio',
-    deadline: '10 Jul 2026',
-    description: 'Competencia regional para las startups climáticas más innovadoras de América Latina. Incluye mentoría, visibilidad mediática y acceso a red de inversores de impacto.',
-    eligibility: 'Startups de climatech con MVP funcional, operaciones en LATAM, equipo de al menos 2 personas',
-    region: 'Regional',
-  },
-  {
-    name: 'BID Lab Innovation Fund',
-    organization: 'BID Lab (Banco Interamericano de Desarrollo)',
-    type: 'Fondo',
-    amount: 'USD 100K - 1M',
-    deadline: '30 Ago 2026',
-    description: 'Fondo de innovación para emprendimientos que demuestren impacto social y ambiental medible en comunidades vulnerables de América Latina y el Caribe.',
-    eligibility: 'Startups con al menos 1 año de operación, impacto verificable, modelo de negocio sostenible',
-    region: 'Regional',
-  },
-  {
-    name: 'Start-Up Chile Scale',
-    organization: 'Start-Up Chile / CORFO',
-    type: 'Aceleradora',
-    amount: 'USD 100K equity-free',
-    deadline: '20 May 2026',
-    description: 'Programa de escalamiento para startups con tracción comprobada. Incluye financiamiento no reembolsable, mentoría intensiva, espacio de coworking y acceso al mercado chileno.',
-    eligibility: 'Startups con ingresos recurrentes > $5K/mes, cualquier nacionalidad, dispuestas a operar desde Chile',
-    region: 'Chile',
-  },
-  {
-    name: 'CORFO Semilla Inicia',
-    organization: 'CORFO',
-    type: 'Grant',
-    amount: 'USD 40K',
-    deadline: '30 Jun 2026',
-    description: 'Subsidio no reembolsable para startups en etapa temprana con soluciones innovadoras. Cubre desarrollo de producto, validación de mercado y primeras contrataciones.',
-    eligibility: 'Startups chilenas o con operaciones en Chile, facturación < $500K USD anual, menos de 3 años de operación',
-    region: 'Chile',
-  },
-  {
-    name: 'Google for Startups Climate',
-    organization: 'Google',
-    type: 'Programa',
-    amount: 'USD 200K en créditos',
-    deadline: '15 Jul 2026',
-    description: 'Programa de 12 semanas para startups climáticas que usan tecnología para resolver desafíos ambientales. Incluye créditos cloud, mentoría de ingenieros de Google y acceso a la red global.',
-    eligibility: 'Startups con producto en mercado, Series Seed a A, enfoque en sostenibilidad o climatech',
-    region: 'Global',
-  },
-  {
-    name: 'MassChallenge LATAM',
-    organization: 'MassChallenge',
-    type: 'Aceleradora',
-    amount: 'USD 0 equity',
-    deadline: '1 Ago 2026',
-    description: 'Aceleradora zero-equity de 4 meses con acceso a mentores, corporativos y red global de MassChallenge. Los ganadores del programa acceden a premios en efectivo sin ceder participación.',
-    eligibility: 'Startups en cualquier vertical con producto validado, dispuestas a participar presencialmente en Ciudad de México',
-    region: 'Regional',
-  },
-  {
-    name: 'CAF Ventures Climate',
-    organization: 'CAF - Banco de Desarrollo de América Latina',
-    type: 'Fondo',
-    amount: 'USD 250K - 2M',
-    deadline: '15 Sep 2026',
-    description: 'Vehículo de inversión de CAF enfocado en startups climáticas de la región. Ticket de inversión en equity o notas convertibles con términos favorables para founders.',
-    eligibility: 'Startups con ingresos anuales > $100K, modelo de negocio probado, impacto climático cuantificable',
-    region: 'Regional',
-  },
-  {
-    name: 'Finanzas climáticas para startups',
-    organization: 'Climate Policy Initiative (CPI)',
-    type: 'Capacitación',
-    amount: 'Gratuito',
-    deadline: '10 May 2026',
-    description: 'Curso intensivo de 6 semanas sobre financiamiento climático, bonos de carbono, taxonomía verde y cómo estructurar proyectos para acceder a fondos internacionales.',
-    eligibility: 'Founders y equipos de startups de impacto en LATAM, no requiere conocimiento previo en finanzas',
-    region: 'Regional',
-  },
-  {
-    name: 'Premios Latinoamérica Verde',
-    organization: 'Fundación Latinoamérica Verde',
-    type: 'Competencia',
-    amount: 'USD 10K premio',
-    deadline: '25 Jun 2026',
-    description: 'Los premios ambientales más grandes de la región. Reconocen los 500 mejores proyectos sociales y ambientales de América Latina con visibilidad, networking y premios económicos.',
-    eligibility: 'Proyectos y startups con impacto ambiental demostrable, cualquier etapa, operaciones en LATAM',
-    region: 'Regional',
-  },
-]
-
 /* ─── Demo: map DEMO_OPPORTUNITIES → Opportunity shape ─── */
 const TYPE_FROM_DEMO: Record<string, OpportunityType> = {
   grant: 'Grant',
@@ -212,7 +108,7 @@ function getTimeStatus(deadline: string): 'vigente' | 'por_vencer' | 'cerrada' {
 }
 
 /* ─── Card component ─── */
-function OpportunityCard({ item, index }: { item: Opportunity; index: number }) {
+function OpportunityCard({ item, index, showCohortBadge }: { item: Opportunity & { cohortMatchCount?: number }; index: number; showCohortBadge?: boolean }) {
   const config = TYPE_CONFIG[item.type]
   const TypeIcon = config.icon
   const daysLeft = getDaysUntil(item.deadline)
@@ -300,6 +196,27 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
           >
             <Clock size={10} />
             {daysLeft} días
+          </span>
+        )}
+        {showCohortBadge && typeof item.cohortMatchCount === 'number' && item.cohortMatchCount > 0 && (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              padding: '0.125rem 0.5rem',
+              borderRadius: 999,
+              background: 'rgba(22,163,74,0.08)',
+              border: '1px solid rgba(22,163,74,0.25)',
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-2xs)',
+              fontWeight: 600,
+              color: '#16A34A',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <Users size={10} />
+            {item.cohortMatchCount} founder{item.cohortMatchCount !== 1 ? 's' : ''} califican
           </span>
         )}
       </div>
@@ -438,24 +355,59 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
   )
 }
 
+interface LiveOpportunity extends Opportunity {
+  cohortMatchCount: number
+}
+
 /* ─── Main page ─── */
 export default function AdminOportunidadesPage() {
   const { appUser, isDemo } = useAuth()
   const router = useRouter()
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('Todos')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Vigentes')
-  const [liveOpps, setLiveOpps] = useState<Opportunity[] | null>(null)
+  const [liveOpps, setLiveOpps] = useState<LiveOpportunity[] | null>(null)
+  const [cohortDataAvailable, setCohortDataAvailable] = useState(false)
 
   useEffect(() => {
+    if (!appUser) return
     let cancelled = false
     ;(async () => {
-      const { data, error } = await supabase
-        .from('opportunities')
-        .select('title, organization, type, amount_min, amount_max, currency, deadline, application_url, eligible_countries, eligible_verticals, eligible_stages, description')
-        .eq('is_active', true)
-        .order('deadline', { ascending: true, nullsFirst: false })
-        .limit(60)
-      if (cancelled || error || !data) return
+      const orgId = appUser.org_id ?? null
+
+      // Load opportunities and cohort founder verticals in parallel
+      const [oppsRes, foundersRes] = await Promise.all([
+        supabase
+          .from('opportunities')
+          .select('id, title, organization, type, amount_min, amount_max, currency, deadline, application_url, eligible_countries, eligible_verticals, eligible_stages, description')
+          .eq('is_active', true)
+          .order('deadline', { ascending: true, nullsFirst: false })
+          .limit(60),
+        orgId
+          ? supabase
+              .from('profiles')
+              .select('id, startups!inner(vertical, stage, cohort_startups!inner(cohort_id, cohorts!inner(org_id)))')
+              .eq('role', 'founder')
+              .eq('startups.cohort_startups.cohorts.org_id', orgId)
+          : Promise.resolve({ data: null, error: null }),
+      ])
+
+      if (cancelled) return
+
+      // Build set of founder verticals from cohort
+      const founderVerticals: string[] = []
+      if (foundersRes.data && Array.isArray(foundersRes.data)) {
+        setCohortDataAvailable(true)
+        for (const profile of foundersRes.data as Array<{ startups?: Array<{ vertical?: string | null }> | { vertical?: string | null } }>) {
+          const startups = Array.isArray(profile.startups) ? profile.startups : (profile.startups ? [profile.startups] : [])
+          for (const s of startups) {
+            if (s.vertical) founderVerticals.push(s.vertical.toLowerCase())
+          }
+        }
+      }
+
+      const { data, error } = oppsRes
+      if (error || !data) return
+
       const TYPE_MAP: Record<string, OpportunityType> = {
         grant: 'Grant',
         fund: 'Fondo',
@@ -471,8 +423,14 @@ export default function AdminOportunidadesPage() {
         const v = (min || max)!
         return `${c} ${(v/1000).toFixed(0)}K`
       }
-      setLiveOpps(
-        data.map((r: Record<string, unknown>) => ({
+
+      const opps: LiveOpportunity[] = data.map((r: Record<string, unknown>) => {
+        const oppVerticals = ((r.eligible_verticals as string[] | null) ?? []).map((v) => v.toLowerCase())
+        const cohortMatchCount = oppVerticals.length === 0
+          ? founderVerticals.length
+          : founderVerticals.filter((fv) => oppVerticals.some((ov) => ov === fv || ov.includes(fv) || fv.includes(ov))).length
+
+        return {
           name: r.title as string,
           organization: (r.organization as string) || '—',
           type: TYPE_MAP[(r.type as string) || ''] || 'Programa',
@@ -486,20 +444,27 @@ export default function AdminOportunidadesPage() {
           ].filter(Boolean).join(' · ') || 'Ver convocatoria para detalles',
           region: ((r.eligible_countries as string[] | null) || []).slice(0, 2).join(', ') || 'LATAM',
           url: (r.application_url as string) || null,
-        }))
-      )
+          cohortMatchCount,
+        }
+      })
+
+      // Sort by cohort match count descending when data is available, else keep deadline order
+      if (founderVerticals.length > 0) {
+        opps.sort((a, b) => b.cohortMatchCount - a.cohortMatchCount)
+      }
+
+      setLiveOpps(opps)
     })()
     return () => { cancelled = true }
-  }, [])
+  }, [appUser])
 
   if (!appUser || (appUser.role !== 'admin_org' && appUser.role !== 'superadmin')) {
     router.replace('/admin')
     return null
   }
 
-  const sourceList = isDemo
-    ? DEMO_OPPORTUNITIES_MAPPED
-    : (liveOpps && liveOpps.length > 0 ? liveOpps : OPPORTUNITIES)
+  const demosWithCount: LiveOpportunity[] = DEMO_OPPORTUNITIES_MAPPED.map((o) => ({ ...o, cohortMatchCount: 0 }))
+  const sourceList: LiveOpportunity[] = isDemo ? demosWithCount : (liveOpps ?? [])
   const filtered = sourceList
     .filter((o) => typeFilter === 'Todos' || o.type === typeFilter)
     .filter((o) => {
@@ -716,6 +681,25 @@ export default function AdminOportunidadesPage() {
           </span>
         </motion.div>
 
+        {/* Section header when cohort data is available */}
+        {!isDemo && cohortDataAvailable && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.18 }}
+            style={{ marginBottom: '0.875rem' }}
+          >
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 600,
+              color: 'var(--color-text-secondary)',
+            }}>
+              Oportunidades ordenadas por relevancia para tu cohorte
+            </span>
+          </motion.div>
+        )}
+
         {/* Opportunity cards grid */}
         <div
           style={{
@@ -725,20 +709,57 @@ export default function AdminOportunidadesPage() {
           }}
         >
           {filtered.map((item, i) => (
-            <OpportunityCard key={item.name} item={item} index={i} />
+            <OpportunityCard key={item.name} item={item} index={i} showCohortBadge={!isDemo && cohortDataAvailable} />
           ))}
         </div>
 
         {/* Empty state */}
-        {filtered.length === 0 && (
+        {!isDemo && liveOpps === null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            style={{
-              textAlign: 'center',
-              padding: '3rem 1rem',
-            }}
+            style={{ textAlign: 'center', padding: '3rem 1rem' }}
+          >
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              color: 'var(--color-text-muted)',
+            }}>
+              Cargando oportunidades…
+            </p>
+          </motion.div>
+        )}
+        {!isDemo && liveOpps !== null && sourceList.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            style={{ textAlign: 'center', padding: '3rem 1rem' }}
+          >
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              color: 'var(--color-text-muted)',
+              marginBottom: '0.5rem',
+            }}>
+              No hay datos disponibles aún.
+            </p>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--color-text-muted)',
+            }}>
+              Agrega oportunidades desde el panel de Supabase.
+            </p>
+          </motion.div>
+        )}
+        {filtered.length === 0 && sourceList.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            style={{ textAlign: 'center', padding: '3rem 1rem' }}
           >
             <p style={{
               fontFamily: 'var(--font-body)',

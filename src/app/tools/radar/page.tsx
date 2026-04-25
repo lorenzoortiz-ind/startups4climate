@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -18,6 +18,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
 /* ─── Types ─── */
 type ContentType = 'news' | 'regulation' | 'investment' | 'trend' | 'event' | 'report'
@@ -160,10 +161,14 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
 }
 
 export default function RadarPage() {
+  const { appUser } = useAuth()
   const [activeTab, setActiveTab] = useState<Tab>('noticias')
   const [items, setItems] = useState<NewsRow[]>([])
   const [startup, setStartup] = useState<{ vertical: string | null; country: string | null } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [aiInsight, setAiInsight] = useState<string | null>(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const insightFetched = useRef(false)
 
   useEffect(() => {
     let cancelled = false
@@ -191,7 +196,48 @@ export default function RadarPage() {
     return () => { cancelled = true }
   }, [])
 
+  // Fetch AI insight once per session, only for authenticated (non-demo) users
+  useEffect(() => {
+    if (insightFetched.current) return
+    if (!appUser?.id) return
+    insightFetched.current = true
+
+    setAiLoading(true)
+    fetch('/api/ai/radar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'founder_insight' }),
+    })
+      .then(async (res) => {
+        if (!res.ok) return
+        const json = (await res.json()) as { insight?: string }
+        if (json.insight) setAiInsight(json.insight)
+      })
+      .catch((err) => {
+        console.error('[S4C AI] radar insight fetch failed:', err)
+      })
+      .finally(() => {
+        setAiLoading(false)
+      })
+  }, [appUser?.id])
+
   const userVertical = startup?.vertical || 'tu vertical'
+
+  // Items sorted so vertical-matching ones appear first in the "noticias" tab
+  const sortedItems = useMemo(() => {
+    if (!startup?.vertical) return items
+    const vLower = startup.vertical.toLowerCase()
+    const matches = (it: NewsRow) =>
+      (it.vertical !== null && it.vertical !== undefined &&
+        (it.vertical.toLowerCase().includes(vLower) || vLower.includes(it.vertical.toLowerCase())))
+    const matched: NewsRow[] = []
+    const rest: NewsRow[] = []
+    for (const it of items) {
+      if (matches(it)) matched.push(it)
+      else rest.push(it)
+    }
+    return [...matched, ...rest]
+  }, [items, startup?.vertical])
 
   const verticalItems = useMemo(() => {
     if (!startup) return items
@@ -206,6 +252,69 @@ export default function RadarPage() {
   const lastUpdated = items[0]?.published_at
     ? new Date(items[0].published_at).toLocaleDateString('es', { day: '2-digit', month: 'short', year: 'numeric' })
     : '—'
+
+  const renderAiInsightCard = () => {
+    if (!appUser?.id) return null
+    if (!aiLoading && !aiInsight) return null
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        style={{
+          marginBottom: '1.5rem',
+          padding: '1.25rem 1.5rem',
+          borderRadius: 14,
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(31,119,246,0.05) 100%)',
+          border: '1px solid rgba(99,102,241,0.2)',
+          boxShadow: 'var(--shadow-card)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>✨</span>
+          <span
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.875rem',
+              fontWeight: 700,
+              color: '#6366F1',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            Insight de la semana para tu startup
+          </span>
+        </div>
+        {aiLoading ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {[100, 85, 70].map((w, i) => (
+              <div
+                key={i}
+                style={{
+                  height: 14,
+                  borderRadius: 7,
+                  background: 'rgba(99,102,241,0.12)',
+                  width: `${w}%`,
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <p
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.65,
+              margin: 0,
+            }}
+          >
+            {aiInsight}
+          </p>
+        )}
+      </motion.div>
+    )
+  }
 
   const renderList = (list: NewsRow[]) => {
     if (loading) {
@@ -331,7 +440,12 @@ export default function RadarPage() {
         })}
       </motion.div>
 
-      {activeTab === 'noticias' && renderList(items)}
+      {activeTab === 'noticias' && (
+        <div>
+          {renderAiInsightCard()}
+          {renderList(sortedItems)}
+        </div>
+      )}
 
       {activeTab === 'vertical' && (
         <div>

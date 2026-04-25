@@ -14,7 +14,7 @@ const LIMITS: Record<string, number> = {
 
 const WINDOW_MS = 60 * 60 * 1000 // 1 hour
 
-export type AIEndpoint = 'chat' | 'feedback'
+export type AIEndpoint = 'chat' | 'feedback' | 'opportunities' | 'radar'
 export type RateLimitRole = 'founder' | 'admin_org' | 'superadmin'
 
 export interface RateLimitResult {

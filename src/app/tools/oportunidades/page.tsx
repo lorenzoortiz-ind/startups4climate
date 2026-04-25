@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -16,6 +16,8 @@ import {
   MapPin,
   ExternalLink,
   ChevronRight,
+  Loader2,
+  X,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
@@ -54,14 +56,26 @@ interface OpportunityRow {
   application_url: string | null
   deadline: string | null
   is_rolling: boolean | null
+  geographic_scope: string | null
+  vertical_tags: string[] | null
+  stage_requirements: string[] | null
 }
 
-interface Opportunity extends OpportunityRow {
+interface ScoredApiOpportunity extends OpportunityRow {
+  matchScore: number
+  matchBreakdown: {
+    vertical_match: number
+    stage_match: number
+    country_match: number
+    score_bonus: number
+  }
+  aiBlurb?: string
+}
+
+interface Opportunity extends ScoredApiOpportunity {
   displayType: DisplayType
   amountLabel: string | null
   regionLabel: string
-  matchScore: number
-  matchReasons: string[]
 }
 
 const TYPE_LABELS: Record<DbType, DisplayType> = {
@@ -156,45 +170,181 @@ function getTimeStatus(deadline: string | null, isRolling: boolean | null): 'vig
   return 'vigente'
 }
 
-function computeMatch(
-  op: OpportunityRow,
-  startup: { vertical: string | null; country: string | null; stage: string | null } | null
-): { score: number; reasons: string[] } {
-  if (!startup) return { score: 70, reasons: [] }
-  let score = 50
-  const reasons: string[] = []
-
-  if (startup.country && op.eligible_countries?.includes(startup.country)) {
-    score += 20
-    reasons.push(`Elegible en ${COUNTRY_LABELS[startup.country] || startup.country}`)
-  } else if (!op.eligible_countries || op.eligible_countries.length === 0) {
-    score += 10
-  }
-
-  if (startup.vertical && op.eligible_verticals?.includes(startup.vertical)) {
-    score += 20
-    reasons.push(`Vertical compatible: ${startup.vertical}`)
-  }
-
-  if (startup.stage && op.eligible_stages?.includes(startup.stage)) {
-    score += 10
-    reasons.push('Etapa compatible')
-  }
-
-  return { score: Math.min(score, 99), reasons }
-}
-
-function getMatchColor(score: number): { color: string; bg: string; border: string } {
-  if (score >= 75) return { color: '#1F77F6', bg: 'rgba(31,119,246,0.08)', border: 'rgba(31,119,246,0.2)' }
-  if (score >= 50) return { color: '#2A222B', bg: 'rgba(42,34,43,0.08)', border: 'rgba(42,34,43,0.2)' }
+function getMatchBadgeStyle(score: number): { color: string; bg: string; border: string } {
+  if (score >= 70) return { color: '#16A34A', bg: 'rgba(22,163,74,0.08)', border: 'rgba(22,163,74,0.25)' }
+  if (score >= 40) return { color: '#D97706', bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.25)' }
   return { color: '#9CA3AF', bg: 'rgba(156,163,175,0.08)', border: 'rgba(156,163,175,0.2)' }
 }
 
+/* ─── AI Blurb popover ─── */
+interface BlurbPopoverProps {
+  opportunityId: string
+  opportunityTitle: string
+  initialBlurb: string | undefined
+  onBlurbLoaded: (id: string, blurb: string) => void
+}
+
+function BlurbPopover({ opportunityId, opportunityTitle, initialBlurb, onBlurbLoaded }: BlurbPopoverProps) {
+  const [open, setOpen] = useState(false)
+  const [blurb, setBlurb] = useState<string | undefined>(initialBlurb)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  // Keep blurb in sync if parent fetched it
+  useEffect(() => {
+    if (initialBlurb && !blurb) setBlurb(initialBlurb)
+  }, [initialBlurb, blurb])
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [open])
+
+  async function handleOpen() {
+    setOpen(true)
+    if (blurb) return
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/ai/opportunities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ opportunityId, generateBlurbs: true }),
+      })
+      const json = (await res.json()) as {
+        opportunities?: ScoredApiOpportunity[]
+        error?: string
+      }
+      if (!res.ok || json.error) {
+        setError(json.error ?? 'No se pudo generar la explicación.')
+      } else {
+        const found = json.opportunities?.find((o) => o.id === opportunityId)
+        if (found?.aiBlurb) {
+          setBlurb(found.aiBlurb)
+          onBlurbLoaded(opportunityId, found.aiBlurb)
+        } else {
+          setError('No se pudo generar la explicación para esta oportunidad.')
+        }
+      }
+    } catch {
+      setError('Error de red. Intenta de nuevo.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }} ref={popoverRef}>
+      <button
+        onClick={handleOpen}
+        title={`Por qué "${opportunityTitle}" es relevante para ti`}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.2rem',
+          padding: '0.15rem 0.5rem',
+          borderRadius: 999,
+          border: '1px solid rgba(218,78,36,0.3)',
+          background: 'rgba(218,78,36,0.06)',
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-2xs)',
+          fontWeight: 600,
+          color: '#DA4E24',
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <Sparkles size={9} />
+        Ver por qué
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 8px)',
+            left: 0,
+            zIndex: 50,
+            width: 280,
+            padding: '0.875rem',
+            borderRadius: 10,
+            background: 'var(--color-bg-card)',
+            border: '1px solid rgba(218,78,36,0.25)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'var(--text-2xs)',
+              fontWeight: 700,
+              color: '#DA4E24',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}>
+              <Sparkles size={11} />
+              Por qué es relevante para ti
+            </span>
+            <button
+              onClick={() => setOpen(false)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 0 }}
+            >
+              <X size={13} />
+            </button>
+          </div>
+
+          {loading && (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)', fontSize: '0.8125rem' }}>
+              <Loader2 size={14} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
+              Generando…
+            </span>
+          )}
+
+          {!loading && error && (
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: '#EF4444', margin: 0 }}>
+              {error}
+            </p>
+          )}
+
+          {!loading && !error && blurb && (
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.8125rem',
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.6,
+              margin: 0,
+            }}>
+              {blurb}
+            </p>
+          )}
+        </div>
+      )}
+    </span>
+  )
+}
+
 /* ─── Card ─── */
-function OpportunityCard({ item, index }: { item: Opportunity; index: number }) {
+function OpportunityCard({
+  item,
+  index,
+  onBlurbLoaded,
+}: {
+  item: Opportunity
+  index: number
+  onBlurbLoaded: (id: string, blurb: string) => void
+}) {
   const typeStyle = TYPE_COLORS[item.displayType]
   const TypeIcon = TYPE_ICONS[item.displayType]
-  const matchStyle = getMatchColor(item.matchScore)
+  const matchStyle = getMatchBadgeStyle(item.matchScore)
   const status = getTimeStatus(item.deadline, item.is_rolling)
   const deadlineColor = status === 'cerrada' ? '#9CA3AF' : status === 'por_vencer' ? '#EF4444' : 'var(--color-text-secondary)'
 
@@ -242,16 +392,24 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
             </span>
           )}
         </div>
-        <div
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-            padding: '0.2rem 0.625rem', borderRadius: 999,
-            background: matchStyle.bg, border: `1px solid ${matchStyle.border}`,
-          }}
-        >
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', fontWeight: 700, color: matchStyle.color }}>
-            {item.matchScore}% match
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          <div
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+              padding: '0.2rem 0.625rem', borderRadius: 999,
+              background: matchStyle.bg, border: `1px solid ${matchStyle.border}`,
+            }}
+          >
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', fontWeight: 700, color: matchStyle.color }}>
+              {item.matchScore}% match
+            </span>
+          </div>
+          <BlurbPopover
+            opportunityId={item.id}
+            opportunityTitle={item.title}
+            initialBlurb={item.aiBlurb}
+            onBlurbLoaded={onBlurbLoaded}
+          />
         </div>
       </div>
 
@@ -266,12 +424,6 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
       {item.description && (
         <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)', lineHeight: 1.6, margin: 0 }}>
           {item.description}
-        </p>
-      )}
-
-      {item.matchReasons.length > 0 && (
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)', lineHeight: 1.5, margin: 0 }}>
-          <strong style={{ color: 'var(--color-text-secondary)' }}>Por qué te aplica:</strong> {item.matchReasons.join(' · ')}
         </p>
       )}
 
@@ -320,41 +472,51 @@ function OpportunityCard({ item, index }: { item: Opportunity; index: number }) 
 export default function OportunidadesPage() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('Todas')
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('Vigentes')
+  // apiScores maps opportunityId → { matchScore, matchBreakdown, aiBlurb? }
+  const [apiScores, setApiScores] = useState<Map<string, ScoredApiOpportunity>>(new Map())
   const [rows, setRows] = useState<OpportunityRow[]>([])
-  const [startup, setStartup] = useState<{ vertical: string | null; country: string | null; stage: string | null } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
     async function load() {
-      // Load opportunities + current user's startup in parallel
-      const opsPromise = supabase
+      // Load raw opportunity rows from Supabase (for display shape)
+      const { data: oppsData, error: oppsError } = await supabase
         .from('opportunities')
         .select(
-          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
+          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling,geographic_scope,vertical_tags,stage_requirements'
         )
         .eq('is_active', true)
         .order('deadline', { ascending: true, nullsFirst: false })
 
-      const userRes = await supabase.auth.getUser()
-      const uid = userRes.data.user?.id
-      const startupPromise = uid
-        ? supabase
-            .from('startups')
-            .select('vertical, country, stage')
-            .eq('founder_id', uid)
-            .maybeSingle()
-        : Promise.resolve({ data: null, error: null })
-
-      const [opsRes, startupRes] = await Promise.all([opsPromise, startupPromise])
       if (cancelled) return
 
-      if (opsRes.error) {
-        console.error('[S4C Opportunities]', opsRes.error)
+      if (oppsError) {
+        console.error('[S4C Opportunities]', oppsError)
       }
-      setRows((opsRes.data as OpportunityRow[]) || [])
-      setStartup(startupRes.data || null)
+      setRows((oppsData as OpportunityRow[]) || [])
       setLoading(false)
+
+      // Fire algorithmic scoring via API (no AI blurbs yet)
+      try {
+        const res = await fetch('/api/ai/opportunities', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({}),
+        })
+        if (res.ok) {
+          const json = (await res.json()) as { opportunities?: ScoredApiOpportunity[] }
+          if (json.opportunities && !cancelled) {
+            const map = new Map<string, ScoredApiOpportunity>()
+            for (const op of json.opportunities) {
+              map.set(op.id, op)
+            }
+            setApiScores(map)
+          }
+        }
+      } catch (err) {
+        console.error('[S4C Opportunities] score fetch failed:', err)
+      }
     }
     load()
     return () => {
@@ -362,20 +524,41 @@ export default function OportunidadesPage() {
     }
   }, [])
 
+  // When a blurb is fetched on-demand, cache it in apiScores
+  function handleBlurbLoaded(id: string, blurb: string) {
+    setApiScores((prev) => {
+      const next = new Map(prev)
+      const existing = next.get(id)
+      if (existing) {
+        next.set(id, { ...existing, aiBlurb: blurb })
+      }
+      return next
+    })
+  }
+
   const enriched: Opportunity[] = useMemo(
     () =>
       rows.map((r) => {
-        const { score, reasons } = computeMatch(r, startup)
+        const scored = apiScores.get(r.id)
         return {
           ...r,
-          displayType: TYPE_LABELS[r.type] || 'Grant',
+          displayType: TYPE_LABELS[r.type] ?? 'Grant',
           amountLabel: formatAmount(r.amount_min, r.amount_max, r.currency),
           regionLabel: formatRegion(r.eligible_countries),
-          matchScore: score,
-          matchReasons: reasons,
+          matchScore: scored?.matchScore ?? 50,
+          matchBreakdown: scored?.matchBreakdown ?? {
+            vertical_match: 0,
+            stage_match: 0,
+            country_match: 0,
+            score_bonus: 0,
+          },
+          aiBlurb: scored?.aiBlurb,
+          geographic_scope: r.geographic_scope,
+          vertical_tags: r.vertical_tags,
+          stage_requirements: r.stage_requirements,
         }
       }),
-    [rows, startup]
+    [rows, apiScores]
   )
 
   const filtered = enriched
@@ -537,7 +720,12 @@ export default function OportunidadesPage() {
         }}
       >
         {sorted.map((item, i) => (
-          <OpportunityCard key={item.id} item={item} index={i} />
+          <OpportunityCard
+            key={item.id}
+            item={item}
+            index={i}
+            onBlurbLoaded={handleBlurbLoaded}
+          />
         ))}
       </div>
     </div>

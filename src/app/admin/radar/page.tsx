@@ -12,6 +12,7 @@ import {
   Lightbulb,
   Award,
   ExternalLink,
+  RefreshCw,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -234,6 +235,8 @@ export default function AdminRadarPage() {
   const [aiDigest, setAiDigest] = useState<string | null>(null)
   const [aiDigestLoading, setAiDigestLoading] = useState(false)
   const digestFetched = useRef(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [refreshResult, setRefreshResult] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -359,6 +362,22 @@ export default function AdminRadarPage() {
     return null
   }
 
+  async function handleRefresh() {
+    setRefreshing(true)
+    setRefreshResult(null)
+    try {
+      const res = await fetch('/api/admin/refresh-radar', { method: 'POST' })
+      const json = await res.json() as { rss_inserted?: number; ai_inserted?: number; errors?: string[] }
+      setRefreshResult(`${(json.rss_inserted ?? 0) + (json.ai_inserted ?? 0)} noticias añadidas`)
+      // Reload news after refresh
+      setTimeout(() => window.location.reload(), 1000)
+    } catch {
+      setRefreshResult('Error al actualizar')
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
   // Filter out actores tab when not in demo mode
   const visibleTabs = isDemo ? TABS : TABS.filter((t) => t.id !== 'actores')
 
@@ -435,28 +454,58 @@ export default function AdminRadarPage() {
             </div>
           </div>
 
-          {/* Last updated */}
+          {/* Last updated + refresh button */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.375rem',
+              gap: '0.75rem',
               marginTop: '0.5rem',
               marginLeft: 52,
+              flexWrap: 'wrap',
             }}
           >
-            <Clock size={12} color="var(--color-text-muted)" />
-            <span
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <Clock size={12} color="var(--color-text-muted)" />
+              <span
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--color-text-muted)',
+                }}
+              >
+                {lastUpdated
+                  ? `Última actualización: ${lastUpdated}`
+                  : 'Actualizando…'}
+              </span>
+            </div>
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+                padding: '0.375rem 0.875rem',
+                borderRadius: 6,
+                background: refreshing ? 'var(--color-bg-secondary)' : 'var(--color-ember)',
+                border: 'none',
+                cursor: refreshing ? 'not-allowed' : 'pointer',
                 fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-xs)',
-                color: 'var(--color-text-muted)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: '#fff',
+                transition: 'all 0.2s ease',
               }}
             >
-              {lastUpdated
-                ? `Última actualización: ${lastUpdated}`
-                : 'Actualizando…'}
-            </span>
+              <RefreshCw size={13} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+              {refreshing ? 'Actualizando…' : 'Actualizar con IA'}
+            </button>
+            {refreshResult && (
+              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>
+                {refreshResult}
+              </span>
+            )}
           </div>
         </motion.div>
 

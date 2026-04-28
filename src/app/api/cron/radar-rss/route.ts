@@ -34,6 +34,13 @@ const FEEDS: Array<{
     default_country: null,
     default_type: 'news',
   },
+  {
+    url: 'https://agfundernews.com/feed/',
+    source_name: 'AgFunder News',
+    default_vertical: 'agritech_foodtech',
+    default_country: null,
+    default_type: 'trend',
+  },
 ]
 
 // Vertical keywords for auto-tagging

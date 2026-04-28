@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/radar-rss",
-      "schedule": "0 10 * * *"
+      "schedule": "0 13 * * 1,4"
     }
   ]
 }

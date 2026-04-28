@@ -157,13 +157,24 @@ Responde SOLO con un array JSON válido, sin texto adicional:
   {
     "title": "Título de la noticia en español (máx 120 caracteres)",
     "summary": "Resumen en español de 80-120 palabras. Datos concretos, sin clichés.",
-    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, El Economista, PitchBook, TechCrunch)",
-    "source_url": "URL real y funcional al sitio del medio o programa mencionado",
+    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, El Economista, Gestión, El Cronista)",
+    "source_url": "URL de la página principal del medio — SOLO homepage o sección principal verificada: https://contxto.com, https://latamlist.com, https://www.bloomberglinea.com, https://gestion.pe/economia/, https://www.eleconomista.com.mx/empresas, https://www.reuters.com, https://agfundernews.com — NUNCA inventes subrutas específicas.",
     "content_type": "news|investment|trend|regulation|event|report",
     "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other o null",
     "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
   }
 ]
+REGLA CRÍTICA para source_url: usa ÚNICAMENTE estas URLs base verificadas que funcionan:
+- contxto.com → "https://contxto.com"
+- LatamList → "https://latamlist.com"
+- Bloomberg Línea → "https://www.bloomberglinea.com"
+- Gestión Perú → "https://gestion.pe/economia/"
+- El Economista MX → "https://www.eleconomista.com.mx/empresas"
+- Reuters → "https://www.reuters.com"
+- AgFunder → "https://agfundernews.com"
+- El Cronista → "https://www.cronista.com"
+- Pulso Social → "https://pulsosocial.com"
+NO uses URLs de BID Lab, CORFO, Google, ni programas de aceleración — solo medios de comunicación.
 Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
 
   const aiResponse = await callGemini(aiPrompt)

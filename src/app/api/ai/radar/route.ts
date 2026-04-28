@@ -14,12 +14,12 @@ interface NewsItemRow {
   id: string
   title: string
   summary: string | null
-  source: string | null
+  source_name: string | null
   source_url: string | null
-  category: string | null
-  vertical_tags: string[] | null
-  country_tags: string[] | null
-  created_at: string
+  content_type: string | null
+  vertical: string | null
+  country: string | null
+  published_at: string
 }
 
 interface RadarRequestBody {
@@ -108,9 +108,9 @@ async function handleFounderInsight(
   // Load last 10 active news, filtered by vertical if possible
   const { data: allNews, error: newsError } = await supabase
     .from('news_items')
-    .select('id, title, summary, source, source_url, category, vertical_tags, country_tags, created_at')
+    .select('id, title, summary, source_name, source_url, content_type, vertical, country, published_at')
     .eq('is_active', true)
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
     .limit(10)
 
   if (newsError) {
@@ -126,8 +126,8 @@ async function handleFounderInsight(
     const vLower = vertical.toLowerCase()
     const matched = newsRows.filter(
       (n) =>
-        Array.isArray(n.vertical_tags) &&
-        n.vertical_tags.some((t) => t.toLowerCase().includes(vLower) || vLower.includes(t.toLowerCase()))
+        n.vertical != null &&
+        (n.vertical.toLowerCase().includes(vLower) || vLower.includes(n.vertical.toLowerCase()))
     )
     if (matched.length > 0) {
       relevantNews = matched
@@ -142,7 +142,7 @@ async function handleFounderInsight(
     relevantNews.map((n) => ({
       title: n.title,
       summary: n.summary,
-      category: n.category,
+      category: n.content_type,
     }))
   )
 
@@ -221,9 +221,9 @@ async function handleOrgDigest(
   // Load last 15 active news
   const { data: allNews, error: newsError } = await supabase
     .from('news_items')
-    .select('id, title, summary, source, source_url, category, vertical_tags, country_tags, created_at')
+    .select('id, title, summary, source_name, source_url, content_type, vertical, country, published_at')
     .eq('is_active', true)
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
     .limit(15)
 
   if (newsError) {
@@ -244,7 +244,7 @@ async function handleOrgDigest(
     newsRows.map((n) => ({
       title: n.title,
       summary: n.summary,
-      category: n.category,
+      category: n.content_type,
     }))
   )
 

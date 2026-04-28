@@ -243,13 +243,15 @@ export default function AdminRadarPage() {
   useEffect(() => {
     let cancelled = false
     ;(async () => {
+      try {
       const { data, error } = await supabase
         .from('news_items')
         .select('title, source_name, source_url, published_at, content_type, summary, tags, vertical, scraped_at')
         .eq('is_active', true)
         .order('published_at', { ascending: false })
         .limit(40)
-      if (cancelled || error || !data) return
+      if (cancelled) return
+      if (error || !data) { if (!cancelled) setLiveNews([]); return }
 
       // Load cohort founders' verticals if org is known
       let verticals: string[] = []
@@ -329,6 +331,10 @@ export default function AdminRadarPage() {
             new Date(ts).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })
           )
         }
+      }
+      } catch (err) {
+        console.error('[S4C RADAR] fetch error:', err)
+        if (!cancelled) setLiveNews([])
       }
     })()
     return () => { cancelled = true }

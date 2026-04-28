@@ -176,24 +176,29 @@ export default function RadarPage() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const newsPromise = supabase
-        .from('news_items')
-        .select('id,title,summary,source_name,source_url,vertical,country,content_type,tags,published_at')
-        .eq('is_active', true)
-        .order('published_at', { ascending: false })
-        .limit(50)
-      const userRes = await supabase.auth.getUser()
-      const uid = userRes.data.user?.id
-      const startupPromise = uid
-        ? supabase.from('startups').select('vertical, country').eq('founder_id', uid).maybeSingle()
-        : Promise.resolve({ data: null, error: null })
+      try {
+        const newsPromise = supabase
+          .from('news_items')
+          .select('id,title,summary,source_name,source_url,vertical,country,content_type,tags,published_at')
+          .eq('is_active', true)
+          .order('published_at', { ascending: false })
+          .limit(50)
+        const userRes = await supabase.auth.getUser()
+        const uid = userRes.data.user?.id
+        const startupPromise = uid
+          ? supabase.from('startups').select('vertical, country').eq('founder_id', uid).maybeSingle()
+          : Promise.resolve({ data: null, error: null })
 
-      const [newsRes, startupRes] = await Promise.all([newsPromise, startupPromise])
-      if (cancelled) return
-      if (newsRes.error) console.error('[S4C RADAR]', newsRes.error)
-      setItems((newsRes.data as NewsRow[]) || [])
-      setStartup(startupRes.data || null)
-      setLoading(false)
+        const [newsRes, startupRes] = await Promise.all([newsPromise, startupPromise])
+        if (cancelled) return
+        if (newsRes.error) console.error('[S4C RADAR]', newsRes.error)
+        setItems((newsRes.data as NewsRow[]) || [])
+        setStartup(startupRes.data || null)
+      } catch (err) {
+        console.error('[S4C RADAR] load error:', err)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
     }
     load()
     return () => { cancelled = true }

@@ -480,42 +480,47 @@ export default function OportunidadesPage() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      // Load raw opportunity rows from Supabase (for display shape)
-      const { data: oppsData, error: oppsError } = await supabase
-        .from('opportunities')
-        .select(
-          'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
-        )
-        .eq('is_active', true)
-        .order('deadline', { ascending: true, nullsFirst: false })
-
-      if (cancelled) return
-
-      if (oppsError) {
-        console.error('[S4C Opportunities]', oppsError)
-      }
-      setRows((oppsData as OpportunityRow[]) || [])
-      setLoading(false)
-
-      // Fire algorithmic scoring via API (no AI blurbs yet)
       try {
-        const res = await fetch('/api/ai/opportunities', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
-        })
-        if (res.ok) {
-          const json = (await res.json()) as { opportunities?: ScoredApiOpportunity[] }
-          if (json.opportunities && !cancelled) {
-            const map = new Map<string, ScoredApiOpportunity>()
-            for (const op of json.opportunities) {
-              map.set(op.id, op)
+        // Load raw opportunity rows from Supabase (for display shape)
+        const { data: oppsData, error: oppsError } = await supabase
+          .from('opportunities')
+          .select(
+            'id,title,organization,description,type,amount_min,amount_max,currency,eligible_countries,eligible_verticals,eligible_stages,application_url,deadline,is_rolling'
+          )
+          .eq('is_active', true)
+          .order('deadline', { ascending: true, nullsFirst: false })
+
+        if (cancelled) return
+
+        if (oppsError) {
+          console.error('[S4C Opportunities]', oppsError)
+        }
+        setRows((oppsData as OpportunityRow[]) || [])
+
+        // Fire algorithmic scoring via API (no AI blurbs yet)
+        try {
+          const res = await fetch('/api/ai/opportunities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+          })
+          if (res.ok) {
+            const json = (await res.json()) as { opportunities?: ScoredApiOpportunity[] }
+            if (json.opportunities && !cancelled) {
+              const map = new Map<string, ScoredApiOpportunity>()
+              for (const op of json.opportunities) {
+                map.set(op.id, op)
+              }
+              setApiScores(map)
             }
-            setApiScores(map)
           }
+        } catch (err) {
+          console.error('[S4C Opportunities] score fetch failed:', err)
         }
       } catch (err) {
-        console.error('[S4C Opportunities] score fetch failed:', err)
+        console.error('[S4C Opportunities] load error:', err)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
     load()

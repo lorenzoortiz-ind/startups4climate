@@ -356,6 +356,7 @@ export default function AdminOportunidadesPage() {
     if (!appUser) return
     let cancelled = false
     ;(async () => {
+      try {
       const orgId = appUser.org_id ?? null
 
       // Load opportunities and cohort founder verticals in parallel
@@ -390,7 +391,7 @@ export default function AdminOportunidadesPage() {
       }
 
       const { data, error } = oppsRes
-      if (error || !data) return
+      if (error || !data) { if (!cancelled) setLiveOpps([]); return }
 
       const TYPE_MAP: Record<string, OpportunityType> = {
         grant: 'Grant',
@@ -438,6 +439,10 @@ export default function AdminOportunidadesPage() {
       }
 
       setLiveOpps(opps)
+      } catch (err) {
+        console.error('[S4C Oportunidades] fetch error:', err)
+        if (!cancelled) setLiveOpps([])
+      }
     })()
     return () => { cancelled = true }
   }, [appUser])

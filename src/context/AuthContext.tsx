@@ -109,7 +109,7 @@ export function isDemoUserId(id: string | null | undefined): boolean {
 /** Seed some example tool progress into localStorage so demo founder has content. */
 function seedDemoFounderData() {
   if (typeof window === 'undefined') return
-  const SEED_VERSION = '4'  // Bump this when seed data changes
+  const SEED_VERSION = '5'  // Bump this when seed data changes
   const versionKey = `s4c_${DEMO_FOUNDER_ID}_seed_version`
   try {
     const currentVersion = localStorage.getItem(versionKey)
@@ -392,9 +392,9 @@ function seedDemoFounderData() {
       },
     },
     'sales-process-map': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         proceso: '1. Identificación (LinkedIn Sales Navigator + base APEGA) → 2. Contacto inicial (email personalizado + WhatsApp) → 3. Demo presencial con muestras → 4. Piloto gratuito 2 semanas → 5. Follow-up con métricas del piloto → 6. Propuesta comercial → 7. Negociación → 8. Firma contrato → 9. Onboarding (capacitación staff) → 10. Primera entrega',
@@ -404,9 +404,9 @@ function seedDemoFounderData() {
       },
     },
     'okr-tracker': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         periodo: 'Q2 2026',
@@ -532,9 +532,9 @@ function seedDemoFounderData() {
       },
     },
     'product-plan-scaling': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         vision: 'Convertir a EcoBio Perú en el referente latinoamericano de empaques compostables hechos con materias primas amazónicas, alcanzando 500 clientes B2B y 5,000 toneladas de plástico evitadas para el cierre de 2027.',
@@ -597,9 +597,9 @@ function seedDemoFounderData() {
       },
     },
     'pitch-deck-builder': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         version: 'v7 — abril 2026',
@@ -666,9 +666,9 @@ function seedDemoFounderData() {
       },
     },
     'cap-table-fundraising': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         rondaActual: {
@@ -727,9 +727,9 @@ function seedDemoFounderData() {
       },
     },
     'data-room-builder': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         ultimoUpdate: '2026-04-10',
@@ -821,9 +821,9 @@ function seedDemoFounderData() {
       },
     },
     'financial-model-builder': {
-      completed: true,
-      completedAt: now,
-      reportGenerated: true,
+      completed: false,
+      completedAt: null,
+      reportGenerated: false,
       lastSaved: now,
       data: {
         version: 'v3 — abril 2026',

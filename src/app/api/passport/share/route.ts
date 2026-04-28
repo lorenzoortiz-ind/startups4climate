@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     })
     .eq('id', startup.id)
     .select('is_public, public_share_token')
-    .single()
+    .maybeSingle()
 
   if (updErr || !updated) {
     return Response.json({ error: 'Error guardando preferencia.' }, { status: 500 })

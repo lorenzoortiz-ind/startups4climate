@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     .from('profiles')
     .select('role, org_id')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     .select('id, name, org_id, start_date, end_date, status')
     .eq('id', cohortId)
     .eq('org_id', profile.org_id)
-    .single()
+    .maybeSingle()
 
   if (!cohort) {
     return NextResponse.json({ error: 'Cohorte no encontrada' }, { status: 404 })

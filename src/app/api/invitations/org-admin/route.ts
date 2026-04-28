@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     .from('profiles')
     .select('role, full_name')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile || profile.role !== 'superadmin') {
     return NextResponse.json({ error: 'Solo superadmin puede invitar administradores de organización' }, { status: 403 })
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     .from('organizations')
     .select('id, name')
     .eq('id', org_id)
-    .single()
+    .maybeSingle()
 
   if (!org) {
     return NextResponse.json({ error: 'Organización no encontrada' }, { status: 404 })
@@ -81,10 +81,10 @@ export async function POST(request: NextRequest) {
       invitation_type: 'admin_org',
     })
     .select('id, token')
-    .single()
+    .maybeSingle()
 
   if (insertError || !invitation) {
-    console.error('Insert error:', insertError)
+    console.error('[S4C Admin] invitations insert error:', insertError)
     return NextResponse.json({ error: 'Error al crear la invitación' }, { status: 500 })
   }
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     })
   } catch {
     // Email failed but invitation was created — log but don't fail
-    console.error('Failed to send org-admin invitation email')
+    console.error('[S4C Admin] failed to send org-admin invitation email')
   }
 
   return NextResponse.json({ success: true, invitation })

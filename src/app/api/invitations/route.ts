@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     .from('profiles')
     .select('role, org_id, full_name')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       invited_by: user.id,
     })
     .select('id, token')
-    .single()
+    .maybeSingle()
 
   if (insertError || !invitation) {
     return NextResponse.json({ error: 'Error al crear la invitación' }, { status: 500 })
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     .from('organizations')
     .select('name')
     .eq('id', profile.org_id)
-    .single()
+    .maybeSingle()
 
   const inviteUrl = `${SITE_URL}/invite/${invitation.token}`
   const orgName = org?.name || 'una organización'
@@ -138,7 +138,7 @@ export async function GET() {
     .from('profiles')
     .select('role, org_id')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })

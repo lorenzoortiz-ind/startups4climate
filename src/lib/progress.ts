@@ -352,12 +352,10 @@ export async function hydrateProgressFromSupabase(userId: string): Promise<boole
 
     // Also merge any local-only entries (saved offline) and push them to Supabase
     const localProgress = getLocalProgress(userId)
-    let hadLocalOnly = false
     for (const [toolId, localEntry] of Object.entries(localProgress)) {
       if (!progress[toolId] && localEntry.lastSaved) {
         // This entry exists only locally — push to Supabase
         progress[toolId] = localEntry
-        hadLocalOnly = true
         syncToolDataToSupabase(userId, toolId, localEntry.data).catch((err) => {
           console.error('[S4C Sync] Failed to push local-only entry to Supabase:', err)
         })

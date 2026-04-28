@@ -43,6 +43,7 @@ export async function GET(
     path: '/',
     maxAge: 86400,
     sameSite: 'lax',
+    httpOnly: false, // must be readable by AuthContext via document.cookie
   })
 
   return response

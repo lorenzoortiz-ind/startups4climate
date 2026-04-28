@@ -274,13 +274,13 @@ export async function POST(request: NextRequest) {
       .from('startups')
       .select('*')
       .eq('founder_id', user.id)
-      .single()
+      .maybeSingle()
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     const { data: progress } = await supabase
       .from('tool_data')
@@ -297,7 +297,7 @@ export async function POST(request: NextRequest) {
         .select('messages')
         .eq('id', conversationId)
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
       if (prevConv?.messages && Array.isArray(prevConv.messages)) {
         history = prevConv.messages
@@ -377,7 +377,7 @@ export async function POST(request: NextRequest) {
                   messages: newMessages,
                 })
                 .select('id')
-                .single()
+                .maybeSingle()
               convId = newConv?.id || crypto.randomUUID()
             }
           } catch (dbErr) {
@@ -449,7 +449,7 @@ export async function POST(request: NextRequest) {
           messages: newMessages,
         })
         .select('id')
-        .single()
+        .maybeSingle()
 
       convId = newConv?.id || crypto.randomUUID()
     }

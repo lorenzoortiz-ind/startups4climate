@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       .from('startups')
       .select('*')
       .eq('founder_id', user.id)
-      .single()
+      .maybeSingle()
 
     const { data: progress } = await supabase
       .from('tool_data')

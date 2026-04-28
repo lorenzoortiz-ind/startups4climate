@@ -6,10 +6,11 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-// Same RSS feeds as cron
+// Same RSS feeds as cron — keep in sync with /api/cron/radar-rss/route.ts
 const FEEDS = [
   { url: 'https://latamlist.com/feed/', source_name: 'LatamList', default_type: 'news' as const },
   { url: 'https://contxto.com/en/feed/', source_name: 'Contxto', default_type: 'investment' as const },
+  { url: 'https://labsnews.com/en/feed/', source_name: 'LABS News', default_type: 'news' as const },
   { url: 'https://agfundernews.com/feed/', source_name: 'AgFunder News', default_type: 'trend' as const },
 ]
 

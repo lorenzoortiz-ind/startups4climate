@@ -17,7 +17,7 @@ export async function DELETE(
     .from('profiles')
     .select('role, org_id')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })

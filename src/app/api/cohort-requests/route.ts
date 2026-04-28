@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     .from('cohorts')
     .select('id, name, access_mode')
     .eq('id', cohort_id)
-    .single()
+    .maybeSingle()
 
   if (!cohort) {
     return NextResponse.json({ error: 'Cohorte no encontrada' }, { status: 404 })
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
     .from('startups')
     .select('id')
     .eq('founder_id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!startup) {
     return NextResponse.json({ error: 'No se encontró tu startup. Debes registrar una startup primero.' }, { status: 404 })
@@ -166,10 +166,10 @@ export async function POST(request: NextRequest) {
       status: 'pending',
     })
     .select()
-    .single()
+    .maybeSingle()
 
   if (insertError || !cohortRequest) {
-    console.error('Insert error:', insertError)
+    console.error('[S4C Admin] cohort-requests insert error:', insertError)
     return NextResponse.json({ error: 'Error al crear la solicitud' }, { status: 500 })
   }
 

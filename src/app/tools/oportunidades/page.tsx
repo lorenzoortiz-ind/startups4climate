@@ -489,6 +489,7 @@ export default function OportunidadesPage() {
           )
           .eq('is_active', true)
           .order('deadline', { ascending: true, nullsFirst: false })
+          .limit(60)
 
         if (cancelled) return
 

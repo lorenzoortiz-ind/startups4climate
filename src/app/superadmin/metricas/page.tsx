@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import {
   Building2, Users, Rocket, GraduationCap,
   Wrench, Target, Mail, AlertCircle,
-  BarChart3, PieChart, TrendingUp,
+  BarChart3, PieChart, TrendingUp, HardDrive, Database, Activity,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -42,6 +42,40 @@ interface GroupCount {
   count: number
 }
 
+interface CapacityGauge {
+  bytes?: number
+  count?: number
+  limit_bytes?: number
+  limit?: number
+  pct: number
+}
+
+interface CapacitySnapshot {
+  generated_at: string
+  db: CapacityGauge
+  storage: CapacityGauge
+  mau_30d: CapacityGauge
+  active_founders_7d: number
+  active_founders_30d: number
+  ai_calls_30d: number
+  orgs_active: number
+  founders_total: number
+  top_tables: { name: string; bytes: number; rows: number }[]
+}
+
+function formatBytes(b: number): string {
+  if (b < 1024) return `${b} B`
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`
+  if (b < 1024 * 1024 * 1024) return `${(b / 1024 / 1024).toFixed(1)} MB`
+  return `${(b / 1024 / 1024 / 1024).toFixed(2)} GB`
+}
+
+function pctColor(pct: number): { bar: string; bg: string; label: string } {
+  if (pct >= 80) return { bar: '#DC2626', bg: 'rgba(220,38,38,0.1)', label: 'Crítico' }
+  if (pct >= 60) return { bar: '#F59E0B', bg: 'rgba(245,158,11,0.1)', label: 'Atención' }
+  return { bar: '#10B981', bg: 'rgba(16,185,129,0.1)', label: 'OK' }
+}
+
 export default function MetricasPage() {
   const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
@@ -62,6 +96,9 @@ export default function MetricasPage() {
   const [orgsByPlan, setOrgsByPlan] = useState<GroupCount[]>([])
   const [foundersByStage, setFoundersByStage] = useState<GroupCount[]>([])
   const [dailyRegistrations, setDailyRegistrations] = useState<{ date: string; count: number }[]>([])
+
+  // Platform capacity (Supabase usage vs Free tier limits)
+  const [capacity, setCapacity] = useState<CapacitySnapshot | null>(null)
 
   useEffect(() => {
     if (isDemo) {
@@ -88,6 +125,24 @@ export default function MetricasPage() {
         synthetic.push({ date: key, count: Math.max(0, base) })
       }
       setDailyRegistrations(synthetic)
+      setCapacity({
+        generated_at: new Date().toISOString(),
+        db: { bytes: 38 * 1024 * 1024, limit_bytes: 500 * 1024 * 1024, pct: 7.6 },
+        storage: { bytes: 6 * 1024 * 1024, limit_bytes: 1024 * 1024 * 1024, pct: 0.6 },
+        mau_30d: { count: 142, limit: 50000, pct: 0.28 },
+        active_founders_7d: 58,
+        active_founders_30d: 142,
+        ai_calls_30d: 920,
+        orgs_active: 8,
+        founders_total: 187,
+        top_tables: [
+          { name: 'tool_data', bytes: 9 * 1024 * 1024, rows: 1840 },
+          { name: 'startups', bytes: 6 * 1024 * 1024, rows: 187 },
+          { name: 'ai_conversations', bytes: 5 * 1024 * 1024, rows: 920 },
+          { name: 'news_items', bytes: 4 * 1024 * 1024, rows: 280 },
+          { name: 'diagnostics', bytes: 2 * 1024 * 1024, rows: 187 },
+        ],
+      })
       setLoading(false)
       return
     }
@@ -192,6 +247,14 @@ export default function MetricasPage() {
         dailyData.push({ date: key, count: dayCounts[key] || 0 })
       }
       setDailyRegistrations(dailyData)
+
+      // Capacity snapshot (RPC, superadmin-only). Failures are non-fatal.
+      const { data: capData, error: capErr } = await supabase.rpc('platform_capacity_snapshot')
+      if (capErr) {
+        console.error('[S4C Capacity]', capErr)
+      } else if (capData) {
+        setCapacity(capData as CapacitySnapshot)
+      }
 
       setLoading(false)
     }
@@ -367,6 +430,153 @@ export default function MetricasPage() {
           )
         })}
       </div>
+
+      {/* Platform capacity (Supabase usage vs Free tier) */}
+      {capacity && (
+        <motion.div
+          {...fadeUp}
+          transition={{ ...fadeUp.transition, delay: 0.42 }}
+          style={{ ...cardStyle, marginBottom: '1.5rem' }}
+        >
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Activity size={18} color="var(--color-text-muted)" />
+              <h3 style={{
+                fontFamily: 'var(--font-heading)', fontWeight: 600,
+                fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+              }}>
+                Capacidad de plataforma
+              </h3>
+            </div>
+            <span style={{
+              fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
+              color: 'var(--color-text-muted)',
+            }}>
+              Snapshot {new Date(capacity.generated_at).toLocaleString('es-419')}
+            </span>
+          </div>
+
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '1rem', marginBottom: '1.25rem',
+          }}>
+            {[
+              { key: 'db', icon: Database, title: 'Base de datos', gauge: capacity.db,
+                used: formatBytes(capacity.db.bytes ?? 0),
+                limit: formatBytes(capacity.db.limit_bytes ?? 0) },
+              { key: 'storage', icon: HardDrive, title: 'Storage (logos, archivos)', gauge: capacity.storage,
+                used: formatBytes(capacity.storage.bytes ?? 0),
+                limit: formatBytes(capacity.storage.limit_bytes ?? 0) },
+              { key: 'mau', icon: Users, title: 'MAU (últimos 30 días)', gauge: capacity.mau_30d,
+                used: String(capacity.mau_30d.count ?? 0),
+                limit: String(capacity.mau_30d.limit ?? 0) },
+            ].map(({ key, icon: Icon, title, gauge, used, limit }) => {
+              const c = pctColor(gauge.pct)
+              return (
+                <div key={key} style={{
+                  border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)',
+                  padding: '1rem', background: 'var(--color-bg-base)',
+                }}>
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    marginBottom: '0.75rem',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Icon size={16} color={c.bar} />
+                      <span style={{
+                        fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)',
+                        fontWeight: 600, color: 'var(--color-text-primary)',
+                      }}>
+                        {title}
+                      </span>
+                    </div>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                      fontWeight: 600, color: c.bar, padding: '0.125rem 0.5rem',
+                      borderRadius: '999px', background: c.bg,
+                    }}>
+                      {c.label}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontFamily: 'var(--font-heading)', fontWeight: 700,
+                    fontSize: 'var(--text-lg)', color: 'var(--color-text-primary)',
+                    lineHeight: 1, marginBottom: '0.5rem',
+                  }}>
+                    {used} <span style={{
+                      fontSize: 'var(--text-xs)', fontWeight: 400,
+                      color: 'var(--color-text-muted)',
+                    }}>/ {limit} ({gauge.pct}%)</span>
+                  </div>
+                  <div style={{
+                    height: 6, borderRadius: 999, background: 'var(--color-border)',
+                    overflow: 'hidden',
+                  }}>
+                    <div style={{
+                      height: '100%', width: `${Math.min(100, Math.max(0, gauge.pct))}%`,
+                      background: c.bar, transition: 'width 0.3s ease',
+                    }} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: '0.75rem', paddingTop: '1rem', borderTop: '1px solid var(--color-border)',
+          }}>
+            {[
+              { label: 'Founders activos 7d', value: capacity.active_founders_7d },
+              { label: 'Founders activos 30d', value: capacity.active_founders_30d },
+              { label: 'Llamadas AI 30d', value: capacity.ai_calls_30d },
+              { label: 'Orgs activas', value: capacity.orgs_active },
+            ].map((s) => (
+              <div key={s.label}>
+                <div style={{
+                  fontFamily: 'var(--font-heading)', fontWeight: 700,
+                  fontSize: 'var(--text-md)', color: 'var(--color-text-primary)',
+                }}>
+                  {s.value.toLocaleString('es-419')}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                  color: 'var(--color-text-muted)',
+                }}>
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {capacity.top_tables && capacity.top_tables.length > 0 && (
+            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--color-border)' }}>
+              <div style={{
+                fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                color: 'var(--color-text-muted)', marginBottom: '0.5rem',
+                textTransform: 'uppercase', letterSpacing: '0.05em',
+              }}>
+                Top 5 tablas por tamaño
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {capacity.top_tables.map((t) => (
+                  <span key={t.name} style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                    padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)',
+                    background: 'var(--color-bg-base)', border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-secondary)',
+                  }}>
+                    {t.name} · {formatBytes(t.bytes)} · {t.rows.toLocaleString('es-419')} filas
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Two-column breakdown */}
       <div style={{

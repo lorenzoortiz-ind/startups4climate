@@ -13,6 +13,7 @@ import {
   Target,
   Phone,
   AtSign,
+  KeyRound,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
@@ -196,6 +197,72 @@ export default function ConfiguracionPage() {
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // "Cambiar contraseña" section state
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [pwSaving, setPwSaving] = useState(false)
+  const [pwError, setPwError] = useState<string | null>(null)
+  const [pwSuccess, setPwSuccess] = useState(false)
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPwError(null)
+    setPwSuccess(false)
+
+    if (isDemo) {
+      setPwError('El cambio de contraseña está deshabilitado en modo demo.')
+      return
+    }
+    if (!appUser?.email) {
+      setPwError('No se pudo identificar tu sesión. Vuelve a iniciar sesión.')
+      return
+    }
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPwError('Completa todos los campos.')
+      return
+    }
+    if (newPassword.length < 8) {
+      setPwError('La nueva contraseña debe tener al menos 8 caracteres.')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPwError('La nueva contraseña y su confirmación no coinciden.')
+      return
+    }
+    if (newPassword === currentPassword) {
+      setPwError('La nueva contraseña debe ser distinta a la actual.')
+      return
+    }
+
+    setPwSaving(true)
+    // Re-authenticate to verify the current password before allowing the change.
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: appUser.email,
+      password: currentPassword,
+    })
+    if (signInError) {
+      setPwError('La contraseña actual es incorrecta.')
+      setPwSaving(false)
+      return
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+    if (updateError) {
+      console.error('[S4C Admin] Password update error:', updateError)
+      setPwError('No se pudo actualizar la contraseña. Intenta de nuevo.')
+      setPwSaving(false)
+      return
+    }
+
+    setCurrentPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+    setPwSuccess(true)
+    setPwSaving(false)
+    setTimeout(() => setPwSuccess(false), 4000)
+  }
 
   useEffect(() => {
     if (isDemo) {
@@ -934,6 +1001,112 @@ export default function ConfiguracionPage() {
           </button>
         </div>
       </form>
+
+      {/* Cambiar contraseña — sección de cuenta personal */}
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.1 }}
+        style={{ ...cardStyle, marginTop: '1.5rem', maxWidth: 720 }}
+      >
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem',
+        }}>
+          <KeyRound size={18} color="var(--color-text-muted)" />
+          <h2 style={{
+            fontFamily: 'var(--font-heading)', fontWeight: 600,
+            fontSize: 'var(--text-md)', color: 'var(--color-text-primary)', margin: 0,
+          }}>
+            Cambiar contraseña
+          </h2>
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+          color: 'var(--color-text-secondary)', margin: '0 0 1.25rem 0',
+        }}>
+          Actualiza la contraseña con la que ingresas a tu cuenta.
+        </p>
+
+        <form onSubmit={handleChangePassword} style={{ display: 'grid', gap: '1rem' }}>
+          <div>
+            <label style={labelStyle}>Contraseña actual</label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              autoComplete="current-password"
+              disabled={pwSaving || isDemo}
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Nueva contraseña</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
+              disabled={pwSaving || isDemo}
+              style={inputStyle}
+            />
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+              color: 'var(--color-text-muted)', margin: '0.375rem 0 0 0',
+            }}>
+              Mínimo 8 caracteres. Usa una combinación de letras, números y símbolos.
+            </p>
+          </div>
+          <div>
+            <label style={labelStyle}>Confirmar nueva contraseña</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
+              disabled={pwSaving || isDemo}
+              style={inputStyle}
+            />
+          </div>
+
+          {pwError && (
+            <div style={{
+              padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+              background: 'rgba(220,38,38,0.08)', color: '#DC2626',
+              fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+            }}>
+              {pwError}
+            </div>
+          )}
+          {pwSuccess && (
+            <div style={{
+              padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+              background: 'rgba(16,185,129,0.08)', color: '#10B981',
+              fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+            }}>
+              Contraseña actualizada correctamente.
+            </div>
+          )}
+
+          <div>
+            <button
+              type="submit"
+              disabled={pwSaving || isDemo}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.5rem 1rem', borderRadius: 8,
+                background: 'var(--color-accent-primary)', color: '#fff',
+                border: 'none', cursor: pwSaving || isDemo ? 'not-allowed' : 'pointer',
+                fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
+                transition: 'background 0.15s',
+                opacity: pwSaving || isDemo ? 0.6 : 1,
+              }}
+            >
+              {pwSaving ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <KeyRound size={14} />}
+              {pwSaving ? 'Actualizando...' : 'Actualizar contraseña'}
+            </button>
+          </div>
+        </form>
+      </motion.section>
     </motion.div>
   )
 }

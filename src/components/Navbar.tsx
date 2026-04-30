@@ -16,7 +16,7 @@ const navLinks: { label: string; href: string; isPage?: boolean }[] = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const { user, openAuthModal } = useAuth()
+  const { user, appUser, openAuthModal } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -155,8 +155,8 @@ export default function Navbar() {
             {user ? (
               <button
                 onClick={() => {
-                  if (user.role === 'admin_org') router.push('/admin')
-                  else if (user.role === 'superadmin') router.push('/superadmin')
+                  if (appUser?.role === 'admin_org') router.push('/admin')
+                  else if (appUser?.role === 'superadmin') router.push('/superadmin')
                   else router.push('/tools')
                 }}
                 className="btn-ember"

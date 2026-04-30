@@ -290,7 +290,7 @@ function OpportunityCard({ item, index, showCohortBadge }: { item: Opportunity &
         </span>
         {item.url ? (
           <a
-            href={item.url.match(/^https?:\\/\\//) ? item.url : `https://${item.url}`}
+            href={item.url.match(/^https?:\/\//) ? item.url : `https://${item.url}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{

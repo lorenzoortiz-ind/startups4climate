@@ -432,7 +432,7 @@ function OpportunityCard({
         </span>
         {item.application_url ? (
           <a
-            href={item.application_url.match(/^https?:\\/\\//) ? item.application_url : `https://${item.application_url}`}
+            href={item.application_url.match(/^https?:\/\//) ? item.application_url : `https://${item.application_url}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{

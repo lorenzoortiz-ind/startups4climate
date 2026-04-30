@@ -5,6 +5,7 @@
 Startups4Climate (S4C) es una plataforma all-in-one para founders de startups de impacto en Latinoamérica. Desarrollada por Redesign Lab (Lorenzo Ortiz + Eddie Ajalcriña). Ofrece herramientas interactivas, mentores AI, diagnóstico de startup readiness, y visibilidad de oportunidades (grants, fondos, competencias).
 
 Dos tipos de usuario:
+
 - Founders: acceso gratuito a herramientas y diagnóstico
 - Organizaciones: incubadoras, gobiernos, programas de innovación (modelo B2B)
 
@@ -71,6 +72,7 @@ Todas configuradas en Vercel (Production, Preview, Development).
 ## Supabase
 
 ### Tablas principales
+
 - `profiles` — Datos de usuario (`id`, `full_name`, `role`, `org_id`). Roles: `founder`, `admin_org`, `superadmin`
 - `organizations` — Incubadoras/universidades (`id`, `name`, `logo_url`, `plan`, `max_startups`, `contract_end`)
 - `startups` — Startups de founders (`founder_id`, `name`, `vertical`, `stage`, `diagnostic_score`, `tools_completed`)
@@ -81,12 +83,14 @@ Todas configuradas en Vercel (Production, Preview, Development).
 - `workbook_downloads`, `invitations`, `cohort_requests`, `support_tickets`, `ticket_messages`
 
 ### Seguridad (RLS)
+
 - Todas las tablas con RLS habilitado
 - Políticas scoped por `user_id` / `founder_id` / `org_id`
 - `handle_new_user()` con `search_path` fijo (previene hijacking)
 - Indexes en todas las foreign keys críticas
 
 ### Auth
+
 - `email/password` habilitado
 - `autoRefreshToken: true`, `persistSession: true`
 - Password reset flow via `supabase.auth.resetPasswordForEmail()`
@@ -107,9 +111,9 @@ Todas configuradas en Vercel (Production, Preview, Development).
 
 Password universal: `S4c2026demo!`
 
-- **Superadmins**: lorenzo.ortiz@redesignlab.org, eddie@redesignlab.org
-- **Demo admin_org**: admin@demo.startups4climate.org (org: "Universidad Demo — Startups4Climate")
-- **Demo founder**: founder@demo.startups4climate.org (startup: EcoBio Perú, sin org → puede pedir ingreso a cohorts)
+- **Superadmins**: <lorenzo.ortiz@redesignlab.org>, <eddie@redesignlab.org>
+- **Demo admin_org**: <admin@demo.startups4climate.org> (org: "Universidad Demo — Startups4Climate")
+- **Demo founder**: <founder@demo.startups4climate.org> (startup: EcoBio Perú, sin org → puede pedir ingreso a cohorts)
 - **Founders orgánicos**: 13 founders reales registrados desde la landing (sin org asignada aún)
 - **Cohort demo**: "Cohorte Innovación Climática 2026" — active, access_mode='open', org demo
 - **Solicitud pre-cargada**: founder demo ya tiene una solicitud `pending` en el cohort demo para mostrar el flujo de aprobación
@@ -134,6 +138,6 @@ Password universal: `S4c2026demo!`
 
 ## Contacto y contexto
 
-- Email: hello@redesignlab.org
+- Email: <hello@redesignlab.org>
 - WhatsApp soporte: +51989338401
 - Web Redesign Lab: redesignlab.org

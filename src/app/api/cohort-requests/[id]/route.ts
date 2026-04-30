@@ -132,6 +132,11 @@ export async function PATCH(
 
   // If approved: add startup to cohort, then set founder's profile.org_id if null
   if (status === 'approved') {
+    if (!cohortRequest.startup_id) {
+      console.error('[S4C Admin] approve failed: solicitud sin startup_id', id)
+      return NextResponse.json({ error: 'Esta solicitud no tiene una startup asociada y no puede aprobarse.' }, { status: 400 })
+    }
+
     const { error: insertError } = await supabase
       .from('cohort_startups')
       .insert({

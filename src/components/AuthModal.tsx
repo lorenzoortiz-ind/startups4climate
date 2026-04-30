@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Button, Input } from '@/components/ui'
+import { normalizeLoginIdentifier } from '@/lib/auth-identifier'
 
 export default function AuthModal() {
   const router = useRouter()
@@ -38,14 +39,15 @@ export default function AuthModal() {
 
     if (mode === 'reset') {
       if (!form.email) {
-        setError('Por favor ingresa tu email.')
+        setError('Por favor ingresa tu usuario o email.')
         return
       }
       setLoading(true)
       try {
-        const { error: resetError } = await supabase.auth.resetPasswordForEmail(form.email, {
-          redirectTo: window.location.origin + '/tools',
-        })
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+          normalizeLoginIdentifier(form.email),
+          { redirectTo: window.location.origin + '/tools' },
+        )
         if (resetError) {
           setError(resetError.message)
         } else {
@@ -76,7 +78,7 @@ export default function AuthModal() {
     try {
       result =
         mode === 'login'
-          ? await login(form.email, form.password)
+          ? await login(normalizeLoginIdentifier(form.email), form.password)
           : await register(form.email, form.password, form.name, form.startup)
     } catch {
       setError('Error de conexión. Verifica tu internet e intenta de nuevo.')
@@ -393,7 +395,7 @@ export default function AuthModal() {
                       }}
                     >
                       {mode === 'reset'
-                        ? 'Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.'
+                        ? 'Ingresa tu usuario o email y te enviaremos un enlace para restablecer tu contraseña.'
                         : mode === 'login'
                           ? (orgMode
                             ? 'Ingresa las credenciales proporcionadas por S4C.'
@@ -431,11 +433,11 @@ export default function AuthModal() {
                       variant="underline"
                       inputSize="lg"
                       leftIcon={<Mail size={16} />}
-                      type="email"
-                      placeholder="Email"
+                      type={mode === 'register' ? 'email' : 'text'}
+                      placeholder={mode === 'register' ? 'Email' : 'Usuario o email'}
                       value={form.email}
                       onChange={set('email')}
-                      autoComplete="email"
+                      autoComplete={mode === 'register' ? 'email' : 'username'}
                       style={{ marginBottom: '1.25rem' }}
                     />
                     {mode !== 'reset' && (

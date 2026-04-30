@@ -16,7 +16,6 @@ import {
   ChevronLeft,
   Radar,
   Lightbulb,
-  BookOpen,
   Building2,
   Inbox,
 } from 'lucide-react'
@@ -35,7 +34,6 @@ const NAV_ITEMS = [
   { href: '/admin/benchmarking', label: 'Benchmarking', icon: BarChart3 },
   { href: '/admin/radar', label: 'RADAR', icon: Radar },
   { href: '/admin/oportunidades', label: 'Oportunidades', icon: Lightbulb },
-  { href: '/admin/recursos', label: 'Recursos', icon: BookOpen },
   { href: '/admin/configuracion', label: 'Configuración', icon: Settings },
 ] as const
 

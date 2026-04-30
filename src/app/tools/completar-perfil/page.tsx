@@ -227,6 +227,112 @@ export default function CompletarPerfilPage() {
     )
   }, [isDemo, user?.id])
 
+  // Prefill from previously saved data so founders don't re-enter what they
+  // already provided in the diagnostic or in a prior completar-perfil run.
+  // Sources (in priority order): supabase.startups row → localStorage backup.
+  useEffect(() => {
+    if (isDemo || !user?.id) return
+    let cancelled = false
+
+    const setIfEmpty = (
+      current: string,
+      next: unknown,
+      setter: (v: string) => void,
+    ) => {
+      if (current) return
+      if (typeof next === 'string' && next.trim()) setter(next)
+      else if (typeof next === 'number') setter(String(next))
+    }
+
+    const setListIfEmpty = (
+      current: string[],
+      next: unknown,
+      setter: (v: string[]) => void,
+    ) => {
+      if (current.length > 0) return
+      if (Array.isArray(next)) setter(next.filter((x) => typeof x === 'string'))
+    }
+
+    ;(async () => {
+      try {
+        const [startupRes, profileRes] = await Promise.all([
+          supabase
+            .from('startups')
+            .select(
+              'vertical, country, description, team_size, website, linkedin'
+            )
+            .eq('founder_id', user.id)
+            .maybeSingle(),
+          supabase
+            .from('profiles')
+            .select('diagnostic_data')
+            .eq('id', user.id)
+            .maybeSingle(),
+        ])
+
+        if (cancelled) return
+
+        const s = startupRes.data
+        if (s) {
+          setIfEmpty(vertical, s.vertical, setVertical)
+          setIfEmpty(country, s.country, setCountry)
+          setIfEmpty(description, s.description, setDescription)
+          setIfEmpty(teamSize, s.team_size, setTeamSize)
+          setIfEmpty(website, s.website, setWebsite)
+          setIfEmpty(linkedin, s.linkedin, setLinkedin)
+        }
+
+        // Diagnostic answers may carry country in human form ("Perú") even
+        // when startups.country was populated as fallback ("PE"). Prefer the
+        // diagnostic value only if startups.country is empty.
+        const diag = (profileRes.data?.diagnostic_data ?? {}) as Record<
+          string,
+          unknown
+        >
+        if (diag) {
+          setIfEmpty(country, diag.country, setCountry)
+        }
+
+        // Local backup written by handleFinish — restores extra fields not
+        // mirrored to Supabase (region, role, experience, MRR, etc).
+        const extraKey = `s4c_${user.id}_profile_extra`
+        const extraRaw = localStorage.getItem(extraKey)
+        if (extraRaw) {
+          try {
+            const extra = JSON.parse(extraRaw) as Record<string, unknown>
+            setIfEmpty(region, extra.region, setRegion)
+            setIfEmpty(role, extra.role, setRole)
+            setIfEmpty(experience, extra.experience, setExperience)
+            setIfEmpty(linkedin, extra.linkedin, setLinkedin)
+            setIfEmpty(description, extra.description, setDescription)
+            setIfEmpty(teamSize, extra.teamSize, setTeamSize)
+            setIfEmpty(foundedYear, extra.foundedYear, setFoundedYear)
+            setIfEmpty(website, extra.website, setWebsite)
+            setIfEmpty(businessModel, extra.businessModel, setBusinessModel)
+            setIfEmpty(pricingModel, extra.pricingModel, setPricingModel)
+            setIfEmpty(currentMRR, extra.currentMRR, setCurrentMRR)
+            setIfEmpty(totalFunding, extra.totalFunding, setTotalFunding)
+            setIfEmpty(mainCustomers, extra.mainCustomers, setMainCustomers)
+            setListIfEmpty(certifications, extra.certifications, setCertifications)
+            setListIfEmpty(sdgImpact, extra.sdgImpact, setSdgImpact)
+            setIfEmpty(mainChallenges, extra.mainChallenges, setMainChallenges)
+          } catch {
+            /* ignore corrupt backup */
+          }
+        }
+      } catch (err) {
+        console.error('[S4C Sync] completar-perfil prefill failed:', err)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+    // We deliberately depend only on user/demo to run a single hydration
+    // pass; we never overwrite values the user is currently editing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDemo, user?.id])
+
   const toggle = (list: string[], setList: (v: string[]) => void) => (v: string) => {
     if (list.includes(v)) setList(list.filter((x) => x !== v))
     else setList([...list, v])

@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, Loader2, CheckCircle2, Info, AlertTriangle, Spar
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import { applyDiagnosticToProfile } from '@/lib/diagnostic-sync'
 
 /* ════════════════════════════════════════════════════════════════════
    Startups4Climate · DiagnosticForm v2.1
@@ -747,6 +748,19 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
           dimension_scores: dimensionScores,
         })
         if (error) console.error('[S4C Sync] diagnostics insert failed:', error)
+
+        // If the user is authenticated, also propagate the diagnostic into
+        // their profile + startup row so they don't have to re-enter
+        // vertical / country / stage in /tools/completar-perfil.
+        if (foundUserId) {
+          await applyDiagnosticToProfile(supabase, foundUserId, {
+            total_score: total,
+            perfil_etapa: matched.etapa,
+            dimension_scores: dimensionScores,
+            answers,
+            tags,
+          })
+        }
       } catch (err) {
         console.error('[S4C Sync] diagnostics insert threw:', err)
       }

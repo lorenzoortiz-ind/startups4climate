@@ -89,7 +89,12 @@ export async function middleware(request: NextRequest) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/'
       redirectUrl.searchParams.set('auth', 'login')
-      return NextResponse.redirect(redirectUrl)
+      const response = NextResponse.redirect(redirectUrl)
+      // Pass the refreshed cookies
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return response
     }
   }
 
@@ -111,14 +116,18 @@ export async function middleware(request: NextRequest) {
       const { data: profile } = await Promise.race([
         supabase.from('profiles').select('role').eq('id', user.id).single(),
         new Promise<{ data: null; error: { message: string } }>((resolve) =>
-          setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+          setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 10000)
         ),
       ])
 
       if (!profile || profile.role !== 'superadmin') {
         const redirectUrl = request.nextUrl.clone()
         redirectUrl.pathname = profile?.role === 'admin_org' ? '/admin' : '/tools'
-        return NextResponse.redirect(redirectUrl)
+        const response = NextResponse.redirect(redirectUrl)
+        supabaseResponse.cookies.getAll().forEach((cookie) => {
+          response.cookies.set(cookie.name, cookie.value, cookie)
+        })
+        return response
       }
     }
 
@@ -144,26 +153,38 @@ export async function middleware(request: NextRequest) {
     const { data: profile } = await Promise.race([
       supabase.from('profiles').select('role').eq('id', user.id).single(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>
-        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 3000)
+        setTimeout(() => resolve({ data: null, error: { message: 'Timeout' } }), 10000)
       ),
     ])
 
     if (!profile) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/tools'
-      return NextResponse.redirect(redirectUrl)
+      const response = NextResponse.redirect(redirectUrl)
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return response
     }
 
     if (profile.role === 'superadmin') {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/superadmin'
-      return NextResponse.redirect(redirectUrl)
+      const response = NextResponse.redirect(redirectUrl)
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return response
     }
 
     if (profile.role !== 'admin_org') {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/tools'
-      return NextResponse.redirect(redirectUrl)
+      const response = NextResponse.redirect(redirectUrl)
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        response.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return response
     }
   }
 

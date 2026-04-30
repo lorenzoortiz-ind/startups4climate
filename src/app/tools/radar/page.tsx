@@ -144,7 +144,7 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
         )}
         {item.source_url && (
           <a
-            href={item.source_url}
+            href={item.source_url.match(/^https?:\\/\\//) ? item.source_url : `https://${item.source_url}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{

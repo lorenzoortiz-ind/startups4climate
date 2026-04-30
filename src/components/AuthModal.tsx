@@ -98,7 +98,7 @@ export default function AuthModal() {
         closeAuthModal()
         setSuccess(false)
         if (isOrgAdmin) {
-          window.location.href = '/admin'
+          router.push('/admin')
         } else if (mode === 'register') {
           router.push('/tools/completar-perfil')
         } else {

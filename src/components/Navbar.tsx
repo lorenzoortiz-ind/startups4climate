@@ -154,7 +154,11 @@ export default function Navbar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {user ? (
               <button
-                onClick={() => { window.location.href = '/tools' }}
+                onClick={() => {
+                  if (user.role === 'admin_org') router.push('/admin')
+                  else if (user.role === 'superadmin') router.push('/superadmin')
+                  else router.push('/tools')
+                }}
                 className="btn-ember"
                 style={{ padding: '0.55rem 1.1rem', fontSize: '0.85rem' }}
               >

@@ -430,7 +430,6 @@ export default function ConfiguracionPage() {
       programGoals,
     }
 
-    // First attempt: persist core columns + meta JSONB.
     const { error: updateError } = await supabase
       .from('organizations')
       .update({
@@ -443,28 +442,10 @@ export default function ConfiguracionPage() {
       .eq('id', appUser.org_id)
 
     if (updateError) {
-      // Fallback: meta column may not exist yet. Persist core fields only and
-      // cache the extended payload locally so the form stays consistent.
-      const { error: coreError } = await supabase
-        .from('organizations')
-        .update({
-          name: orgName.trim(),
-          website: website.trim() || null,
-          logo_url: logoUrl.trim() || null,
-          billing_email: billingEmail.trim() || null,
-        })
-        .eq('id', appUser.org_id)
-
-      if (coreError) {
-        console.error('[S4C Admin] Error saving org:', coreError)
-        setError('Error al guardar los cambios. Intenta de nuevo.')
-        setSaving(false)
-        return
-      }
-
-      try {
-        localStorage.setItem(`s4c_org_${appUser.org_id}_meta`, JSON.stringify(meta))
-      } catch { /* ignore */ }
+      console.error('[S4C Admin] Error saving org:', updateError)
+      setError('Error al guardar los cambios. Intenta de nuevo.')
+      setSaving(false)
+      return
     }
 
     setSaved(true)

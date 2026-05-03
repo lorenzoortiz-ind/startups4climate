@@ -1121,52 +1121,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Get initial user (getUser() validates with the server, unlike getSession())
-    supabase.auth.getUser().then(async ({ data: { user: authUser } }) => {
-      if (cancelled) return
-      if (authUser) {
-        // Set a minimal user IMMEDIATELY from authUser so we're never stuck
-        // with loading=false but appUser=null (which triggers redirect to /)
-        const minimalUser: AppUser = {
-          id: authUser.id,
-          email: authUser.email ?? '',
-          role: 'founder',
-          org_id: null,
-          full_name: authUser.user_metadata?.full_name ?? authUser.email ?? '',
-          startup_name: authUser.user_metadata?.startup_name ?? null,
-          stage: null,
-          diagnosticScore: null,
-          created_at: authUser.created_at ?? new Date().toISOString(),
-        }
-        setAppUser(minimalUser)
-
-        // Try to enrich with session-based profile (has role, org_id)
-        try {
-          const { data: { session } } = await supabase.auth.getSession()
-          if (session) {
-            const enriched = await fallbackAppUser(session)
-            if (!cancelled) setAppUser(enriched)
+    // Cold-load session restore.
+    //
+    // Order matters: getSession() reads tokens from the cookie/storage layer
+    // synchronously, no network round-trip. getUser() validates with the
+    // auth server and can fail or stall on flaky networks. If we relied on
+    // getUser() alone, a transient validation hiccup on reload would set
+    // appUser=null, the admin layout would see loading=false + !appUser, and
+    // route the user back to the landing — exactly the "reload pierde login"
+    // bug. So: hydrate from session first, validate in the background.
+    ;(async () => {
+      let hydrated = false
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (cancelled) return
+        if (session?.user) {
+          const enriched = await fallbackAppUser(session)
+          if (!cancelled) {
+            setAppUser(enriched)
+            setLoading(false)
+            hydrated = true
           }
-        } catch {
-          // Session fetch failed — minimal user already set
+          // Background: load full profile (best-effort enrichment)
+          loadProfile(session.user.id).then((profile) => {
+            if (!cancelled && profile) setAppUser(profile)
+          }).catch(() => {})
         }
-        setLoading(false)
-        // Then try to enrich with full profile data in background
-        try {
-          const profile = await loadProfile(authUser.id)
-          if (!cancelled && profile) {
-            setAppUser(profile)
-          }
-        } catch {
-          // Fallback already set — ignore
-        }
-      } else {
-        setLoading(false)
+      } catch {
+        // Session read failed — fall through to getUser path
       }
-    }).catch(() => {
-      // getUser() itself failed — ensure we never stay stuck loading
-      if (!cancelled) setLoading(false)
-    })
+
+      // Validate with the server. If validation succeeds and we hadn't
+      // hydrated yet, populate appUser. If validation fails AND we did
+      // hydrate from a session, keep the user logged in (refresh will retry).
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser()
+        if (cancelled) return
+        if (authUser && !hydrated) {
+          const minimalUser: AppUser = {
+            id: authUser.id,
+            email: authUser.email ?? '',
+            role: ((authUser.user_metadata?.role as AppUser['role']) || 'founder'),
+            org_id: (authUser.user_metadata?.org_id as string) || null,
+            full_name: authUser.user_metadata?.full_name ?? authUser.email ?? '',
+            startup_name: authUser.user_metadata?.startup_name ?? null,
+            stage: null,
+            diagnosticScore: null,
+            created_at: authUser.created_at ?? new Date().toISOString(),
+          }
+          setAppUser(minimalUser)
+          loadProfile(authUser.id).then((profile) => {
+            if (!cancelled && profile) setAppUser(profile)
+          }).catch(() => {})
+        } else if (!authUser && !hydrated) {
+          // Truly logged out
+        }
+      } catch {
+        // getUser failed; if we hydrated already, leave appUser in place.
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
 
     // Listen for auth state changes
     const {

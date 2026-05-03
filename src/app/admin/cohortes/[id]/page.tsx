@@ -147,6 +147,8 @@ export default function CohortDetailPage() {
   const [availableStartups, setAvailableStartups] = useState<AvailableStartup[]>([])
   const [loadingStartups, setLoadingStartups] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
+  const [inviteLink, setInviteLink] = useState<string | null>(null)
+  const [linkCopied, setLinkCopied] = useState(false)
   const [inviting, setInviting] = useState(false)
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null)
 
@@ -1147,6 +1149,45 @@ export default function CohortDetailPage() {
                     {inviteSuccess}
                   </div>
                 )}
+                {inviteLink && (
+                  <div style={{
+                    padding: '0.625rem 0.75rem', borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(240,114,29,0.08)', border: '1px solid rgba(240,114,29,0.2)',
+                    fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-primary)',
+                    marginBottom: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.375rem',
+                  }}>
+                    <span style={{ color: '#F0721D', fontWeight: 600 }}>
+                      Email no enviado — comparte este link manualmente:
+                    </span>
+                    <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+                      <code style={{
+                        flex: 1, padding: '0.375rem 0.5rem',
+                        background: 'var(--color-bg-card)', borderRadius: 4,
+                        fontSize: '0.6875rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>
+                        {inviteLink}
+                      </code>
+                      <button
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(inviteLink)
+                            setLinkCopied(true)
+                            setTimeout(() => setLinkCopied(false), 2000)
+                          } catch { /* noop */ }
+                        }}
+                        style={{
+                          padding: '0.375rem 0.625rem', borderRadius: 4,
+                          background: 'var(--color-accent-primary)', color: '#fff',
+                          border: 'none', cursor: 'pointer',
+                          fontSize: '0.6875rem', fontWeight: 600, fontFamily: 'var(--font-body)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {linkCopied ? '✓ Copiado' : 'Copiar'}
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <input
                     type="email"
@@ -1160,6 +1201,7 @@ export default function CohortDetailPage() {
                       if (!inviteEmail.trim()) return
                       setInviting(true)
                       setInviteSuccess(null)
+                      setInviteLink(null)
                       setError(null)
                       try {
                         const res = await fetch('/api/invitations', {
@@ -1169,7 +1211,12 @@ export default function CohortDetailPage() {
                         })
                         const data = await res.json()
                         if (res.ok) {
-                          setInviteSuccess(`Invitación enviada a ${inviteEmail}`)
+                          if (data.email_sent) {
+                            setInviteSuccess(`Invitación enviada a ${inviteEmail}`)
+                          } else {
+                            setInviteSuccess(`Invitación creada para ${inviteEmail}`)
+                            setInviteLink(data.invite_url || null)
+                          }
                           setInviteEmail('')
                         } else {
                           setError(data.error || 'Error al enviar invitación')

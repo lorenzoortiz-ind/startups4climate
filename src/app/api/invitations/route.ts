@@ -76,7 +76,9 @@ export async function POST(request: NextRequest) {
   const inviteUrl = `${SITE_URL}/invite/${invitation.token}`
   const orgName = org?.name || 'una organización'
 
-  // Send email via Resend
+  // Send email via Resend (best-effort — if it fails the UI shows the link so
+  // the admin can share it manually until Resend is wired up).
+  let emailSent = false
   try {
     if (!resend) throw new Error('RESEND_API_KEY not configured')
     await resend.emails.send({
@@ -118,12 +120,17 @@ export async function POST(request: NextRequest) {
         </div>
       `,
     })
-  } catch {
-    // Email failed but invitation was created — log but don't fail
-    console.error('Failed to send invitation email')
+    emailSent = true
+  } catch (err) {
+    console.error('[S4C Invite] email send failed:', err)
   }
 
-  return NextResponse.json({ success: true, invitation_id: invitation.id })
+  return NextResponse.json({
+    success: true,
+    invitation_id: invitation.id,
+    invite_url: inviteUrl,
+    email_sent: emailSent,
+  })
 }
 
 export async function GET() {

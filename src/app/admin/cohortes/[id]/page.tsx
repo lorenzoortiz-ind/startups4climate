@@ -33,6 +33,7 @@ interface CohortData {
   milestones: { name: string; stage: string; deadline: string }[]
   org_id: string
   access_mode: 'open' | 'closed'
+  share_token: string | null
 }
 
 interface StartupInCohort {
@@ -149,6 +150,8 @@ export default function CohortDetailPage() {
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteLink, setInviteLink] = useState<string | null>(null)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [shareLinkCopied, setShareLinkCopied] = useState(false)
+  const [regenerating, setRegenerating] = useState(false)
   const [inviting, setInviting] = useState(false)
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null)
 
@@ -173,6 +176,7 @@ export default function CohortDetailPage() {
         status: demoCohort.status,
         org_id: 'demo-org-bioinnova',
         access_mode: 'closed',
+        share_token: null,
         milestones: demoCohort.milestones.map((m) => ({
           name: m.title,
           stage: m.status === 'done' ? 'completed' : 'pending',
@@ -223,6 +227,7 @@ export default function CohortDetailPage() {
       ...cohortData,
       milestones: (cohortData.milestones as CohortData['milestones']) || [],
       access_mode: accessMode,
+      share_token: cohortData.share_token || null,
     })
     setEditForm({
       name: cohortData.name,
@@ -1123,6 +1128,86 @@ export default function CohortDetailPage() {
                   marginBottom: '0.875rem',
                 }}>
                   {addStartupError}
+                </div>
+              )}
+
+              {/* Public share link */}
+              {cohort.share_token && (
+                <div style={{
+                  padding: '1rem', borderRadius: 'var(--radius-sm)',
+                  background: 'var(--color-bg-primary)', marginBottom: '1rem',
+                  border: '1px solid var(--color-border)',
+                }}>
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.8125rem',
+                    fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '0.25rem',
+                  }}>
+                    Link público
+                  </p>
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                    color: 'var(--color-text-muted)', marginBottom: '0.625rem',
+                  }}>
+                    Compártelo con tus founders. Cada uno crea una solicitud que tú apruebas en /admin/cohort-requests.
+                  </p>
+                  <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+                    <code style={{
+                      flex: 1, padding: '0.5rem 0.625rem',
+                      background: 'var(--color-bg-card)', border: '1px solid var(--color-border)',
+                      borderRadius: 4, fontSize: '0.6875rem',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      color: 'var(--color-text-primary)',
+                    }}>
+                      {`${typeof window !== 'undefined' ? window.location.origin : ''}/cohort-join/${cohort.share_token}`}
+                    </code>
+                    <button
+                      onClick={async () => {
+                        if (!cohort?.share_token) return
+                        const url = `${window.location.origin}/cohort-join/${cohort.share_token}`
+                        try {
+                          await navigator.clipboard.writeText(url)
+                          setShareLinkCopied(true)
+                          setTimeout(() => setShareLinkCopied(false), 2000)
+                        } catch { /* noop */ }
+                      }}
+                      style={{
+                        padding: '0.5rem 0.75rem', borderRadius: 4,
+                        background: 'var(--color-accent-primary)', color: '#fff',
+                        border: 'none', cursor: 'pointer',
+                        fontSize: '0.75rem', fontWeight: 600, fontFamily: 'var(--font-body)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {shareLinkCopied ? '✓ Copiado' : 'Copiar'}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!cohort?.id) return
+                        const ok = window.confirm('Regenerar el link invalida el actual. Founders con el link viejo no podrán postular. ¿Continuar?')
+                        if (!ok) return
+                        setRegenerating(true)
+                        const { data } = await supabase.rpc('regenerate_cohort_share_token', { p_cohort_id: cohort.id })
+                        const payload = data as { ok: boolean; share_token?: string; error?: string } | null
+                        if (payload?.ok && payload.share_token) {
+                          setCohort({ ...cohort, share_token: payload.share_token })
+                        } else {
+                          alert('No se pudo regenerar el link.')
+                        }
+                        setRegenerating(false)
+                      }}
+                      disabled={regenerating}
+                      title="Regenerar link"
+                      style={{
+                        padding: '0.5rem 0.625rem', borderRadius: 4,
+                        background: 'transparent', color: 'var(--color-text-muted)',
+                        border: '1px solid var(--color-border)', cursor: regenerating ? 'wait' : 'pointer',
+                        fontSize: '0.6875rem', fontWeight: 500, fontFamily: 'var(--font-body)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {regenerating ? '…' : 'Regenerar'}
+                    </button>
+                  </div>
                 </div>
               )}
 

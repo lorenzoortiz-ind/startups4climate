@@ -4,7 +4,7 @@ import { Resend } from 'resend'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://startups4climate.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://startups4climate.org'
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')

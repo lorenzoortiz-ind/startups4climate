@@ -153,7 +153,7 @@ export async function GET() {
 
   const { data: invitations } = await supabase
     .from('invitations')
-    .select('*')
+    .select('id, org_id, cohort_id, email, status, invitation_type, invited_by, expires_at, accepted_at, created_at')
     .eq('org_id', profile.org_id)
     .order('created_at', { ascending: false })
 

@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
   // Get startup data
   const { data: startups } = await supabase
     .from('startups')
-    .select('*')
+    .select('id, name, founder_id, vertical, country, stage, diagnostic_score, tools_completed, team_size, monthly_revenue, tam_usd, has_mvp, has_paying_customers, paying_customers_count')
     .in('id', startupIds)
 
   // Get founder profiles

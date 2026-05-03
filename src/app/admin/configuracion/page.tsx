@@ -300,7 +300,7 @@ export default function ConfiguracionPage() {
       try {
         const { data: org, error: orgErr } = await supabase
           .from('organizations')
-          .select('*')
+          .select('id, name, website, logo_url, billing_email, plan, max_startups, contract_end, meta')
           .eq('id', appUser!.org_id!)
           .maybeSingle()
 

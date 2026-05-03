@@ -210,7 +210,7 @@ export default function CohortDetailPage() {
 
     const { data: cohortData, error: cohortError } = await supabase
       .from('cohorts')
-      .select('*')
+      .select('id, name, description, start_date, end_date, status, milestones, org_id, access_mode, share_token')
       .eq('id', cohortId)
       .maybeSingle()
 

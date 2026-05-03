@@ -1072,12 +1072,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false
 
     // Safety: never stay stuck on loading spinner for more than 8 seconds
+    // Last-resort safety net. The auth listener should always fire INITIAL_SESSION
+    // and flip loading=false within ~1s. If we hit this timeout, something in
+    // the Supabase client is broken — release the spinner so the user sees the
+    // page rather than block forever, and log loudly so we can investigate.
     const safetyTimeout = setTimeout(() => {
       setLoading((prev) => {
-        if (prev) console.warn('[S4C Auth] Safety timeout — forcing loading=false')
+        if (prev) {
+          console.error(
+            '[S4C Auth] INITIAL_SESSION never fired in 5s — releasing loading state. ' +
+            'Supabase auth client may be misconfigured or unreachable.'
+          )
+        }
         return false
       })
-    }, 8000)
+    }, 5000)
 
     // Rehydrate demo session from cookie before hitting Supabase. Without this,
     // refreshing /tools or /admin in demo mode redirects back to / because
@@ -1111,114 +1120,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Cold-load session restore.
+    // Single source of truth: onAuthStateChange.
     //
-    // Order matters: getSession() reads tokens from the cookie/storage layer
-    // synchronously, no network round-trip. getUser() validates with the
-    // auth server and can fail or stall on flaky networks. If we relied on
-    // getUser() alone, a transient validation hiccup on reload would set
-    // appUser=null, the admin layout would see loading=false + !appUser, and
-    // route the user back to the landing — exactly the "reload pierde login"
-    // bug. So: hydrate from session first, validate in the background.
-    ;(async () => {
-      let hydrated = false
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (cancelled) return
-        if (session?.user) {
-          const enriched = await fallbackAppUser(session)
-          if (!cancelled) {
-            setAppUser(enriched)
-            setLoading(false)
-            hydrated = true
-          }
-          // Background: load full profile (best-effort enrichment)
-          loadProfile(session.user.id).then((profile) => {
-            if (!cancelled && profile) setAppUser(profile)
-          }).catch(() => {})
-        }
-      } catch {
-        // Session read failed — fall through to getUser path
-      }
-
-      // Validate with the server. If validation succeeds and we hadn't
-      // hydrated yet, populate appUser. If validation fails AND we did
-      // hydrate from a session, keep the user logged in (refresh will retry).
-      try {
-        const { data: { user: authUser } } = await supabase.auth.getUser()
-        if (cancelled) return
-        if (authUser && !hydrated) {
-          const minimalUser: AppUser = {
-            id: authUser.id,
-            email: authUser.email ?? '',
-            role: ((authUser.user_metadata?.role as AppUser['role']) || 'founder'),
-            org_id: (authUser.user_metadata?.org_id as string) || null,
-            full_name: authUser.user_metadata?.full_name ?? authUser.email ?? '',
-            startup_name: authUser.user_metadata?.startup_name ?? null,
-            stage: null,
-            diagnosticScore: null,
-            created_at: authUser.created_at ?? new Date().toISOString(),
-          }
-          setAppUser(minimalUser)
-          loadProfile(authUser.id).then((profile) => {
-            if (!cancelled && profile) setAppUser(profile)
-          }).catch(() => {})
-        } else if (!authUser && !hydrated) {
-          // Truly logged out
-        }
-      } catch {
-        // getUser failed; if we hydrated already, leave appUser in place.
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    })()
-
-    // Listen for auth state changes
+    // Supabase fires INITIAL_SESSION immediately when the listener is attached,
+    // covering the cold-load hydration case without needing a parallel
+    // getSession()/getUser() pass. Having one source eliminates the race
+    // condition where the listener overwrites freshly-set appUser data.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (cancelled) return
-      // If login() or register() already set the user with accurate role data,
-      // skip re-fetching here to avoid overwriting with stale/fallback data.
-      if (loginInProgressRef.current) return
 
-      // On token refresh, just keep the current user — don't re-fetch
-      if (event === 'TOKEN_REFRESHED') {
-        // Session is still valid, no action needed — user stays logged in
+      // Token refreshes don't change identity — keep current user as-is
+      if (event === 'TOKEN_REFRESHED') return
+
+      // login()/register() set appUser explicitly with authoritative data.
+      // Skip listener handling during that window so we don't overwrite it
+      // with the role/org_id from JWT user_metadata which may be stale.
+      if (loginInProgressRef.current) {
+        if (event === 'INITIAL_SESSION' && !cancelled) setLoading(false)
+        return
+      }
+
+      if (event === 'SIGNED_OUT') {
+        setAppUser(null)
+        if (!cancelled) setLoading(false)
         return
       }
 
       if (session?.user) {
-        // Set fallback immediately, then enrich
+        // Hydrate from JWT user_metadata immediately — no DB call, no race.
         try {
-          setAppUser(await fallbackAppUser(session))
+          const enriched = await fallbackAppUser(session)
+          if (!cancelled) setAppUser(enriched)
         } catch {
-          // Fallback failed — set minimal user
-          setAppUser({
-            id: session.user.id,
-            email: session.user.email ?? '',
-            role: 'founder',
-            org_id: null,
-            full_name: session.user.email ?? '',
-            startup_name: null,
-            stage: null,
-            diagnosticScore: null,
-            created_at: session.user.created_at ?? new Date().toISOString(),
-          })
-        }
-        try {
-          const profile = await loadProfile(session.user.id)
-          if (!cancelled && profile) {
-            setAppUser(profile)
+          if (!cancelled) {
+            setAppUser({
+              id: session.user.id,
+              email: session.user.email ?? '',
+              role: 'founder',
+              org_id: null,
+              full_name: session.user.email ?? '',
+              startup_name: null,
+              stage: null,
+              diagnosticScore: null,
+              created_at: session.user.created_at ?? new Date().toISOString(),
+            })
           }
-        } catch {
-          // Fallback already set — ignore
         }
-      } else if (event === 'SIGNED_OUT') {
-        setAppUser(null)
+        if (!cancelled) setLoading(false)
+
+        // Background: enrich with fresh profile data (full_name, startup_name,
+        // stage, diagnosticScore). Best-effort; don't block render.
+        loadProfile(session.user.id)
+          .then((profile) => {
+            if (!cancelled && profile) setAppUser(profile)
+          })
+          .catch(() => {})
+      } else {
+        // INITIAL_SESSION with no session = user not logged in
+        if (!cancelled) setLoading(false)
       }
-      // For other events with no session (e.g. TOKEN_REFRESHED failure),
-      // keep the existing user rather than logging out
     })
 
     return () => {

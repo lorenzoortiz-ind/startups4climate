@@ -346,9 +346,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Mobile header */}
       <header
-        className="lg:hidden"
+        className="flex lg:hidden"
         style={{
-          display: 'flex',
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           height: 56, background: 'var(--color-admin-sidebar-bg)',
           alignItems: 'center', justifyContent: 'space-between',

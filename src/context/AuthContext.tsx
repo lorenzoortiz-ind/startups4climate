@@ -997,9 +997,15 @@ function appUserToUser(appUser: AppUser): User {
  * is not stuck on a loading spinner forever.
  */
 async function fallbackAppUser(session: Session): Promise<AppUser> {
-  // Try a minimal query to at least get the role (critical for redirect)
-  let role: 'founder' | 'admin_org' | 'superadmin' = 'founder'
-  let org_id: string | null = null
+  // Read role/org_id from user_metadata first — available immediately from JWT,
+  // no DB round-trip needed. This avoids "logged in as founder by mistake" on
+  // reload when the profiles fetch is slow or RLS races the auth handshake.
+  const meta = session.user.user_metadata || {}
+  let role: 'founder' | 'admin_org' | 'superadmin' =
+    (meta.role as 'founder' | 'admin_org' | 'superadmin') || 'founder'
+  let org_id: string | null = (meta.org_id as string) || null
+
+  // Best-effort enrich from profiles (in case metadata is stale).
   try {
     const { data } = await supabase
       .from('profiles')
@@ -1009,7 +1015,7 @@ async function fallbackAppUser(session: Session): Promise<AppUser> {
     if (data?.role) role = data.role as typeof role
     if (data?.org_id) org_id = data.org_id
   } catch {
-    // If even this fails, default to founder
+    // Metadata fallback already applied above.
   }
 
   return {

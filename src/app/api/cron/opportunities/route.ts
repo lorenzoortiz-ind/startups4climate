@@ -89,9 +89,10 @@ REGLAS:
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
         body: JSON.stringify({
-          model: 'gemini-2.0-flash',
+          model: 'gemini-2.5-flash',
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4000,
+          max_completion_tokens: 16000,
+          response_format: { type: 'json_object' },
         }),
         signal: AbortSignal.timeout(55000),
       }

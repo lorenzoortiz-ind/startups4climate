@@ -84,12 +84,16 @@ REGLAS:
       return NextResponse.json(results, { status: 502 })
     }
 
-    const json = await aiRes.json() as { choices?: Array<{ message?: { content?: string } }> }
-    const content = (json.choices?.[0]?.message?.content ?? '').replace(/```json\s*/g, '').replace(/```/g, '')
+    const rawJson = await aiRes.json() as Record<string, unknown>
+    const content = (
+      (rawJson as { choices?: Array<{ message?: { content?: string } }> }).choices?.[0]?.message?.content ?? ''
+    ).replace(/```json\s*/gi, '').replace(/```/g, '').trim()
     const jsonMatch = /\[[\s\S]*\]/.exec(content)
 
     if (!jsonMatch) {
-      results.errors.push('No valid JSON array in Gemini response')
+      console.log('[S4C OPPORTUNITIES DEBUG] raw content length:', content.length, 'first 500 chars:', content.slice(0, 500))
+      console.log('[S4C OPPORTUNITIES DEBUG] raw keys:', JSON.stringify(Object.keys(rawJson)))
+      results.errors.push(`No valid JSON array in Gemini response (len=${content.length})`)
       return NextResponse.json(results, { status: 502 })
     }
 

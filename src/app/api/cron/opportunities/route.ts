@@ -91,10 +91,8 @@ REGLAS:
     const jsonMatch = /\[[\s\S]*\]/.exec(content)
 
     if (!jsonMatch) {
-      console.log('[S4C OPPORTUNITIES DEBUG] raw content length:', content.length, 'first 500 chars:', content.slice(0, 500))
-      console.log('[S4C OPPORTUNITIES DEBUG] raw keys:', JSON.stringify(Object.keys(rawJson)))
-      results.errors.push(`No valid JSON array in Gemini response (len=${content.length})`)
-      return NextResponse.json(results, { status: 502 })
+      results.errors.push(`No valid JSON array (len=${content.length})`)
+      return NextResponse.json({ ...results, _debug: { content: content.slice(0, 800), keys: Object.keys(rawJson) } }, { status: 502 })
     }
 
     const items = JSON.parse(jsonMatch[0]) as Array<{

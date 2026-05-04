@@ -73,7 +73,7 @@ REGLAS:
         body: JSON.stringify({
           model: 'gemini-2.5-flash',
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4000,
+          max_completion_tokens: 16000,
         }),
         signal: AbortSignal.timeout(45000),
       }

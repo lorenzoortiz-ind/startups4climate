@@ -40,14 +40,14 @@ const STAGE_CONFIG = {
   4: { label: 'Escalamiento', color: '#5BB4FF' },
 } as const
 
-/* ─── Sidebar palette (S4C v2 — black + ember/electric) ─── */
+/* ─── Sidebar palette — uses CSS vars for consistency with admin/superadmin ─── */
 const SB = {
-  bg: '#000000',
-  text: 'rgba(255,255,255,0.60)',
+  bg: 'var(--color-admin-sidebar-bg)',
+  text: 'var(--color-admin-sidebar-text)',
   textActive: '#FFFFFF',
   textHover: '#FFFFFF',
   textMuted: 'rgba(255,255,255,0.35)',
-  divider: 'rgba(255,255,255,0.06)',
+  divider: 'var(--color-border)',
   hoverBg: 'rgba(255,255,255,0.04)',
   cardBg: 'rgba(255,255,255,0.03)',
 }
@@ -870,7 +870,7 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       <aside
         className={isDemo ? undefined : "hidden lg:flex"}
         style={{
-          width: 240,
+          width: 260,
           flexShrink: 0,
           background: SB.bg,
           position: 'fixed',
@@ -988,8 +988,58 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           overflowWrap: 'break-word' as const,
           wordBreak: 'break-word' as const,
         }}
-        className="lg:ml-[240px] pt-14 lg:pt-0"
+        className="lg:ml-[260px] pt-14 lg:pt-0"
       >
+        {/* Desktop top bar — matches admin/superadmin structure */}
+        <div
+          style={{
+            height: 56,
+            background: 'var(--color-bg-card)',
+            borderBottom: '1px solid var(--color-border)',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 1.5rem',
+          }}
+          className="hidden lg:flex"
+        >
+          <div style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 600,
+            fontSize: '0.8125rem',
+            color: 'var(--color-text-primary)',
+          }}>
+            {appUser?.startup_name || 'Plataforma'}
+          </div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.6875rem',
+              color: 'var(--color-text-secondary)',
+            }}>
+              {appUser?.full_name}
+            </span>
+            <div style={{
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              background: 'var(--color-accent-light)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              color: 'var(--color-accent-primary)',
+            }}>
+              {appUser?.full_name?.charAt(0).toUpperCase()}
+            </div>
+          </div>
+        </div>
+
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
 

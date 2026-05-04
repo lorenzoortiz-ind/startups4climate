@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+/* ─── Mluvka — S4C primary typeface ─── */
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-Regular-BF65518ac8463f5.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-Medium-BF65518ac864edb.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-SemiBold-BF65518ac864155.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-Bold-BF65518ac8cff8c.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-ExtraBold-BF65518ac86bc69.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mluvka';
+  src: url('/mluvka/Mluvka-Light-BF65518ac849790.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* ─── S4C v2 — "Forge × Climate" (inspirado en fusionai.framer.website) ─── */
 
@@ -300,14 +344,13 @@
 [data-app-layout] button:active { transform: none; }
 
 @theme inline {
-  --font-heading: 'General Sans', var(--font-inter), system-ui, sans-serif;
-  --font-body: var(--font-inter), 'Inter', system-ui, sans-serif;
-  --font-display: 'General Sans', var(--font-inter), system-ui, sans-serif;
-  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
-  --font-serif: 'General Sans', Georgia, serif;
+  --font-heading: 'Mluvka', 'General Sans', system-ui, sans-serif;
+  --font-body: 'Mluvka', 'General Sans', system-ui, sans-serif;
+  --font-display: 'Mluvka', 'General Sans', system-ui, sans-serif;
+  --font-sans: 'Mluvka', 'General Sans', system-ui, sans-serif;
+  --font-serif: 'Mluvka', Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
-  /* Compat con código viejo que referenciaba --font-mluvka */
-  --font-mluvka: 'General Sans', var(--font-inter), system-ui, sans-serif;
+  --font-mluvka: 'Mluvka', 'General Sans', system-ui, sans-serif;
 }
 
 @layer base {

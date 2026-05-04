@@ -1,16 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { AuthProvider } from '@/context/AuthContext'
 import { StartupProvider } from '@/context/StartupContext'
 import LayoutShell from '@/components/LayoutShell'
 import './globals.css'
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-inter',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.startups4climate.org'),
@@ -120,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="es-419"
-      className={`${inter.variable} h-full`}
+      className="h-full"
     >
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />

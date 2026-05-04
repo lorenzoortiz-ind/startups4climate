@@ -427,7 +427,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             fontFamily: 'var(--font-heading)', fontWeight: 600,
             fontSize: '0.8125rem', color: 'var(--color-text-primary)',
           }}>
-            {appUser.startup_name || 'Mi Organización'}
+            {orgName || 'Mi Organización'}
           </div>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '1rem',

@@ -10,39 +10,16 @@ import {
   GraduationCap, Calendar, Download
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { supabase } from '@/lib/supabase'
 import { Card } from '@/components/ui'
 import {
-  DEMO_ORG, DEMO_COHORTS, DEMO_VERTICAL_DISTRIBUTION,
-  DEMO_STAGE_DISTRIBUTION, topStartupsByReadiness,
+  DEMO_ORG, DEMO_VERTICAL_DISTRIBUTION, DEMO_STAGE_DISTRIBUTION,
 } from '@/lib/demo/admin-fixtures'
-
-interface OrgMetrics {
-  totalStartups: number
-  activeCohorts: number
-  avgScore: number
-  avgToolsCompleted: number
-}
-
-interface StartupRow {
-  id: string
-  name: string
-  vertical: string
-  stage: string
-  diagnostic_score: number | null
-  tools_completed: number | null
-  founder_name: string
-  country: string
-}
-
-interface CohortRow {
-  id: string
-  name: string
-  status: string
-  start_date: string
-  end_date: string
-  startup_count: number
-}
+import {
+  loadDashboard,
+  type DashboardCohortRow as CohortRow,
+  type DashboardStartupRow as StartupRow,
+  type DashboardMetrics as OrgMetrics,
+} from '@/lib/admin-data/dashboard'
 
 // Card styling handled by <Card> component from @/components/ui
 
@@ -56,93 +33,6 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   active: { bg: 'rgba(31,119,246,0.1)', text: '#1F77F6' },
   planned: { bg: 'rgba(59,130,246,0.1)', text: '#1F77F6' },
   completed: { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' },
-}
-
-const MOCK_DEMO_COHORTS: CohortRow[] = [
-  {
-    id: 'demo-cohort-otono-2025',
-    name: 'Cohorte Otoño 2025',
-    status: 'active',
-    start_date: '2025-09-01',
-    end_date: '2025-12-15',
-    startup_count: 12,
-  },
-  {
-    id: 'demo-cohort-primavera-2026',
-    name: 'Cohorte Primavera 2026',
-    status: 'active',
-    start_date: '2026-03-01',
-    end_date: '2026-06-30',
-    startup_count: 8,
-  },
-  {
-    id: 'demo-cohort-verano-2025',
-    name: 'Cohorte Verano 2025',
-    status: 'completed',
-    start_date: '2025-06-01',
-    end_date: '2025-08-31',
-    startup_count: 10,
-  },
-]
-
-const MOCK_DEMO_STARTUPS: StartupRow[] = [
-  {
-    id: 'demo-startup-1',
-    name: 'EcoAgro Perú',
-    vertical: 'agritech',
-    stage: 'mvp',
-    diagnostic_score: 7.4,
-    tools_completed: 5,
-    founder_name: 'Ana Quispe',
-    country: 'Perú',
-  },
-  {
-    id: 'demo-startup-2',
-    name: 'BioCultiva',
-    vertical: 'biotech',
-    stage: 'growth',
-    diagnostic_score: 8.1,
-    tools_completed: 7,
-    founder_name: 'Luis Torres',
-    country: 'Perú',
-  },
-  {
-    id: 'demo-startup-3',
-    name: 'SolarAndes',
-    vertical: 'cleantech',
-    stage: 'ideation',
-    diagnostic_score: 5.8,
-    tools_completed: 2,
-    founder_name: 'María Paredes',
-    country: 'Perú',
-  },
-  {
-    id: 'demo-startup-4',
-    name: 'HidroVerde',
-    vertical: 'cleantech',
-    stage: 'mvp',
-    diagnostic_score: 6.9,
-    tools_completed: 4,
-    founder_name: 'Carlos Mendoza',
-    country: 'Perú',
-  },
-  {
-    id: 'demo-startup-5',
-    name: 'AgroSmart LATAM',
-    vertical: 'agritech',
-    stage: 'growth',
-    diagnostic_score: 7.8,
-    tools_completed: 6,
-    founder_name: 'Rosa Huamán',
-    country: 'Perú',
-  },
-]
-
-const MOCK_DEMO_METRICS: OrgMetrics = {
-  totalStartups: MOCK_DEMO_STARTUPS.length,
-  activeCohorts: MOCK_DEMO_COHORTS.filter((c) => c.status === 'active' || c.status === 'planned').length,
-  avgScore: Math.round((MOCK_DEMO_STARTUPS.reduce((sum, s) => sum + (s.diagnostic_score || 0), 0) / MOCK_DEMO_STARTUPS.length) * 10) / 10,
-  avgToolsCompleted: Math.round((MOCK_DEMO_STARTUPS.reduce((sum, s) => sum + (s.tools_completed || 0), 0) / MOCK_DEMO_STARTUPS.length) * 10) / 10,
 }
 
 export default function AdminDashboard() {
@@ -167,144 +57,33 @@ function AdminOrgDashboard() {
   const [orgName, setOrgName] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isDemo) {
-      setOrgName(DEMO_ORG.name)
-      setOrgLogo(null)
-      const cohorts: CohortRow[] = DEMO_COHORTS.map((c) => ({
-        id: c.id,
-        name: c.name,
-        status: c.status,
-        start_date: c.startDate,
-        end_date: c.endDate,
-        startup_count: c.startupIds.length,
-      }))
-      const top = topStartupsByReadiness(5)
-      const startupRows: StartupRow[] = top.map((s) => ({
-        id: s.id,
-        name: s.name,
-        vertical: s.verticalLabel,
-        stage: s.stageLabel,
-        diagnostic_score: s.diagnosticScore,
-        tools_completed: s.toolsCompleted,
-        founder_name: s.founderName,
-        country: 'Perú',
-      }))
-      setCohorts(cohorts)
-      setStartups(startupRows)
-      setMetrics({
-        totalStartups: DEMO_ORG.activeStartups,
-        activeCohorts: DEMO_COHORTS.filter((c) => c.status === 'active').length,
-        avgScore: 7.3,
-        avgToolsCompleted: 23,
-      })
+    if (!isDemo && !appUser?.org_id) {
       setLoading(false)
       return
     }
 
-    async function loadData() {
-      if (!appUser?.org_id) {
-        setLoading(false)
-        return
-      }
+    let cancelled = false
+    setLoading(true)
+    setError(null)
 
-      try {
-        // Load org info and cohorts in parallel
-        const [orgRes, cohortRes] = await Promise.all([
-          supabase.from('organizations').select('name, logo_url').eq('id', appUser.org_id).single(),
-          supabase.from('cohorts').select('id, name, status, start_date, end_date').eq('org_id', appUser.org_id),
-        ])
-
-        if (orgRes.data) {
-          setOrgLogo(orgRes.data.logo_url)
-          setOrgName(orgRes.data.name)
-        }
-
-        const cohortData = cohortRes.data || []
-        const cohortIds = cohortData.map((c) => c.id)
-
-        // Load ALL cohort_startups in one batch query (fixes N+1)
-        let startupList: StartupRow[] = []
-        let cohortList: CohortRow[] = []
-
-        if (cohortIds.length > 0) {
-          const { data: csData } = await supabase
-            .from('cohort_startups')
-            .select('cohort_id, startup_id')
-            .in('cohort_id', cohortIds)
-
-          // Count startups per cohort from the batch result
-          const countMap: Record<string, number> = {}
-          const startupIds = new Set<string>()
-          ;(csData || []).forEach((cs) => {
-            countMap[cs.cohort_id] = (countMap[cs.cohort_id] || 0) + 1
-            startupIds.add(cs.startup_id)
-          })
-
-          cohortList = cohortData.map((c) => ({
-            ...c,
-            startup_count: countMap[c.id] || 0,
-          }))
-
-          if (startupIds.size > 0) {
-            // Load startups and founder profiles in parallel
-            const { data: startupData } = await supabase
-              .from('startups')
-              .select('id, name, vertical, stage, diagnostic_score, tools_completed, country, founder_id')
-              .in('id', Array.from(startupIds))
-
-            const founderIds = (startupData || []).map((s) => s.founder_id).filter(Boolean)
-            const { data: profileData } = founderIds.length > 0
-              ? await supabase.from('profiles').select('id, full_name').in('id', founderIds)
-              : { data: [] }
-
-            startupList = (startupData || []).map((s) => ({
-              ...s,
-              founder_name:
-                profileData?.find((p) => p.id === s.founder_id)?.full_name || 'Sin nombre',
-            })) as StartupRow[]
-          }
-        } else {
-          cohortList = cohortData.map((c) => ({ ...c, startup_count: 0 }))
-        }
-
-        setCohorts(cohortList)
-        setStartups(startupList)
-        setMetrics({
-          totalStartups: startupList.length,
-          activeCohorts: cohortList.filter(
-            (c) => c.status === 'active' || c.status === 'planned'
-          ).length,
-          avgScore:
-            startupList.length > 0
-              ? Math.round(
-                  (startupList.reduce(
-                    (sum, s) => sum + (s.diagnostic_score || 0),
-                    0
-                  ) /
-                    startupList.length) *
-                    10
-                ) / 10
-              : 0,
-          avgToolsCompleted:
-            startupList.length > 0
-              ? Math.round(
-                  (startupList.reduce(
-                    (sum, s) => sum + (s.tools_completed || 0),
-                    0
-                  ) /
-                    startupList.length) *
-                    10
-                ) / 10
-              : 0,
-        })
-      } catch (err) {
+    loadDashboard({ isDemo, orgId: appUser?.org_id })
+      .then((data) => {
+        if (cancelled) return
+        setOrgName(data.orgName)
+        setOrgLogo(data.orgLogo)
+        setCohorts(data.cohorts)
+        setStartups(data.startups)
+        setMetrics(data.metrics)
+      })
+      .catch((err) => {
         console.error('[S4C Admin] Error loading dashboard:', err)
-        setError('No se pudieron cargar los datos. Intenta recargar la página.')
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
+        if (!cancelled) setError('No se pudieron cargar los datos. Intenta recargar la página.')
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
   }, [appUser, isDemo])
 
   const METRIC_CARDS = [

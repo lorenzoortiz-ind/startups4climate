@@ -888,9 +888,8 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
 
       {/* Mobile header — hidden in demo mode (sidebar always visible) */}
       <header
-        className={isDemo ? undefined : "lg:hidden"}
+        className={isDemo ? "hidden" : "flex lg:hidden"}
         style={{
-          display: isDemo ? 'none' : 'flex',
           position: 'fixed',
           top: 0,
           left: 0,

@@ -13,15 +13,8 @@ import {
   Legend,
 } from 'recharts'
 import { TrendingUp, TrendingDown, Minus, Loader2 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
-import { DEMO_STARTUPS, DEMO_ORG } from '@/lib/demo/admin-fixtures'
-
-interface BenchmarkMetric {
-  metric: string
-  org: number
-  platform: number
-}
+import { loadBenchmark, DEMO_STARTUPS, type BenchmarkMetric } from '@/lib/admin-data/benchmarking'
 
 function getTrend(org: number, platform: number) {
   const diff = org - platform
@@ -29,11 +22,6 @@ function getTrend(org: number, platform: number) {
   if (diff > 0) return { icon: TrendingUp, color: '#1F77F6', text: `+${pct}% vs promedio` }
   if (diff < 0) return { icon: TrendingDown, color: '#DC2626', text: `${pct}% vs promedio` }
   return { icon: Minus, color: '#6B7280', text: 'Igual al promedio' }
-}
-
-function avg(arr: number[]): number {
-  if (arr.length === 0) return 0
-  return Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10
 }
 
 const cardStyle: React.CSSProperties = {
@@ -50,25 +38,6 @@ const fadeUp = {
   transition: { duration: 0.4, ease: 'easeOut' as const },
 }
 
-// Auto-derived from DEMO_STARTUPS for consistency with the rest of the demo
-const DEMO_TOOLS_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.toolsCompleted, 0) / DEMO_STARTUPS.length).toFixed(1)
-const DEMO_READINESS_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.readiness, 0) / DEMO_STARTUPS.length).toFixed(1)
-const DEMO_DIAG_AVG = +(DEMO_STARTUPS.reduce((s, x) => s + x.diagnosticScore, 0) / DEMO_STARTUPS.length).toFixed(1)
-
-const MOCK_DEMO_BENCHMARK: BenchmarkMetric[] = [
-  { metric: 'Herramientas completadas (de 32)', org: DEMO_TOOLS_AVG, platform: 11.4 },
-  { metric: 'Readiness score (0-100)', org: DEMO_READINESS_AVG, platform: 56 },
-  { metric: 'Score diagnóstico (0-10)', org: DEMO_DIAG_AVG, platform: 5.6 },
-  { metric: 'NPS programa', org: DEMO_ORG.averageNps, platform: 62 },
-]
-
-const MOCK_DEMO_CHART: { name: string; tuOrg: number; promedio: number }[] = [
-  { name: 'Herramientas', tuOrg: DEMO_TOOLS_AVG, promedio: 11.4 },
-  { name: 'Readiness', tuOrg: DEMO_READINESS_AVG, promedio: 56 },
-  { name: 'Score diag.', tuOrg: DEMO_DIAG_AVG, promedio: 5.6 },
-  { name: 'NPS', tuOrg: DEMO_ORG.averageNps, promedio: 62 },
-]
-
 export default function BenchmarkingPage() {
   const { appUser, isDemo } = useAuth()
   const [loading, setLoading] = useState(true)
@@ -76,86 +45,16 @@ export default function BenchmarkingPage() {
   const [chartData, setChartData] = useState<{ name: string; tuOrg: number; promedio: number }[]>([])
 
   useEffect(() => {
-    if (isDemo) {
-      setBenchmarkData(MOCK_DEMO_BENCHMARK)
-      setChartData(MOCK_DEMO_CHART)
-      setLoading(false)
-      return
-    }
+    if (!isDemo && !appUser?.org_id) return
 
-    if (!appUser?.org_id) return
-
-    async function loadBenchmark() {
-      setLoading(true)
-
-      // Get org's cohorts
-      const { data: cohorts } = await supabase
-        .from('cohorts')
-        .select('id')
-        .eq('org_id', appUser!.org_id!)
-
-      const cohortIds = cohorts?.map((c) => c.id) || []
-
-      // Get org's startup IDs
-      let orgStartupIds: string[] = []
-      if (cohortIds.length > 0) {
-        const { data: assignments } = await supabase
-          .from('cohort_startups')
-          .select('startup_id')
-          .in('cohort_id', cohortIds)
-        orgStartupIds = assignments?.map((a) => a.startup_id) || []
-      }
-
-      // Get org's startups
-      let orgStartups: { diagnostic_score: number | null; tools_completed: number | null; stage: string | null }[] = []
-      if (orgStartupIds.length > 0) {
-        const { data } = await supabase
-          .from('startups')
-          .select('diagnostic_score, tools_completed, stage')
-          .in('id', orgStartupIds)
-        orgStartups = data || []
-      }
-
-      // Get all platform startups
-      const { data: allStartups } = await supabase
-        .from('startups')
-        .select('diagnostic_score, tools_completed, stage')
-
-      const platformStartups = allStartups || []
-
-      // Calculate metrics
-      const orgScores = orgStartups.filter((s) => s.diagnostic_score != null).map((s) => s.diagnostic_score!)
-      const platformScores = platformStartups.filter((s) => s.diagnostic_score != null).map((s) => s.diagnostic_score!)
-
-      const orgTools = orgStartups.map((s) => s.tools_completed || 0)
-      const platformTools = platformStartups.map((s) => s.tools_completed || 0)
-
-      // Stage progress: map stages to % (pre=25, inc=50, acc=75, scal=100)
-      const stageToPercent: Record<string, number> = {
-        pre_incubation: 25,
-        incubation: 50,
-        acceleration: 75,
-        scaling: 100,
-      }
-      const orgProgress = orgStartups.map((s) => stageToPercent[s.stage || ''] || 0)
-      const platformProgress = platformStartups.map((s) => stageToPercent[s.stage || ''] || 0)
-
-      const metrics: BenchmarkMetric[] = [
-        { metric: 'Herramientas completadas', org: avg(orgTools), platform: avg(platformTools) },
-        { metric: 'Avance de etapa (%)', org: avg(orgProgress), platform: avg(platformProgress) },
-        { metric: 'Score diagnóstico', org: avg(orgScores), platform: avg(platformScores) },
-      ]
-
-      setBenchmarkData(metrics)
-      setChartData([
-        { name: 'Herramientas', tuOrg: metrics[0].org, promedio: metrics[0].platform },
-        { name: 'Avance (%)', tuOrg: metrics[1].org, promedio: metrics[1].platform },
-        { name: 'Score diag.', tuOrg: metrics[2].org, promedio: metrics[2].platform },
-      ])
-      setLoading(false)
-    }
-
-    loadBenchmark()
+    setLoading(true)
+    loadBenchmark({ isDemo, orgId: appUser?.org_id })
+      .then((result) => {
+        setBenchmarkData(result.metrics)
+        setChartData(result.chart)
+      })
+      .catch((err) => console.error('[S4C Admin] Error loading benchmark:', err))
+      .finally(() => setLoading(false))
   }, [appUser?.org_id, isDemo])
 
   if (loading) {

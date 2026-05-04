@@ -11,21 +11,8 @@ import {
   ChevronRight,
   Loader2,
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
-import { DEMO_COHORTS } from '@/lib/demo/admin-fixtures'
-
-interface CohortRow {
-  id: string
-  name: string
-  description: string | null
-  start_date: string | null
-  end_date: string | null
-  status: string
-  created_at: string
-  startup_count: number
-  pending_requests_count: number
-}
+import { loadCohorts, type CohortRow } from '@/lib/admin-data/cohorts'
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   active: { label: 'Activa', color: '#1F77F6', bg: 'rgba(31,119,246,0.08)' },
@@ -41,18 +28,6 @@ const cardStyle: React.CSSProperties = {
   boxShadow: 'var(--shadow-card)',
 }
 
-const MOCK_DEMO_COHORTS: CohortRow[] = DEMO_COHORTS.map((c) => ({
-  id: c.id,
-  name: c.name,
-  description: c.description,
-  start_date: c.startDate,
-  end_date: c.endDate,
-  status: c.status,
-  created_at: c.startDate,
-  startup_count: c.startupIds.length,
-  pending_requests_count: 0,
-}))
-
 export default function CohortesPage() {
   const { appUser, isDemo } = useAuth()
   const pathname = usePathname()
@@ -62,39 +37,26 @@ export default function CohortesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isDemo) {
-      setCohorts(MOCK_DEMO_COHORTS)
-      setLoading(false)
-      setError(null)
-      return
-    }
+    // Wait until auth has settled (real users need an org_id; demo users don't)
+    if (!isDemo && !appUser?.org_id) return
 
-    if (!appUser?.org_id) return
+    let cancelled = false
+    setLoading(true)
+    setError(null)
 
-    async function loadCohorts() {
-      setLoading(true)
-      setError(null)
-
-      try {
-        // Single query against the cohorts_with_counts view (RLS inherited via security_invoker)
-        const { data: cohortsData, error: cohortErr } = await supabase
-          .from('cohorts_with_counts')
-          .select('id, name, description, start_date, end_date, status, created_at, startup_count, pending_requests_count')
-          .eq('org_id', appUser!.org_id!)
-          .order('created_at', { ascending: false })
-
-        if (cohortErr) throw cohortErr
-
-        setCohorts((cohortsData ?? []) as CohortRow[])
-      } catch (err) {
+    loadCohorts({ isDemo, orgId: appUser?.org_id })
+      .then((rows) => {
+        if (!cancelled) setCohorts(rows)
+      })
+      .catch((err) => {
         console.error('[S4C Admin] Error loading cohorts:', err)
-        setError('No se pudieron cargar las cohortes. Intenta recargar la página.')
-      } finally {
-        setLoading(false)
-      }
-    }
+        if (!cancelled) setError('No se pudieron cargar las cohortes. Intenta recargar la página.')
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
 
-    loadCohorts()
+    return () => { cancelled = true }
   }, [appUser?.org_id, isDemo])
 
   if (loading) {

@@ -10,14 +10,8 @@ import {
   Sheet,
   CalendarClock,
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
-import { DEMO_COHORTS, DEMO_ADMIN_REPORTS } from '@/lib/demo/admin-fixtures'
-
-interface CohortOption {
-  id: string
-  name: string
-}
+import { loadReportCohorts, DEMO_REPORT_HISTORY, type CohortOption } from '@/lib/admin-data/reportes'
 
 const REPORT_TYPES = [
   {
@@ -63,8 +57,6 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
 }
 
-const MOCK_DEMO_COHORTS: CohortOption[] = DEMO_COHORTS.map((c) => ({ id: c.id, name: c.name }))
-
 export default function ReportesPage() {
   const { appUser, isDemo } = useAuth()
   const [cohorts, setCohorts] = useState<CohortOption[]>([])
@@ -75,33 +67,15 @@ export default function ReportesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isDemo) {
-      setCohorts(MOCK_DEMO_COHORTS)
-      setLoadingCohorts(false)
-      return
-    }
+    if (!isDemo && !appUser?.org_id) return
 
-    if (!appUser?.org_id) return
-
-    async function loadCohorts() {
-      try {
-        const { data, error: err } = await supabase
-          .from('cohorts')
-          .select('id, name')
-          .eq('org_id', appUser!.org_id!)
-          .order('created_at', { ascending: false })
-
-        if (err) throw err
-        setCohorts(data || [])
-      } catch (err) {
+    loadReportCohorts({ isDemo, orgId: appUser?.org_id })
+      .then((data) => setCohorts(data))
+      .catch((err) => {
         console.error('[S4C Admin] Error loading cohorts for reports:', err)
         setError('No se pudieron cargar las cohortes.')
-      } finally {
-        setLoadingCohorts(false)
-      }
-    }
-
-    loadCohorts()
+      })
+      .finally(() => setLoadingCohorts(false))
   }, [appUser?.org_id, isDemo])
 
   const handleGenerate = async () => {
@@ -352,14 +326,14 @@ export default function ReportesPage() {
               fontFamily: 'var(--font-body)', fontSize: '0.75rem',
               color: 'var(--color-text-muted)',
             }}>
-              {DEMO_ADMIN_REPORTS.length} reportes disponibles
+              {DEMO_REPORT_HISTORY.length} reportes disponibles
             </span>
           </div>
           <div style={{
             display: 'grid', gap: '0.85rem',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           }}>
-            {DEMO_ADMIN_REPORTS.map((r, i) => (
+            {DEMO_REPORT_HISTORY.map((r, i) => (
               <motion.div
                 key={r.id}
                 initial={{ opacity: 0, y: 10 }}

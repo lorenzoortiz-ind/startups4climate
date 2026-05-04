@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
-import { DEMO_ORG } from '@/lib/demo/admin-fixtures'
+import { loadOrgProfile } from '@/lib/admin-data/configuracion'
 
 const PLAN_LABELS: Record<string, string> = {
   starter: 'Starter',
@@ -113,55 +113,6 @@ const chipActive: React.CSSProperties = {
   background: 'var(--color-accent-primary)',
   color: '#fff',
   borderColor: 'var(--color-accent-primary)',
-}
-
-interface OrgData {
-  name: string
-  website: string | null
-  logo_url: string | null
-  billing_email: string | null
-  plan: string
-  max_startups: number
-  contract_end: string | null
-}
-
-const MOCK_DEMO_ORG: OrgData & {
-  startup_count: number
-  country: string
-  region: string
-  orgType: string
-  verticalFocus: string[]
-  cohortFrequency: string
-  mainContactName: string
-  mainContactRole: string
-  mainContactPhone: string
-  socialLinkedIn: string
-  socialTwitter: string
-  description: string
-  programGoals: string
-} = {
-  name: DEMO_ORG.name,
-  website: 'https://bioinnova.unamad.edu.pe',
-  logo_url: null,
-  billing_email: 'facturacion@bioinnova.unamad.edu.pe',
-  plan: DEMO_ORG.plan.toLowerCase(),
-  max_startups: DEMO_ORG.maxStartups,
-  contract_end: DEMO_ORG.contractEnd,
-  startup_count: DEMO_ORG.activeStartups,
-  country: 'Perú',
-  region: 'Lima',
-  orgType: 'Incubadora',
-  verticalFocus: ['ClimaTech', 'Biomateriales', 'AgriTech'],
-  cohortFrequency: 'Trimestral',
-  mainContactName: 'María Fernández',
-  mainContactRole: 'Directora de Innovación',
-  mainContactPhone: '+51 999 888 777',
-  socialLinkedIn: 'https://linkedin.com/company/bioinnova-pe',
-  socialTwitter: 'https://twitter.com/BioInnovaPE',
-  description:
-    'BioInnova es la incubadora de la Universidad Nacional Amazónica de Madre de Dios enfocada en startups de impacto ambiental con base científica. Acompañamos emprendedores que transforman investigación amazónica en negocios escalables: biomateriales, bioeconomía, AgriTech regenerativa y soluciones para el monitoreo de la Amazonía.',
-  programGoals:
-    'Para el 2026 buscamos: (1) graduar 12 startups de impacto con tracción comercial validada; (2) movilizar $1.5M en capital catalítico para nuestras startups; (3) firmar 3 alianzas con corporativos de retail y consumo masivo; (4) consolidar la primera red regional Madre de Dios + Cusco + Loreto de incubación amazónica.',
 }
 
 export default function ConfiguracionPage() {
@@ -265,95 +216,40 @@ export default function ConfiguracionPage() {
   }
 
   useEffect(() => {
-    if (isDemo) {
-      setOrgName(MOCK_DEMO_ORG.name)
-      setWebsite(MOCK_DEMO_ORG.website || '')
-      setLogoUrl(MOCK_DEMO_ORG.logo_url || '')
-      setBillingEmail(MOCK_DEMO_ORG.billing_email || '')
-      setPlan(MOCK_DEMO_ORG.plan)
-      setMaxStartups(MOCK_DEMO_ORG.max_startups)
-      setContractEnd(MOCK_DEMO_ORG.contract_end)
-      setStartupCount(MOCK_DEMO_ORG.startup_count)
-      setCountry(MOCK_DEMO_ORG.country)
-      setRegion(MOCK_DEMO_ORG.region)
-      setOrgType(MOCK_DEMO_ORG.orgType)
-      setVerticalFocus(MOCK_DEMO_ORG.verticalFocus)
-      setCohortFrequency(MOCK_DEMO_ORG.cohortFrequency)
-      setMainContactName(MOCK_DEMO_ORG.mainContactName)
-      setMainContactRole(MOCK_DEMO_ORG.mainContactRole)
-      setMainContactPhone(MOCK_DEMO_ORG.mainContactPhone)
-      setSocialLinkedIn(MOCK_DEMO_ORG.socialLinkedIn)
-      setSocialTwitter(MOCK_DEMO_ORG.socialTwitter)
-      setDescription(MOCK_DEMO_ORG.description)
-      setProgramGoals(MOCK_DEMO_ORG.programGoals)
-      setLoading(false)
-      setError(null)
-      return
-    }
+    if (!isDemo && !appUser?.org_id) return
 
-    if (!appUser?.org_id) return
+    setLoading(true)
+    setError(null)
 
-    async function loadOrg() {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const { data: org, error: orgErr } = await supabase
-          .from('organizations')
-          .select('id, name, website, logo_url, billing_email, plan, max_startups, contract_end, meta')
-          .eq('id', appUser!.org_id!)
-          .maybeSingle()
-
-        if (orgErr) throw orgErr
-
-        if (org) {
-          setOrgName(org.name || '')
-          setWebsite(org.website || '')
-          setLogoUrl(org.logo_url || '')
-          setBillingEmail(org.billing_email || '')
-          setPlan(org.plan || 'starter')
-          setMaxStartups(org.max_startups || 25)
-          setContractEnd(org.contract_end)
-
-          // Extended fields may live in a JSONB `meta` column. Load defensively.
-          const meta = (org as { meta?: Record<string, unknown> }).meta || {}
-          setCountry(typeof meta.country === 'string' ? meta.country : '')
-          setRegion(typeof meta.region === 'string' ? meta.region : '')
-          setOrgType(typeof meta.orgType === 'string' ? meta.orgType : '')
-          setVerticalFocus(Array.isArray(meta.verticalFocus) ? (meta.verticalFocus as string[]) : [])
-          setCohortFrequency(typeof meta.cohortFrequency === 'string' ? meta.cohortFrequency : '')
-          setMainContactName(typeof meta.mainContactName === 'string' ? meta.mainContactName : '')
-          setMainContactRole(typeof meta.mainContactRole === 'string' ? meta.mainContactRole : '')
-          setMainContactPhone(typeof meta.mainContactPhone === 'string' ? meta.mainContactPhone : '')
-          setSocialLinkedIn(typeof meta.socialLinkedIn === 'string' ? meta.socialLinkedIn : '')
-          setSocialTwitter(typeof meta.socialTwitter === 'string' ? meta.socialTwitter : '')
-          setDescription(typeof meta.description === 'string' ? meta.description : '')
-          setProgramGoals(typeof meta.programGoals === 'string' ? meta.programGoals : '')
-        }
-
-        // Count startups in org's cohorts
-        const { data: cohorts } = await supabase
-          .from('cohorts')
-          .select('id')
-          .eq('org_id', appUser!.org_id!)
-
-        if (cohorts && cohorts.length > 0) {
-          const { count } = await supabase
-            .from('cohort_startups')
-            .select('id', { count: 'exact', head: true })
-            .in('cohort_id', cohorts.map((c) => c.id))
-
-          setStartupCount(count || 0)
-        }
-      } catch (err) {
+    loadOrgProfile({ isDemo, orgId: appUser?.org_id })
+      .then((profile) => {
+        if (!profile) return
+        setOrgName(profile.name)
+        setWebsite(profile.website)
+        setLogoUrl(profile.logo_url)
+        setBillingEmail(profile.billing_email)
+        setPlan(profile.plan)
+        setMaxStartups(profile.max_startups)
+        setContractEnd(profile.contract_end)
+        setStartupCount(profile.startup_count)
+        setCountry(profile.country)
+        setRegion(profile.region)
+        setOrgType(profile.orgType)
+        setVerticalFocus(profile.verticalFocus)
+        setCohortFrequency(profile.cohortFrequency)
+        setMainContactName(profile.mainContactName)
+        setMainContactRole(profile.mainContactRole)
+        setMainContactPhone(profile.mainContactPhone)
+        setSocialLinkedIn(profile.socialLinkedIn)
+        setSocialTwitter(profile.socialTwitter)
+        setDescription(profile.description)
+        setProgramGoals(profile.programGoals)
+      })
+      .catch((err) => {
         console.error('[S4C Admin] Error loading org settings:', err)
         setError('No se pudieron cargar los datos de la organización.')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadOrg()
+      })
+      .finally(() => setLoading(false))
   }, [appUser?.org_id, isDemo])
 
   const toggleVertical = (v: string) => {

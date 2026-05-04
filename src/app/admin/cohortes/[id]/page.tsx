@@ -21,7 +21,9 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
-import { getCohortById, startupsByCohort } from '@/lib/demo/admin-fixtures'
+import { loadCohortDetail } from '@/lib/admin-data/cohort-detail'
+// Demo-only display fixture (cohort progress KPIs panel rendered behind isDemo guard)
+import { getCohortById } from '@/lib/demo/admin-fixtures'
 
 interface CohortData {
   id: string
@@ -159,128 +161,28 @@ export default function CohortDetailPage() {
     setLoading(true)
     setError(null)
 
-    // Demo short-circuit: serve fixture data when in demo mode
-    if (isDemo) {
-      const demoCohort = getCohortById(cohortId)
-      if (!demoCohort) {
-        setError('No se encontró la cohorte (demo).')
-        setLoading(false)
-        return
-      }
-      setCohort({
-        id: demoCohort.id,
-        name: demoCohort.name,
-        description: demoCohort.description,
-        start_date: demoCohort.startDate,
-        end_date: demoCohort.endDate,
-        status: demoCohort.status,
-        org_id: 'demo-org-bioinnova',
-        access_mode: 'closed',
-        share_token: null,
-        milestones: demoCohort.milestones.map((m) => ({
-          name: m.title,
-          stage: m.status === 'done' ? 'completed' : 'pending',
-          deadline: m.date,
-        })),
-      })
+    try {
+      const { cohort: cohortData, startups: startupsList } = await loadCohortDetail({ isDemo, cohortId })
+      setCohort(cohortData)
       setEditForm({
-        name: demoCohort.name,
-        description: demoCohort.description,
-        start_date: demoCohort.startDate,
-        end_date: demoCohort.endDate,
-        access_mode: 'closed',
+        name: cohortData.name,
+        description: cohortData.description || '',
+        start_date: cohortData.start_date || '',
+        end_date: cohortData.end_date || '',
+        access_mode: cohortData.access_mode,
       })
-      const demoStartups = startupsByCohort(cohortId)
-      setStartups(
-        demoStartups.map((s) => ({
-          assignment_id: `demo-assign-${s.id}`,
-          startup_id: s.id,
-          name: s.name,
-          founder_name: s.founderName,
-          vertical: s.vertical,
-          stage: s.stage,
-          diagnostic_score: s.diagnosticScore,
-          tools_completed: s.toolsCompleted,
-          assignment_status: 'active',
-        }))
-      )
-      setLoading(false)
-      return
-    }
-
-    const { data: cohortData, error: cohortError } = await supabase
-      .from('cohorts')
-      .select('id, name, description, start_date, end_date, status, milestones, org_id, access_mode, share_token')
-      .eq('id', cohortId)
-      .maybeSingle()
-
-    if (cohortError || !cohortData) {
-      if (cohortError) console.error('[S4C Admin] cohort load failed:', cohortError)
-      setError('No se encontró la cohorte.')
-      setLoading(false)
-      return
-    }
-
-    const accessMode: 'open' | 'closed' = cohortData.access_mode === 'open' ? 'open' : 'closed'
-
-    setCohort({
-      ...cohortData,
-      milestones: (cohortData.milestones as CohortData['milestones']) || [],
-      access_mode: accessMode,
-      share_token: cohortData.share_token || null,
-    })
-    setEditForm({
-      name: cohortData.name,
-      description: cohortData.description || '',
-      start_date: cohortData.start_date || '',
-      end_date: cohortData.end_date || '',
-      access_mode: accessMode,
-    })
-
-    // Load startups in this cohort
-    const { data: assignments } = await supabase
-      .from('cohort_startups')
-      .select('id, startup_id, status')
-      .eq('cohort_id', cohortId)
-
-    if (assignments && assignments.length > 0) {
-      const startupIds = assignments.map((a) => a.startup_id)
-      const { data: startupsData } = await supabase
-        .from('startups')
-        .select('id, name, vertical, stage, diagnostic_score, tools_completed, founder_id')
-        .in('id', startupIds)
-
-      if (startupsData) {
-        const founderIds = startupsData.map((s) => s.founder_id).filter(Boolean)
-        const { data: profiles } = await supabase
-          .from('profiles')
-          .select('id, full_name')
-          .in('id', founderIds)
-
-        const profileMap: Record<string, string> = {}
-        profiles?.forEach((p) => { profileMap[p.id] = p.full_name })
-
-        const merged: StartupInCohort[] = startupsData.map((s) => {
-          const assignment = assignments.find((a) => a.startup_id === s.id)
-          return {
-            assignment_id: assignment?.id || '',
-            startup_id: s.id,
-            name: s.name,
-            founder_name: profileMap[s.founder_id] || 'Sin founder',
-            vertical: s.vertical,
-            stage: s.stage,
-            diagnostic_score: s.diagnostic_score,
-            tools_completed: s.tools_completed,
-            assignment_status: assignment?.status || 'active',
-          }
-        })
-        setStartups(merged)
+      setStartups(startupsList)
+    } catch (err) {
+      const code = err instanceof Error ? err.message : ''
+      if (code === 'demo_not_found') setError('No se encontró la cohorte (demo).')
+      else if (code === 'cohort_not_found') setError('No se encontró la cohorte.')
+      else {
+        console.error('[S4C Admin] cohort load failed:', err)
+        setError('No se pudo cargar la cohorte.')
       }
-    } else {
-      setStartups([])
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }, [cohortId, isDemo])
 
   useEffect(() => {

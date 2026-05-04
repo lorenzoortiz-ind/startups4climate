@@ -247,7 +247,7 @@ export default function Hero() {
           >
             {[
               { v: '+30', l: 'Herramientas' },
-              { v: '3', l: 'Universidades' },
+              { v: '+10', l: 'Universidades' },
               { v: 'Gratis', l: 'Para founders LATAM' },
             ].map((s) => (
               <div key={s.l} style={{ textAlign: 'center' }}>

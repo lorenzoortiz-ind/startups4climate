@@ -46,6 +46,10 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://www.startups4climate.org',
+    languages: {
+      'es-419': 'https://www.startups4climate.org',
+      'x-default': 'https://www.startups4climate.org',
+    },
   },
 }
 
@@ -104,6 +108,71 @@ const websiteJsonLd = {
   publisher: { '@id': `${SITE_URL}/#organization` },
 }
 
+const softwareJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Startups4Climate',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  url: SITE_URL,
+  description:
+    'Plataforma all-in-one con herramientas interactivas, mentor AI y diagnóstico de startup readiness para founders de impacto en LATAM.',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    description: 'Acceso gratuito para founders',
+  },
+  featureList: [
+    'Diagnóstico de Startup Readiness',
+    'Mentor AI personalizado',
+    '+30 herramientas interactivas',
+    'Lean Canvas, BMC, análisis financiero',
+    'RADAR del ecosistema LATAM',
+    'Oportunidades de financiamiento',
+  ],
+  provider: { '@id': `${SITE_URL}/#organization` },
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Que es Startups4Climate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Startups4Climate es una plataforma all-in-one gratuita para founders de startups de impacto en America Latina. Ofrece herramientas interactivas, mentor AI, diagnostico de startup readiness y visibilidad de oportunidades de financiamiento.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Es gratis usar Startups4Climate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Si. El acceso para founders es completamente gratuito. Incluye +30 herramientas interactivas, mentor AI personalizado, diagnostico de readiness y acceso al RADAR del ecosistema.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Para que paises esta disponible?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Startups4Climate esta disponible para founders de toda America Latina y el Caribe, con enfoque en Peru, Colombia, Chile, Mexico, Argentina y Brasil.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Como funciona para universidades e incubadoras?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Las organizaciones pueden gestionar cohortes de startups, invitar founders por email, ver dashboards en tiempo real, generar reportes Excel y dar acceso a +30 herramientas interactivas y mentor AI.',
+      },
+    },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -132,6 +201,14 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
         <AuthProvider>
           <StartupProvider>

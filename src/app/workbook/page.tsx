@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { BookOpen, CheckCircle2 } from 'lucide-react'
+import { BookOpen, CheckCircle2, ChevronRight, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
 
 const TOC_ITEMS = [
@@ -33,159 +33,165 @@ export default function WorkbookPage() {
   }, [])
 
   return (
-    <div
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--color-bg-primary)',
-      }}
-    >
-      {/* Hero section */}
+    <div style={{ minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
+
+      {/* ============================================================ */}
+      {/*  HERO — mirrors /organizaciones pattern                      */}
+      {/* ============================================================ */}
       <section
+        className="hero-stage"
         style={{
           padding: 'clamp(3rem, 6vw, 6rem) var(--container-px) clamp(2rem, 4vw, 4rem)',
-          maxWidth: 'var(--container-max)',
-          margin: '0 auto',
         }}
       >
         <div
-          style={{
-            display: 'grid',
-            alignItems: 'center',
-            gap: 'clamp(2rem, 5vw, 5rem)',
-            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-          }}
-        >
-          {/* Left: editorial text */}
-          <motion.div
-            {...springReveal}
-            style={{ maxWidth: 600 }}
-          >
-            {/* Eyebrow */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.375rem 0.875rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(218,78,36,0.08)',
-                border: '1px solid rgba(218,78,36,0.15)',
-                marginBottom: '1.75rem',
-              }}
-            >
-              <BookOpen size={14} color="var(--color-accent-secondary)" />
-              <span
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.6rem',
-                  fontWeight: 700,
-                  color: 'var(--color-accent-secondary)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                USD $15
-              </span>
-            </div>
-
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-display-lg)',
-                fontWeight: 700,
-                color: 'var(--color-ink)',
-                letterSpacing: '-0.04em',
-                lineHeight: 1.05,
-                marginBottom: '1.5rem',
-              }}
-            >
-              Guía profesional para{' '}
-              <span style={{ color: 'var(--color-accent-primary)' }}>founders de impacto</span>
-            </h1>
-
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 'var(--text-body-lg)',
-                color: 'var(--color-text-secondary)',
-                maxWidth: 540,
-                lineHeight: 1.6,
-                marginBottom: '2rem',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Lleva tu startup de la idea al escalamiento con metodología profesional.
-              Profundiza el uso de las herramientas de la plataforma y aprende a validar,
-              construir y escalar paso a paso en América Latina.
-            </p>
-
-            {/* Stats row */}
-            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-              {[
-                { num: '8', label: 'capítulos' },
-                { num: '100+', label: 'páginas' },
-                { num: '4', label: 'etapas' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-display-md)',
-                      fontWeight: 700,
-                      color: 'var(--color-ink)',
-                      letterSpacing: '-0.05em',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {stat.num}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.7rem',
-                      color: 'var(--color-text-muted)',
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right: workbook mockup — flex:1 to match right column below */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
+          className="orb orb-electric orb-lg"
+          style={{ bottom: '-340px', left: '-280px' }}
+          aria-hidden
+        />
+        <div
+          className="orb orb-ember orb-lg"
+          style={{ bottom: '-340px', right: '-280px' }}
+          aria-hidden
+        />
+        <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+          <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
+              display: 'grid',
               alignItems: 'center',
-              width: '100%',
+              gap: 'clamp(2rem, 5vw, 5rem)',
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
             }}
           >
-            <Image
-              src="/workbook-cover.png"
-              alt="Workbook: De la idea al escalamiento"
-              width={280}
-              height={430}
+            {/* Left: editorial text */}
+            <motion.div {...springReveal} style={{ maxWidth: 600 }}>
+              {/* Eyebrow */}
+              <div style={{ marginBottom: '1.75rem' }}>
+                <span className="pill-ember">
+                  <BookOpen size={12} />
+                  Workbook profesional
+                </span>
+              </div>
+
+              <h1
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'var(--text-display-lg)',
+                  fontWeight: 500,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.0,
+                  marginBottom: '1.5rem',
+                }}
+              >
+                De la idea al{' '}
+                <span className="text-ember">escalamiento</span>
+                {' '}paso a paso
+              </h1>
+
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-body-lg)',
+                  color: 'var(--color-text-secondary)',
+                  maxWidth: 540,
+                  lineHeight: 1.6,
+                  marginBottom: '2rem',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                Lleva tu startup de la idea al escalamiento con metodología profesional.
+                Profundiza el uso de las herramientas de la plataforma y aprende a validar,
+                construir y escalar paso a paso en LATAM.
+              </p>
+
+              {/* Stats row */}
+              <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+                {[
+                  { num: '8', label: 'capítulos' },
+                  { num: '100+', label: 'páginas' },
+                  { num: '4', label: 'etapas' },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
+                        fontWeight: 700,
+                        color: 'var(--color-ink)',
+                        letterSpacing: '-0.05em',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {stat.num}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.7rem',
+                        color: 'var(--color-text-muted)',
+                        marginTop: '0.25rem',
+                      }}
+                    >
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Hero CTA buttons */}
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <a
+                  href="https://wa.me/51989338401?text=Hola%2C%20me%20interesa%20adquirir%20el%20Workbook%20de%20Startups4Climate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ember"
+                >
+                  <MessageCircle size={18} strokeWidth={2} />
+                  Comprar por WhatsApp
+                </a>
+                <a href="#contenido" className="btn-ghost">
+                  Ver contenido <ChevronRight size={16} />
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Right: workbook mockup */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.15 }}
               style={{
-                borderRadius: 'var(--radius-lg)',
-                boxShadow: '0 24px 48px -12px rgba(25,25,25,0.15), 0 8px 16px -4px rgba(25,25,25,0.08)',
-                objectFit: 'cover',
-                maxWidth: 280,
-                height: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
               }}
-              priority
-            />
-          </motion.div>
+            >
+              <Image
+                src="/workbook-cover.png"
+                alt="Workbook: De la idea al escalamiento"
+                width={320}
+                height={460}
+                style={{
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: '0 24px 60px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
+                  objectFit: 'cover',
+                  maxWidth: 320,
+                  height: 'auto',
+                }}
+                priority
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Two-column layout: TOC + Form */}
+      {/* ============================================================ */}
+      {/*  CONTENT + PURCHASE — two-column layout                      */}
+      {/* ============================================================ */}
       <section
+        id="contenido"
         style={{
           padding: '0 var(--container-px) clamp(4rem, 8vw, 8rem)',
           maxWidth: 'var(--container-max)',
@@ -194,34 +200,33 @@ export default function WorkbookPage() {
       >
         <div
           style={{
-            display: 'flex',
+            display: 'grid',
             gap: '2rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'flex-start',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            alignItems: 'start',
           }}
         >
           {/* Left column: Table of Contents */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 }}
             style={{
-              flex: 1,
-              minWidth: 0,
               background: 'var(--color-paper)',
               borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--color-border)',
-              padding: '2.5rem',
-              boxShadow: 'var(--shadow-float)',
+              padding: 'clamp(1.5rem, 3vw, 2.5rem)',
+              boxShadow: 'var(--shadow-card)',
             }}
           >
             <h2
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-display-md)',
-                fontWeight: 700,
+                fontSize: 'var(--text-heading-lg)',
+                fontWeight: 500,
                 color: 'var(--color-ink)',
-                letterSpacing: '-0.04em',
+                letterSpacing: '-0.025em',
                 lineHeight: 1.05,
                 marginBottom: '2rem',
               }}
@@ -234,7 +239,8 @@ export default function WorkbookPage() {
                 <motion.div
                   key={item.chapter}
                   initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
                   transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.2 + i * 0.05 }}
                   style={{
                     display: 'flex',
@@ -262,12 +268,11 @@ export default function WorkbookPage() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: 'clamp(0.7rem, 1.5vw, 0.88rem)',
-                        fontWeight: 700,
+                        fontSize: 'var(--text-body)',
+                        fontWeight: 600,
                         color: 'var(--color-ink)',
                         letterSpacing: '-0.02em',
                         marginBottom: '0.125rem',
-                        whiteSpace: 'nowrap',
                       }}
                     >
                       {item.title}
@@ -302,44 +307,22 @@ export default function WorkbookPage() {
           {/* Right column: Purchase CTA */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.18 }}
             style={{
-              flex: 1,
-              minWidth: 0,
               background: 'var(--color-paper)',
               borderRadius: 'var(--radius-lg)',
               border: '1px solid var(--color-border)',
-              padding: '2.5rem',
-              boxShadow: 'var(--shadow-float)',
+              padding: 'clamp(1.5rem, 3vw, 2.5rem)',
+              boxShadow: 'var(--shadow-card)',
             }}
             id="comprar"
           >
-            {/* Purchase CTA */}
             <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.375rem 0.875rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(218,78,36,0.08)',
-                  border: '1px solid rgba(218,78,36,0.15)',
-                  marginBottom: '1.5rem',
-                }}
-              >
-                <BookOpen size={14} color="var(--color-accent-secondary)" />
-                <span
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.6rem',
-                    fontWeight: 700,
-                    color: 'var(--color-accent-secondary)',
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                  }}
-                >
+              <div style={{ marginBottom: '1.5rem' }}>
+                <span className="pill-ember">
+                  <BookOpen size={12} />
                   Recurso profesional
                 </span>
               </div>
@@ -347,10 +330,10 @@ export default function WorkbookPage() {
               <h2
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-display-md)',
-                  fontWeight: 700,
+                  fontSize: 'var(--text-heading-lg)',
+                  fontWeight: 500,
                   color: 'var(--color-ink)',
-                  letterSpacing: '-0.04em',
+                  letterSpacing: '-0.025em',
                   lineHeight: 1.05,
                   marginBottom: '0.75rem',
                 }}
@@ -361,7 +344,7 @@ export default function WorkbookPage() {
               <div
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-display-lg)',
+                  fontSize: 'var(--text-display-md)',
                   fontWeight: 700,
                   color: 'var(--color-accent-primary)',
                   letterSpacing: '-0.04em',
@@ -375,7 +358,7 @@ export default function WorkbookPage() {
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body-lg)',
+                  fontSize: 'var(--text-body)',
                   color: 'var(--color-text-secondary)',
                   marginBottom: '1.5rem',
                   lineHeight: 1.6,
@@ -418,7 +401,7 @@ export default function WorkbookPage() {
                     <span
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.75rem',
+                        fontSize: 'var(--text-body)',
                         color: 'var(--color-text-secondary)',
                         lineHeight: 1.4,
                         letterSpacing: '-0.01em',
@@ -432,30 +415,15 @@ export default function WorkbookPage() {
 
               {/* WhatsApp CTA button */}
               <a
-                href="https://wa.me/51989338401?text=Hola%2C%20me%20interesa%20adquirir%20el%20Workbook%20de%20Startups4Climate%20%F0%9F%9A%80"
+                href="https://wa.me/51989338401?text=Hola%2C%20me%20interesa%20adquirir%20el%20Workbook%20de%20Startups4Climate"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="btn-ember"
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.625rem',
                   width: '100%',
-                  padding: '1.125rem 2rem',
-                  borderRadius: 'var(--radius-full)',
-                  background: '#25D366',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body-lg)',
-                  fontWeight: 700,
-                  border: 'none',
-                  cursor: 'pointer',
-                  letterSpacing: '-0.01em',
-                  textDecoration: 'none',
-                  transition: 'background 0.2s ease',
+                  justifyContent: 'center',
+                  padding: '1rem 2rem',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = '#1EB954' }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = '#25D366' }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -466,7 +434,7 @@ export default function WorkbookPage() {
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.65rem',
+                  fontSize: '0.7rem',
                   color: 'var(--color-text-muted)',
                   marginTop: '1rem',
                   lineHeight: 1.5,

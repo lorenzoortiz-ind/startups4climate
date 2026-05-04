@@ -30,7 +30,10 @@ export default function Navbar() {
     const hash = href.startsWith('/') ? href.slice(1) : href
     if (pathname === '/') {
       const el = document.querySelector(hash)
-      if (el) el.scrollIntoView({ behavior: 'smooth' })
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 140
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      }
     } else {
       router.push(href)
     }

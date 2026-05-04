@@ -40,7 +40,10 @@ export default function FloatingDiagnosticCTA() {
 
   const handleClick = () => {
     const el = document.getElementById('diagnostico')
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 140
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+    }
   }
 
   return (

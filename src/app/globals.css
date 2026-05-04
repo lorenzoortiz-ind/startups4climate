@@ -356,13 +356,13 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 96px;
+    scroll-padding-top: 140px;
     text-rendering: optimizeLegibility;
     background-color: var(--color-bg-primary);
   }
 
   section[id] {
-    scroll-margin-top: 96px;
+    scroll-margin-top: 140px;
   }
 
   * {

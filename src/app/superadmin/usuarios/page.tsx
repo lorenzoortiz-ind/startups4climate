@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import {
   Users, Search, ChevronDown, ChevronUp, Save,
   Shield, Loader2, ShieldCheck, ShieldOff, MapPin,
-  UserCheck, UserX, Clock,
+  UserCheck, Clock,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
@@ -78,91 +78,10 @@ const fadeUp = {
   transition: { duration: 0.4, ease: 'easeOut' as const },
 }
 
-/* ─────────────── DEMO USERS (43 rows) ─────────────── */
-type DemoUser = {
-  id: string
-  full_name: string
-  email: string
-  role: 'founder' | 'admin_org' | 'superadmin'
-  org_name: string
-  startup_name: string | null
-  stage: string | null
-  region: string
-  lastLoginRel: string
-  mfa: boolean
-  status: 'active' | 'pending' | 'suspended'
-  created_at: string
-}
-
-const DEMO_USERS: DemoUser[] = [
-  // Superadmins
-  { id: 'du-001', full_name: 'Lorenzo Ortiz', email: 'lorenzo.ortiz@redesignlab.org', role: 'superadmin', org_name: 'Redesign Lab', startup_name: null, stage: null, region: 'Lima', lastLoginRel: 'hace 4 min', mfa: true, status: 'active', created_at: '2025-01-10' },
-  { id: 'du-002', full_name: 'Eddie Ajalcriña', email: 'eddie@redesignlab.org', role: 'superadmin', org_name: 'Redesign Lab', startup_name: null, stage: null, region: 'Lima', lastLoginRel: 'hace 22 min', mfa: true, status: 'active', created_at: '2025-01-10' },
-
-  // Admins de organización
-  { id: 'du-003', full_name: 'María Fernández', email: 'admin@bioinnova.pe', role: 'admin_org', org_name: 'BioInnova UNAMAD', startup_name: null, stage: null, region: 'Madre de Dios', lastLoginRel: 'hace 1 h', mfa: true, status: 'active', created_at: '2025-01-15' },
-  { id: 'du-004', full_name: 'Carlos Pinedo', email: 'admin@unamad.edu.pe', role: 'admin_org', org_name: 'UNAMAD', startup_name: null, stage: null, region: 'Madre de Dios', lastLoginRel: 'hace 3 h', mfa: true, status: 'active', created_at: '2025-01-18' },
-  { id: 'du-005', full_name: 'Sofía Castillo', email: 'admin@wiener.edu.pe', role: 'admin_org', org_name: 'Universidad Wiener', startup_name: null, stage: null, region: 'Lima', lastLoginRel: 'hace 6 h', mfa: false, status: 'active', created_at: '2025-02-01' },
-  { id: 'du-006', full_name: 'Patricia Quintanilla', email: 'admin@demo-incubadora.org', role: 'admin_org', org_name: 'Demo Incubadora', startup_name: null, stage: null, region: 'Lima', lastLoginRel: 'hace 2 d', mfa: true, status: 'active', created_at: '2025-03-15' },
-  { id: 'du-007', full_name: 'Diego Rodríguez', email: 'directora@hub-udep.edu.pe', role: 'admin_org', org_name: 'Hub UDEP', startup_name: null, stage: null, region: 'Piura', lastLoginRel: 'hace 1 d', mfa: true, status: 'active', created_at: '2025-03-20' },
-  { id: 'du-008', full_name: 'Lucía Mendoza', email: 'innovacion@aceleragap.com', role: 'admin_org', org_name: 'AceleraGap', startup_name: null, stage: null, region: 'Lima', lastLoginRel: 'hace 11 min', mfa: true, status: 'active', created_at: '2025-06-01' },
-  { id: 'du-009', full_name: 'Roberto Zegarra', email: 'director@energiaverde.org', role: 'admin_org', org_name: 'Energía Verde Arequipa', startup_name: null, stage: null, region: 'Arequipa', lastLoginRel: 'hace 5 d', mfa: false, status: 'active', created_at: '2025-07-15' },
-  { id: 'du-010', full_name: 'Juliana Pérez', email: 'pm@agrihub-libertad.pe', role: 'admin_org', org_name: 'AgriHub La Libertad', startup_name: null, stage: null, region: 'La Libertad', lastLoginRel: 'hace 8 h', mfa: true, status: 'active', created_at: '2025-08-01' },
-  { id: 'du-011', full_name: 'Miguel Cusi', email: 'innovate@cusco.gob.pe', role: 'admin_org', org_name: 'Innóvate Cusco', startup_name: null, stage: null, region: 'Cusco', lastLoginRel: 'hace 12 h', mfa: true, status: 'active', created_at: '2025-05-01' },
-
-  // Founders BioInnova / UNAMAD (Madre de Dios)
-  { id: 'du-012', full_name: 'Ana Quispe', email: 'ana.quispe@ecobioperu.com', role: 'founder', org_name: 'BioInnova UNAMAD', startup_name: 'EcoBio Perú', stage: 'Aceleración', region: 'Madre de Dios', lastLoginRel: 'hace 3 min', mfa: true, status: 'active', created_at: '2025-02-10' },
-  { id: 'du-013', full_name: 'Luis Mamani', email: 'luis@terrareciclo.pe', role: 'founder', org_name: 'BioInnova UNAMAD', startup_name: 'TerraReciclo', stage: 'Aceleración', region: 'Madre de Dios', lastLoginRel: 'hace 1 h', mfa: true, status: 'active', created_at: '2025-02-12' },
-  { id: 'du-014', full_name: 'Rocío Tello', email: 'rocio@biopakandina.com', role: 'founder', org_name: 'BioInnova UNAMAD', startup_name: 'BioPak Andina', stage: 'Aceleración', region: 'Madre de Dios', lastLoginRel: 'hace 5 h', mfa: true, status: 'active', created_at: '2025-02-15' },
-  { id: 'du-015', full_name: 'Gerson Chávez', email: 'gerson@amazonbiopack.com', role: 'founder', org_name: 'BioInnova UNAMAD', startup_name: 'AmazonBio Pack', stage: 'Incubación', region: 'Madre de Dios', lastLoginRel: 'hace 2 d', mfa: false, status: 'active', created_at: '2025-09-01' },
-  { id: 'du-016', full_name: 'Claudia Rojas', email: 'claudia@kuntiplant.pe', role: 'founder', org_name: 'BioInnova UNAMAD', startup_name: 'KuntiPlant', stage: 'Aceleración', region: 'Madre de Dios', lastLoginRel: 'hace 14 h', mfa: true, status: 'active', created_at: '2025-09-05' },
-  { id: 'du-017', full_name: 'Néstor Vela', email: 'nestor@agrosinergia.com', role: 'founder', org_name: 'UNAMAD', startup_name: 'AgroSinergia', stage: 'Incubación', region: 'Madre de Dios', lastLoginRel: 'hace 4 d', mfa: false, status: 'pending', created_at: '2026-03-15' },
-  { id: 'du-018', full_name: 'Yenny Saldaña', email: 'yenny@ecocacaomadre.pe', role: 'founder', org_name: 'UNAMAD', startup_name: 'EcoCacao Madre', stage: 'Aceleración', region: 'Madre de Dios', lastLoginRel: 'hace 1 d', mfa: true, status: 'active', created_at: '2025-02-20' },
-
-  // Founders Wiener (Lima)
-  { id: 'du-019', full_name: 'Andrea Camacho', email: 'andrea@ayahealth.pe', role: 'founder', org_name: 'Universidad Wiener', startup_name: 'AyaHealth', stage: 'Aceleración', region: 'Lima', lastLoginRel: 'hace 28 min', mfa: true, status: 'active', created_at: '2025-04-20' },
-  { id: 'du-020', full_name: 'Javier Echevarría', email: 'javier@telemedandina.com', role: 'founder', org_name: 'Universidad Wiener', startup_name: 'TeleMed Andina', stage: 'Aceleración', region: 'Lima', lastLoginRel: 'hace 4 h', mfa: true, status: 'active', created_at: '2025-04-22' },
-  { id: 'du-021', full_name: 'Karina Loayza', email: 'karina@bienestarkids.com', role: 'founder', org_name: 'Universidad Wiener', startup_name: 'BienestarKids', stage: 'Incubación', region: 'Lima', lastLoginRel: 'hace 3 d', mfa: false, status: 'active', created_at: '2026-02-05' },
-  { id: 'du-022', full_name: 'Renato Fuentes', email: 'renato@medibosque.pe', role: 'founder', org_name: 'Universidad Wiener', startup_name: 'MediBosque', stage: 'Aceleración', region: 'Lima', lastLoginRel: 'hace 2 h', mfa: true, status: 'active', created_at: '2025-05-01' },
-  { id: 'du-023', full_name: 'Valeria Solano', email: 'valeria@nutriquinua.pe', role: 'founder', org_name: 'Universidad Wiener', startup_name: 'NutriQuinua', stage: 'Aceleración', region: 'Lima', lastLoginRel: 'hace 7 h', mfa: true, status: 'active', created_at: '2025-05-15' },
-
-  // Founders UDEP (Piura)
-  { id: 'du-024', full_name: 'Joaquín Garrido', email: 'joaquin@biomarbio.pe', role: 'founder', org_name: 'Hub UDEP', startup_name: 'BiomarBio', stage: 'Incubación', region: 'Piura', lastLoginRel: 'hace 9 h', mfa: false, status: 'active', created_at: '2025-04-10' },
-  { id: 'du-025', full_name: 'Cinthya Ramos', email: 'cinthya@pescasostenible.pe', role: 'founder', org_name: 'Hub UDEP', startup_name: 'PescaSostenible', stage: 'Incubación', region: 'Piura', lastLoginRel: 'hace 1 d', mfa: true, status: 'active', created_at: '2025-04-15' },
-  { id: 'du-026', full_name: 'Walter Yáñez', email: 'walter@agromango.pe', role: 'founder', org_name: 'Hub UDEP', startup_name: 'AgroMango', stage: 'Pre-incubación', region: 'Piura', lastLoginRel: 'hace 12 d', mfa: false, status: 'active', created_at: '2026-01-15' },
-
-  // Founders AceleraGap (Lima) — climate tech avanzados
-  { id: 'du-027', full_name: 'Mariana Vidal', email: 'mariana@carbonzerolatam.com', role: 'founder', org_name: 'AceleraGap', startup_name: 'CarbonZero LatAm', stage: 'Escalamiento', region: 'Lima', lastLoginRel: 'hace 18 min', mfa: true, status: 'active', created_at: '2025-06-25' },
-  { id: 'du-028', full_name: 'Felipe Aranda', email: 'felipe@enersmart.pe', role: 'founder', org_name: 'AceleraGap', startup_name: 'EnerSmart Andes', stage: 'Escalamiento', region: 'Lima', lastLoginRel: 'hace 51 min', mfa: true, status: 'active', created_at: '2025-06-28' },
-  { id: 'du-029', full_name: 'Tamara Inca', email: 'tamara@movegreen.pe', role: 'founder', org_name: 'AceleraGap', startup_name: 'MoveGreen', stage: 'Aceleración', region: 'Lima', lastLoginRel: 'hace 3 h', mfa: true, status: 'active', created_at: '2025-07-02' },
-
-  // Founders Cusco
-  { id: 'du-030', full_name: 'Inés Huamán', email: 'ines@andinafood.pe', role: 'founder', org_name: 'Innóvate Cusco', startup_name: 'AndinaFood', stage: 'Pre-incubación', region: 'Cusco', lastLoginRel: 'hace 6 d', mfa: false, status: 'active', created_at: '2025-05-20' },
-  { id: 'du-031', full_name: 'Bruno Quispe', email: 'bruno@turismovivo.pe', role: 'founder', org_name: 'Innóvate Cusco', startup_name: 'TurismoVivo', stage: 'Aceleración', region: 'Cusco', lastLoginRel: 'hace 2 d', mfa: true, status: 'active', created_at: '2025-05-25' },
-  { id: 'du-032', full_name: 'Pilar Ñahui', email: 'pilar@textilqente.com', role: 'founder', org_name: 'Innóvate Cusco', startup_name: "TextilQ'ente", stage: 'Aceleración', region: 'Cusco', lastLoginRel: 'hace 9 h', mfa: false, status: 'active', created_at: '2025-06-01' },
-
-  // Founders Energía Arequipa
-  { id: 'du-033', full_name: 'Gabriel Vargas', email: 'gabriel@solarselva.pe', role: 'founder', org_name: 'Energía Verde Arequipa', startup_name: 'SolarSelva', stage: 'Aceleración', region: 'Arequipa', lastLoginRel: 'hace 4 h', mfa: true, status: 'active', created_at: '2025-08-15' },
-  { id: 'du-034', full_name: 'Daniela Torres', email: 'daniela@enerpampa.pe', role: 'founder', org_name: 'Energía Verde Arequipa', startup_name: 'EnerPampa', stage: 'Aceleración', region: 'Arequipa', lastLoginRel: 'hace 19 h', mfa: true, status: 'active', created_at: '2025-08-18' },
-  { id: 'du-035', full_name: 'Hugo Cáceres', email: 'hugo@cleanribera.pe', role: 'founder', org_name: 'Energía Verde Arequipa', startup_name: 'CleanRibera', stage: 'Pre-incubación', region: 'Arequipa', lastLoginRel: 'hace 23 d', mfa: false, status: 'suspended', created_at: '2025-08-25' },
-
-  // Founders AgriHub La Libertad
-  { id: 'du-036', full_name: 'Sebastián Linares', email: 'sebastian@agrocosta.pe', role: 'founder', org_name: 'AgriHub La Libertad', startup_name: 'AgroCosta', stage: 'Aceleración', region: 'La Libertad', lastLoginRel: 'hace 1 h', mfa: true, status: 'active', created_at: '2025-08-25' },
-  { id: 'du-037', full_name: 'Adriana Reyes', email: 'adriana@paltapower.pe', role: 'founder', org_name: 'AgriHub La Libertad', startup_name: 'PaltaPower', stage: 'Aceleración', region: 'La Libertad', lastLoginRel: 'hace 6 h', mfa: false, status: 'active', created_at: '2025-08-28' },
-  { id: 'du-038', full_name: 'Iván Cubas', email: 'ivan@esparragotech.pe', role: 'founder', org_name: 'AgriHub La Libertad', startup_name: 'EsparragoTech', stage: 'Incubación', region: 'La Libertad', lastLoginRel: 'hace 4 d', mfa: false, status: 'active', created_at: '2025-09-02' },
-
-  // Founders adicionales de demo-incubadora
-  { id: 'du-039', full_name: 'Carla Silva', email: 'carla@demo-incubadora.org', role: 'founder', org_name: 'Demo Incubadora', startup_name: 'GreenLogix', stage: 'Incubación', region: 'Lima', lastLoginRel: 'hace 13 h', mfa: false, status: 'active', created_at: '2025-10-15' },
-  { id: 'du-040', full_name: 'Diego Rojas', email: 'diego@demo-incubadora.org', role: 'founder', org_name: 'Demo Incubadora', startup_name: 'AquaPath', stage: 'Pre-incubación', region: 'Lima', lastLoginRel: 'hace 1 d', mfa: false, status: 'active', created_at: '2025-11-01' },
-
-  // Pendientes / suspendidos
-  { id: 'du-041', full_name: 'Marisol Pizango', email: 'marisol@iquitosbio.pe', role: 'founder', org_name: 'Sin organización', startup_name: 'IquitosBio', stage: null, region: 'Loreto', lastLoginRel: 'nunca', mfa: false, status: 'pending', created_at: '2026-04-10' },
-  { id: 'du-042', full_name: 'Ronaldo Choque', email: 'ronaldo@punainnova.pe', role: 'founder', org_name: 'Sin organización', startup_name: 'PunaInnova', stage: null, region: 'Puno', lastLoginRel: 'nunca', mfa: false, status: 'pending', created_at: '2026-04-12' },
-  { id: 'du-043', full_name: 'Sandra Amaya', email: 'sandra@ucayali-eco.pe', role: 'founder', org_name: 'Sin organización', startup_name: 'UcayaliEco', stage: null, region: 'Ucayali', lastLoginRel: 'hace 60 d', mfa: false, status: 'suspended', created_at: '2026-01-20' },
-]
+/* ─────────────── Page component ─────────────── */
 
 export default function UsuariosPage() {
-  const { appUser, isDemo } = useAuth()
+  const { appUser } = useAuth()
   const [users, setUsers] = useState<UserRow[]>([])
   const [orgs, setOrgs] = useState<OrgOption[]>([])
   const [loading, setLoading] = useState(true)
@@ -181,38 +100,6 @@ export default function UsuariosPage() {
   const [editOrgId, setEditOrgId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
-
-  const loadDemoUsers = useCallback(() => {
-    let rows = DEMO_USERS as DemoUser[]
-    if (roleFilter !== 'all') rows = rows.filter((u) => u.role === roleFilter)
-    if (statusFilter !== 'all') rows = rows.filter((u) => u.status === statusFilter)
-    const q = searchQuery.trim().toLowerCase()
-    if (q) {
-      rows = rows.filter((u) =>
-        u.full_name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q) ||
-        (u.startup_name || '').toLowerCase().includes(q)
-      )
-    }
-    setUsers(rows.map((u) => ({
-      id: u.id,
-      full_name: u.full_name,
-      email: u.email,
-      role: u.role,
-      org_id: null,
-      startup_name: u.startup_name,
-      stage: u.stage,
-      created_at: u.created_at,
-      org_name: u.org_name,
-      region: u.region,
-      lastLoginRel: u.lastLoginRel,
-      mfa: u.mfa,
-      status: u.status,
-    })))
-    setTotalCount(DEMO_USERS.length)
-    setHasMore(false)
-    setLoading(false)
-  }, [roleFilter, statusFilter, searchQuery])
 
   const loadUsers = useCallback(async (pageNum: number, reset: boolean) => {
     setLoading(true)
@@ -261,7 +148,6 @@ export default function UsuariosPage() {
 
   // Load all orgs for the assign dropdown
   useEffect(() => {
-    if (isDemo) return
     async function loadOrgs() {
       const { data } = await supabase
         .from('organizations')
@@ -270,18 +156,14 @@ export default function UsuariosPage() {
       setOrgs(data || [])
     }
     loadOrgs()
-  }, [isDemo])
+  }, [])
 
   // Reload on filter change
   useEffect(() => {
     setPage(0)
     setExpandedId(null)
-    if (isDemo) {
-      loadDemoUsers()
-    } else {
-      loadUsers(0, true)
-    }
-  }, [roleFilter, statusFilter, searchQuery, isDemo, loadDemoUsers, loadUsers])
+    loadUsers(0, true)
+  }, [roleFilter, statusFilter, searchQuery, loadUsers])
 
   const handleLoadMore = () => {
     const nextPage = page + 1
@@ -301,11 +183,6 @@ export default function UsuariosPage() {
   }
 
   const handleSave = async (userId: string) => {
-    if (isDemo) {
-      setSaveSuccess(userId)
-      setTimeout(() => setSaveSuccess(null), 2500)
-      return
-    }
     setSaving(true)
     setSaveSuccess(null)
 
@@ -340,27 +217,24 @@ export default function UsuariosPage() {
     setSaving(false)
   }
 
-  // KPI strip data — based on demo dataset (or live count for prod)
-  const kpis = useMemo(() => {
-    if (isDemo) {
-      const total = DEMO_USERS.length
-      const active = DEMO_USERS.filter((u) => u.status === 'active').length
-      const mfa = DEMO_USERS.filter((u) => u.mfa).length
-      const pending = DEMO_USERS.filter((u) => u.status === 'pending').length
-      return [
-        { icon: Users, label: 'Total usuarios', value: total, color: '#1F77F6' },
-        { icon: UserCheck, label: 'Activos', value: active, color: '#16A34A' },
-        { icon: ShieldCheck, label: 'MFA habilitado', value: `${Math.round((mfa / total) * 100)}%`, color: '#1F77F6' },
-        { icon: Clock, label: 'Invitaciones pendientes', value: pending, color: '#F59E0B' },
-      ]
-    }
-    return [
-      { icon: Users, label: 'Total usuarios', value: totalCount, color: '#1F77F6' },
-      { icon: UserCheck, label: 'Activos', value: '—', color: '#16A34A' },
-      { icon: ShieldCheck, label: 'MFA habilitado', value: '—', color: '#1F77F6' },
-      { icon: Clock, label: 'Invitaciones pendientes', value: '—', color: '#F59E0B' },
-    ]
-  }, [isDemo, totalCount])
+  // KPI strip — real counts
+  const [roleCounts, setRoleCounts] = useState({ founders: 0, admins: 0, superadmins: 0 })
+  useEffect(() => {
+    Promise.all([
+      supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'founder'),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'admin_org'),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'superadmin'),
+    ]).then(([f, a, s]) => {
+      setRoleCounts({ founders: f.count ?? 0, admins: a.count ?? 0, superadmins: s.count ?? 0 })
+    })
+  }, [])
+
+  const kpis = useMemo(() => [
+    { icon: Users, label: 'Total usuarios', value: totalCount, color: '#1F77F6' },
+    { icon: UserCheck, label: 'Founders', value: roleCounts.founders, color: '#16A34A' },
+    { icon: ShieldCheck, label: 'Admins de org', value: roleCounts.admins, color: '#8B5CF6' },
+    { icon: Clock, label: 'Superadmins', value: roleCounts.superadmins, color: '#F59E0B' },
+  ], [totalCount, roleCounts])
 
   if (appUser?.role !== 'superadmin') {
     return (
@@ -696,9 +570,8 @@ export default function UsuariosPage() {
                                   </select>
                                 </div>
 
-                                {/* Assign org (real mode) */}
-                                {!isDemo && (
-                                  <div>
+                                {/* Assign org */}
+                                <div>
                                     <label style={{
                                       fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)',
                                       fontWeight: 600, color: 'var(--color-text-primary)',
@@ -716,26 +589,7 @@ export default function UsuariosPage() {
                                         <option key={org.id} value={org.id}>{org.name}</option>
                                       ))}
                                     </select>
-                                  </div>
-                                )}
-
-                                {/* Suspender (demo only visual) */}
-                                {isDemo && user.status === 'active' && (
-                                  <button
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{
-                                      display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-                                      padding: '0.5rem 0.85rem', borderRadius: 8,
-                                      background: 'transparent',
-                                      color: '#DC2626', border: '1px solid rgba(220,38,38,0.3)',
-                                      cursor: 'pointer',
-                                      fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 600,
-                                    }}
-                                  >
-                                    <UserX size={12} />
-                                    Suspender
-                                  </button>
-                                )}
+                                </div>
 
                                 {/* Save button */}
                                 <button

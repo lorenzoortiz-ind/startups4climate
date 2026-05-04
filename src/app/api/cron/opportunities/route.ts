@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   const results = { inserted: 0, updated: 0, errors: [] as string[] }
 
   const prompt = `Eres un investigador de oportunidades de financiamiento para startups de impacto en América Latina.
-Genera exactamente 10 oportunidades REALES y ACTUALES (2025-2026) para founders de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto en LATAM.
+Genera exactamente 5 oportunidades REALES y ACTUALES (2025-2026) para founders de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto en LATAM.
 
 Incluye una mezcla de: grants, programas de aceleración, fondos de inversión, competencias y convocatorias.
 
@@ -79,7 +79,8 @@ REGLAS:
 - Montos realistas (grants: 5000-500000, accelerators: 20000-150000, funds: 100000-5000000)
 - Mezcla oportunidades regionales con específicas de país
 - NO repitas organización
-- Genera exactamente 10 objetos`
+- Genera exactamente 5 objetos
+- Descripciones cortas de máximo 50 palabras`
 
   try {
     const aiRes = await fetch(
@@ -88,11 +89,11 @@ REGLAS:
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
         body: JSON.stringify({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-2.0-flash',
           messages: [{ role: 'user', content: prompt }],
-          max_completion_tokens: 16000,
+          max_tokens: 4000,
         }),
-        signal: AbortSignal.timeout(45000),
+        signal: AbortSignal.timeout(55000),
       }
     )
 

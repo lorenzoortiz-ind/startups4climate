@@ -86,7 +86,7 @@ REGLAS:
     }
 
     const json = await aiRes.json() as { choices?: Array<{ message?: { content?: string } }> }
-    const content = json.choices?.[0]?.message?.content ?? ''
+    const content = (json.choices?.[0]?.message?.content ?? '').replace(/```json\s*/g, '').replace(/```/g, '')
     const jsonMatch = /\[[\s\S]*\]/.exec(content)
 
     if (!jsonMatch) {

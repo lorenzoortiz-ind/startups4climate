@@ -249,7 +249,7 @@ Enfócate en: rondas de inversión, regulación ambiental, programas de acelerac
       )
       if (aiRes.ok) {
         const json = await aiRes.json() as { choices?: Array<{ message?: { content?: string } }> }
-        const content = json.choices?.[0]?.message?.content ?? ''
+        const content = (json.choices?.[0]?.message?.content ?? '').replace(/```json\s*/g, '').replace(/```/g, '')
         const jsonMatch = /\[[\s\S]*\]/.exec(content)
         if (jsonMatch) {
           const items = JSON.parse(jsonMatch[0]) as Array<{

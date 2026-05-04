@@ -234,7 +234,6 @@ function ToolCard({
         background: 'var(--color-bg-card)',
         borderRadius: 12,
         border: '1px solid var(--color-border)',
-        borderLeft: `3px solid ${stageColor}`,
         padding: '1.25rem',
         boxShadow: 'var(--shadow-card)',
         display: 'flex',

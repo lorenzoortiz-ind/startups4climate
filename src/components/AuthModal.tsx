@@ -18,8 +18,6 @@ export default function AuthModal() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [resetSent, setResetSent] = useState(false)
-  const [orgMode, setOrgMode] = useState(false)
-
   const [form, setForm] = useState({ email: '', password: '', name: '', startup: '' })
 
   useEffect(() => {
@@ -29,7 +27,6 @@ export default function AuthModal() {
       setSuccess(false)
       setResetSent(false)
       setForm({ email: '', password: '', name: '', startup: '' })
-      setOrgMode(false)
     }
   }, [authModalOpen, authModalMode])
 
@@ -324,7 +321,7 @@ export default function AuthModal() {
                 </div>
 
                 {/* Tabs: Login / Registro */}
-                {!orgMode && mode !== 'reset' && (
+                {mode !== 'reset' && (
                   <div
                     style={{
                       display: 'flex',
@@ -366,7 +363,7 @@ export default function AuthModal() {
                   </div>
                 )}
 
-                <div style={{ padding: orgMode ? '0 2.5rem 2.5rem' : '0 2.5rem 2.5rem' }}>
+                <div style={{ padding: '0 2.5rem 2.5rem' }}>
                   {/* Heading */}
                   <div style={{ marginBottom: '2rem' }}>
                     <h2
@@ -383,7 +380,7 @@ export default function AuthModal() {
                       {mode === 'reset'
                         ? 'Recupera tu contraseña'
                         : mode === 'login'
-                          ? (orgMode ? 'Acceso organizaciones' : 'Accede a tus herramientas')
+                          ? 'Accede a tu plataforma'
                           : 'Crea tu cuenta gratis'}
                     </h2>
                     <p
@@ -397,9 +394,7 @@ export default function AuthModal() {
                       {mode === 'reset'
                         ? 'Ingresa tu usuario o email y te enviaremos un enlace para restablecer tu contraseña.'
                         : mode === 'login'
-                          ? (orgMode
-                            ? 'Ingresa las credenciales proporcionadas por S4C.'
-                            : '+30 herramientas operativas para startups de impacto.')
+                          ? 'Un solo acceso para founders y organizaciones.'
                           : <>Accede a la Plataforma <span style={{ color: 'var(--color-accent-primary)', fontWeight: 700 }}>S4C</span> sin costo.</>}
                     </p>
                   </div>
@@ -593,26 +588,6 @@ export default function AuthModal() {
                       >
                         Volver al login
                       </button>
-                    ) : orgMode ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOrgMode(false)
-                          setForm({ email: '', password: '', name: '', startup: '' })
-                          setError('')
-                        }}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '0.875rem',
-                          fontWeight: 600,
-                          color: 'var(--color-accent-primary)',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Acceder como founder
-                      </button>
                     ) : (
                       <span
                         style={{
@@ -626,7 +601,6 @@ export default function AuthModal() {
                           type="button"
                           onClick={() => {
                             setMode(mode === 'login' ? 'register' : 'login')
-                            setOrgMode(false)
                             setError('')
                           }}
                           style={{
@@ -647,42 +621,6 @@ export default function AuthModal() {
                     )}
                   </div>
 
-                  {mode === 'login' && !orgMode && (
-                    <div
-                      style={{
-                        paddingTop: '0.75rem',
-                        textAlign: 'center',
-                      }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOrgMode(true)
-                          setForm({ email: '', password: '', name: '', startup: '' })
-                          setError('')
-                        }}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.375rem',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '0.8125rem',
-                          fontWeight: 500,
-                          color: 'var(--color-text-muted)',
-                          cursor: 'pointer',
-                          transition: 'color 0.2s',
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-ink)' }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-muted)' }}
-                      >
-                        <Building2 size={13} />
-                        Acceder como organización
-                      </button>
-                    </div>
-                  )}
                 </div>
               </motion.div>
             )}

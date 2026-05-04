@@ -137,7 +137,8 @@ REGLAS:
       items = JSON.parse(sanitized)
     } catch (parseErr) {
       results.errors.push(`JSON parse: ${parseErr instanceof Error ? parseErr.message : 'unknown'}`)
-      return NextResponse.json({ ...results, _debug: sanitized.slice(0, 500) }, { status: 502 })
+      const errPos = parseErr instanceof Error ? parseInt(parseErr.message.match(/position (\d+)/)?.[1] || '0') : 0
+      return NextResponse.json({ ...results, _debug: sanitized.slice(Math.max(0, errPos - 100), errPos + 100), _pos: errPos, _totalLen: sanitized.length }, { status: 502 })
     }
 
     for (const item of items) {

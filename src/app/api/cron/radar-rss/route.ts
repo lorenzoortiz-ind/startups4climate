@@ -214,6 +214,72 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // ── Phase 2: Gemini-generated curated items ──
+  const apiKey = process.env.GEMINI_API_KEY
+  if (apiKey) {
+    try {
+      const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
+Genera exactamente 8 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto.
+Responde SOLO con un array JSON válido, sin texto adicional:
+[
+  {
+    "title": "Título de la noticia en español (máx 120 caracteres)",
+    "summary": "Resumen en español de 80-120 palabras. Datos concretos, sin clichés.",
+    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, Gestión)",
+    "source_url": "URL homepage del medio verificada — NUNCA inventes subrutas.",
+    "content_type": "news|investment|trend|regulation|event|report",
+    "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other",
+    "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
+  }
+]
+Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
+
+      const aiRes = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+          body: JSON.stringify({
+            model: 'gemini-2.5-flash',
+            messages: [{ role: 'user', content: aiPrompt }],
+            max_tokens: 3000,
+          }),
+          signal: AbortSignal.timeout(30000),
+        }
+      )
+      if (aiRes.ok) {
+        const json = await aiRes.json() as { choices?: Array<{ message?: { content?: string } }> }
+        const content = json.choices?.[0]?.message?.content ?? ''
+        const jsonMatch = /\[[\s\S]*\]/.exec(content)
+        if (jsonMatch) {
+          const items = JSON.parse(jsonMatch[0]) as Array<{
+            title: string; summary: string; source_name: string; source_url: string;
+            content_type: string; vertical: string | null; country: string | null
+          }>
+          for (const item of items) {
+            if (!item.title || !item.source_url) continue
+            const { error } = await supabase.from('news_items').upsert({
+              title: item.title.slice(0, 500),
+              summary: item.summary?.slice(0, 800),
+              source_name: item.source_name || 'S4C AI',
+              source_url: item.source_url,
+              vertical: item.vertical || null,
+              country: item.country || null,
+              content_type: (item.content_type as string) || 'news',
+              published_at: new Date().toISOString(),
+              scraped_at: new Date().toISOString(),
+              is_active: true,
+            }, { onConflict: 'source_url', ignoreDuplicates: false })
+            if (error) results.errors.push(`AI upsert: ${error.message}`)
+            else (results as Record<string, unknown>).ai_inserted = ((results as Record<string, unknown>).ai_inserted as number || 0) + 1
+          }
+        }
+      }
+    } catch (err) {
+      results.errors.push(`Gemini: ${err instanceof Error ? err.message : 'unknown'}`)
+    }
+  }
+
   // Deactivate items older than 45 days to keep RADAR fresh
   await supabase
     .from('news_items')

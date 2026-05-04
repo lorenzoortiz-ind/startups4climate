@@ -132,8 +132,12 @@ REGLAS:
       return NextResponse.json({ ...results, _debug: sanitized.slice(Math.max(0, errPos - 100), errPos + 100), _pos: errPos, _totalLen: sanitized.length }, { status: 502 })
     }
 
+    const VALID_TYPES = ['grant', 'accelerator', 'competition', 'fund', 'fellowship']
+
     for (const item of items) {
       if (!item.title || !item.organization) continue
+      // Normalize type to valid enum
+      const itemType = VALID_TYPES.includes(item.type) ? item.type : 'fund'
 
       const { data: existing } = await supabase
         .from('opportunities')
@@ -147,7 +151,7 @@ REGLAS:
           .from('opportunities')
           .update({
             description: item.description?.slice(0, 1000),
-            type: item.type || 'grant',
+            type: itemType,
             amount_min: item.amount_min,
             amount_max: item.amount_max,
             currency: item.currency || 'USD',
@@ -170,7 +174,7 @@ REGLAS:
             title: item.title.slice(0, 500),
             organization: item.organization,
             description: item.description?.slice(0, 1000),
-            type: item.type || 'grant',
+            type: itemType,
             amount_min: item.amount_min,
             amount_max: item.amount_max,
             currency: item.currency || 'USD',

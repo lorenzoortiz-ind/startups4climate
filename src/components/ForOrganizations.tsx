@@ -196,10 +196,9 @@ export default function ForOrganizations() {
             textAlign: 'center',
             maxWidth: 920,
             margin: '0 auto',
-            border: '1px solid rgba(218,78,36,0.45)',
+            border: '1px solid rgba(255,255,255,0.08)',
             background: 'rgba(14, 14, 14, 0.85)',
-            boxShadow:
-              'inset 0 0 14px rgba(217,119,87,0.40), inset 0 0 28px rgba(217,119,87,0.18), 0 30px 80px -20px rgba(218,78,36,0.40)',
+            boxShadow: '0 24px 48px -12px rgba(0,0,0,0.5)',
           }}
         >
           <span className="pill-ember" style={{ marginBottom: '1.25rem' }}>

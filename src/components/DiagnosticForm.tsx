@@ -890,9 +890,9 @@ export default function DiagnosticForm({ embedded = false, userId = null, prefil
           borderRadius: 24,
           overflow: 'hidden',
           position: 'relative',
-          border: '1px solid rgba(218,78,36,0.35)',
+          border: '1px solid rgba(255,255,255,0.08)',
           background: 'rgba(14, 14, 14, 0.85)',
-          boxShadow: 'inset 0 0 14px rgba(217,119,87,0.30), inset 0 0 28px rgba(217,119,87,0.12), 0 30px 80px -20px rgba(0,0,0,0.6)',
+          boxShadow: '0 24px 48px -12px rgba(0,0,0,0.5)',
         }}>
           {/* Top gradient accent */}
           <div style={{

@@ -129,8 +129,8 @@ export default function AboutRedesignLab() {
                     overflow: 'hidden',
                     marginBottom: '1rem',
                     flexShrink: 0,
-                    border: '1px solid rgba(218,78,36,0.35)',
-                    boxShadow: '0 0 24px -8px rgba(218,78,36,0.5)',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                    boxShadow: 'none',
                   }}
                 >
                   <Image

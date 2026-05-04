@@ -140,31 +140,31 @@ const faqJsonLd = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'Que es Startups4Climate?',
+      name: '¿Qué es Startups4Climate?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Startups4Climate es una plataforma all-in-one gratuita para founders de startups de impacto en America Latina. Ofrece herramientas interactivas, mentor AI, diagnostico de startup readiness y visibilidad de oportunidades de financiamiento.',
+        text: 'Startups4Climate es una plataforma all-in-one gratuita para founders de startups de impacto en América Latina. Ofrece herramientas interactivas, mentor AI, diagnóstico de startup readiness y visibilidad de oportunidades de financiamiento.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Es gratis usar Startups4Climate?',
+      name: '¿Es gratis usar Startups4Climate?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Si. El acceso para founders es completamente gratuito. Incluye +30 herramientas interactivas, mentor AI personalizado, diagnostico de readiness y acceso al RADAR del ecosistema.',
+        text: 'Sí. El acceso para founders es completamente gratuito. Incluye +30 herramientas interactivas, mentor AI personalizado, diagnóstico de readiness y acceso al RADAR del ecosistema.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Para que paises esta disponible?',
+      name: '¿Para qué países está disponible?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Startups4Climate esta disponible para founders de toda America Latina y el Caribe, con enfoque en Peru, Colombia, Chile, Mexico, Argentina y Brasil.',
+        text: 'Startups4Climate está disponible para founders de toda América Latina y el Caribe, con enfoque en Perú, Colombia, Chile, México, Argentina y Brasil.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Como funciona para universidades e incubadoras?',
+      name: '¿Cómo funciona para universidades e incubadoras?',
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Las organizaciones pueden gestionar cohortes de startups, invitar founders por email, ver dashboards en tiempo real, generar reportes Excel y dar acceso a +30 herramientas interactivas y mentor AI.',

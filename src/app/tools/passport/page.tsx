@@ -1000,7 +1000,7 @@ export default function PassportPage() {
               lineHeight: 1.6,
             }}
           >
-            Completa el diagnostico y las herramientas para generar tu Startup Passport con metricas de inversion
+            Completa el diagnóstico y las herramientas para generar tu Startup Passport con métricas de inversión
           </p>
           <Link
             href="/tools"
@@ -1020,7 +1020,7 @@ export default function PassportPage() {
               boxShadow: '0 2px 10px rgba(59,130,246,0.25)',
             }}
           >
-            Ir al diagnostico
+            Ir al diagnóstico
           </Link>
         </motion.div>
       </div>
@@ -1438,7 +1438,7 @@ export default function PassportPage() {
               {/* Breakdown bars */}
               <div style={{ flex: 1, minWidth: 200 }}>
                 <ScoreBar
-                  label="Diagnostico (25%)"
+                  label="Diagnóstico (25%)"
                   score={scoreBreakdown.diagnostic}
                   maxScore={25}
                   color="#1F77F6"
@@ -1994,7 +1994,7 @@ export default function PassportPage() {
                 flexWrap: 'wrap',
               }}
             >
-              <CircularProgress score={diagnosticScore} size={80} label="Diagnostico" />
+              <CircularProgress score={diagnosticScore} size={80} label="Diagnóstico" />
               <div>
                 <div
                   style={{
@@ -2005,7 +2005,7 @@ export default function PassportPage() {
                     marginBottom: 2,
                   }}
                 >
-                  Puntaje de diagnostico
+                  Puntaje de diagnóstico
                 </div>
                 <div
                   style={{

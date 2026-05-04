@@ -41,7 +41,7 @@ export default async function Image() {
               height: 10,
               borderRadius: 999,
               background: '#F0721D',
-              boxShadow: '0 0 12px #F0721D',
+              boxShadow: 'none',
             }}
           />
           <span style={{ fontSize: 22, letterSpacing: 2, color: '#F0721D', fontWeight: 600 }}>

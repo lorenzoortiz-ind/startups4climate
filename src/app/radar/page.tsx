@@ -12,7 +12,7 @@ import {
 export const metadata: Metadata = {
   title: 'RADAR del Ecosistema LATAM | Startups4Climate',
   description:
-    'Noticias, tendencias e inversiones del ecosistema de startups de impacto en America Latina. Actualizado diariamente con fuentes verificadas y curado con IA.',
+    'Noticias, tendencias e inversiones del ecosistema de startups de impacto en América Latina. Actualizado diariamente con fuentes verificadas y curado con IA.',
   keywords: [
     'noticias startups LATAM',
     'ecosistema emprendimiento latinoamerica',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'RADAR del Ecosistema LATAM | Startups4Climate',
     description:
-      'Noticias, tendencias e inversiones del ecosistema de startups de impacto en America Latina. Actualizado diariamente.',
+      'Noticias, tendencias e inversiones del ecosistema de startups de impacto en América Latina. Actualizado diariamente.',
     url: 'https://www.startups4climate.org/radar',
     type: 'website',
   },
@@ -142,7 +142,7 @@ export default async function RadarPublicPage() {
           }}
         >
           Noticias, inversiones y tendencias del ecosistema de startups de impacto
-          en America Latina. Curado con fuentes verificadas y actualizado con IA.
+          en América Latina. Curado con fuentes verificadas y actualizado con IA.
         </p>
       </div>
 
@@ -262,7 +262,7 @@ export default async function RadarPublicPage() {
             padding: '3rem 0',
           }}
         >
-          El RADAR se actualiza diariamente. Vuelve pronto para ver las ultimas noticias.
+          El RADAR se actualiza diariamente. Vuelve pronto para ver las últimas noticias.
         </p>
       )}
 
@@ -298,7 +298,7 @@ export default async function RadarPublicPage() {
           }}
         >
           Crea tu cuenta gratuita para ver todas las noticias, filtrar por vertical
-          y pais, y recibir actualizaciones del ecosistema LATAM.
+          y país, y recibir actualizaciones del ecosistema LATAM.
         </p>
         <Link
           href="/?auth=register"

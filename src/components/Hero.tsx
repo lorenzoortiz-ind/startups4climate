@@ -140,9 +140,8 @@ export default function Hero() {
                 padding: '1rem 1.25rem',
                 borderRadius: 16,
                 background: 'rgba(14, 14, 14, 0.85)',
-                border: '1px solid rgba(218, 78, 36, 0.50)',
-                boxShadow:
-                  'inset 0 0 12px rgba(217,119,87,0.45), inset 0 0 24px rgba(217,119,87,0.20), 0 30px 80px -20px rgba(218,78,36,0.35)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 24px 48px -12px rgba(0,0,0,0.5)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
               }}
@@ -189,7 +188,7 @@ export default function Hero() {
                     height: 8,
                     borderRadius: '50%',
                     background: '#10B981',
-                    boxShadow: '0 0 8px #10B981',
+                    boxShadow: 'none',
                   }}
                 />
               </div>

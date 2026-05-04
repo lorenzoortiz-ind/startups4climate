@@ -98,8 +98,8 @@ export default function OnboardingTour() {
               padding: '2rem 1.75rem 1.5rem',
               borderRadius: 20,
               position: 'relative',
-              border: `1px solid ${current.accent}40`,
-              boxShadow: `0 30px 80px -20px ${current.accent}50, inset 0 0 24px ${current.accent}12`,
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 24px 48px -12px rgba(0,0,0,0.5)',
             }}
           >
             <button

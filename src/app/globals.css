@@ -109,17 +109,11 @@
   --grad-text-ember: linear-gradient(180deg, #FFFFFF 0%, #F0721D 100%);
   --grad-text-electric: linear-gradient(180deg, #FFFFFF 0%, #5BB4FF 100%);
 
-  /* === GLOWS / SHADOWS firma === */
-  --glow-ember-inset:
-    inset 0 0 10px rgba(217,119,87,0.5),
-    inset 0 0 20px rgba(217,119,87,0.3),
-    inset 0 0 30px rgba(217,119,87,0.1);
-  --glow-electric-inset:
-    inset 0 0 10px rgba(91,180,255,0.5),
-    inset 0 0 20px rgba(91,180,255,0.3),
-    inset 0 0 30px rgba(91,180,255,0.1);
-  --glow-ember-outer: 0 0 40px rgba(218,78,36,0.35);
-  --glow-electric-outer: 0 0 40px rgba(31,119,246,0.35);
+  /* === SHADOWS firma (sutil, sin glow neón) === */
+  --glow-ember-inset: inset 0 1px 0 rgba(255,255,255,0.06);
+  --glow-electric-inset: inset 0 1px 0 rgba(255,255,255,0.06);
+  --glow-ember-outer: 0 8px 24px -8px rgba(218,78,36,0.20);
+  --glow-electric-outer: 0 8px 24px -8px rgba(31,119,246,0.18);
   --shadow-card:
     0 0.6px 1.6px -1.5px rgba(0,0,0,0.17),
     0 2.3px 6px -3px rgba(0,0,0,0.14),
@@ -523,15 +517,14 @@
   gap: 0.5rem;
   padding: 0.5rem 1.1rem;
   border-radius: var(--radius-full);
-  background: rgba(0,0,0,0.4);
-  border: 1px solid var(--border-ember);
+  background: rgba(218,78,36,0.06);
+  border: 1px solid rgba(218,78,36,0.20);
   color: var(--color-text-primary);
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  box-shadow: var(--glow-ember-inset);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -540,7 +533,6 @@
   height: 6px;
   border-radius: 50%;
   background: var(--ember-500);
-  box-shadow: 0 0 8px var(--ember-500);
   display: inline-block;
 }
 
@@ -550,27 +542,26 @@
   gap: 0.5rem;
   padding: 0.5rem 1.1rem;
   border-radius: var(--radius-full);
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(31,119,246,0.40);
+  background: rgba(31,119,246,0.06);
+  border: 1px solid rgba(31,119,246,0.20);
   color: var(--color-text-primary);
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  box-shadow: var(--glow-electric-inset);
   backdrop-filter: blur(10px);
 }
 
-/* Botón primario con ember glow inset (estilo "Get Started") */
+/* Botón primario ember */
 .btn-ember {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.85rem 1.6rem;
   border-radius: var(--radius-full);
-  background: linear-gradient(180deg, #1A0A05 0%, #000000 100%);
-  border: 1px solid var(--border-ember);
+  background: linear-gradient(180deg, #1C0E08 0%, #0D0604 100%);
+  border: 1px solid rgba(218,78,36,0.30);
   color: #FFFFFF;
   font-family: var(--font-body);
   font-size: var(--text-body-lg);
@@ -579,11 +570,12 @@
   cursor: pointer;
   text-decoration: none;
   box-shadow: var(--glow-ember-inset);
-  transition: box-shadow 0.25s ease, transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.25s ease;
 }
 .btn-ember:hover {
+  border-color: rgba(218,78,36,0.50);
+  background: linear-gradient(180deg, #221008 0%, #0D0604 100%);
   box-shadow: var(--glow-ember-inset), var(--glow-ember-outer);
-  border-color: var(--ember-500);
   transform: translateY(-1px);
 }
 .btn-ember:active {
@@ -596,8 +588,8 @@
   gap: 0.6rem;
   padding: 0.85rem 1.6rem;
   border-radius: var(--radius-full);
-  background: linear-gradient(180deg, #051622 0%, #000000 100%);
-  border: 1px solid rgba(31,119,246,0.40);
+  background: linear-gradient(180deg, #0A1520 0%, #060D14 100%);
+  border: 1px solid rgba(31,119,246,0.25);
   color: #FFFFFF;
   font-family: var(--font-body);
   font-size: var(--text-body-lg);
@@ -605,9 +597,11 @@
   cursor: pointer;
   text-decoration: none;
   box-shadow: var(--glow-electric-inset);
-  transition: box-shadow 0.25s ease, transform 0.2s ease;
+  transition: all 0.25s ease;
 }
 .btn-electric:hover {
+  border-color: rgba(31,119,246,0.45);
+  background: linear-gradient(180deg, #0D1A28 0%, #060D14 100%);
   box-shadow: var(--glow-electric-inset), var(--glow-electric-outer);
   transform: translateY(-1px);
 }

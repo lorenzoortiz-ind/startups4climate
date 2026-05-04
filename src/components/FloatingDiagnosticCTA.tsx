@@ -63,15 +63,14 @@ export default function FloatingDiagnosticCTA() {
             padding: '0.7rem 1.1rem',
             background: 'linear-gradient(180deg, #F0721D 0%, #DA4E24 100%)',
             color: '#fff',
-            border: '1px solid rgba(255,255,255,0.12)',
+            border: 'none',
             borderRadius: 999,
             fontFamily: 'var(--font-body)',
             fontSize: '0.85rem',
             fontWeight: 600,
             letterSpacing: '-0.005em',
             cursor: 'pointer',
-            boxShadow:
-              'inset 0 1px 0 rgba(255,255,255,0.25), 0 12px 30px -8px rgba(218,78,36,0.55), 0 0 0 1px rgba(218,78,36,0.45)',
+            boxShadow: '0 4px 16px -4px rgba(218,78,36,0.35)',
           }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}

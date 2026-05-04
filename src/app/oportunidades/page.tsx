@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: 'Oportunidades de Financiamiento LATAM | Startups4Climate',
   description:
-    'Grants, aceleradoras, fondos de inversion y competencias para startups de impacto en America Latina. Actualizado diariamente con oportunidades verificadas.',
+    'Grants, aceleradoras, fondos de inversión y competencias para startups de impacto en América Latina. Actualizado diariamente con oportunidades verificadas.',
   keywords: [
     'grants startups LATAM',
     'fondos startups impacto',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Oportunidades de Financiamiento LATAM | Startups4Climate',
     description:
-      'Grants, aceleradoras, fondos y competencias para startups de impacto en America Latina. Actualizado diariamente.',
+      'Grants, aceleradoras, fondos y competencias para startups de impacto en América Latina. Actualizado diariamente.',
     url: 'https://www.startups4climate.org/oportunidades',
     type: 'website',
   },
@@ -158,8 +158,8 @@ export default async function OportunidadesPublicPage() {
             margin: 0,
           }}
         >
-          Grants, aceleradoras, fondos de inversion y competencias para startups de
-          impacto en America Latina. Curado y verificado con IA.
+          Grants, aceleradoras, fondos de inversión y competencias para startups de
+          impacto en América Latina. Curado y verificado con IA.
         </p>
       </div>
 
@@ -344,7 +344,7 @@ export default async function OportunidadesPublicPage() {
             lineHeight: 1.6,
           }}
         >
-          Crea tu cuenta gratuita para filtrar por pais, vertical y etapa de tu startup.
+          Crea tu cuenta gratuita para filtrar por país, vertical y etapa de tu startup.
           Recibe alertas de nuevas oportunidades.
         </p>
         <Link

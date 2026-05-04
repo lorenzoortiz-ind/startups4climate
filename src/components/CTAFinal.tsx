@@ -48,10 +48,9 @@ export default function CTAFinal() {
             padding: 'clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem)',
             borderRadius: 28,
             textAlign: 'center',
-            border: '1px solid rgba(218, 78, 36, 0.45)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             background: 'rgba(14, 14, 14, 0.85)',
-            boxShadow:
-              'inset 0 0 16px rgba(217,119,87,0.40), inset 0 0 32px rgba(217,119,87,0.18), 0 40px 100px -30px rgba(218,78,36,0.40)',
+            boxShadow: '0 24px 48px -12px rgba(0,0,0,0.5)',
           }}
         >
           <span className="pill-ember" style={{ marginBottom: '1.75rem' }}>

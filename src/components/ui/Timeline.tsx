@@ -20,8 +20,8 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => {
     <>
       <style>{`
         @keyframes s4c-timeline-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(218,78,36, 0.45); }
-          50% { box-shadow: 0 0 0 6px rgba(218,78,36, 0); }
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
         }
       `}</style>
       <ol

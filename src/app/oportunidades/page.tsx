@@ -49,6 +49,7 @@ type Opportunity = {
   eligible_countries: string[]
   is_rolling: boolean
   deadline: string | null
+  application_url: string | null
 }
 
 const TYPE_CONFIG: Record<string, { icon: typeof Landmark; label: string; color: string }> = {
@@ -94,7 +95,7 @@ async function getPublicOpportunities(): Promise<Opportunity[]> {
 
   const { data } = await supabase
     .from('opportunities')
-    .select('id, title, organization, description, type, amount_min, amount_max, currency, eligible_countries, is_rolling, deadline')
+    .select('id, title, organization, description, type, amount_min, amount_max, currency, eligible_countries, is_rolling, deadline, application_url')
     .eq('is_active', true)
     .order('created_at', { ascending: false })
     .limit(12)
@@ -181,9 +182,16 @@ export default async function OportunidadesPublicPage() {
               ?.map((c) => COUNTRY_NAMES[c] || c)
               .join(', ')
 
+            const href = opp.application_url || '#'
             return (
-              <article
+              <a
                 key={opp.id}
+                href={href}
+                target={href !== '#' ? '_blank' : undefined}
+                rel={href !== '#' ? 'noopener noreferrer' : undefined}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+              <article
                 style={{
                   background: 'var(--color-bg-card)',
                   border: '1px solid var(--color-border)',
@@ -193,6 +201,9 @@ export default async function OportunidadesPublicPage() {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.625rem',
+                  transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                  cursor: 'pointer',
+                  height: '100%',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -285,6 +296,7 @@ export default async function OportunidadesPublicPage() {
                   )}
                 </div>
               </article>
+              </a>
             )
           })}
         </div>

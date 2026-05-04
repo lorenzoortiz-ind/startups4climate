@@ -159,8 +159,14 @@ export default async function RadarPublicPage() {
           {news.map((item) => {
             const Icon = TYPE_ICONS[item.content_type] || Newspaper
             return (
-              <article
+              <a
                 key={item.id}
+                href={item.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+              <article
                 style={{
                   background: 'var(--color-bg-card)',
                   border: '1px solid var(--color-border)',
@@ -170,6 +176,9 @@ export default async function RadarPublicPage() {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.75rem',
+                  transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                  cursor: 'pointer',
+                  height: '100%',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -240,6 +249,7 @@ export default async function RadarPublicPage() {
                   {item.country && ` · ${item.country}`}
                 </div>
               </article>
+              </a>
             )
           })}
         </div>

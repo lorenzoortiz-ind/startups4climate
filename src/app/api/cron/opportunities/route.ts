@@ -11,21 +11,12 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-/** Strip control characters from inside JSON string values */
+/** Clean Gemini JSON output for safe parsing */
 function sanitizeJsonString(raw: string): string {
   return raw
-    .replace(/,\s*([}\]])/g, '$1')
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/\/\/[^\n]*/g, '')
-    .replace(/"([^"]*?)"/g, (m) =>
-      m.replace(/[\x00-\x1f]/g, (c) => {
-        if (c === '\n') return '\\n'
-        if (c === '\r') return '\\r'
-        if (c === '\t') return '\\t'
-        return ''
-      })
-    )
+    .replace(/[\x00-\x09\x0b\x0c\x0e-\x1f\x7f]/g, ' ') // strip all control chars except \n \r
+    .replace(/\r?\n/g, ' ')                                // newlines to spaces (JSON allows it)
+    .replace(/,\s*([}\]])/g, '$1')                         // trailing commas
 }
 
 export async function GET(request: NextRequest) {

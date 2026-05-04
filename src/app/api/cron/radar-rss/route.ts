@@ -41,6 +41,48 @@ const FEEDS: Array<{
     default_country: null,
     default_type: 'trend',
   },
+  {
+    url: 'https://techcrunch.com/tag/latin-america/feed/',
+    source_name: 'TechCrunch LATAM',
+    default_vertical: null,
+    default_country: null,
+    default_type: 'investment',
+  },
+  {
+    url: 'https://ecosistemastartup.com/feed/',
+    source_name: 'Ecosistema Startup',
+    default_vertical: null,
+    default_country: null,
+    default_type: 'news',
+  },
+  {
+    url: 'https://cleantechnica.com/feed/',
+    source_name: 'CleanTechnica',
+    default_vertical: 'cleantech_climatech',
+    default_country: null,
+    default_type: 'trend',
+  },
+  {
+    url: 'https://www.pv-magazine-latam.com/feed/',
+    source_name: 'PV Magazine LATAM',
+    default_vertical: 'cleantech_climatech',
+    default_country: null,
+    default_type: 'news',
+  },
+  {
+    url: 'https://startupeable.com/feed/',
+    source_name: 'Startupeable',
+    default_vertical: null,
+    default_country: null,
+    default_type: 'news',
+  },
+  {
+    url: 'https://news.crunchbase.com/feed/',
+    source_name: 'Crunchbase News',
+    default_vertical: null,
+    default_country: null,
+    default_type: 'investment',
+  },
 ]
 
 // Vertical keywords for auto-tagging

@@ -46,7 +46,7 @@ export default function AuthModal() {
       try {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(
           normalizeLoginIdentifier(form.email),
-          { redirectTo: window.location.origin + '/tools' },
+          { redirectTo: window.location.origin + '/auth/callback?type=recovery' },
         )
         if (resetError) {
           setError(resetError.message)

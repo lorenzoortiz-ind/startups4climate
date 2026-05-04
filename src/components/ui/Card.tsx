@@ -72,7 +72,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       overflow: 'hidden',
       transition: 'box-shadow 0.15s var(--ease-smooth), transform 0.15s var(--ease-smooth), border-color 0.15s ease',
       ...variantBase[variant],
-      ...(accent ? { borderTop: `2px solid ${accent}` } : {}),
+      ...(accent ? { borderLeft: `3px solid ${accent}` } : {}),
       ...(hoverable && hovered
         ? {
             boxShadow: 'var(--shadow-card-hover)',

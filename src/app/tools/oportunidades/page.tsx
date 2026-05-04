@@ -356,7 +356,7 @@ function OpportunityCard({
         borderRadius: 12,
         background: 'var(--color-bg-card)',
         border: `1px solid var(--color-border)`,
-        borderTop: `2px solid ${typeStyle.color}`,
+        borderLeft: `3px solid ${typeStyle.color}`,
         boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',

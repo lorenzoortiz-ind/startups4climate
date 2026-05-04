@@ -110,7 +110,7 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
         padding: '1.25rem', borderRadius: 12,
         background: 'var(--color-bg-card)',
         border: '1px solid var(--color-border)',
-        borderTop: `2px solid ${accent}`,
+        borderLeft: `3px solid ${accent}`,
         boxShadow: 'var(--shadow-card)',
         display: 'flex', flexDirection: 'column', gap: '0.5rem',
         overflowWrap: 'break-word', wordBreak: 'break-word',

@@ -5,15 +5,16 @@ import S4CLogo from '@/components/S4CLogo'
 
 const footerLinks = {
   plataforma: [
-    { label: 'Diagnóstico gratuito', href: '#diagnostico' },
-    { label: 'Herramientas', href: '#plataforma' },
+    { label: 'Diagnóstico gratuito', href: '/#diagnostico', isPage: true },
+    { label: 'Herramientas', href: '/#plataforma', isPage: true },
     { label: 'Workbook', href: '/workbook', isPage: true },
     { label: 'Acceder a la plataforma', href: '/tools', isPage: true },
   ],
   organizaciones: [
     { label: 'Para organizaciones', href: '/organizaciones', isPage: true },
     { label: 'Solicitar demo', href: 'mailto:hello@redesignlab.org' },
-    { label: 'Metodología', href: '/metodologia', isPage: true },
+    { label: 'RADAR del ecosistema', href: '/radar', isPage: true },
+    { label: 'Oportunidades', href: '/oportunidades', isPage: true },
   ],
   contacto: [
     { label: 'hello@redesignlab.org', href: 'mailto:hello@redesignlab.org' },

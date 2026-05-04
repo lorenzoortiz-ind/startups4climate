@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/radar', '/oportunidades', '/organizaciones', '/workbook', '/metodologia'],
+        allow: ['/', '/radar', '/oportunidades', '/organizaciones', '/workbook'],
         disallow: [
           '/admin/',
           '/superadmin/',

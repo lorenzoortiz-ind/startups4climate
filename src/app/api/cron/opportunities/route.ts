@@ -40,30 +40,29 @@ Genera exactamente 10 oportunidades REALES y ACTUALES (2025-2026) para founders 
 
 Incluye una mezcla de: grants, programas de aceleración, fondos de inversión, competencias y convocatorias.
 
-Responde SOLO con un array JSON válido, sin texto adicional:
-[
-  {
-    "title": "Nombre exacto de la oportunidad en español",
-    "organization": "Nombre de la organización que ofrece (e.g. BID Lab, Wayra, CORFO, CONACYT, Village Capital)",
-    "description": "Descripción en español de 60-100 palabras. Qué ofrece, para quién, beneficios concretos.",
-    "type": "grant|accelerator|competition|fund|fellowship",
-    "amount_min": null o número en USD,
-    "amount_max": null o número en USD,
-    "currency": "USD",
-    "eligible_countries": ["PE","CL","CO","MX","AR","BR"] o subset específico,
-    "eligible_verticals": ["cleantech_climatech","agritech_foodtech","fintech","healthtech","edtech","logistics_mobility","other"] o subset,
-    "eligible_stages": ["idea","pre_seed","seed","series_a","growth"] o subset,
-    "application_url": "URL verificada de la página principal de la organización o programa — NUNCA inventes subrutas.",
-    "is_rolling": true si es convocatoria permanente, false si tiene deadline,
-    "deadline": "2026-06-30T00:00:00Z" o null si is_rolling=true
-  }
-]
+Responde SOLO con un array JSON válido. Sin texto antes ni después. Sin bloques de código markdown.
+
+Cada objeto del array debe tener exactamente estas propiedades:
+- "title": string, nombre de la oportunidad en español
+- "organization": string, nombre real de la organización (BID Lab, Wayra, CORFO, etc.)
+- "description": string, 60-100 palabras en español
+- "type": string, uno de: "grant", "accelerator", "competition", "fund", "fellowship"
+- "amount_min": number o null (en USD)
+- "amount_max": number o null (en USD)
+- "currency": "USD"
+- "eligible_countries": array de strings, códigos ISO: "PE", "CL", "CO", "MX", "AR", "BR"
+- "eligible_verticals": array de strings, valores: "cleantech_climatech", "agritech_foodtech", "fintech", "healthtech", "edtech", "logistics_mobility", "other"
+- "eligible_stages": array de strings, valores: "idea", "pre_seed", "seed", "series_a", "growth"
+- "application_url": string, URL real verificable de la organización
+- "is_rolling": boolean
+- "deadline": string ISO 8601 o null
+
 REGLAS:
-- Usa organizaciones REALES que existen y operan en LATAM.
-- Los montos deben ser realistas (grants: $5K-$500K, accelerators: $20K-$150K, funds: $100K-$5M).
-- Mezcla oportunidades regionales (todo LATAM) con específicas de país.
-- NO repitas la misma organización más de una vez.
-- application_url DEBE ser una URL verificable real (homepage o sección principal).`
+- Organizaciones REALES que operan en LATAM
+- Montos realistas (grants: 5000-500000, accelerators: 20000-150000, funds: 100000-5000000)
+- Mezcla oportunidades regionales con específicas de país
+- NO repitas organización
+- Genera exactamente 10 objetos`
 
   try {
     const aiRes = await fetch(

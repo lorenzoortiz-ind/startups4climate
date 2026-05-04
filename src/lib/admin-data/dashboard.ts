@@ -97,7 +97,7 @@ export async function loadDashboard({ isDemo, orgId }: LoadDashboardArgs): Promi
   }
 
   const [orgRes, cohortRes] = await Promise.all([
-    supabase.from('organizations').select('name, logo_url').eq('id', orgId).single(),
+    supabase.from('organizations').select('name, logo_url').eq('id', orgId).maybeSingle(),
     supabase.from('cohorts').select('id, name, status, start_date, end_date').eq('org_id', orgId),
   ])
 

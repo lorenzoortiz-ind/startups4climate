@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     .eq('id', user.id)
     .maybeSingle()
 
-  if (!profile || profile.role !== 'admin_org' || !profile.org_id) {
+  if (!profile || !['admin_org', 'superadmin'].includes(profile.role) || !profile.org_id) {
     return NextResponse.json({ error: 'Sin permisos' }, { status: 403 })
   }
 

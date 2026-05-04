@@ -247,7 +247,8 @@ export default function CohortDetailPage() {
       return
     }
     setDeleting(true)
-    // Remove startup assignments first
+    // Remove related records first, then the cohort itself
+    await supabase.from('cohort_requests').delete().eq('cohort_id', cohortId)
     await supabase.from('cohort_startups').delete().eq('cohort_id', cohortId)
     const { error: deleteError } = await supabase.from('cohorts').delete().eq('id', cohortId)
 

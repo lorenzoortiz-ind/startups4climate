@@ -61,7 +61,7 @@ export default function NuevaCohorte() {
   const router = useRouter()
   const pathname = usePathname()
   const cohortsHref = pathname.startsWith('/demo-admin') ? '/demo-admin/cohortes' : '/admin/cohortes'
-  const { appUser } = useAuth()
+  const { appUser, isDemo } = useAuth()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [name, setName] = useState('')
@@ -90,6 +90,10 @@ export default function NuevaCohorte() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (isDemo) {
+      router.push(pathname.startsWith('/demo-admin') ? '/demo-admin/cohortes' : '/admin/cohortes')
+      return
+    }
     if (!name.trim() || !startDate || !endDate) return
     if (!appUser?.org_id) {
       setError('No se encontró la organización asociada a tu cuenta.')

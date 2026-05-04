@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
   LogOut,
-  Menu,
-  X,
   ChevronLeft,
   Building2,
   UsersRound,
@@ -41,13 +39,8 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
   const { appUser, loading, logout, isDemo } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [orgLogo, setOrgLogo] = useState<string | null>(null)
   const [orgName, setOrgName] = useState<string | null>(null)
-
-  useEffect(() => {
-    setMobileOpen(false)
-  }, [pathname])
 
   useEffect(() => {
     // Demo / superadmin display info — MINPRO branding
@@ -285,8 +278,8 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
     <div data-app-layout style={{ display: 'flex', minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
       {/* Desktop sidebar */}
       <aside
-        className="hidden lg:flex"
         style={{
+          display: 'flex',
           width: 260, flexShrink: 0,
           background: 'var(--color-admin-sidebar-bg)',
           position: 'fixed', top: 0, left: 0, bottom: 0,
@@ -296,76 +289,10 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
         {sidebarContent}
       </aside>
 
-      {/* Mobile header */}
-      <header
-        className="lg:hidden"
-        style={{
-          display: 'flex',
-          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-          height: 56, background: 'var(--color-admin-sidebar-bg)',
-          alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 1rem',
-        }}
-      >
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '0.5rem',
-        }}>
-          <S4CLogo size={28} />
-          <span style={{
-            fontFamily: 'var(--font-heading)', fontWeight: 700,
-            fontSize: '0.75rem', color: '#F1F5F9',
-          }}>
-            S4C Superadmin
-          </span>
-        </div>
-        <button
-          onClick={() => setMobileOpen((o) => !o)}
-          aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            color: '#F1F5F9', display: 'flex',
-          }}
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </header>
-
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              style={{
-                position: 'fixed', inset: 0, zIndex: 55,
-                background: 'rgba(0,0,0,0.5)',
-              }}
-            />
-            <motion.aside
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.28, ease: 'easeInOut' }}
-              style={{
-                position: 'fixed', top: 0, left: 0, bottom: 0,
-                width: 280, zIndex: 60,
-                background: 'var(--color-admin-sidebar-bg)',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {sidebarContent}
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-
       {/* Main content area */}
       <main
         style={{ flex: 1, minHeight: '100dvh' }}
-        className="lg:ml-[260px] pt-14 lg:pt-0"
+        className="ml-[260px]"
       >
         <div style={{
           height: 56, background: 'var(--color-bg-card)',

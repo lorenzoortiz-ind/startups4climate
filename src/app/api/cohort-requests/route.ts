@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase-server'
 
 export async function GET(request: NextRequest) {
+  try {
   const supabase = await createSupabaseServer()
 
   // Auth check
@@ -98,9 +99,14 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json({ requests: requests || [] })
+  } catch (err) {
+    console.error('[S4C Admin] cohort-requests GET error:', err)
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+  }
 }
 
 export async function POST(request: NextRequest) {
+  try {
   const supabase = await createSupabaseServer()
 
   // Auth check
@@ -174,4 +180,8 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ success: true, request: cohortRequest })
+  } catch (err) {
+    console.error('[S4C Admin] cohort-requests POST error:', err)
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+  }
 }

@@ -5,6 +5,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  try {
   const { id } = await params
   const supabase = await createSupabaseServer()
 
@@ -35,4 +36,8 @@ export async function DELETE(
   }
 
   return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('[S4C Admin] invitation revoke error:', err)
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+  }
 }

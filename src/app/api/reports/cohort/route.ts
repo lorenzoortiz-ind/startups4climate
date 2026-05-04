@@ -23,6 +23,7 @@ const VERTICAL_LABELS: Record<string, string> = {
 }
 
 export async function POST(request: NextRequest) {
+  try {
   const supabase = await createSupabaseServer()
 
   // Auth check
@@ -159,4 +160,8 @@ export async function POST(request: NextRequest) {
       'Content-Disposition': `attachment; filename="reporte-${cohort.name.replace(/\s+/g, '-').toLowerCase()}.xlsx"`,
     },
   })
+  } catch (err) {
+    console.error('[S4C Admin] Report generation error:', err)
+    return NextResponse.json({ error: 'Error interno al generar el reporte' }, { status: 500 })
+  }
 }

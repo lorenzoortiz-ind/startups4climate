@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function Hero() {
   const { user, openAuthModal } = useAuth()
@@ -119,9 +120,9 @@ export default function Hero() {
               {user ? 'Ir a mi plataforma' : 'Empezar gratis'}
               <ArrowRight size={18} />
             </button>
-            <a href="/organizaciones" className="btn-ghost">
+            <Link href="/organizaciones" className="btn-ghost">
               Para organizaciones
-            </a>
+            </Link>
           </motion.div>
 
           {/* Hero visual mockup — chat AI floating card (estilo FusionAI) */}

@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
 export async function POST(request: Request) {
+  try {
   /* ── Auth guard: must be superadmin ── */
   const {
     data: { user },
@@ -145,4 +146,8 @@ export async function POST(request: Request) {
     organization: { id: org.id, name: org.name },
     user: { id: authData.user.id, email: authData.user.email },
   })
+  } catch (err) {
+    console.error('[S4C Superadmin] Unexpected error in create-org-admin:', err)
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+  }
 }

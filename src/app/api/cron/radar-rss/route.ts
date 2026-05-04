@@ -242,8 +242,9 @@ Enfócate en: rondas de inversión, regulación ambiental, programas de acelerac
           body: JSON.stringify({
             model: 'gemini-2.5-flash',
             messages: [{ role: 'user', content: aiPrompt }],
-            max_completion_tokens: 16000,
+            max_completion_tokens: 8000,
             response_format: { type: 'json_object' },
+            reasoning_effort: 'none',
           }),
           signal: AbortSignal.timeout(30000),
         }

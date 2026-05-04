@@ -11,6 +11,23 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
+/** Strip control characters from inside JSON string values */
+function sanitizeJsonString(raw: string): string {
+  return raw
+    .replace(/,\s*([}\]])/g, '$1')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/\/\/[^\n]*/g, '')
+    .replace(/"([^"]*?)"/g, (m) =>
+      m.replace(/[\x00-\x1f]/g, (c) => {
+        if (c === '\n') return '\\n'
+        if (c === '\r') return '\\r'
+        if (c === '\t') return '\\t'
+        return ''
+      })
+    )
+}
+
 export async function GET(request: NextRequest) {
   // Vercel cron auth
   const authHeader = request.headers.get('authorization') || ''
@@ -95,12 +112,7 @@ REGLAS:
       return NextResponse.json({ ...results, _debug: { content: content.slice(0, 800), keys: Object.keys(rawJson) } }, { status: 502 })
     }
 
-    // Sanitize common Gemini JSON issues: trailing commas, smart quotes, comments
-    let rawArray = jsonMatch[0]
-      .replace(/,\s*([}\]])/g, '$1')          // trailing commas
-      .replace(/[“”]/g, '"')         // smart double quotes
-      .replace(/[‘’]/g, "'")         // smart single quotes
-      .replace(/\/\/[^\n]*/g, '')              // single-line comments
+    const sanitized = sanitizeJsonString(jsonMatch[0])
 
     let items: Array<{
       title: string
@@ -119,10 +131,10 @@ REGLAS:
     }>
 
     try {
-      items = JSON.parse(rawArray)
+      items = JSON.parse(sanitized)
     } catch (parseErr) {
       results.errors.push(`JSON parse: ${parseErr instanceof Error ? parseErr.message : 'unknown'}`)
-      return NextResponse.json({ ...results, _debug: rawArray.slice(0, 500) }, { status: 502 })
+      return NextResponse.json({ ...results, _debug: sanitized.slice(0, 500) }, { status: 502 })
     }
 
     for (const item of items) {
@@ -136,7 +148,6 @@ REGLAS:
         .maybeSingle()
 
       if (existing) {
-        // Update existing
         const { error } = await supabase
           .from('opportunities')
           .update({
@@ -158,7 +169,6 @@ REGLAS:
         if (error) results.errors.push(`Update ${item.title}: ${error.message}`)
         else results.updated++
       } else {
-        // Insert new
         const { error } = await supabase
           .from('opportunities')
           .insert({

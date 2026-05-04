@@ -95,7 +95,14 @@ REGLAS:
       return NextResponse.json({ ...results, _debug: { content: content.slice(0, 800), keys: Object.keys(rawJson) } }, { status: 502 })
     }
 
-    const items = JSON.parse(jsonMatch[0]) as Array<{
+    // Sanitize common Gemini JSON issues: trailing commas, smart quotes, comments
+    let rawArray = jsonMatch[0]
+      .replace(/,\s*([}\]])/g, '$1')          // trailing commas
+      .replace(/[“”]/g, '"')         // smart double quotes
+      .replace(/[‘’]/g, "'")         // smart single quotes
+      .replace(/\/\/[^\n]*/g, '')              // single-line comments
+
+    let items: Array<{
       title: string
       organization: string
       description: string
@@ -110,6 +117,13 @@ REGLAS:
       is_rolling: boolean
       deadline: string | null
     }>
+
+    try {
+      items = JSON.parse(rawArray)
+    } catch (parseErr) {
+      results.errors.push(`JSON parse: ${parseErr instanceof Error ? parseErr.message : 'unknown'}`)
+      return NextResponse.json({ ...results, _debug: rawArray.slice(0, 500) }, { status: 502 })
+    }
 
     for (const item of items) {
       if (!item.title || !item.organization) continue

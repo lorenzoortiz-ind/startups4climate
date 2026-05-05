@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Building2, Loader2, UserPlus, Eye, EyeOff, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Building2, Loader2, UserPlus, Eye, EyeOff, CheckCircle2, Upload, X } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/context/AuthContext'
 import { useSuperadmin } from '@/context/SuperadminContext'
 
@@ -94,6 +95,9 @@ export default function NuevaOrganizacionPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<{ orgName: string; email: string } | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (appUser?.role !== 'superadmin' || !isSuperadmin) {
     router.replace('/admin')
@@ -137,22 +141,23 @@ export default function NuevaOrganizacionPage() {
     setSubmitting(true)
 
     try {
+      const formData = new FormData()
+      formData.append('orgName', form.name.trim())
+      formData.append('orgType', form.type)
+      formData.append('country', form.country)
+      formData.append('plan', form.plan)
+      formData.append('maxStartups', String(form.max_startups))
+      if (form.billing_email.trim()) formData.append('billingEmail', form.billing_email.trim())
+      if (form.website.trim()) formData.append('website', form.website.trim())
+      if (form.contract_end) formData.append('contractEnd', form.contract_end)
+      formData.append('adminFullName', form.adminFullName.trim())
+      formData.append('adminEmail', form.adminEmail.trim())
+      formData.append('adminPassword', form.adminPassword)
+      if (logoFile) formData.append('logo', logoFile)
+
       const res = await fetch('/api/superadmin/create-org-admin', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orgName: form.name.trim(),
-          orgType: form.type,
-          country: form.country,
-          plan: form.plan,
-          maxStartups: form.max_startups,
-          billingEmail: form.billing_email.trim() || null,
-          website: form.website.trim() || null,
-          contractEnd: form.contract_end || null,
-          adminFullName: form.adminFullName.trim(),
-          adminEmail: form.adminEmail.trim(),
-          adminPassword: form.adminPassword,
-        }),
+        body: formData,
       })
 
       const data = await res.json()
@@ -210,6 +215,8 @@ export default function NuevaOrganizacionPage() {
             <button
               onClick={() => {
                 setSuccess(null)
+                setLogoFile(null)
+                setLogoPreview(null)
                 setForm({
                   name: '', type: 'university', country: 'Perú', plan: 'starter',
                   max_startups: 25, billing_email: '', website: '', contract_end: '',
@@ -307,6 +314,96 @@ export default function NuevaOrganizacionPage() {
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
                 required
               />
+            </div>
+
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={labelStyle}>Logo</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {logoPreview ? (
+                  <div style={{ position: 'relative' }}>
+                    <Image
+                      src={logoPreview}
+                      alt="Logo preview"
+                      width={64}
+                      height={64}
+                      style={{
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--color-border)',
+                        objectFit: 'contain',
+                        background: '#fff',
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLogoFile(null)
+                        setLogoPreview(null)
+                        if (fileInputRef.current) fileInputRef.current.value = ''
+                      }}
+                      style={{
+                        position: 'absolute', top: -6, right: -6,
+                        width: 20, height: 20, borderRadius: '50%',
+                        background: 'var(--color-bg-primary)', border: '1px solid var(--color-border)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', color: 'var(--color-text-muted)',
+                      }}
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      width: 64, height: 64, borderRadius: 'var(--radius-sm)',
+                      border: '1px dashed var(--color-border)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: 'var(--color-text-muted)',
+                    }}
+                  >
+                    <Building2 size={24} />
+                  </div>
+                )}
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      if (file.size > 2 * 1024 * 1024) {
+                        setError('El logo debe pesar menos de 2 MB.')
+                        return
+                      }
+                      setLogoFile(file)
+                      setLogoPreview(URL.createObjectURL(file))
+                      setError(null)
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                      padding: '0.375rem 0.75rem', borderRadius: 6,
+                      border: '1px solid var(--color-border)',
+                      background: 'var(--color-bg-card)', color: 'var(--color-text-primary)',
+                      fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 500,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Upload size={13} />
+                    {logoFile ? 'Cambiar logo' : 'Subir logo'}
+                  </button>
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: '0.6875rem',
+                    color: 'var(--color-text-muted)', marginTop: '0.25rem',
+                  }}>
+                    PNG, JPG o SVG. Max 2 MB.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>

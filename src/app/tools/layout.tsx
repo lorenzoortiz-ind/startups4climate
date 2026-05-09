@@ -22,6 +22,7 @@ import {
   Users,
   Activity,
   LineChart,
+  Lock,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -34,6 +35,7 @@ import DemoLinkRewriter from '@/components/DemoLinkRewriter'
 import OnboardingTour from '@/components/OnboardingTour'
 
 const STAGE_CONFIG = {
+  0: { label: 'Ideación', color: '#16A34A' },
   1: { label: 'Pre-incubación', color: '#DA4E24' },
   2: { label: 'Incubación', color: '#1F77F6' },
   3: { label: 'Aceleración', color: '#F0721D' },
@@ -59,7 +61,7 @@ function StageSidebarSection({
   currentPath,
   currentSearchStage,
 }: {
-  stageNum: 1 | 2 | 3 | 4
+  stageNum: 0 | 1 | 2 | 3 | 4
   tools: ToolDef[]
   completedIds: Set<string>
   currentPath: string
@@ -785,16 +787,44 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Tools by stage */}
-      {([1, 2, 3, 4] as const).map((stage) => (
-        <StageSidebarSection
-          key={stage}
-          stageNum={stage}
-          tools={TOOLS_BY_STAGE[stage]}
-          completedIds={completedIds}
-          currentPath={pathname}
-          currentSearchStage={currentSearchStage}
-        />
-      ))}
+      {([0, 1, 2, 3, 4] as const).map((stage) => {
+        // Pre-incubación+ is locked if founder is in 'ideacion' stage
+        const founderStage = appUser?.stage ?? null
+        const isLocked = stage >= 1 && founderStage === 'ideacion'
+        return (
+          <div key={stage} style={{ position: 'relative' }}>
+            <StageSidebarSection
+              stageNum={stage}
+              tools={TOOLS_BY_STAGE[stage] ?? []}
+              completedIds={completedIds}
+              currentPath={pathname}
+              currentSearchStage={currentSearchStage}
+            />
+            {isLocked && (
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'rgba(0,0,0,0.45)',
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.25rem',
+                backdropFilter: 'blur(1px)',
+                cursor: 'not-allowed',
+              }}>
+                <Lock size={10} color="rgba(255,255,255,0.5)" />
+                <span style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.5625rem',
+                  color: 'rgba(255,255,255,0.5)',
+                }}>
+                  Completa Ideación primero
+                </span>
+              </div>
+            )}
+          </div>
+        )
+      })}
 
       {/* Bottom actions */}
       <div style={{ marginTop: 'auto', paddingTop: '0.75rem' }}>

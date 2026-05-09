@@ -31,6 +31,11 @@ import { Callout, InsightBox, SectionHeader } from '@/components/ui'
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
 // Note: New tools will show "en construcción" until their components are created
 const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> = {
+  'problem-exploration': dynamic(() => import('./ProblemExploration')),
+  'problem-selection': dynamic(() => import('./ProblemSelection')),
+  'empathy-map': dynamic(() => import('./EmpathyMap')),
+  'interview-guide': dynamic(() => import('./InterviewGuide')),
+  'initial-idea': dynamic(() => import('./InitialIdea')),
   'passion-purpose': dynamic(() => import('./PassionPurpose')),
   'market-segmentation': dynamic(() => import('./MarketSegmentation')),
   'beachhead-market': dynamic(() => import('./BeachheadMarket')),
@@ -71,7 +76,7 @@ export interface ToolComponentProps {
   toolStorageId?: string
 }
 
-export default function ToolPage({ toolId, transversalStage }: { toolId: string; transversalStage?: 1 | 2 | 3 | 4 }) {
+export default function ToolPage({ toolId, transversalStage }: { toolId: string; transversalStage?: 0 | 1 | 2 | 3 | 4 }) {
   const { user } = useAuth()
   const tool = getToolById(toolId)
 
@@ -101,9 +106,9 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
   // Compute step X of Y within the current stage (for the top bar indicator)
   const stageProgress = useMemo(() => {
     if (!tool) return null
-    const stageKey: 1 | 2 | 3 | 4 = isTransversalView && transversalStage
+    const stageKey: 0 | 1 | 2 | 3 | 4 = isTransversalView && transversalStage
       ? transversalStage
-      : (tool.stage as 1 | 2 | 3 | 4)
+      : (tool.stage as 0 | 1 | 2 | 3 | 4)
     const siblings = TOOLS_BY_STAGE[stageKey] ?? []
     const total = siblings.length
     // Find by id — when transversal, it may not belong to this stage list; fallback to stepNumber

@@ -20,7 +20,6 @@ import {
   RefreshCw,
   Leaf,
   Bike,
-  DollarSign,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
@@ -78,17 +77,16 @@ const COUNTRY_LABELS: Record<string, string> = {
 }
 
 /* ─── Category definitions ─── */
-type RadarCategory = 'Todos' | 'Energía' | 'Agua' | 'Eco. circular' | 'Biodiversidad' | 'Movilidad' | 'Agri & Alimentos' | 'Fondos'
+type RadarCategory = 'Todos' | 'Energía' | 'Agua' | 'Eco. circular' | 'Biodiversidad' | 'Movilidad' | 'Agri & Alimentos'
 
 const CATEGORIES: { id: RadarCategory; icon: typeof Zap; color: string }[] = [
-  { id: 'Todos',          icon: Radio,     color: '#DA4E24' },
-  { id: 'Energía',        icon: Zap,        color: '#F59E0B' },
-  { id: 'Agua',           icon: Droplets,   color: '#0EA5E9' },
-  { id: 'Eco. circular',  icon: RefreshCw,  color: '#10B981' },
-  { id: 'Biodiversidad',  icon: Leaf,       color: '#22C55E' },
-  { id: 'Movilidad',      icon: Bike,       color: '#8B5CF6' },
-  { id: 'Agri & Alimentos',icon: Leaf,      color: '#84CC16' },
-  { id: 'Fondos',         icon: DollarSign, color: '#1F77F6' },
+  { id: 'Todos',            icon: Radio,    color: '#DA4E24' },
+  { id: 'Energía',          icon: Zap,      color: '#F59E0B' },
+  { id: 'Agua',             icon: Droplets, color: '#0EA5E9' },
+  { id: 'Eco. circular',    icon: RefreshCw,color: '#10B981' },
+  { id: 'Biodiversidad',    icon: Leaf,     color: '#22C55E' },
+  { id: 'Movilidad',        icon: Bike,     color: '#8B5CF6' },
+  { id: 'Agri & Alimentos', icon: Leaf,     color: '#84CC16' },
 ]
 
 // Maps each UI category to relevant DB verticals + title/summary keywords
@@ -100,7 +98,6 @@ const CATEGORY_MATCH: Record<RadarCategory, { verticals?: string[]; types?: Cont
   'Biodiversidad':  { keywords: ['biodiversid','biodiversity','forest','bosque','naturaleza','nature','ecosystem','fauna','flora','especie','conserv','reforesta','manglar','deforesta','ambiente','selva','jungle'] },
   'Movilidad':      { verticals: ['logistics_mobility'], keywords: ['movilidad','mobility','transport','vehícul','vehicle','eléctric','electric','bicicl','micro','bus','tren','train','metro','camión','camion','uber','autobús'] },
   'Agri & Alimentos': { verticals: ['agritech_foodtech'], keywords: ['agritech','foodtech','agricultur','farm','alimento','food','cosecha','semilla','ganadería','ganaderia','pecuario','café','cafe','cacao','quinua','acuicultur'] },
-  'Fondos':         { types: ['investment'], keywords: ['fondo','fund','inversión','inversion','capital','ronda','serie','financiamiento','venture','vc','grant','beca','subvención'] },
 }
 
 function matchesCategory(item: NewsRow, cat: RadarCategory): boolean {
@@ -113,7 +110,6 @@ function matchesCategory(item: NewsRow, cat: RadarCategory): boolean {
   return false
 }
 
-const REGIONS = ['Todas', 'LATAM', 'Perú', 'Colombia', 'Chile', 'México', 'Brasil', 'Argentina']
 const REGION_COUNTRY_MAP: Record<string, string[]> = {
   'LATAM': [], 'Perú': ['PE'], 'Colombia': ['CO'], 'Chile': ['CL'],
   'México': ['MX'], 'Brasil': ['BR'], 'Argentina': ['AR'],
@@ -299,6 +295,12 @@ export default function RadarPage() {
     return catOk && regionOk
   }), [baseList, catFilter, regionFilter])
 
+  // Region pills: Todas + LATAM + founder's country (if known)
+  const founderCountryLabel = startup?.country ? (COUNTRY_LABELS[startup.country] ?? null) : null
+  const visibleRegions = founderCountryLabel
+    ? ['Todas', 'LATAM', founderCountryLabel]
+    : ['Todas', 'LATAM']
+
   const lastUpdated = items[0]?.published_at
     ? new Date(items[0].published_at).toLocaleDateString('es', { day: '2-digit', month: 'short', year: 'numeric' })
     : '—'
@@ -413,7 +415,7 @@ export default function RadarPage() {
         <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', flexShrink: 0, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Región
         </span>
-        {REGIONS.map((region) => {
+        {visibleRegions.map((region) => {
           const isActive = regionFilter === region
           return (
             <button key={region} onClick={() => setRegionFilter(region)} style={{

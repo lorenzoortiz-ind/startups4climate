@@ -40,7 +40,7 @@ export const STAGE_META = {
   },
   1: {
     name: 'Pre-incubación',
-    subtitle: 'Ideación y Descubrimiento',
+    subtitle: 'Validación y Descubrimiento',
     description: 'Encuentra tu idea, entiende tu mercado y define a tu cliente ideal. Aquí naces como startup. +30 herramientas te acompañan en cada paso.',
     color: '#DA4E24',
     bg: 'rgba(218,78,36,0.07)',
@@ -132,7 +132,7 @@ export const TOOLS: ToolDef[] = [
       'Matriz de evaluación ICE completada',
       'Razones documentadas para descartar los demás',
     ],
-    stepNumber: 0,
+    stepNumber: 1,
   },
   {
     id: 'empathy-map',
@@ -151,7 +151,7 @@ export const TOOLS: ToolDef[] = [
       'Perfil del afectado con nombre ficticio',
       '3 insights síntesis derivados del mapa',
     ],
-    stepNumber: 0,
+    stepNumber: 2,
   },
   {
     id: 'interview-guide',
@@ -170,12 +170,12 @@ export const TOOLS: ToolDef[] = [
       'Registro de hallazgos de 3+ entrevistas',
       'Patrones confirmados y supuestos refutados',
     ],
-    stepNumber: 0,
+    stepNumber: 3,
   },
   {
     id: 'initial-idea',
     name: 'Idea Inicial',
-    shortName: 'Idea inicial',
+    shortName: 'Idea Inicial',
     description:
       'Sintetiza todo tu trabajo de Ideación en una hipótesis articulada: problema, cliente, solución y supuesto más riesgoso.',
     guidingQuestion: '¿Cuál es tu hipótesis de negocio más sólida dado lo que has descubierto?',
@@ -190,7 +190,7 @@ export const TOOLS: ToolDef[] = [
       'Hipótesis de solución con ventaja diferencial',
       'Supuesto más riesgoso identificado',
     ],
-    stepNumber: 0,
+    stepNumber: 4,
   },
 
   // ── Stage 1: Pre-incubación (6 herramientas) ──────────────────
@@ -208,7 +208,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Declaración de misión', 'Inventario de habilidades del equipo', 'Plan de reclutamiento de cofounders'],
     relatedService: 'Sesión estratégica 1:1',
-    stepNumber: 0,
+    stepNumber: 5,
   },
   {
     id: 'market-segmentation',
@@ -224,7 +224,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Matriz de segmentos potenciales', 'Criterios de evaluación por segmento', 'Top 6-12 oportunidades de mercado'],
     relatedProduct: 'Investigación de mercado profunda',
-    stepNumber: 1,
+    stepNumber: 6,
   },
   {
     id: 'beachhead-market',
@@ -239,7 +239,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Mercado',
     estimatedTime: '20 min',
     outputs: ['Mercado inicial seleccionado', 'Justificación con criterios ponderados', 'Mapa de expansión futura'],
-    stepNumber: 2,
+    stepNumber: 7,
   },
   {
     id: 'end-user-profile',
@@ -255,7 +255,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Perfil demográfico y psicográfico', 'Mapa de dolores y necesidades', 'Contexto de uso del producto'],
     relatedService: 'Workshop de Customer Discovery',
-    stepNumber: 3,
+    stepNumber: 8,
   },
   {
     id: 'tam-calculator',
@@ -270,7 +270,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Finanzas',
     estimatedTime: '20 min',
     outputs: ['TAM del Mercado Inicial (USD)', 'Metodología bottom-up documentada', 'Número estimado de clientes potenciales'],
-    stepNumber: 4,
+    stepNumber: 9,
   },
   {
     id: 'persona-profile',
@@ -285,7 +285,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Mercado',
     estimatedTime: '15 min',
     outputs: ['Ficha de Persona completa', 'Día típico de la Persona', 'Criterios de decisión de compra'],
-    stepNumber: 5,
+    stepNumber: 10,
   },
 
   // ── Stage 2: Incubación (8 herramientas) ──────────────────────
@@ -302,7 +302,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Producto',
     estimatedTime: '25 min',
     outputs: ['Mapa completo del ciclo de uso', 'Puntos de fricción identificados', 'Oportunidades de mejora priorizadas'],
-    stepNumber: 6,
+    stepNumber: 11,
   },
   {
     id: 'product-specification',
@@ -318,7 +318,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Brochure de producto', 'Lista de features principales', 'Límites explícitos del MVP'],
     relatedProduct: 'Diseño de producto MVP',
-    stepNumber: 7,
+    stepNumber: 12,
   },
   {
     id: 'quantified-value-prop',
@@ -333,7 +333,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '20 min',
     outputs: ['Valor cuantificado en USD/tiempo/riesgo', 'Comparación vs. status quo', 'ROI estimado para el cliente'],
-    stepNumber: 8,
+    stepNumber: 13,
   },
   {
     id: 'first-10-customers',
@@ -349,7 +349,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Lista de 10 clientes potenciales', 'Datos de contacto y contexto', 'Estrategia de primer acercamiento'],
     relatedService: 'Acompañamiento de ventas B2B',
-    stepNumber: 9,
+    stepNumber: 14,
   },
   {
     id: 'core-competitive-position',
@@ -364,7 +364,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '20 min',
     outputs: ['Definición del Core', 'Mapa de posicionamiento competitivo', 'Barreras de entrada identificadas'],
-    stepNumber: 10,
+    stepNumber: 15,
   },
   {
     id: 'lean-canvas',
@@ -379,7 +379,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '30 min',
     outputs: ['Canvas completo en 1 página', 'Hipótesis clave identificadas', 'Métricas de validación'],
-    stepNumber: 11,
+    stepNumber: 16,
     transversal: true,
   },
   {
@@ -395,7 +395,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['Mapa de competidores directos e indirectos', 'Matriz comparativa de features y precios', 'Espacios de oportunidad identificados'],
-    stepNumber: 12,
+    stepNumber: 17,
   },
   {
     id: 'impact-metrics',
@@ -410,7 +410,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['ODS alineados a tu startup', 'KPIs de impacto definidos', 'Framework de medición y reporte'],
-    stepNumber: 13,
+    stepNumber: 18,
   },
 
   // ── Stage 3: Aceleración (8 herramientas) ──────────────────────
@@ -428,7 +428,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Mapa de la DMU con roles', 'Estrategia por stakeholder', 'Objeciones anticipadas por rol'],
     relatedService: 'Estrategia de ventas B2B',
-    stepNumber: 14,
+    stepNumber: 19,
   },
   {
     id: 'customer-acquisition-process',
@@ -443,7 +443,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Marketing',
     estimatedTime: '20 min',
     outputs: ['Funnel de adquisición completo', 'Tasas de conversión estimadas por etapa', 'Canales prioritarios identificados'],
-    stepNumber: 15,
+    stepNumber: 20,
   },
   {
     id: 'business-model-design',
@@ -459,7 +459,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Modelo de negocio seleccionado', 'Flujos de ingresos mapeados', 'Estructura de costos estimada'],
     relatedProduct: 'Modelamiento financiero profesional',
-    stepNumber: 16,
+    stepNumber: 21,
   },
   {
     id: 'pricing-framework',
@@ -474,7 +474,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Finanzas',
     estimatedTime: '20 min',
     outputs: ['Estructura de precios definida', 'Justificación basada en valor', 'Comparación con alternativas del mercado'],
-    stepNumber: 17,
+    stepNumber: 22,
   },
   {
     id: 'ltv-unit-economics',
@@ -490,7 +490,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['LTV calculado', 'COCA calculado', 'Ratio LTV/COCA', 'Payback period', 'Dashboard de unit economics'],
     relatedProduct: 'Dashboard financiero para inversores',
-    stepNumber: 18,
+    stepNumber: 23,
   },
   {
     id: 'sales-process-map',
@@ -506,7 +506,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '20 min',
     outputs: ['Pipeline de ventas documentado', 'Scripts y templates por etapa', 'KPIs de ventas definidos'],
     relatedService: 'Workshop de ventas para founders',
-    stepNumber: 19,
+    stepNumber: 24,
   },
   {
     id: 'okr-tracker',
@@ -521,7 +521,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '20 min',
     outputs: ['OKRs del trimestre definidos', 'Key Results con métricas medibles', 'Cadencia de seguimiento semanal'],
-    stepNumber: 20,
+    stepNumber: 25,
   },
   {
     id: 'regulatory-compass',
@@ -536,7 +536,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['Mapa regulatorio por país y vertical', 'Licencias y permisos requeridos', 'Riesgos regulatorios y plan de mitigación'],
-    stepNumber: 21,
+    stepNumber: 26,
   },
 
   // ── Stage 4: Escalamiento (8 herramientas) ─────────────────────
@@ -553,7 +553,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Estrategia',
     estimatedTime: '25 min',
     outputs: ['Lista priorizada de supuestos', 'Diseño de experimentos de validación', 'Criterios de éxito/fracaso por supuesto'],
-    stepNumber: 22,
+    stepNumber: 27,
   },
   {
     id: 'mvbp-definition',
@@ -569,7 +569,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '25 min',
     outputs: ['Definición del MVBP', 'Features incluidas y excluidas', 'Roadmap de iteración post-lanzamiento'],
     relatedProduct: 'Desarrollo de MVP/prototipo',
-    stepNumber: 23,
+    stepNumber: 28,
   },
   {
     id: 'traction-validation',
@@ -584,7 +584,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Ventas',
     estimatedTime: '20 min',
     outputs: ['Evidencia de ventas reales', 'Métricas de retención y satisfacción', 'Testimoniales y casos de éxito'],
-    stepNumber: 24,
+    stepNumber: 29,
   },
   {
     id: 'product-plan-scaling',
@@ -599,7 +599,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Producto',
     estimatedTime: '25 min',
     outputs: ['Roadmap de producto a 12-18 meses', 'TAM de mercados adyacentes', 'Estrategia de bowling alley'],
-    stepNumber: 25,
+    stepNumber: 30,
   },
   {
     id: 'pitch-deck-builder',
@@ -615,7 +615,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '45 min',
     outputs: ['12 slides estructurados', 'Narrative arc validado', 'Talking points por slide'],
     relatedService: 'Revisión y coaching de Pitch Deck',
-    stepNumber: 26,
+    stepNumber: 31,
     transversal: true,
   },
   {
@@ -633,7 +633,7 @@ export const TOOLS: ToolDef[] = [
     outputs: ['Cap table multi-ronda', 'Dilución proyectada por ronda', 'Estrategia de fundraising documentada'],
     relatedProduct: 'Modelo financiero para inversores',
     relatedService: 'Asesoría de fundraising',
-    stepNumber: 27,
+    stepNumber: 32,
   },
   {
     id: 'data-room-builder',
@@ -648,7 +648,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Finanzas',
     estimatedTime: '30 min',
     outputs: ['Checklist de documentos del Data Room', 'Estructura de carpetas organizada', 'Estado de completitud por documento'],
-    stepNumber: 28,
+    stepNumber: 33,
   },
   {
     id: 'financial-model-builder',
@@ -664,7 +664,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '35 min',
     outputs: ['Proyecciones financieras a 3-5 años', 'Estado de resultados proyectado', 'Análisis de breakeven y runway'],
     relatedProduct: 'Modelo financiero para inversores',
-    stepNumber: 29,
+    stepNumber: 34,
   },
 ]
 

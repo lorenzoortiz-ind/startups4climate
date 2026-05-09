@@ -174,6 +174,26 @@ export default function RadarPage() {
   // Filter state
   const [catFilter, setCatFilter] = useState<string>('Todos')
   const [regionFilter, setRegionFilter] = useState<string>('Todos')
+  const [refreshing, setRefreshing] = useState(false)
+  const isSuperadmin = appUser?.role === 'superadmin'
+
+  const handleRefreshRadar = async () => {
+    setRefreshing(true)
+    try {
+      const res = await fetch('/api/admin/refresh-radar', { method: 'POST' })
+      const data = await res.json() as { rss_inserted?: number; ai_inserted?: number; errors?: string[] }
+      if (res.ok) {
+        window.location.reload()
+      } else {
+        console.error('[S4C Radar refresh]', data)
+        alert('Error al refrescar. Ver consola.')
+      }
+    } catch (err) {
+      console.error('[S4C Radar refresh]', err)
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -406,6 +426,23 @@ export default function RadarPage() {
             {loading ? 'Cargando…' : `${filtered.length} artículos · actualizado ${lastUpdated}`}
           </p>
         </div>
+        {isSuperadmin && (
+          <button
+            onClick={handleRefreshRadar}
+            disabled={refreshing}
+            style={{
+              marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+              padding: '0.375rem 0.875rem', borderRadius: 6,
+              background: refreshing ? 'rgba(218,78,36,0.06)' : 'rgba(218,78,36,0.10)',
+              border: '1px solid rgba(218,78,36,0.25)',
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+              color: refreshing ? 'rgba(218,78,36,0.5)' : '#DA4E24',
+              cursor: refreshing ? 'wait' : 'pointer',
+            }}
+          >
+            {refreshing ? 'Actualizando…' : '✦ Actualizar con IA'}
+          </button>
+        )}
       </div>
 
       {/* Body */}

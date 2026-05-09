@@ -21,6 +21,7 @@ import {
   X,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
 /* ─── Types ─── */
 type DbType =
@@ -112,8 +113,6 @@ const FILTER_CATEGORIES: FilterCategory[] = [
   'Aceleradora',
   'Competencia',
   'Fondo',
-  'Premio',
-  'Fellowship',
 ]
 
 const TIME_FILTERS: TimeFilter[] = ['Todas', 'Vigentes', 'Por vencer', 'Cerradas']
@@ -467,17 +466,34 @@ function OpportunityCard({
 
 /* ─── Main page ─── */
 export default function OportunidadesPage() {
+  const { appUser } = useAuth()
   const pathname = usePathname()
   const toolsBase = pathname.startsWith('/demo-tools') ? '/demo-tools' : '/tools'
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('Todas')
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('Vigentes')
-  const [tipoFilter, setTipoFilter] = useState<string>('Todos')
-  const [etapaFilter, setEtapaFilter] = useState<string>('Cualquiera')
-  const [regionFilter, setRegionFilter] = useState<string>('Todos')
+  const [refreshing, setRefreshing] = useState(false)
+  const isSuperadmin = appUser?.role === 'superadmin'
   // apiScores maps opportunityId → { matchScore, matchBreakdown, aiBlurb? }
   const [apiScores, setApiScores] = useState<Map<string, ScoredApiOpportunity>>(new Map())
   const [rows, setRows] = useState<OpportunityRow[]>([])
   const [loading, setLoading] = useState(true)
+
+  const handleRefreshOportunidades = async () => {
+    setRefreshing(true)
+    try {
+      const res = await fetch('/api/admin/refresh-oportunidades', { method: 'POST' })
+      if (res.ok) {
+        window.location.reload()
+      } else {
+        console.error('[S4C Oportunidades refresh]', await res.json())
+        alert('Error al refrescar. Ver consola.')
+      }
+    } catch (err) {
+      console.error('[S4C Oportunidades refresh]', err)
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -579,22 +595,6 @@ export default function OportunidadesPage() {
 
   const sorted = [...filtered].sort((a, b) => b.matchScore - a.matchScore)
 
-  const TIPOS = ['Todos', 'Grant', 'Fondo', 'Competencia', 'Aceleración', 'Convocatoria']
-  const ETAPAS = ['Cualquiera', 'Pre-seed', 'Seed', 'Serie A']
-  const REGIONS_OPP = ['Todos', 'LATAM', 'Global', 'Perú', 'México', 'Colombia', 'Chile']
-
-  const DB_TYPE_TO_TIPO: Record<DbType, string> = {
-    grant: 'Grant', competition: 'Competencia', accelerator: 'Aceleración',
-    investment_fund: 'Fondo', soft_loan: 'Fondo', award: 'Competencia', fellowship: 'Grant',
-  }
-
-  const filteredOpp = sorted.filter((item) => {
-    const tipoOk = tipoFilter === 'Todos' || DB_TYPE_TO_TIPO[item.type] === tipoFilter
-    const etapaOk = etapaFilter === 'Cualquiera' || (item.eligible_stages ?? []).some((s) => s.toLowerCase().includes(etapaFilter.toLowerCase()))
-    const regionOk = regionFilter === 'Todos' || regionFilter === 'LATAM' || regionFilter === 'Global' ||
-      (item.eligible_countries ?? []).includes(regionFilter.slice(0, 2).toUpperCase())
-    return tipoOk && etapaOk && regionOk
-  })
 
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
@@ -631,6 +631,23 @@ export default function OportunidadesPage() {
               Grants, aceleradoras, competencias y fondos personalizados para tu perfil
             </p>
           </div>
+          {isSuperadmin && (
+            <button
+              onClick={handleRefreshOportunidades}
+              disabled={refreshing}
+              style={{
+                flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.375rem 0.875rem', borderRadius: 6,
+                background: refreshing ? 'rgba(218,78,36,0.06)' : 'rgba(218,78,36,0.10)',
+                border: '1px solid rgba(218,78,36,0.25)',
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+                color: refreshing ? 'rgba(218,78,36,0.5)' : '#DA4E24',
+                cursor: refreshing ? 'wait' : 'pointer',
+              }}
+            >
+              {refreshing ? 'Actualizando…' : '✦ Actualizar con IA'}
+            </button>
+          )}
         </div>
       </motion.div>
 
@@ -710,114 +727,20 @@ export default function OportunidadesPage() {
         </span>
       </motion.div>
 
-      {/* Page header */}
-      <div style={{
-        padding: '1.25rem 0',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
-      }}>
-        <div>
-          <h1 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'rgba(255,255,255,0.88)', margin: 0 }}>
-            Oportunidades
-          </h1>
-          <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)', margin: '0.25rem 0 0' }}>
-            {loading ? 'Cargando…' : `${filteredOpp.length} oportunidades`}
-          </p>
+      {/* Card grid */}
+      {loading ? (
+        <div style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', padding: '3rem 0' }}>Cargando…</div>
+      ) : sorted.length === 0 ? (
+        <div style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', padding: '3rem 0', textAlign: 'center' }}>
+          No hay oportunidades para este filtro.
         </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: '1.5rem', paddingTop: '1rem' }}>
-        {/* Filters */}
-        <div style={{
-          width: 200, flexShrink: 0,
-          borderRight: '1px solid rgba(255,255,255,0.06)',
-          paddingRight: '0.75rem',
-          display: 'flex', flexDirection: 'column', gap: '0.25rem',
-        }}>
-          {/* Tipo */}
-          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Tipo</div>
-          {TIPOS.map((t) => (
-            <button key={t} onClick={() => setTipoFilter(t)} style={{
-              fontSize: '0.8125rem', color: tipoFilter === t ? '#DA4E24' : 'rgba(255,255,255,0.4)',
-              background: tipoFilter === t ? 'rgba(218,78,36,0.10)' : 'transparent',
-              border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
-            }}>{t}</button>
-          ))}
-          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
-          {/* Etapa */}
-          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Etapa</div>
-          {ETAPAS.map((e) => (
-            <button key={e} onClick={() => setEtapaFilter(e)} style={{
-              fontSize: '0.8125rem', color: etapaFilter === e ? '#DA4E24' : 'rgba(255,255,255,0.4)',
-              background: etapaFilter === e ? 'rgba(218,78,36,0.10)' : 'transparent',
-              border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
-            }}>{e}</button>
-          ))}
-          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
-          {/* Región */}
-          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Región</div>
-          {REGIONS_OPP.map((r) => (
-            <button key={r} onClick={() => setRegionFilter(r)} style={{
-              fontSize: '0.8125rem', color: regionFilter === r ? '#DA4E24' : 'rgba(255,255,255,0.4)',
-              background: regionFilter === r ? 'rgba(218,78,36,0.10)' : 'transparent',
-              border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
-            }}>{r}</button>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))', gap: '1rem', paddingBottom: '3rem' }}>
+          {sorted.map((opp, i) => (
+            <OpportunityCard key={opp.id} item={opp} index={i} onBlurbLoaded={handleBlurbLoaded} />
           ))}
         </div>
-
-        {/* List */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.375rem', paddingBottom: '1.5rem' }}>
-          {loading ? (
-            <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Cargando…</div>
-          ) : filteredOpp.length === 0 ? (
-            <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Sin resultados para este filtro.</div>
-          ) : filteredOpp.map((item) => (
-            <a
-              key={item.id}
-              href={item.application_url ?? '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex', alignItems: 'center', gap: '0.75rem',
-                padding: '0.5rem 0.75rem', borderRadius: 7,
-                border: '1px solid rgba(255,255,255,0.06)',
-                background: '#111111', textDecoration: 'none', cursor: 'pointer',
-                transition: 'border-color 0.15s, background 0.15s',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)'
-                ;(e.currentTarget as HTMLElement).style.background = '#161616'
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)'
-                ;(e.currentTarget as HTMLElement).style.background = '#111111'
-              }}
-            >
-              <span style={{
-                width: 5, height: 5, borderRadius: '50%',
-                background: item.type === 'investment_fund' ? '#3B82F6' : '#DA4E24',
-                flexShrink: 0,
-              }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {item.title}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
-                  {item.organization}{item.deadline ? ` · cierra ${new Date(item.deadline).toLocaleDateString('es-419', { day: 'numeric', month: 'short' })}` : item.is_rolling ? ' · convocatoria abierta' : ''}
-                </div>
-              </div>
-              <span style={{
-                fontSize: '0.6875rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
-                background: item.type === 'investment_fund' ? 'rgba(29,78,216,0.08)' : 'rgba(218,78,36,0.08)',
-                color: item.type === 'investment_fund' ? 'rgba(59,130,246,0.7)' : 'rgba(218,78,36,0.7)',
-                flexShrink: 0, whiteSpace: 'nowrap',
-              }}>
-                {DB_TYPE_TO_TIPO[item.type]}
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   )
 }

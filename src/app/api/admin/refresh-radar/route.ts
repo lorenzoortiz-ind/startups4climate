@@ -6,12 +6,17 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-// Same RSS feeds as cron — keep in sync with /api/cron/radar-rss/route.ts
+// RSS feeds — climate tech, impact, LATAM innovation
 const FEEDS = [
   { url: 'https://latamlist.com/feed/', source_name: 'LatamList', default_type: 'news' as const },
   { url: 'https://contxto.com/en/feed/', source_name: 'Contxto', default_type: 'investment' as const },
   { url: 'https://labsnews.com/en/feed/', source_name: 'LABS News', default_type: 'news' as const },
   { url: 'https://agfundernews.com/feed/', source_name: 'AgFunder News', default_type: 'trend' as const },
+  { url: 'https://pulsosocial.com/feed/', source_name: 'Pulso Social', default_type: 'news' as const },
+  { url: 'https://www.bloomberglinea.com/feed/', source_name: 'Bloomberg Línea', default_type: 'investment' as const },
+  { url: 'https://techcrunch.com/tag/climate/feed/', source_name: 'TechCrunch Climate', default_type: 'trend' as const },
+  { url: 'https://climatetechvc.org/feed/', source_name: 'ClimateTech VC', default_type: 'investment' as const },
+  { url: 'https://cleanenergyfinanceforum.com/feed/', source_name: 'Clean Energy Finance', default_type: 'investment' as const },
 ]
 
 function decodeHtml(s: string): string {
@@ -152,7 +157,7 @@ export async function POST(_request: NextRequest) {
 
   // ── Phase 2: Gemini-generated curated items ──
   const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
-Genera exactamente 8 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto.
+Genera exactamente 15 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto. Incluye al menos 5 sobre cleantech/clima, 3 sobre agritech, 3 sobre inversión/fondos, 2 sobre regulación y 2 sobre programas de aceleración.
 Responde SOLO con un array JSON válido, sin texto adicional:
 [
   {

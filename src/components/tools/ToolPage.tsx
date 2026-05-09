@@ -27,6 +27,9 @@ import {
 import { markToolCompleted, markReportGenerated, getProgress } from '@/lib/progress'
 import { generateToolReport } from '@/lib/pdf-generator'
 import { Callout, InsightBox, SectionHeader } from '@/components/ui'
+import { SectionsProvider } from '@/contexts/SectionsContext'
+import { SectionBadge } from '@/components/tools/SectionBadge'
+import { ContextPanel } from '@/components/tools/ContextPanel'
 
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
 // Note: New tools will show "en construcción" until their components are created
@@ -161,6 +164,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
     : `Esta herramienta es clave para avanzar en ${displayStageName?.toLowerCase() ?? 'tu etapa actual'}. Tómate el tiempo para responder con datos reales, no con suposiciones.`
 
   return (
+    <SectionsProvider>
     <div style={{ minHeight: '100dvh', background: 'var(--color-bg-primary)' }}>
       {/* Top bar */}
       <div
@@ -220,32 +224,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexShrink: 0 }}>
-          {stageProgress && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                padding: '0.3rem 0.75rem',
-                borderRadius: 8,
-                background: 'var(--color-bg-muted)',
-                border: '1px solid var(--color-border)',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.625rem',
-                fontWeight: 600,
-                color: 'var(--color-text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-              }}
-              aria-label={`Paso ${stageProgress.position} de ${stageProgress.total}`}
-            >
-              <span style={{ color: displayStageColor, fontWeight: 700 }}>
-                {stageProgress.position.toString().padStart(2, '0')}
-              </span>
-              <span style={{ opacity: 0.5 }}>/</span>
-              <span>{stageProgress.total.toString().padStart(2, '0')}</span>
-            </div>
-          )}
+          <SectionBadge />
           {reportGenerated && (
             <div
               style={{
@@ -291,7 +270,9 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 1.5rem', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+        <div className="tool-content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 228px', gap: '1.5rem', alignItems: 'start', paddingTop: '1.5rem' }}>
+        <div>{/* left column start */}
         {/* Tool header — two-column: metadata left, "Lo que producirás" checklist right */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -435,8 +416,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                       style={{
                         fontFamily: 'var(--font-body)',
                         fontSize: '1rem',
-                        fontStyle: 'italic',
-                        color: displayStageColor,
+                        color: 'rgba(255,255,255,0.35)',
                         marginBottom: 0,
                         lineHeight: 1.5,
                       }}
@@ -769,7 +749,23 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
             </div>
           )}
         </motion.div>
+        </div>{/* left column end */}
+
+        {/* Right: ContextPanel */}
+        <div>
+          <ContextPanel toolId={toolId} activeSectionLabel="" />
+        </div>
+        </div>{/* tool-content-grid end */}
+
+        <style>{`
+          @media (max-width: 768px) {
+            .tool-content-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}</style>
       </div>
     </div>
+    </SectionsProvider>
   )
 }

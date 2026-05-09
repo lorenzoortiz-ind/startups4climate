@@ -383,7 +383,7 @@ export default function PerfilPage() {
         padding: '2.5rem 1.75rem',
       }}
     >
-      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Back link */}
         <Link
           href="/tools"
@@ -406,87 +406,227 @@ export default function PerfilPage() {
           Volver al dashboard
         </Link>
 
-        {/* Profile header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-          style={{ marginBottom: '2.5rem' }}
+        {/* 2-col grid: sidebar + form */}
+        <div
+          className="perfil-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '280px 1fr',
+            gap: '2.5rem',
+            alignItems: 'start',
+          }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-            {/* Avatar */}
+          {/* ── LEFT SIDEBAR (sticky) ── */}
+          <motion.div
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+            style={{
+              position: 'sticky',
+              top: 'calc(44px + 1.5rem)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}
+          >
+            {/* Avatar card */}
             <div
               style={{
-                width: 80,
-                height: 80,
-                borderRadius: 'var(--radius-full)',
-                background: 'var(--color-ink)',
+                background: 'var(--color-paper)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid var(--color-border)',
+                padding: '1.75rem',
+                boxShadow: 'var(--shadow-float)',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                border: '3px solid var(--color-paper)',
+                gap: '1rem',
+                textAlign: 'center',
+              }}
+            >
+              {/* Avatar */}
+              <div
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 'var(--radius-full)',
+                  background: 'var(--color-ink)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  border: '3px solid var(--color-paper)',
+                  boxShadow: 'var(--shadow-float)',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.5rem',
+                    fontWeight: 700,
+                    color: 'var(--color-paper)',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {initials}
+                </span>
+              </div>
+
+              {/* Stage badge */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  background: stageInfo.bg,
+                  border: `1px solid ${stageInfo.color}30`,
+                }}
+              >
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: stageInfo.color, flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 700,
+                  color: stageInfo.color,
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '0.06em',
+                }}>
+                  {stageInfo.label}
+                </span>
+              </div>
+
+              {/* Name + startup */}
+              <div>
+                <div style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'var(--text-heading-md)',
+                  fontWeight: 700,
+                  color: 'var(--color-ink)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.1,
+                  marginBottom: '0.25rem',
+                }}>
+                  {nombre || 'Tu nombre'}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--color-text-secondary)',
+                  letterSpacing: '-0.01em',
+                }}>
+                  {startupName || 'Tu startup'}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-2xs)',
+                  color: 'var(--color-text-muted)',
+                  marginTop: '0.25rem',
+                  wordBreak: 'break-all' as const,
+                }}>
+                  {user.email}
+                </div>
+              </div>
+
+              {/* Score if present */}
+              {user.diagnosticScore != null && (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column' as const,
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.75rem 1rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--color-bg-card)',
+                  border: '1px solid var(--color-border)',
+                  width: '100%',
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(1.5rem, 2vw, 2rem)',
+                    fontWeight: 700,
+                    color: stageInfo.color,
+                    letterSpacing: '-0.04em',
+                  }}>{user.diagnosticScore}</span>
+                  <span style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'var(--text-2xs)',
+                    color: 'var(--color-text-muted)',
+                    textTransform: 'uppercase' as const,
+                    letterSpacing: '0.06em',
+                  }}>Score diagnóstico</span>
+                </div>
+              )}
+            </div>
+
+            {/* Pasaporte público */}
+            <div
+              style={{
+                padding: '1.25rem',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--color-paper)',
+                border: '1px solid var(--color-border)',
                 boxShadow: 'var(--shadow-float)',
               }}
             >
-              <span
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.5rem',
-                  fontWeight: 700,
-                  color: 'var(--color-paper)',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {initials}
-              </span>
-            </div>
-            <div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  color: stageInfo.color,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  marginBottom: '0.25rem',
-                }}
-              >
-                {stageInfo.label}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.75rem' }}>
+                <div
+                  style={{
+                    width: 30, height: 30, borderRadius: 8,
+                    background: 'rgba(31,119,246,0.08)', border: '1px solid rgba(31,119,246,0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}
+                >
+                  <Share2 size={14} color="#1F77F6" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--color-ink)' }}>
+                    Pasaporte público
+                  </div>
+                </div>
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, cursor: shareLoading ? 'wait' : 'pointer', flexShrink: 0 }}>
+                  <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)', fontWeight: 600, color: isPublic ? '#1F77F6' : 'var(--color-text-muted)' }}>
+                    {shareLoading ? '...' : isPublic ? 'ON' : 'OFF'}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={isPublic}
+                    disabled={shareLoading}
+                    onChange={(e) => handleToggleShare(e.target.checked)}
+                    style={{ width: 16, height: 16, accentColor: '#1F77F6', cursor: shareLoading ? 'wait' : 'pointer' }}
+                  />
+                </label>
               </div>
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
-                  fontWeight: 700,
-                  color: 'var(--color-ink)',
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.05,
-                  marginBottom: '0.25rem',
-                }}
-              >
-                {nombre || 'Tu nombre'}
-              </h1>
-              <p
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-body-lg)',
-                  color: 'var(--color-text-secondary)',
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                {startupName || 'Tu startup'} · {user.email}
-              </p>
+              <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)', color: 'var(--color-text-muted)', lineHeight: 1.5, marginBottom: isPublic && shareUrl ? '0.75rem' : 0 }}>
+                URL pública read-only con tu pitch y métricas.
+              </div>
+              {isPublic && shareUrl && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.5rem 0.625rem', borderRadius: 6, background: 'var(--color-bg-primary)', border: '1px solid var(--color-border)' }}>
+                  <input
+                    readOnly value={shareUrl}
+                    style={{ flex: 1, minWidth: 0, border: 'none', background: 'transparent', fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)', color: 'var(--color-text-primary)', outline: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}
+                    onFocus={(e) => e.currentTarget.select()}
+                  />
+                  <button onClick={handleCopyShare} title="Copiar" style={{ display: 'inline-flex', alignItems: 'center', gap: 3, padding: '0.25rem 0.5rem', borderRadius: 5, background: copied ? 'rgba(31,119,246,0.1)' : 'var(--color-bg-card)', border: '1px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)', fontWeight: 600, color: copied ? '#1F77F6' : 'var(--color-text-secondary)', cursor: 'pointer' }}>
+                    <Copy size={10} /> {copied ? '✓' : 'Copiar'}
+                  </button>
+                  <a href={shareUrl} target="_blank" rel="noopener noreferrer" title="Abrir" style={{ display: 'inline-flex', alignItems: 'center', padding: '0.25rem 0.4rem', borderRadius: 5, background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', textDecoration: 'none' }}>
+                    <ExternalLink size={10} />
+                  </a>
+                </div>
+              )}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
+          {/* ── RIGHT: FORM ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.07 }}
+          >
         {/* Profile form card */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.07 }}
+        <div
           style={{
             background: 'var(--color-paper)',
             borderRadius: 'var(--radius-lg)',
@@ -664,59 +804,6 @@ export default function PerfilPage() {
                 placeholder="Número de personas"
               />
 
-              {/* Stage read-only */}
-              <div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    color: 'var(--color-text-muted)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  Etapa (del diagnóstico)
-                </div>
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: 'var(--radius-full)',
-                    background: stageInfo.bg,
-                    border: `1px solid ${stageInfo.color}30`,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: 'var(--radius-full)',
-                      background: stageInfo.color,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.9375rem',
-                      fontWeight: 600,
-                      color: stageInfo.color,
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {stageInfo.label}
-                  </span>
-                  {user.diagnosticScore != null && (
-                    <span style={{ color: 'var(--color-text-muted)', fontSize: '0.8125rem' }}>
-                      · {user.diagnosticScore}/100
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
 
@@ -807,100 +894,6 @@ export default function PerfilPage() {
             </div>
           </div>
 
-          {/* Pasaporte público */}
-          <div
-            style={{
-              padding: '1.5rem',
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              marginBottom: '1.5rem',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-              <div
-                style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: 'rgba(31,119,246,0.08)', border: '1px solid rgba(31,119,246,0.2)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}
-              >
-                <Share2 size={16} color="#1F77F6" />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: 4 }}>
-                  Pasaporte público
-                </div>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.85rem', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
-                  Comparte una URL pública read-only con tu pitch, métricas y links. Útil para inversores o aplicaciones a fondos.
-                </div>
-              </div>
-              <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: shareLoading ? 'wait' : 'pointer' }}>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8rem', fontWeight: 600, color: isPublic ? '#1F77F6' : 'var(--color-text-muted)' }}>
-                  {shareLoading ? '...' : isPublic ? 'Activado' : 'Desactivado'}
-                </span>
-                <input
-                  type="checkbox"
-                  checked={isPublic}
-                  disabled={shareLoading}
-                  onChange={(e) => handleToggleShare(e.target.checked)}
-                  style={{ width: 20, height: 20, accentColor: '#1F77F6', cursor: shareLoading ? 'wait' : 'pointer' }}
-                />
-              </label>
-            </div>
-            {isPublic && shareUrl && (
-              <div
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '0.6rem 0.8rem', borderRadius: 8,
-                  background: 'var(--color-bg-primary)',
-                  border: '1px solid var(--color-border)',
-                  marginTop: 4,
-                }}
-              >
-                <input
-                  readOnly
-                  value={shareUrl}
-                  style={{
-                    flex: 1, minWidth: 0, border: 'none', background: 'transparent',
-                    fontFamily: 'var(--font-body)', fontSize: '0.8rem',
-                    color: 'var(--color-text-primary)', outline: 'none',
-                  }}
-                  onFocus={(e) => e.currentTarget.select()}
-                />
-                <button
-                  onClick={handleCopyShare}
-                  title="Copiar"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
-                    padding: '0.35rem 0.7rem', borderRadius: 6,
-                    background: copied ? 'rgba(31,119,246,0.1)' : 'var(--color-bg-card)',
-                    border: '1px solid var(--color-border)',
-                    fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
-                    color: copied ? '#1F77F6' : 'var(--color-text-secondary)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <Copy size={12} /> {copied ? 'Copiado' : 'Copiar'}
-                </button>
-                <a
-                  href={shareUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="Abrir"
-                  style={{
-                    display: 'inline-flex', alignItems: 'center',
-                    padding: '0.35rem 0.6rem', borderRadius: 6,
-                    background: 'var(--color-bg-card)',
-                    border: '1px solid var(--color-border)',
-                    color: 'var(--color-text-secondary)', textDecoration: 'none',
-                  }}
-                >
-                  <ExternalLink size={12} />
-                </a>
-              </div>
-            )}
-          </div>
 
           {/* Save button */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -950,7 +943,9 @@ export default function PerfilPage() {
               </motion.div>
             )}
           </div>
-        </motion.div>
+        </div>{/* /form card */}
+          </motion.div>{/* /right column */}
+        </div>{/* /perfil-grid */}
       </div>
     </div>
   )

@@ -137,7 +137,7 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
       )}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4, gap: 8, flexWrap: 'wrap' }}>
         {item.source_name && (
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
             Fuente: {item.source_name}
           </span>
         )}
@@ -171,6 +171,9 @@ export default function RadarPage() {
   const [aiInsight, setAiInsight] = useState<string | null>(null)
   const [aiLoading, setAiLoading] = useState(false)
   const insightFetched = useRef(false)
+  // Filter state
+  const [catFilter, setCatFilter] = useState<string>('Todos')
+  const [regionFilter, setRegionFilter] = useState<string>('Todos')
 
   useEffect(() => {
     let cancelled = false
@@ -362,124 +365,149 @@ export default function RadarPage() {
     )
   }
 
+  const CATEGORIES = ['Todos', 'Energía', 'Agua', 'Economía circular', 'Biodiversidad', 'Movilidad', 'Fondos']
+  const REGIONS = ['Todos', 'LATAM', 'Perú', 'México', 'Colombia', 'Chile', 'Brasil']
+
+  const REGION_COUNTRY_MAP: Record<string, string[]> = {
+    'LATAM': [],   // show all
+    'Perú': ['PE'],
+    'México': ['MX'],
+    'Colombia': ['CO'],
+    'Chile': ['CL'],
+    'Brasil': ['BR'],
+  }
+
+  // Map vertical names and content types to category filter
+  const filtered = items.filter((item) => {
+    const catOk = catFilter === 'Todos' ||
+      (item.vertical?.toLowerCase().includes(catFilter.toLowerCase())) ||
+      (catFilter === 'Fondos' && item.content_type === 'investment') ||
+      (item.tags && item.tags.some((t) => t.toLowerCase().includes(catFilter.toLowerCase())))
+    const regionOk = regionFilter === 'Todos' || regionFilter === 'LATAM' ||
+      (item.country && (REGION_COUNTRY_MAP[regionFilter] ?? []).includes(item.country))
+    return catOk && regionOk
+  })
+
   return (
-    <div style={{ padding: '2rem', maxWidth: 960, margin: '0 auto' }}>
-      <Link
-        href={toolsBase}
-        style={{
-          display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-          fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
-          color: 'var(--color-text-muted)', textDecoration: 'none', marginBottom: '1.5rem',
-        }}
-      >
-        <ArrowLeft size={14} />
-        Volver al dashboard
-      </Link>
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        style={{ marginBottom: '2rem' }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-          <div
-            style={{
-              width: 40, height: 40, borderRadius: 12,
-              background: 'rgba(31,119,246,0.08)', border: '1px solid rgba(31,119,246,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}
-          >
-            <Radio size={20} color="#1F77F6" />
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)',
-                fontWeight: 700, color: 'var(--color-ink)', letterSpacing: '-0.02em',
-                lineHeight: 1.3, margin: 0,
-              }}
-            >
-              RADAR del ecosistema
-            </h1>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>
-              Mantente informado sobre lo que pasa en el ecosistema de innovación en LATAM
-            </p>
-          </div>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+      {/* Page header */}
+      <div style={{
+        padding: '1.25rem 0',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+      }}>
+        <div>
+          <h1 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'rgba(255,255,255,0.88)', margin: 0 }}>
+            Radar
+          </h1>
+          <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)', margin: '0.25rem 0 0' }}>
+            {loading ? 'Cargando…' : `${filtered.length} artículos · actualizado ${lastUpdated}`}
+          </p>
         </div>
+      </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.5rem', marginLeft: 52 }}>
-          <Clock size={12} color="var(--color-text-muted)" />
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
-            Última actualización: {lastUpdated}
-          </span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.25rem' }}
-      >
-        {TABS.map((tab) => {
-          const Icon = tab.icon
-          const isActive = activeTab === tab.id
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-                padding: '0.5rem 1rem', borderRadius: 999,
-                border: isActive ? '1px solid rgba(31,119,246,0.3)' : '1px solid var(--color-border)',
-                background: isActive ? 'rgba(31,119,246,0.08)' : 'var(--color-bg-card)',
-                fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#1F77F6' : 'var(--color-text-secondary)',
-                cursor: 'pointer', whiteSpace: 'nowrap',
-              }}
-            >
-              <Icon size={14} />
-              {tab.label}
+      {/* Body */}
+      <div style={{ display: 'flex', gap: '1.5rem', paddingTop: '1rem' }}>
+        {/* Filters */}
+        <div style={{
+          width: 200,
+          flexShrink: 0,
+          borderRight: '1px solid rgba(255,255,255,0.06)',
+          paddingRight: '0.75rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.25rem',
+        }}>
+          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
+            Categoría
+          </div>
+          {CATEGORIES.map((cat) => (
+            <button key={cat} onClick={() => setCatFilter(cat)} style={{
+              fontSize: '0.5rem', color: catFilter === cat ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              background: catFilter === cat ? 'rgba(218,78,36,0.10)' : 'transparent',
+              border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
+            }}>
+              {cat}
             </button>
-          )
-        })}
-      </motion.div>
-
-      {activeTab === 'noticias' && (
-        <div>
-          {renderAiInsightCard()}
-          {renderList(sortedItems)}
+          ))}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
+          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
+            Región
+          </div>
+          {REGIONS.map((region) => (
+            <button key={region} onClick={() => setRegionFilter(region)} style={{
+              fontSize: '0.5rem', color: regionFilter === region ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              background: regionFilter === region ? 'rgba(218,78,36,0.10)' : 'transparent',
+              border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
+            }}>
+              {region}
+            </button>
+          ))}
         </div>
-      )}
 
-      {activeTab === 'vertical' && (
-        <div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.75rem 1rem', borderRadius: 12,
-              background: 'rgba(31,119,246,0.04)',
-              border: '1px solid rgba(31,119,246,0.1)',
-              marginBottom: '1rem',
-            }}
-          >
-            <Target size={14} color="#1F77F6" />
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>
-              Mostrando noticias relevantes para:{' '}
-              <strong style={{ color: '#1F77F6' }}>{userVertical}</strong>
-              {startup?.country && (
-                <> en <strong style={{ color: '#1F77F6' }}>{COUNTRY_LABELS[startup.country] || startup.country}</strong></>
+        {/* List */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.375rem', paddingBottom: '1.5rem' }}>
+          {loading ? (
+            <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Cargando…</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Sin resultados para este filtro.</div>
+          ) : filtered.map((item) => (
+            <a
+              key={item.id}
+              href={item.source_url ?? '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.75rem',
+                padding: '0.5rem 0.75rem', borderRadius: 7,
+                border: '1px solid rgba(255,255,255,0.06)',
+                background: '#111111', textDecoration: 'none', cursor: 'pointer',
+                transition: 'border-color 0.15s, background 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)'
+                ;(e.currentTarget as HTMLElement).style.background = '#161616'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)'
+                ;(e.currentTarget as HTMLElement).style.background = '#111111'
+              }}
+            >
+              <span style={{
+                width: 5, height: 5, borderRadius: '50%',
+                background: item.content_type === 'investment' ? '#3B82F6' : '#DA4E24',
+                flexShrink: 0,
+              }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: '0.5625rem', fontWeight: 600, color: 'rgba(255,255,255,0.78)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.title}
+                </div>
+                <div style={{ fontSize: '0.4375rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>
+                  {item.source_name}{item.published_at ? ` · ${new Date(item.published_at).toLocaleDateString('es-419', { day: 'numeric', month: 'short' })}` : ''}
+                </div>
+              </div>
+              {(item.vertical || item.content_type) && (
+                <span style={{
+                  fontSize: '0.4375rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
+                  background: item.content_type === 'investment' ? 'rgba(29,78,216,0.08)' : 'rgba(218,78,36,0.08)',
+                  color: item.content_type === 'investment' ? 'rgba(59,130,246,0.7)' : 'rgba(218,78,36,0.7)',
+                  flexShrink: 0, whiteSpace: 'nowrap',
+                }}>
+                  {item.vertical ?? TYPE_LABELS[item.content_type]}
+                </span>
               )}
-            </span>
-          </motion.div>
-          {renderList(verticalItems)}
+            </a>
+          ))}
         </div>
-      )}
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .radar-body { flex-direction: column !important; }
+        }
+      `}</style>
     </div>
   )
 }

@@ -22,6 +22,7 @@ export interface ToolDef {
   category: ToolCategory
   estimatedTime: string
   outputs: string[]
+  feedsInto?: string[]          // IDs de herramientas que consumen outputs de esta
   relatedService?: string
   relatedProduct?: string
   stepNumber: number

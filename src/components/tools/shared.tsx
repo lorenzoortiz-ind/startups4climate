@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
-import { ChevronDown, Save, CheckCircle2, FileText, Lightbulb, BookOpen } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { ChevronDown, ChevronRight, Save, CheckCircle2, FileText, Lightbulb, BookOpen } from 'lucide-react'
+import { useSections } from '@/contexts/SectionsContext'
 
-/* ─── ToolSection: 3-state flat carbon surface section ─── */
+/* ─── ToolSection: collapsible 3-state section ─── */
 
 type ToolSectionState = 'idle' | 'active' | 'done'
 
@@ -11,12 +12,13 @@ interface ToolSectionProps {
   title: string
   step?: number
   number?: number               // legacy alias for step — kept for backward compat
-  subtitle?: string             // legacy prop — ignored in new design
-  insight?: string              // legacy prop — ignored in new design
-  insightSource?: string        // legacy prop — ignored in new design
-  defaultOpen?: boolean         // legacy prop — ignored in new design
+  subtitle?: string             // legacy prop — ignored
+  insight?: string              // legacy prop — ignored
+  insightSource?: string        // legacy prop — ignored
+  defaultOpen?: boolean         // overrides state-based default when provided
+  tip?: string                  // contextual tip for ContextPanel
   children: React.ReactNode
-  accentColor?: string          // legacy prop — kept for backward compat, overrides to 'active' state
+  accentColor?: string          // legacy — maps to 'active' state
   state?: ToolSectionState
   className?: string
   style?: React.CSSProperties
@@ -26,6 +28,7 @@ export function ToolSection({
   title,
   step,
   number,
+  defaultOpen,
   children,
   accentColor,
   state = 'idle',
@@ -35,6 +38,39 @@ export function ToolSection({
   const resolvedStep = step ?? number
   const resolvedState: ToolSectionState =
     accentColor && state === 'idle' ? 'active' : state
+
+  // Default open: active → true, done/idle → false; defaultOpen overrides
+  const initialOpen = defaultOpen !== undefined ? defaultOpen : resolvedState === 'active'
+  const [open, setOpen] = useState<boolean>(initialOpen)
+
+  // Register into SectionsContext (graceful — no-op if no provider)
+  const sectionId = `section-${title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
+
+  let registerSection: ((e: import('@/contexts/SectionsContext').SectionEntry) => void) | null = null
+  let unregisterSection: ((id: string) => void) | null = null
+  let updateSection: ((id: string, patch: Partial<import('@/contexts/SectionsContext').SectionEntry>) => void) | null = null
+
+  try {
+    const ctx = useSections()
+    registerSection = ctx.registerSection
+    unregisterSection = ctx.unregisterSection
+    updateSection = ctx.updateSection
+  } catch {
+    // Outside SectionsProvider — fine
+  }
+
+  useEffect(() => {
+    if (!registerSection || !unregisterSection) return
+    registerSection({ id: sectionId, label: title, state: resolvedState })
+    return () => unregisterSection!(sectionId)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (!updateSection) return
+    updateSection(sectionId, { state: resolvedState })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedState])
 
   const borderMap: Record<ToolSectionState, string> = {
     idle:   '1px solid rgba(255,255,255,0.07)',
@@ -54,54 +90,97 @@ export function ToolSection({
 
   return (
     <div
+      id={sectionId}
       className={className}
       style={{
         background: '#111111',
         borderRadius: 14,
         border: borderMap[resolvedState],
-        padding: '1.5rem',
         marginBottom: '1.25rem',
         transition: 'border-color 0.2s ease',
+        overflow: 'hidden',
         ...style,
       }}
     >
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.625rem',
-        marginBottom: '1.25rem',
-      }}>
-        {resolvedStep !== undefined && (
+      {/* Collapsible header */}
+      <div
+        role="button"
+        aria-expanded={open}
+        tabIndex={0}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setOpen(o => !o)
+          }
+        }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.875rem 1.25rem',
+          cursor: 'pointer',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}
+      >
+        {/* Left: step badge + title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+          {resolvedStep !== undefined && (
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 24,
+              height: 24,
+              borderRadius: 6,
+              background: badgeBgMap[resolvedState],
+              color: badgeColorMap[resolvedState],
+              fontFamily: 'monospace',
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              flexShrink: 0,
+              transition: 'background 0.2s ease, color 0.2s ease',
+            }}>
+              {resolvedState === 'done' ? <CheckCircle2 size={12} /> : String(resolvedStep).padStart(2, '0')}
+            </span>
+          )}
           <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 26,
-            height: 26,
-            borderRadius: 8,
-            background: badgeBgMap[resolvedState],
-            color: badgeColorMap[resolvedState],
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.6875rem',
+            fontFamily: 'var(--font-heading)',
+            fontSize: '0.9375rem',
             fontWeight: 700,
-            letterSpacing: '-0.01em',
-            flexShrink: 0,
-            transition: 'background 0.2s ease, color 0.2s ease',
+            color: resolvedState === 'done'
+              ? 'rgba(59,130,246,0.8)'
+              : resolvedState === 'active'
+                ? 'rgba(255,255,255,0.9)'
+                : 'rgba(255,255,255,0.65)',
+            letterSpacing: '-0.02em',
           }}>
-            {resolvedState === 'done' ? <CheckCircle2 size={13} /> : resolvedStep}
+            {title}
           </span>
-        )}
-        <span style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '0.9375rem',
-          fontWeight: 700,
-          color: resolvedState === 'idle' ? 'rgba(255,255,255,0.75)' : '#FFFFFF',
-          letterSpacing: '-0.02em',
-        }}>
-          {title}
-        </span>
+          {resolvedState === 'done' && (
+            <CheckCircle2 size={13} color="#3B82F6" style={{ flexShrink: 0 }} />
+          )}
+        </div>
+
+        {/* Right: chevron */}
+        <ChevronRight
+          size={14}
+          color="rgba(255,255,255,0.25)"
+          style={{
+            transition: 'transform 0.15s ease',
+            transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
+            flexShrink: 0,
+          }}
+        />
       </div>
-      {children}
+
+      {/* Collapsible body */}
+      {open && (
+        <div style={{ padding: '0 1.25rem 1.5rem' }}>
+          {children}
+        </div>
+      )}
     </div>
   )
 }

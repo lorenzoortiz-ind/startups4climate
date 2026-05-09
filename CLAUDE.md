@@ -125,6 +125,17 @@ Password universal: `S4c2026demo!`
 - Idioma: español (es-419 latinoamericano)
 - No usar anglicismos innecesarios en copy
 
+## Paridad Demo / Live
+
+Las rutas demo (`/demo/founder`, `/demo/admin`, `/demo/superadmin`) deben reflejar siempre el mismo diseño y funcionalidad que las versiones live (`/tools/*`, `/admin/*`, `/superadmin/*`). Cualquier cambio visual, de layout, de componentes o de UX en las versiones live **debe replicarse** en los demos correspondientes en el mismo PR o commit.
+
+- `/demo/founder` ↔ `/tools/*`
+- `/demo/admin` ↔ `/admin/*`
+- `/demo/superadmin` ↔ `/superadmin/*`
+- API demo: `/api/demo/[role]` ↔ APIs reales
+
+Si un componente compartido cambia, verificar que se usa en ambos contextos. Si el demo usa una copia hardcodeada, actualizarla.
+
 ## Lo que NO debes hacer
 
 - No cambiar la estructura de navegación sin confirmación
@@ -135,6 +146,7 @@ Password universal: `S4c2026demo!`
 - No usar `.single()` para lecturas opcionales — usar `.maybeSingle()`
 - No usar localStorage sin namespacear por userId (clave: `s4c_${userId}_*`)
 - No escribir a localStorage sin escribir primero a Supabase (excepto en unmount handlers)
+- No modificar una vista live sin actualizar su demo correspondiente
 
 ## Contacto y contexto
 

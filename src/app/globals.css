@@ -760,3 +760,17 @@
     display: none; /* hide outputs checklist on mobile — saves space */
   }
 }
+
+@media (max-width: 768px) {
+  .tool-content-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tool-content-grid > *:last-child {
+    display: none; /* hide ContextPanel on mobile */
+  }
+
+  .perfil-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

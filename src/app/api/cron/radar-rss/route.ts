@@ -260,21 +260,22 @@ export async function GET(request: NextRequest) {
   const apiKey = process.env.GEMINI_API_KEY
   if (apiKey) {
     try {
+      // Note: source_url for AI items is set server-side as a Google News search URL
+      // (unique per title, always working, finds the actual article)
       const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
 Genera exactamente 8 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto.
 Responde SOLO con un array JSON válido, sin texto adicional:
 [
   {
-    "title": "Título de la noticia en español (máx 120 caracteres)",
-    "summary": "Resumen en español de 80-120 palabras. Datos concretos, sin clichés.",
+    "title": "Título de la noticia en español (máx 120 caracteres). Sé específico: empresa, monto, país.",
+    "summary": "Resumen en español de 80-120 palabras. Datos concretos: montos, porcentajes, países, nombres. Sin clichés.",
     "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, Gestión)",
-    "source_url": "URL homepage del medio verificada — NUNCA inventes subrutas.",
     "content_type": "news|investment|trend|regulation|event|report",
     "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other",
     "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
   }
 ]
-Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
+NO incluyas campo source_url. Enfócate en: rondas de inversión, regulación ambiental, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
 
       const aiRes = await fetch(
         'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
@@ -297,16 +298,18 @@ Enfócate en: rondas de inversión, regulación ambiental, programas de acelerac
         const jsonMatch = /\[[\s\S]*\]/.exec(content)
         if (jsonMatch) {
           const items = JSON.parse(jsonMatch[0]) as Array<{
-            title: string; summary: string; source_name: string; source_url: string;
+            title: string; summary: string; source_name: string;
             content_type: string; vertical: string | null; country: string | null
           }>
           for (const item of items) {
-            if (!item.title || !item.source_url) continue
+            if (!item.title) continue
+            // Build a Google News search URL — unique per title, always functional, finds the real article
+            const searchUrl = `https://news.google.com/search?q=${encodeURIComponent(item.title.slice(0, 100))}&hl=es-419&gl=US&ceid=US:es-419`
             const { error } = await supabase.from('news_items').upsert({
               title: item.title.slice(0, 500),
               summary: item.summary?.slice(0, 800),
               source_name: item.source_name || 'S4C AI',
-              source_url: item.source_url,
+              source_url: searchUrl,
               vertical: item.vertical || null,
               country: item.country || null,
               content_type: (item.content_type as string) || 'news',

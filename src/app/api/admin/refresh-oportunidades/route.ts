@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase-server'
 import { createClient } from '@supabase/supabase-js'
+import { resolveOpportunityUrl } from '@/lib/opportunities-url'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -17,50 +18,6 @@ function sanitizeJsonString(raw: string): string {
     .replace(/[\x00-\x09\x0b\x0c\x0e-\x1f\x7f]/g, ' ')
     .replace(/\r?\n/g, ' ')
     .replace(/,\s*([}\]])/g, '$1')
-}
-
-const VERIFIED_ORG_URLS: Record<string, string> = {
-  'bid lab': 'https://bidlab.org',
-  'idb lab': 'https://bidlab.org',
-  'wayra': 'https://www.wayra.com',
-  'corfo': 'https://www.corfo.cl',
-  'start-up chile': 'https://www.startupchile.org',
-  'startup chile': 'https://www.startupchile.org',
-  'innpulsa': 'https://www.innpulsacolombia.com',
-  'fondep': 'https://www.fondep.gob.pe',
-  'concytec': 'https://www.gob.pe/concytec',
-  'prociencia': 'https://www.gob.pe/prociencia',
-  'proinnovate': 'https://www.proinnovate.gob.pe',
-  'endeavor': 'https://endeavor.org',
-  'village capital': 'https://vilcap.com',
-  'y combinator': 'https://www.ycombinator.com',
-  'techstars': 'https://www.techstars.com',
-  '500 global': 'https://500.co',
-  'seedstars': 'https://www.seedstars.com',
-  'kaszek': 'https://www.kaszek.com',
-  'giz': 'https://www.giz.de',
-  'usaid': 'https://www.usaid.gov',
-  'green climate fund': 'https://www.greenclimate.fund',
-  'climateworks': 'https://www.climateworks.org',
-  'acumen': 'https://acumen.org',
-  'google for startups': 'https://startup.google.com',
-  'microsoft for startups': 'https://www.microsoft.com/en-us/startups',
-  'fontagro': 'https://www.fontagro.org',
-  'caf': 'https://www.caf.com',
-  'fao': 'https://www.fao.org',
-  'clean energy ventures': 'https://www.cleanenergyventures.com',
-}
-
-function resolveUrl(org: string, rawUrl: string): string {
-  const orgLower = org.toLowerCase()
-  for (const [key, url] of Object.entries(VERIFIED_ORG_URLS)) {
-    if (orgLower.includes(key)) return url
-  }
-  try {
-    return `${new URL(rawUrl).origin}/`
-  } catch {
-    return rawUrl
-  }
 }
 
 export async function POST(_request: NextRequest) {
@@ -98,7 +55,7 @@ Cada objeto debe tener exactamente estas propiedades:
 {
   "title": "nombre de la oportunidad en español",
   "organization": "nombre real de la organización",
-  "description": "50-80 palabras en español, concreto y directo",
+  "description": "50-80 palabras en español, concreto y directo. Incluye montos, países elegibles y tipo de startup.",
   "type": "grant|accelerator|competition|fund|fellowship",
   "amount_min": número o null,
   "amount_max": número o null,
@@ -106,7 +63,7 @@ Cada objeto debe tener exactamente estas propiedades:
   "eligible_countries": ["PE","CL","CO","MX","AR","BR"],
   "eligible_verticals": ["cleantech_climatech","agritech_foodtech","fintech","healthtech","other"],
   "eligible_stages": ["idea","pre_seed","seed","series_a","growth"],
-  "application_url": "homepage real de la organización",
+  "application_url": "URL de la página de convocatoria o aplicación del programa (no solo la homepage). Ejemplos reales: 'https://www.startupchile.org/programs/', 'https://bidlab.org/calls', 'https://www.proinnovate.gob.pe/convocatorias', 'https://www.techstars.com/accelerators'. Si no conoces la URL exacta del programa, usa la homepage de la organización.",
   "is_rolling": true o false,
   "deadline": "YYYY-MM-DD" o null
 }
@@ -156,7 +113,7 @@ Montos realistas. NO repitas organizaciones. Genera exactamente 10 objetos.`
     for (const item of items) {
       if (!item.title || !item.organization) continue
       const itemType = VALID_TYPES.includes(item.type) ? item.type : 'grant'
-      const verifiedUrl = resolveUrl(item.organization, item.application_url)
+      const verifiedUrl = resolveOpportunityUrl(item.organization, item.application_url ?? '')
 
       const { data: existing } = await adminDb
         .from('opportunities')

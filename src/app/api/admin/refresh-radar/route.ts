@@ -156,32 +156,24 @@ export async function POST(_request: NextRequest) {
   }
 
   // ── Phase 2: Gemini-generated curated items ──
+  // Note: source_url for AI items is set server-side as a Google News search URL
+  // (unique per title, always working, finds the actual article). Gemini only provides
+  // the title, summary, source_name, content_type, vertical, country.
   const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
 Genera exactamente 15 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto. Incluye al menos 5 sobre cleantech/clima, 3 sobre agritech, 3 sobre inversión/fondos, 2 sobre regulación y 2 sobre programas de aceleración.
 Responde SOLO con un array JSON válido, sin texto adicional:
 [
   {
-    "title": "Título de la noticia en español (máx 120 caracteres)",
-    "summary": "Resumen en español de 80-120 palabras. Datos concretos, sin clichés.",
-    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, El Economista, Gestión, El Cronista)",
-    "source_url": "URL de la página principal del medio — SOLO homepage o sección principal verificada: https://contxto.com, https://latamlist.com, https://www.bloomberglinea.com, https://gestion.pe/economia/, https://www.eleconomista.com.mx/empresas, https://www.reuters.com, https://agfundernews.com — NUNCA inventes subrutas específicas.",
+    "title": "Título de la noticia en español (máx 120 caracteres). Sé específico: incluye nombre de empresa, monto, país.",
+    "summary": "Resumen en español de 80-120 palabras. Datos concretos: montos, porcentajes, países, nombres de empresas. Sin clichés.",
+    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, Gestión, El Economista, El Cronista, AgFunder News)",
     "content_type": "news|investment|trend|regulation|event|report",
     "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other o null",
     "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
   }
 ]
-REGLA CRÍTICA para source_url: usa ÚNICAMENTE estas URLs base verificadas que funcionan:
-- contxto.com → "https://contxto.com"
-- LatamList → "https://latamlist.com"
-- Bloomberg Línea → "https://www.bloomberglinea.com"
-- Gestión Perú → "https://gestion.pe/economia/"
-- El Economista MX → "https://www.eleconomista.com.mx/empresas"
-- Reuters → "https://www.reuters.com"
-- AgFunder → "https://agfundernews.com"
-- El Cronista → "https://www.cronista.com"
-- Pulso Social → "https://pulsosocial.com"
-NO uses URLs de BID Lab, CORFO, Google, ni programas de aceleración — solo medios de comunicación.
-Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
+NO incluyas campo source_url — se generará automáticamente.
+Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026. Cada noticia debe ser distinta y específica.`
 
   const aiResponse = await callGemini(aiPrompt)
   if (aiResponse) {
@@ -189,16 +181,18 @@ Enfócate en: rondas de inversión, regulación ambiental, programas de acelerac
       const jsonMatch = /\[[\s\S]*\]/.exec(aiResponse)
       if (jsonMatch) {
         const items = JSON.parse(jsonMatch[0]) as Array<{
-          title: string; summary: string; source_name: string; source_url: string;
+          title: string; summary: string; source_name: string;
           content_type: string; vertical: string | null; country: string | null
         }>
         for (const item of items) {
-          if (!item.title || !item.source_url) continue
+          if (!item.title) continue
+          // Build a Google News search URL — unique per title, always functional, finds the real article
+          const searchUrl = `https://news.google.com/search?q=${encodeURIComponent(item.title.slice(0, 100))}&hl=es-419&gl=US&ceid=US:es-419`
           const { error } = await adminDb.from('news_items').upsert({
             title: item.title.slice(0, 500),
             summary: item.summary?.slice(0, 800),
             source_name: item.source_name || 'S4C AI',
-            source_url: item.source_url,
+            source_url: searchUrl,
             vertical: item.vertical || null,
             country: item.country || null,
             content_type: (item.content_type as string) || 'news',

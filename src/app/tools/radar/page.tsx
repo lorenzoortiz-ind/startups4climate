@@ -21,6 +21,34 @@ import {
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 
+/* ─── URL helpers ─── */
+/**
+ * Returns the effective href and label for a news item link.
+ * - RSS items: have real article URLs → "Leer artículo"
+ * - AI items: have Google News search URLs → "Buscar noticia"
+ * - Bare homepages (no real path): generate a Google search → "Buscar en Google"
+ */
+function getNewsLinkInfo(sourceUrl: string | null, title: string): { href: string; label: string; isSearch: boolean } {
+  if (!sourceUrl) {
+    const q = encodeURIComponent(title.slice(0, 100))
+    return { href: `https://news.google.com/search?q=${q}&hl=es-419`, label: 'Buscar noticia', isSearch: true }
+  }
+  const url = sourceUrl.startsWith('http') ? sourceUrl : `https://${sourceUrl}`
+  // Already a Google News search URL (AI-generated items)
+  if (url.includes('news.google.com/search')) {
+    return { href: url, label: 'Buscar noticia', isSearch: true }
+  }
+  // Check if it's a bare homepage (path is empty or just '/')
+  try {
+    const parsed = new URL(url)
+    const hasRealPath = parsed.pathname.length > 1
+    if (hasRealPath) return { href: url, label: 'Leer artículo', isSearch: false }
+  } catch { /* malformed URL — fall through */ }
+  // Bare homepage: generate a search for the title on Google News
+  const q = encodeURIComponent(title.slice(0, 100))
+  return { href: `https://news.google.com/search?q=${q}&hl=es-419`, label: 'Buscar noticia', isSearch: true }
+}
+
 /* ─── Types ─── */
 type ContentType = 'news' | 'regulation' | 'investment' | 'trend' | 'event' | 'report'
 type Tab = 'noticias' | 'vertical'
@@ -138,23 +166,26 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4, gap: 8, flexWrap: 'wrap' }}>
         {item.source_name && (
           <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
-            Fuente: {item.source_name}
+            {item.source_name}
           </span>
         )}
-        {item.source_url && (
-          <a
-            href={item.source_url.match(/^https?:\/\//) ? item.source_url : `https://${item.source_url}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4,
-              fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
-              color: accent, textDecoration: 'none',
-            }}
-          >
-            Leer más <ExternalLink size={11} />
-          </a>
-        )}
+        {(() => {
+          const { href, label } = getNewsLinkInfo(item.source_url, item.title)
+          return (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+                color: accent, textDecoration: 'none',
+              }}
+            >
+              {label} <ExternalLink size={11} />
+            </a>
+          )
+        })()}
       </div>
     </motion.div>
   )
@@ -490,10 +521,12 @@ export default function RadarPage() {
             <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Cargando…</div>
           ) : filtered.length === 0 ? (
             <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', padding: '2rem 0' }}>Sin resultados para este filtro.</div>
-          ) : filtered.map((item) => (
+          ) : filtered.map((item) => {
+            const { href: itemHref } = getNewsLinkInfo(item.source_url, item.title)
+            return (
             <a
               key={item.id}
-              href={item.source_url ?? '#'}
+              href={itemHref}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -536,7 +569,8 @@ export default function RadarPage() {
                 </span>
               )}
             </a>
-          ))}
+            )
+          })}
         </div>
       </div>
 

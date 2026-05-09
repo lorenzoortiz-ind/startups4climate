@@ -314,12 +314,15 @@ export function ToolActionBar({
 /* ─── ToolProgress: inline completion indicator ─── */
 
 interface ToolProgressProps {
-  current: number
+  current?: number          // new API
+  filled?: number           // legacy alias for current
   total: number
   label?: string
+  accentColor?: string      // legacy — ignored (color is now always ember/cobalt by state)
 }
 
-export function ToolProgress({ current, total, label }: ToolProgressProps) {
+export function ToolProgress({ current, filled, total, label }: ToolProgressProps) {
+  const resolved = current ?? filled ?? 0
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
       <div style={{ display: 'flex', gap: '4px' }}>
@@ -327,10 +330,10 @@ export function ToolProgress({ current, total, label }: ToolProgressProps) {
           <div
             key={i}
             style={{
-              width: i < current ? 20 : 8,
+              width: i < resolved ? 20 : 8,
               height: 4,
               borderRadius: 2,
-              background: i < current ? '#DA4E24' : 'rgba(255,255,255,0.12)',
+              background: i < resolved ? '#DA4E24' : 'rgba(255,255,255,0.12)',
               transition: 'width 0.25s ease, background 0.25s ease',
             }}
           />
@@ -342,7 +345,7 @@ export function ToolProgress({ current, total, label }: ToolProgressProps) {
         color: 'rgba(255,255,255,0.45)',
         fontWeight: 500,
       }}>
-        {current} / {total}
+        {resolved} / {total}
       </span>
       {label && (
         <span style={{

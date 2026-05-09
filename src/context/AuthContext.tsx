@@ -58,6 +58,7 @@ interface AuthContextType {
   authModalMode: 'login' | 'register'
   updateUserStage: (stage: AppUser['stage'], score: number) => void
   enterDemoMode: (role: 'founder' | 'admin_org' | 'superadmin') => void
+  refreshUser: () => Promise<void>
 }
 
 /* ─── Demo user fixtures ─── */
@@ -1540,6 +1541,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [appUser]
   )
 
+  const refreshUser = useCallback(async () => {
+    if (!appUser) return
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id, full_name, email, role, org_id, startup_name, stage')
+      .eq('id', appUser.id)
+      .maybeSingle()
+    if (profile) {
+      setAppUser({
+        id: profile.id,
+        full_name: profile.full_name,
+        email: profile.email ?? appUser.email,
+        role: profile.role,
+        org_id: profile.org_id ?? null,
+        startup_name: profile.startup_name ?? undefined,
+        stage: (profile.stage as AppUser['stage']) ?? null,
+        diagnosticScore: appUser.diagnosticScore,
+        created_at: appUser.created_at,
+      })
+    }
+  }, [appUser])
+
   return (
     <AuthContext.Provider
       value={{
@@ -1557,6 +1580,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authModalMode,
         updateUserStage,
         enterDemoMode,
+        refreshUser,
       }}
     >
       {children}

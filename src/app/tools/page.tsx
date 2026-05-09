@@ -48,6 +48,7 @@ import { generateGlobalReport as generateGlobalReportUtil } from '@/lib/global-r
 
 /* ─── Stage icon mapping ─── */
 const STAGE_ICONS = {
+  0: Lightbulb,
   1: FlaskConical,
   2: Rocket,
   3: Building2,
@@ -290,7 +291,7 @@ function cohortProgressPct(start: string | null, end: string | null): number | n
 }
 
 export default function ToolsDashboard() {
-  const { user, isDemo } = useAuth()
+  const { user, appUser, isDemo } = useAuth()
   const [progress, setProgress] = useState<ProgressMap>({})
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'Todos'>('Todos')
   const [demoBannerDismissed, setDemoBannerDismissed] = useState(false)
@@ -394,21 +395,23 @@ export default function ToolsDashboard() {
   )
 
   const userStageNum = useMemo(() => {
-    let baseStage = 1
-    if (user?.stage) {
-      const parsed = parseInt(user.stage, 10)
-      if (parsed >= 1 && parsed <= 4) baseStage = parsed
+    // appUser.stage is a string like 'ideacion', 'pre-incubacion', etc.
+    // Map to numeric stage for display and locking logic
+    let baseStage: 0 | 1 | 2 | 3 | 4 = appUser?.stage === 'ideacion' ? 0 : 1
+    if (appUser?.stage && appUser.stage !== 'ideacion') {
+      const parsed = parseInt(user?.stage ?? '', 10)
+      if (parsed >= 1 && parsed <= 4) baseStage = parsed as 1 | 2 | 3 | 4
     }
-    let effectiveStage = baseStage
-    for (let s = 1 as 1 | 2 | 3 | 4; s <= 4; s++) {
+    let effectiveStage: number = baseStage
+    for (let s = 1; s <= 4; s++) {
       const stageTools = TOOLS_BY_STAGE[s as 1 | 2 | 3 | 4]
       const allDone = stageTools.every((t) => completedIds.has(t.id))
       if (allDone && s >= effectiveStage) {
-        effectiveStage = Math.min(s + 1, 4) as 1 | 2 | 3 | 4
+        effectiveStage = Math.min(s + 1, 4)
       }
     }
     return Math.max(baseStage, effectiveStage)
-  }, [user, completedIds])
+  }, [user, appUser, completedIds])
 
   const totalCompleted = completedIds.size
   const total = TOOLS.length
@@ -419,8 +422,8 @@ export default function ToolsDashboard() {
   }, [completedIds, userStageNum])
 
   const filteredToolsByStage = useMemo(() => {
-    const result: Record<1 | 2 | 3 | 4, ToolDef[]> = { 1: [], 2: [], 3: [], 4: [] }
-    for (const s of [1, 2, 3, 4] as const) {
+    const result: Record<0 | 1 | 2 | 3 | 4, ToolDef[]> = { 0: [], 1: [], 2: [], 3: [], 4: [] }
+    for (const s of [0, 1, 2, 3, 4] as const) {
       result[s] =
         activeCategory === 'Todos'
           ? TOOLS_BY_STAGE[s]
@@ -438,8 +441,8 @@ export default function ToolsDashboard() {
 
   const firstName = user.name?.split(' ')[0] || user.name
   const startupName = user.startup || 'Tu startup'
-  const currentStageMeta = STAGE_META[userStageNum as 1 | 2 | 3 | 4]
-  const CurrentStageIcon = STAGE_ICONS[userStageNum as 1 | 2 | 3 | 4]
+  const currentStageMeta = STAGE_META[userStageNum as 0 | 1 | 2 | 3 | 4]
+  const CurrentStageIcon = STAGE_ICONS[userStageNum as 0 | 1 | 2 | 3 | 4]
   const diagnosticScore = user.diagnosticScore ?? null
 
   return (
@@ -582,7 +585,9 @@ export default function ToolsDashboard() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                 <Chip
                   variant={
-                    userStageNum === 1
+                    userStageNum === 0
+                      ? 'success'
+                      : userStageNum === 1
                       ? 'stage-1'
                       : userStageNum === 2
                       ? 'stage-2'
@@ -593,7 +598,7 @@ export default function ToolsDashboard() {
                   icon={CurrentStageIcon}
                   size="md"
                 >
-                  Etapa {userStageNum}: {currentStageMeta.name}
+                  {userStageNum === 0 ? 'Módulo 00' : `Etapa ${userStageNum}`}: {currentStageMeta.name}
                 </Chip>
                 {diagnosticScore !== null && (
                   <Chip variant="info" icon={Award} size="md">
@@ -665,10 +670,10 @@ export default function ToolsDashboard() {
           />
           <MetricCard
             label="Etapa actual"
-            value={`E${userStageNum}`}
+            value={userStageNum === 0 ? 'M00' : `E${userStageNum}`}
             icon={CurrentStageIcon}
             accent={
-              userStageNum === 2 ? 'success' : userStageNum === 3 ? 'warning' : userStageNum === 4 ? 'info' : 'primary'
+              userStageNum === 0 ? 'success' : userStageNum === 2 ? 'success' : userStageNum === 3 ? 'warning' : userStageNum === 4 ? 'info' : 'primary'
             }
             size="md"
             description={currentStageMeta.name}
@@ -1081,8 +1086,44 @@ export default function ToolsDashboard() {
         })}
       </motion.div>
 
+      {/* ─── Module 00 Ideación banner ─── */}
+      {appUser?.stage === 'ideacion' && (
+        <div style={{
+          padding: '1.25rem 1.5rem', borderRadius: 14, marginBottom: '1.5rem',
+          background: 'rgba(22,163,74,0.07)', border: '1px solid rgba(22,163,74,0.2)',
+          display: 'flex', alignItems: 'center', gap: '1rem',
+        }}>
+          <div style={{ flex: 1 }}>
+            <div style={{
+              fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700,
+              color: '#16A34A', marginBottom: '0.25rem',
+            }}>
+              Comienza con el Módulo 00 — Ideación
+            </div>
+            <div style={{
+              fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+              color: 'var(--color-text-secondary)',
+            }}>
+              Antes de Pre-incubación, descubre y valida el problema que quieres resolver.
+              Son 5 herramientas, ~2.5 horas en total.
+            </div>
+          </div>
+          <Link
+            href="/tools/problem-exploration"
+            style={{
+              padding: '0.75rem 1.25rem', borderRadius: 10, textDecoration: 'none',
+              background: '#16A34A', color: '#fff',
+              fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
+              flexShrink: 0,
+            }}
+          >
+            Empezar Ideación
+          </Link>
+        </div>
+      )}
+
       {/* ─── Stage sections ─── */}
-      {([1, 2, 3, 4] as const).map((stageNum, si) => {
+      {([0, 1, 2, 3, 4] as const).map((stageNum, si) => {
         const meta = STAGE_META[stageNum]
         const Icon = STAGE_ICONS[stageNum]
         const stageTools = filteredToolsByStage[stageNum]
@@ -1102,13 +1143,13 @@ export default function ToolsDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.1 + si * 0.08 }}
             style={{
-              marginBottom: si < 3 ? '2.5rem' : 0,
+              marginBottom: si < 4 ? '2.5rem' : 0,
             }}
           >
             {/* SectionHeader */}
             <div style={{ marginBottom: '1rem' }}>
               <SectionHeader
-                kicker={`Etapa ${stageNum} · ${meta.subtitle}`}
+                kicker={stageNum === 0 ? `Módulo 00 · ${meta.subtitle}` : `Etapa ${stageNum} · ${meta.subtitle}`}
                 title={meta.name}
                 description={meta.description}
                 action={
@@ -1265,7 +1306,7 @@ export default function ToolsDashboard() {
                       key={tool.id}
                       tool={tool}
                       done={completedIds.has(tool.id)}
-                      locked={isLocked}
+                      locked={isLocked || (appUser?.stage === 'ideacion' && tool.stage > 0)}
                       idx={i}
                     />
                   ))

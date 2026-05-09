@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Unlock } from 'lucide-react'
 import { useToolState } from '@/lib/useToolState'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 import type { ToolComponentProps } from './ToolPage'
 import {
   ToolSection, ToolActionBar, ToolProgress,
@@ -40,6 +41,7 @@ export default function InitialIdea({ userId, onComplete, onGenerateReport }: To
   const [data, setData] = useToolState<Data>(userId, 'initial-idea', DEFAULT)
   const [saved, setSaved] = useState(false)
   const [unlocking, setUnlocking] = useState(false)
+  const { refreshUser } = useAuth()
 
   const fields: (keyof Data)[] = [
     'problem', 'problemEvidence', 'customer', 'currentSolutions',
@@ -59,6 +61,9 @@ export default function InitialIdea({ userId, onComplete, onGenerateReport }: To
 
       if (error) {
         console.error('[S4C Sync] Error unlocking Pre-incubación:', error)
+      } else {
+        // Refresh AuthContext so the new stage is reflected immediately
+        await refreshUser()
       }
     } catch (err) {
       console.error('[S4C Sync] Error unlocking Pre-incubación:', err)

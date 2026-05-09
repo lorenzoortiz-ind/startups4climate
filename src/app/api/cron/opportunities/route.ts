@@ -6,6 +6,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { resolveOpportunityUrl } from '@/lib/opportunities-url'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -19,59 +20,6 @@ function sanitizeJsonString(raw: string): string {
     .replace(/,\s*([}\]])/g, '$1')                         // trailing commas
 }
 
-// Known real organizations and their verified homepage URLs
-const VERIFIED_ORG_URLS: Record<string, string> = {
-  'bid lab': 'https://bidlab.org',
-  'idb lab': 'https://bidlab.org',
-  'wayra': 'https://www.wayra.com',
-  'corfo': 'https://www.corfo.cl',
-  'start-up chile': 'https://www.startupchile.org',
-  'startup chile': 'https://www.startupchile.org',
-  'innpulsa': 'https://www.innpulsacolombia.com',
-  'fondep': 'https://www.fondep.gob.pe',
-  'concytec': 'https://www.gob.pe/concytec',
-  'prociencia': 'https://www.gob.pe/prociencia',
-  'proinnóvate': 'https://www.proinnovate.gob.pe',
-  'proinnovate': 'https://www.proinnovate.gob.pe',
-  'endeavor': 'https://endeavor.org',
-  'village capital': 'https://vilcap.com',
-  'y combinator': 'https://www.ycombinator.com',
-  'techstars': 'https://www.techstars.com',
-  '500 global': 'https://500.co',
-  'seedstars': 'https://www.seedstars.com',
-  'nxtp ventures': 'https://www.nxtpventures.com',
-  'kaszek': 'https://www.kaszek.com',
-  'cometa': 'https://www.cometa.com.co',
-  'gridx': 'https://www.gridx.africa',
-  'giz': 'https://www.giz.de',
-  'usaid': 'https://www.usaid.gov',
-  'green climate fund': 'https://www.greenclimate.fund',
-  'clean energy ventures': 'https://www.cleanenergyventures.com',
-  'climateworks': 'https://www.climateworks.org',
-  'acumen': 'https://acumen.org',
-  'omidyar network': 'https://omidyar.com',
-  'google for startups': 'https://startup.google.com',
-  'microsoft for startups': 'https://www.microsoft.com/en-us/startups',
-  'aws activate': 'https://aws.amazon.com/activate/',
-  'fontagro': 'https://www.fontagro.org',
-  'caf': 'https://www.caf.com',
-  'fao': 'https://www.fao.org',
-}
-
-/** Resolve application URL to a known verified homepage */
-function resolveUrl(org: string, rawUrl: string): string {
-  const orgLower = org.toLowerCase()
-  for (const [key, url] of Object.entries(VERIFIED_ORG_URLS)) {
-    if (orgLower.includes(key)) return url
-  }
-  // If Gemini gave a URL, use only the origin (homepage)
-  try {
-    const u = new URL(rawUrl)
-    return `${u.origin}/`
-  } catch {
-    return rawUrl
-  }
-}
 
 export async function GET(request: NextRequest) {
   // Vercel cron auth
@@ -115,7 +63,7 @@ Cada objeto del array debe tener exactamente estas propiedades:
 - "eligible_countries": array de strings, códigos ISO: "PE", "CL", "CO", "MX", "AR", "BR"
 - "eligible_verticals": array de strings, valores: "cleantech_climatech", "agritech_foodtech", "fintech", "healthtech", "edtech", "logistics_mobility", "other"
 - "eligible_stages": array de strings, valores: "idea", "pre_seed", "seed", "series_a", "growth"
-- "application_url": string, URL HOMEPAGE de la organización (ej: "https://bidlab.org", "https://www.startupchile.org"). NUNCA inventes subrutas, usa SOLO el dominio raíz.
+- "application_url": string, URL de la página de convocatoria o aplicación del programa (no solo la homepage). Ejemplos reales: 'https://www.startupchile.org/programs/', 'https://bidlab.org/calls', 'https://www.proinnovate.gob.pe/convocatorias', 'https://www.techstars.com/accelerators'. Si no conoces la URL exacta del programa, usa la homepage de la organización.
 - "is_rolling": boolean
 - "deadline": string ISO 8601 o null
 
@@ -125,8 +73,7 @@ REGLAS:
 - Mezcla oportunidades regionales con específicas de país
 - NO repitas organización
 - Genera exactamente 5 objetos
-- Descripciones cortas de máximo 50 palabras
-- application_url DEBE ser la homepage real de la organización. NUNCA generes URLs inventadas con paths específicos.`
+- Descripciones concretas de máximo 50 palabras: incluye monto, países elegibles, tipo de startup`
 
   try {
     const aiRes = await fetch(
@@ -202,7 +149,7 @@ REGLAS:
         .maybeSingle()
 
       // Resolve URL to verified homepage
-      const verifiedUrl = resolveUrl(item.organization, item.application_url)
+      const verifiedUrl = resolveOpportunityUrl(item.organization, item.application_url ?? '')
 
       if (existing) {
         const { error } = await supabase

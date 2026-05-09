@@ -14,7 +14,7 @@ export interface ToolDef {
   description: string
   guidingQuestion: string
   preambulo: string
-  stage: 1 | 2 | 3 | 4
+  stage: 0 | 1 | 2 | 3 | 4
   stageName: string
   stageColor: string
   stageBg: string
@@ -29,6 +29,15 @@ export interface ToolDef {
 }
 
 export const STAGE_META = {
+  0: {
+    name: 'Ideación',
+    subtitle: 'Descubrimiento y Problema',
+    description: 'Descubre un problema real que vale la pena resolver, entiende a quién le duele y formula tu primera hipótesis de solución. El punto de partida de todo.',
+    color: '#16A34A',
+    bg: 'rgba(22,163,74,0.07)',
+    border: 'rgba(22,163,74,0.18)',
+    phaseAdvice: 'Has completado el módulo de Ideación. Ahora tienes un problema validado, un cliente hipotético y una primera hipótesis de solución. Antes de avanzar a Pre-incubación, revisa que la evidencia de tus entrevistas sea sólida: ¿al menos 3 personas te han confirmado el problema con sus propias palabras? Si es así, estás listo para comenzar a construir.',
+  },
   1: {
     name: 'Pre-incubación',
     subtitle: 'Ideación y Descubrimiento',
@@ -77,7 +86,7 @@ export const CATEGORIES: ToolCategory[] = [
   'Equipo',
 ]
 
-const stageProps = (stage: 1 | 2 | 3 | 4) => ({
+const stageProps = (stage: 0 | 1 | 2 | 3 | 4) => ({
   stage,
   stageName: STAGE_META[stage].name,
   stageColor: STAGE_META[stage].color,
@@ -86,6 +95,104 @@ const stageProps = (stage: 1 | 2 | 3 | 4) => ({
 })
 
 export const TOOLS: ToolDef[] = [
+  // ── Stage 0: Ideación (5 herramientas) ──────────────────────────
+  {
+    id: 'problem-exploration',
+    name: 'Exploración de Problemas',
+    shortName: 'Exploración',
+    description:
+      'Mapea fricciones, ineficiencias e injusticias en un territorio que conoces bien. Genera tu lista de problemas candidatos.',
+    guidingQuestion: '¿Qué le resulta difícil, costoso, lento o injusto a la gente en este contexto?',
+    preambulo:
+      'Antes de buscar soluciones, necesitas ver el mundo con otros ojos. Esta herramienta te entrena para observar tu entorno como un campo fértil de problemas reales — no como consumidor, sino como investigador. Los mejores negocios nacen de problemas que todos sufren pero nadie se ha tomado en serio resolver.',
+    ...stageProps(0),
+    category: 'Estrategia',
+    estimatedTime: '30 min',
+    outputs: [
+      'Lista de 5-8 problemas candidatos con contexto',
+      'Descripción del territorio explorado',
+      'Perfil de quién vive cada problema',
+    ],
+    stepNumber: 0,
+  },
+  {
+    id: 'problem-selection',
+    name: 'Selección del Problema',
+    shortName: 'Selección',
+    description:
+      'Evalúa cada problema candidato en 4 dimensiones y elige el que tiene mayor potencial de convertirse en un negocio real.',
+    guidingQuestion: '¿Cuál de los problemas identificados merece convertirse en tu startup?',
+    preambulo:
+      'No todos los problemas son iguales. Algunos duelen mucho pero son difíciles de monetizar; otros son comercialmente atractivos pero no generan impacto. Esta herramienta te da un proceso riguroso para elegir con criterio, no con intuición.',
+    ...stageProps(0),
+    category: 'Estrategia',
+    estimatedTime: '25 min',
+    outputs: [
+      '1 problema seleccionado con justificación',
+      'Matriz de evaluación ICE completada',
+      'Razones documentadas para descartar los demás',
+    ],
+    stepNumber: 0,
+  },
+  {
+    id: 'empathy-map',
+    name: 'Mapa de Empatía',
+    shortName: 'Empatía',
+    description:
+      'Describe a la persona que vive el problema desde 4 dimensiones: qué piensa, qué ve, qué dice/hace, qué escucha.',
+    guidingQuestion: '¿Qué está viviendo la persona que tiene este problema?',
+    preambulo:
+      'El mapa de empatía te fuerza a salir de tu perspectiva y entrar en la del afectado. Es el paso que separa a los founders que diseñan para sí mismos de los que diseñan para el cliente. Sin este shift, construirás lo que tú quieres, no lo que el mundo necesita.',
+    ...stageProps(0),
+    category: 'Mercado',
+    estimatedTime: '30 min',
+    outputs: [
+      'Mapa de empatía completo en 4 dimensiones',
+      'Perfil del afectado con nombre ficticio',
+      '3 insights síntesis derivados del mapa',
+    ],
+    stepNumber: 0,
+  },
+  {
+    id: 'interview-guide',
+    name: 'Guía de Entrevista',
+    shortName: 'Entrevistas',
+    description:
+      'Diseña preguntas que revelan la verdad sobre el problema. Documenta los hallazgos de al menos 3 entrevistas reales.',
+    guidingQuestion: '¿Qué necesito preguntarle a alguien para saber si este problema es real y vale la pena resolver?',
+    preambulo:
+      'Las preguntas mal diseñadas confirman lo que ya crees. Las preguntas bien diseñadas te dicen la verdad aunque sea incómoda. Esta herramienta te enseña los principios de The Mom Test (Fitzpatrick): nunca preguntes si les gusta tu idea, pregunta sobre su comportamiento pasado.',
+    ...stageProps(0),
+    category: 'Mercado',
+    estimatedTime: '45 min',
+    outputs: [
+      'Guía de 6-8 preguntas abiertas validadas',
+      'Registro de hallazgos de 3+ entrevistas',
+      'Patrones confirmados y supuestos refutados',
+    ],
+    stepNumber: 0,
+  },
+  {
+    id: 'initial-idea',
+    name: 'Idea Inicial',
+    shortName: 'Idea inicial',
+    description:
+      'Sintetiza todo tu trabajo de Ideación en una hipótesis articulada: problema, cliente, solución y supuesto más riesgoso.',
+    guidingQuestion: '¿Cuál es tu hipótesis de negocio más sólida dado lo que has descubierto?',
+    preambulo:
+      'La Idea Inicial no es un pitch — es un documento de trabajo. Articula lo que crees con la evidencia que tienes y señala claramente lo que aún no sabes. Es el punto de partida para Pre-incubación: lo que llevas contigo al comenzar a construir.',
+    ...stageProps(0),
+    category: 'Estrategia',
+    estimatedTime: '35 min',
+    outputs: [
+      'Hipótesis de problema con evidencia',
+      'Perfil del cliente con frecuencia y soluciones actuales',
+      'Hipótesis de solución con ventaja diferencial',
+      'Supuesto más riesgoso identificado',
+    ],
+    stepNumber: 0,
+  },
+
   // ── Stage 1: Pre-incubación (6 herramientas) ──────────────────
   {
     id: 'passion-purpose',
@@ -561,7 +668,8 @@ export const TOOLS: ToolDef[] = [
   },
 ]
 
-export const TOOLS_BY_STAGE: Record<1 | 2 | 3 | 4, ToolDef[]> = {
+export const TOOLS_BY_STAGE: Record<0 | 1 | 2 | 3 | 4, ToolDef[]> = {
+  0: TOOLS.filter((t) => t.stage === 0),
   1: TOOLS.filter((t) => t.stage === 1),
   2: TOOLS.filter((t) => t.stage === 2),
   3: TOOLS.filter((t) => t.stage === 3),

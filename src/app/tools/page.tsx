@@ -57,13 +57,13 @@ const STAGE_ICONS = {
 
 /* ─── Category color mapping (kept for ToolCard) ─── */
 const CATEGORY_COLORS: Record<ToolCategory, { color: string; bg: string }> = {
-  Estrategia: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
-  Mercado: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
-  Producto: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
-  Finanzas: { color: 'var(--color-text-primary)', bg: 'rgba(139,92,246,0.08)' },
-  Ventas: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
-  Marketing: { color: 'var(--color-accent-primary)', bg: 'rgba(218,78,36,0.08)' },
-  Equipo: { color: 'var(--color-accent-secondary)', bg: 'rgba(31,119,246,0.08)' },
+  Estrategia: { color: '#DA4E24',  bg: 'rgba(218,78,36,0.08)' },
+  Mercado:    { color: '#3B82F6',  bg: 'rgba(29,78,216,0.08)' },
+  Producto:   { color: '#3B82F6',  bg: 'rgba(29,78,216,0.08)' },
+  Finanzas:   { color: '#94A3B8',  bg: 'rgba(148,163,184,0.08)' },
+  Ventas:     { color: '#DA4E24',  bg: 'rgba(218,78,36,0.08)' },
+  Marketing:  { color: '#DA4E24',  bg: 'rgba(218,78,36,0.08)' },
+  Equipo:     { color: '#3B82F6',  bg: 'rgba(29,78,216,0.08)' },
 }
 
 const springReveal = {
@@ -100,8 +100,12 @@ function ToolCard({
         gap: '0.75rem',
         padding: '1.25rem 1.375rem',
         borderRadius: 'var(--radius-md)',
-        background: done ? `linear-gradient(135deg, ${tool.stageBg}, var(--color-bg-card))` : 'var(--color-bg-card)',
-        border: `1px solid ${hovered && !locked ? tool.stageBorder : (done ? tool.stageBorder : 'var(--color-border)')}`,
+        background: '#111111',
+        border: done
+          ? '1px solid rgba(29,78,216,0.35)'
+          : hovered && !locked
+          ? '1px solid rgba(218,78,36,0.40)'
+          : '1px solid rgba(255,255,255,0.07)',
         textDecoration: 'none',
         transition: 'transform 0.15s var(--ease-spring), box-shadow 0.15s ease, border-color 0.15s ease',
         position: 'relative' as const,
@@ -613,37 +617,78 @@ export default function ToolsDashboard() {
               </div>
             </div>
 
-            {/* Right: ProgressRing */}
+            {/* Right: 5-stage segmented progress bar */}
             <div
               className="hero-ring"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                gap: '0.5rem',
+                alignItems: 'flex-end',
+                gap: '0.625rem',
                 flexShrink: 0,
+                minWidth: 180,
               }}
             >
-              <ProgressRing
-                value={pct}
-                size={156}
-                strokeWidth={12}
-                color="var(--color-accent-primary)"
-                trackColor="var(--color-border)"
-                showPercentage
-              />
-              <div
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--color-text-secondary)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  fontWeight: 600,
-                  textAlign: 'center',
-                }}
-              >
-                {totalCompleted} de {total} completadas
+              <div style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.5625rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: 'rgba(255,255,255,0.35)',
+                marginBottom: '0.25rem',
+              }}>
+                Progreso por etapa
+              </div>
+              {([0, 1, 2, 3, 4] as const).map((i) => {
+                const stageTools = TOOLS_BY_STAGE[i] ?? []
+                const stageDone = stageTools.filter((t: ToolDef) => completedIds.has(t.id)).length
+                const stagePct = stageTools.length > 0 ? stageDone / stageTools.length : 0
+                const StageIcon = [Lightbulb, FlaskConical, Rocket, Building2, TrendingUp][i]
+                return (
+                  <div key={i} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    width: '100%',
+                  }}>
+                    <StageIcon size={11} color="rgba(255,255,255,0.30)" strokeWidth={1.75} />
+                    <div style={{
+                      flex: 1,
+                      height: 4,
+                      borderRadius: 2,
+                      background: 'rgba(255,255,255,0.08)',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${stagePct * 100}%`,
+                        borderRadius: 2,
+                        background: stagePct === 1 ? '#3B82F6' : '#DA4E24',
+                        transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
+                      }} />
+                    </div>
+                    <span style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '0.5625rem',
+                      color: 'rgba(255,255,255,0.35)',
+                      width: 32,
+                      textAlign: 'right',
+                      flexShrink: 0,
+                    }}>
+                      {stageDone}/{stageTools.length}
+                    </span>
+                  </div>
+                )
+              })}
+              <div style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                color: '#DA4E24',
+                marginTop: '0.25rem',
+              }}>
+                {Math.round(pct)}% global
               </div>
             </div>
           </div>

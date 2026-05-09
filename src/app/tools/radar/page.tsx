@@ -420,12 +420,12 @@ export default function RadarPage() {
           flexDirection: 'column',
           gap: '0.25rem',
         }}>
-          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
+          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
             Categoría
           </div>
           {CATEGORIES.map((cat) => (
             <button key={cat} onClick={() => setCatFilter(cat)} style={{
-              fontSize: '0.5rem', color: catFilter === cat ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              fontSize: '0.8125rem', color: catFilter === cat ? '#DA4E24' : 'rgba(255,255,255,0.4)',
               background: catFilter === cat ? 'rgba(218,78,36,0.10)' : 'transparent',
               border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
             }}>
@@ -433,12 +433,12 @@ export default function RadarPage() {
             </button>
           ))}
           <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
-          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
+          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>
             Región
           </div>
           {REGIONS.map((region) => (
             <button key={region} onClick={() => setRegionFilter(region)} style={{
-              fontSize: '0.5rem', color: regionFilter === region ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              fontSize: '0.8125rem', color: regionFilter === region ? '#DA4E24' : 'rgba(255,255,255,0.4)',
               background: regionFilter === region ? 'rgba(218,78,36,0.10)' : 'transparent',
               border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
             }}>
@@ -481,16 +481,16 @@ export default function RadarPage() {
                 flexShrink: 0,
               }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '0.5625rem', fontWeight: 600, color: 'rgba(255,255,255,0.78)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.title}
                 </div>
-                <div style={{ fontSize: '0.4375rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
                   {item.source_name}{item.published_at ? ` · ${new Date(item.published_at).toLocaleDateString('es-419', { day: 'numeric', month: 'short' })}` : ''}
                 </div>
               </div>
               {(item.vertical || item.content_type) && (
                 <span style={{
-                  fontSize: '0.4375rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
+                  fontSize: '0.6875rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
                   background: item.content_type === 'investment' ? 'rgba(29,78,216,0.08)' : 'rgba(218,78,36,0.08)',
                   color: item.content_type === 'investment' ? 'rgba(59,130,246,0.7)' : 'rgba(218,78,36,0.7)',
                   flexShrink: 0, whiteSpace: 'nowrap',

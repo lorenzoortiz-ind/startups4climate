@@ -735,30 +735,30 @@ export default function OportunidadesPage() {
           display: 'flex', flexDirection: 'column', gap: '0.25rem',
         }}>
           {/* Tipo */}
-          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Tipo</div>
+          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Tipo</div>
           {TIPOS.map((t) => (
             <button key={t} onClick={() => setTipoFilter(t)} style={{
-              fontSize: '0.5rem', color: tipoFilter === t ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              fontSize: '0.8125rem', color: tipoFilter === t ? '#DA4E24' : 'rgba(255,255,255,0.4)',
               background: tipoFilter === t ? 'rgba(218,78,36,0.10)' : 'transparent',
               border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
             }}>{t}</button>
           ))}
           <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
           {/* Etapa */}
-          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Etapa</div>
+          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Etapa</div>
           {ETAPAS.map((e) => (
             <button key={e} onClick={() => setEtapaFilter(e)} style={{
-              fontSize: '0.5rem', color: etapaFilter === e ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              fontSize: '0.8125rem', color: etapaFilter === e ? '#DA4E24' : 'rgba(255,255,255,0.4)',
               background: etapaFilter === e ? 'rgba(218,78,36,0.10)' : 'transparent',
               border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
             }}>{e}</button>
           ))}
           <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '0.5rem 0' }} />
           {/* Región */}
-          <div style={{ fontSize: '0.4375rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Región</div>
+          <div style={{ fontSize: '0.6875rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: '0 0 0.25rem' }}>Región</div>
           {REGIONS_OPP.map((r) => (
             <button key={r} onClick={() => setRegionFilter(r)} style={{
-              fontSize: '0.5rem', color: regionFilter === r ? '#DA4E24' : 'rgba(255,255,255,0.4)',
+              fontSize: '0.8125rem', color: regionFilter === r ? '#DA4E24' : 'rgba(255,255,255,0.4)',
               background: regionFilter === r ? 'rgba(218,78,36,0.10)' : 'transparent',
               border: 'none', borderRadius: 5, padding: '4px 8px', cursor: 'pointer', textAlign: 'left',
             }}>{r}</button>
@@ -799,15 +799,15 @@ export default function OportunidadesPage() {
                 flexShrink: 0,
               }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '0.5625rem', fontWeight: 600, color: 'rgba(255,255,255,0.78)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.title}
                 </div>
-                <div style={{ fontSize: '0.4375rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
                   {item.organization}{item.deadline ? ` · cierra ${new Date(item.deadline).toLocaleDateString('es-419', { day: 'numeric', month: 'short' })}` : item.is_rolling ? ' · convocatoria abierta' : ''}
                 </div>
               </div>
               <span style={{
-                fontSize: '0.4375rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
+                fontSize: '0.6875rem', fontFamily: 'monospace', borderRadius: 3, padding: '2px 6px',
                 background: item.type === 'investment_fund' ? 'rgba(29,78,216,0.08)' : 'rgba(218,78,36,0.08)',
                 color: item.type === 'investment_fund' ? 'rgba(59,130,246,0.7)' : 'rgba(218,78,36,0.7)',
                 flexShrink: 0, whiteSpace: 'nowrap',

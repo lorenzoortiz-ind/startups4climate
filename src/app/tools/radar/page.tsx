@@ -110,9 +110,33 @@ function matchesCategory(item: NewsRow, cat: RadarCategory): boolean {
   return false
 }
 
-const REGION_COUNTRY_MAP: Record<string, string[]> = {
-  'LATAM': [], 'Perú': ['PE'], 'Colombia': ['CO'], 'Chile': ['CL'],
-  'México': ['MX'], 'Brasil': ['BR'], 'Argentina': ['AR'],
+/* ─── Region logic ─── */
+const LATAM_CODES = new Set(['PE','CL','CO','MX','AR','BR','EC','BO','PY','UY','VE','CR','PA','GT','HN','SV','NI','DO','CU'])
+const GLOBAL_CODES = new Set([
+  // Norte América
+  'US','CA',
+  // Europa
+  'GB','DE','FR','ES','IT','NL','SE','NO','DK','FI','CH','AT','BE','PT','PL','IE',
+  // Asia-Pacífico
+  'CN','JP','KR','IN','SG','AU','NZ','TW','HK','ID','TH','VN',
+  // África relevante
+  'ZA','NG','KE',
+])
+
+type RegionFilter = 'Global' | 'LATAM' | string // string = nombre del país del founder
+
+function matchesRegion(item: NewsRow, region: RegionFilter, founderCountryCode: string | null): boolean {
+  if (region === 'Global') {
+    // Ítems de países no-LATAM, o sin país pero provenientes de fuentes globales
+    if (!item.country) return false // sin país = asumir LATAM (feeds actuales son LATAM)
+    return GLOBAL_CODES.has(item.country) && !LATAM_CODES.has(item.country)
+  }
+  if (region === 'LATAM') {
+    // Ítems de países LATAM o sin país asignado (fuentes regionales LATAM)
+    return !item.country || LATAM_CODES.has(item.country)
+  }
+  // País del founder
+  return !!item.country && item.country === founderCountryCode
 }
 
 /* ─── Helpers ─── */
@@ -217,7 +241,7 @@ export default function RadarPage() {
   const [aiLoading, setAiLoading] = useState(false)
   const insightFetched = useRef(false)
   const [catFilter, setCatFilter] = useState<RadarCategory>('Todos')
-  const [regionFilter, setRegionFilter] = useState<string>('Todas')
+  const [regionFilter, setRegionFilter] = useState<RegionFilter>('LATAM')
   const [activeTab, setActiveTab] = useState<'todos' | 'para-ti'>('todos')
   const [refreshing, setRefreshing] = useState(false)
   const isSuperadmin = appUser?.role === 'superadmin'
@@ -286,20 +310,20 @@ export default function RadarPage() {
     })
   }, [items, startup])
 
+  // Region pills: Global | LATAM | [País del founder]
+  const founderCountryCode = startup?.country ?? null
+  const founderCountryLabel = founderCountryCode ? (COUNTRY_LABELS[founderCountryCode] ?? null) : null
+
   // Filtered items
   const baseList = activeTab === 'para-ti' ? paraTimItems : items
   const filtered = useMemo(() => baseList.filter((item) => {
     const catOk = matchesCategory(item, catFilter)
-    const regionOk = regionFilter === 'Todas' || regionFilter === 'LATAM' ||
-      (item.country && (REGION_COUNTRY_MAP[regionFilter] ?? []).includes(item.country))
+    const regionOk = matchesRegion(item, regionFilter, founderCountryCode)
     return catOk && regionOk
-  }), [baseList, catFilter, regionFilter])
-
-  // Region pills: Todas + LATAM + founder's country (if known)
-  const founderCountryLabel = startup?.country ? (COUNTRY_LABELS[startup.country] ?? null) : null
-  const visibleRegions = founderCountryLabel
-    ? ['Todas', 'LATAM', founderCountryLabel]
-    : ['Todas', 'LATAM']
+  }), [baseList, catFilter, regionFilter, founderCountryCode])
+  const visibleRegions: RegionFilter[] = founderCountryLabel
+    ? ['Global', 'LATAM', founderCountryLabel]
+    : ['Global', 'LATAM']
 
   const lastUpdated = items[0]?.published_at
     ? new Date(items[0].published_at).toLocaleDateString('es', { day: '2-digit', month: 'short', year: 'numeric' })

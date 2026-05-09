@@ -7,16 +7,26 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 // RSS feeds — climate tech, impact, LATAM innovation
+// Covers: Energía, Agua, Economía circular, Biodiversidad, Movilidad, Fondos
 const FEEDS = [
+  // LATAM ecosystem
   { url: 'https://latamlist.com/feed/', source_name: 'LatamList', default_type: 'news' as const },
   { url: 'https://contxto.com/en/feed/', source_name: 'Contxto', default_type: 'investment' as const },
   { url: 'https://labsnews.com/en/feed/', source_name: 'LABS News', default_type: 'news' as const },
-  { url: 'https://agfundernews.com/feed/', source_name: 'AgFunder News', default_type: 'trend' as const },
   { url: 'https://pulsosocial.com/feed/', source_name: 'Pulso Social', default_type: 'news' as const },
   { url: 'https://www.bloomberglinea.com/feed/', source_name: 'Bloomberg Línea', default_type: 'investment' as const },
+  // Energía y cleantech
+  { url: 'https://electrek.co/feed/', source_name: 'Electrek', default_type: 'trend' as const },
   { url: 'https://techcrunch.com/tag/climate/feed/', source_name: 'TechCrunch Climate', default_type: 'trend' as const },
   { url: 'https://climatetechvc.org/feed/', source_name: 'ClimateTech VC', default_type: 'investment' as const },
   { url: 'https://cleanenergyfinanceforum.com/feed/', source_name: 'Clean Energy Finance', default_type: 'investment' as const },
+  // Agua y naturaleza
+  { url: 'https://es.mongabay.com/feed/', source_name: 'Mongabay LATAM', default_type: 'news' as const },
+  { url: 'https://www.climatechangenews.com/feed/', source_name: 'Climate Home News', default_type: 'news' as const },
+  // Agri / economía circular
+  { url: 'https://agfundernews.com/feed/', source_name: 'AgFunder News', default_type: 'trend' as const },
+  // Movilidad e innovación
+  { url: 'https://www.canarymedia.com/rss', source_name: 'Canary Media', default_type: 'trend' as const },
 ]
 
 function decodeHtml(s: string): string {
@@ -160,20 +170,28 @@ export async function POST(_request: NextRequest) {
   // (unique per title, always working, finds the actual article). Gemini only provides
   // the title, summary, source_name, content_type, vertical, country.
   const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
-Genera exactamente 15 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto. Incluye al menos 5 sobre cleantech/clima, 3 sobre agritech, 3 sobre inversión/fondos, 2 sobre regulación y 2 sobre programas de aceleración.
-Responde SOLO con un array JSON válido, sin texto adicional:
+Genera exactamente 18 noticias (2025-2026). DISTRIBUCIÓN OBLIGATORIA:
+- 3 sobre energía solar, eólica o baterías en LATAM
+- 2 sobre agua: acceso hídrico, tecnología de irrigación o desalinización
+- 2 sobre economía circular: reciclaje, residuos o packaging sostenible
+- 2 sobre biodiversidad: restauración forestal, ecosistemas, fauna
+- 2 sobre movilidad sostenible: vehículos eléctricos o transporte limpio
+- 3 sobre fondos e inversión de impacto en LATAM (rondas, VCs, aceleradoras)
+- 2 sobre regulación climática o políticas de carbono
+- 2 sobre agritech o agricultura regenerativa
+
+Responde SOLO con un array JSON:
 [
   {
-    "title": "Título de la noticia en español (máx 120 caracteres). Sé específico: incluye nombre de empresa, monto, país.",
-    "summary": "Resumen en español de 80-120 palabras. Datos concretos: montos, porcentajes, países, nombres de empresas. Sin clichés.",
-    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, Gestión, El Economista, El Cronista, AgFunder News)",
+    "title": "Título en español, máx 110 caracteres. Específico: empresa/país/dato concreto.",
+    "summary": "60-90 palabras. Datos duros: montos, porcentajes, empresas, países. Sin adjetivos vacíos.",
+    "source_name": "Medio real: Contxto, LatamList, Bloomberg Línea, Electrek, Mongabay, Canary Media, AgFunder News, Reuters, Gestión, El Economista",
     "content_type": "news|investment|trend|regulation|event|report",
-    "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other o null",
+    "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|logistics_mobility|other",
     "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
   }
 ]
-NO incluyas campo source_url — se generará automáticamente.
-Enfócate en: rondas de inversión, regulación ambiental, programas de aceleración, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026. Cada noticia debe ser distinta y específica.`
+NO incluyas campo source_url. Cada ítem debe ser distinto. Usa datos reales de 2025-2026.`
 
   const aiResponse = await callGemini(aiPrompt)
   if (aiResponse) {

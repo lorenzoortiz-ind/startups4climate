@@ -557,7 +557,7 @@ export const TOOLS: ToolDef[] = [
       'Assumption Map 2×2 (importancia × certeza) con supuestos clasificados',
       '3 supuestos prioritarios en formato falsificable para diseñar experimentos (04.2)',
     ],
-    stepNumber: 22,
+    stepNumber: 27,
   },
   {
     id: 'key-experiments',
@@ -577,7 +577,7 @@ export const TOOLS: ToolDef[] = [
       'Resultados del experimento #1 con datos reales vs. criterio predefinido',
       'Aprendizaje documentado: ¿confirma o refuta el supuesto? ¿cambia el MVBP?',
     ],
-    stepNumber: 23,
+    stepNumber: 28,
   },
   {
     id: 'mvbp-definition',
@@ -597,7 +597,7 @@ export const TOOLS: ToolDef[] = [
       'Métrica de éxito: N clientes pagando precio real en X semanas',
     ],
     relatedProduct: 'Desarrollo de MVP/prototipo',
-    stepNumber: 24,
+    stepNumber: 29,
   },
   {
     id: 'traction-validation',
@@ -616,7 +616,7 @@ export const TOOLS: ToolDef[] = [
       'Métricas de valor entregado al cliente (antes vs. después con el MVBP)',
       'Análisis de patrones de primeros pagadores + decisión de perseverar o pivotar con justificación',
     ],
-    stepNumber: 25,
+    stepNumber: 30,
   },
   {
     id: 'product-plan-scaling',
@@ -635,7 +635,7 @@ export const TOOLS: ToolDef[] = [
       '3 OKRs para los próximos 12 meses con Key Results medibles',
       'Mapa de follow-on markets actualizado con timing, recursos y sinergias con el beachhead',
     ],
-    stepNumber: 26,
+    stepNumber: 31,
   },
   {
     id: 'pitch-deck-builder',
@@ -655,7 +655,7 @@ export const TOOLS: ToolDef[] = [
       'Los 3 slides con evidencia más débil identificados para fortalecer antes de presentar',
     ],
     relatedService: 'Revisión y coaching de Pitch Deck',
-    stepNumber: 27,
+    stepNumber: 32,
     transversal: true,
   },
   {
@@ -677,7 +677,7 @@ export const TOOLS: ToolDef[] = [
     ],
     relatedProduct: 'Modelo financiero para inversores',
     relatedService: 'Asesoría de fundraising',
-    stepNumber: 28,
+    stepNumber: 33,
   },
   {
     id: 'data-room-builder',
@@ -692,7 +692,7 @@ export const TOOLS: ToolDef[] = [
     category: 'Finanzas',
     estimatedTime: '30 min',
     outputs: ['Checklist de documentos del Data Room', 'Estructura de carpetas organizada', 'Estado de completitud por documento'],
-    stepNumber: 29,
+    stepNumber: 34,
   },
   {
     id: 'financial-model-builder',
@@ -708,7 +708,7 @@ export const TOOLS: ToolDef[] = [
     estimatedTime: '35 min',
     outputs: ['Proyecciones financieras a 3-5 años', 'Estado de resultados proyectado', 'Análisis de breakeven y runway'],
     relatedProduct: 'Modelo financiero para inversores',
-    stepNumber: 30,
+    stepNumber: 35,
   },
 ]
 

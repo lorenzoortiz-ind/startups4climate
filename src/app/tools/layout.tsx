@@ -324,6 +324,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
     window.scrollTo(0, 0)
   }, [pathname])
 
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
+
   useEffect(() => {
     if (!loading && !user) {
       router.replace('/')

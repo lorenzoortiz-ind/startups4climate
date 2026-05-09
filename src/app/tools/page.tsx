@@ -1197,7 +1197,17 @@ export default function ToolsDashboard() {
             }}
           >
             {/* SectionHeader */}
-            <div style={{ marginBottom: '1rem' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: 'spring',
+                stiffness: 200,
+                damping: 25,
+                delay: si * 0.07,
+              }}
+              style={{ marginBottom: '1rem' }}
+            >
               <SectionHeader
                 kicker={stageNum === 0 ? `Módulo 00 · ${meta.subtitle}` : `Etapa ${stageNum} · ${meta.subtitle}`}
                 title={meta.name}
@@ -1295,7 +1305,7 @@ export default function ToolsDashboard() {
                   </div>
                 }
               />
-            </div>
+            </motion.div>
 
             {/* Stage icon strip — visual anchor */}
             <div

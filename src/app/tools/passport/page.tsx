@@ -1824,7 +1824,6 @@ export default function PassportPage() {
                       fontSize: 'var(--text-sm)',
                       color: 'var(--color-text-primary)',
                       fontWeight: 500,
-                      fontStyle: 'italic',
                       lineHeight: 1.6,
                       margin: 0,
                     }}

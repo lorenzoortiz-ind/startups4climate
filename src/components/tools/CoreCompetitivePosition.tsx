@@ -72,7 +72,6 @@ MAPA DE POSICIONAMIENTO:
           fontFamily: 'var(--font-body)',
           fontSize: '0.6875rem',
           color: 'var(--color-text-muted)',
-          fontStyle: 'italic',
           marginTop: '0.25rem',
           display: 'block',
         }}>

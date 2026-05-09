@@ -110,9 +110,9 @@ const chipBase: React.CSSProperties = {
 
 const chipActive: React.CSSProperties = {
   ...chipBase,
-  background: 'var(--color-accent-primary)',
+  background: '#1D4ED8',
   color: '#fff',
-  borderColor: 'var(--color-accent-primary)',
+  borderColor: '#1D4ED8',
 }
 
 export default function ConfiguracionPage() {
@@ -352,7 +352,7 @@ export default function ConfiguracionPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+        <Loader2 size={28} color="#1D4ED8" style={{ animation: 'spin 1s linear infinite' }} />
       </div>
     )
   }
@@ -419,7 +419,7 @@ export default function ConfiguracionPage() {
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             marginBottom: '1.25rem',
           }}>
-            <Building2 size={18} color="var(--color-accent-primary)" />
+            <Building2 size={18} color="#1D4ED8" />
             <h2 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
               fontSize: '1rem', color: 'var(--color-text-primary)',
@@ -436,7 +436,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setOrgName(e.target.value)}
               placeholder="Nombre de tu organización"
               style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -570,7 +570,7 @@ export default function ConfiguracionPage() {
                     transition: 'border-color 0.15s, background 0.15s',
                     opacity: uploading ? 0.7 : 1,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-accent-primary)'; e.currentTarget.style.background = 'rgba(31,119,246,0.04)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#1D4ED8'; e.currentTarget.style.background = 'rgba(31,119,246,0.04)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-card)' }}
                 >
                   {uploading ? (
@@ -595,7 +595,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setLogoUrl(e.target.value)}
               placeholder="https://ejemplo.com/logo.png"
               style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
             <p style={{
@@ -617,7 +617,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setWebsite(e.target.value)}
               placeholder="https://miorganización.com"
               style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -629,7 +629,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe tu organización en 2-3 oraciones"
               style={{ ...inputStyle, minHeight: 80, resize: 'vertical' }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -641,7 +641,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setProgramGoals(e.target.value)}
               placeholder="¿Qué buscan lograr este año con S4C?"
               style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -653,7 +653,7 @@ export default function ConfiguracionPage() {
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             marginBottom: '1.25rem',
           }}>
-            <Users size={18} color="var(--color-accent-primary)" />
+            <Users size={18} color="#1D4ED8" />
             <h2 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
               fontSize: '1rem', color: 'var(--color-text-primary)',
@@ -671,7 +671,7 @@ export default function ConfiguracionPage() {
                 onChange={(e) => setMainContactName(e.target.value)}
                 placeholder="Ej: María Fernández"
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
               />
             </div>
@@ -683,7 +683,7 @@ export default function ConfiguracionPage() {
                 onChange={(e) => setMainContactRole(e.target.value)}
                 placeholder="Ej: Director de Innovación"
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
               />
             </div>
@@ -700,7 +700,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setMainContactPhone(e.target.value)}
               placeholder="+51 999 999 999"
               style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -717,7 +717,7 @@ export default function ConfiguracionPage() {
                 onChange={(e) => setSocialLinkedIn(e.target.value)}
                 placeholder="https://linkedin.com/company/..."
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
               />
             </div>
@@ -732,7 +732,7 @@ export default function ConfiguracionPage() {
                 onChange={(e) => setSocialTwitter(e.target.value)}
                 placeholder="https://twitter.com/..."
                 style={inputStyle}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
               />
             </div>
@@ -745,7 +745,7 @@ export default function ConfiguracionPage() {
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             marginBottom: '1.25rem',
           }}>
-            <CreditCard size={18} color="var(--color-accent-primary)" />
+            <CreditCard size={18} color="#1D4ED8" />
             <h2 style={{
               fontFamily: 'var(--font-heading)', fontWeight: 600,
               fontSize: '1rem', color: 'var(--color-text-primary)',
@@ -835,7 +835,7 @@ export default function ConfiguracionPage() {
               onChange={(e) => setBillingEmail(e.target.value)}
               placeholder="facturación@miorganización.com"
               style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-primary)')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#1D4ED8')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             />
           </div>
@@ -864,14 +864,14 @@ export default function ConfiguracionPage() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.5rem 1rem', borderRadius: 8,
-              background: 'var(--color-accent-primary)',
+              background: '#1D4ED8',
               color: '#fff', border: 'none', cursor: 'pointer',
               fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
               transition: 'background 0.15s',
               opacity: saving ? 0.7 : 1,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-accent-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-accent-primary)')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#3B82F6')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#1D4ED8')}
           >
             <Save size={16} />
             {saving ? 'Guardando...' : 'Guardar cambios'}
@@ -971,7 +971,7 @@ export default function ConfiguracionPage() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
                 padding: '0.5rem 1rem', borderRadius: 8,
-                background: 'var(--color-accent-primary)', color: '#fff',
+                background: '#1D4ED8', color: '#fff',
                 border: 'none', cursor: pwSaving || isDemo ? 'not-allowed' : 'pointer',
                 fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
                 transition: 'background 0.15s',

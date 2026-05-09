@@ -168,7 +168,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
           background: 'var(--color-bg-card)',
           borderBottom: '1px solid var(--color-border)',
           padding: '0 1.5rem',
-          height: 56,
+          height: 44,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -177,7 +177,7 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
           zIndex: 20,
           gap: '0.5rem',
         }}
-        className="lg:top-0 top-14"
+        className="lg:top-0 top-11"
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0, flex: 1, overflow: 'hidden' }}>
           <Link
@@ -301,35 +301,24 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
         >
           <div
             style={{
-              background: 'var(--color-bg-card)',
-              borderRadius: 20,
-              border: '1px solid var(--color-border)',
-              padding: '1.75rem',
-              boxShadow: 'var(--shadow-card)',
-              position: 'relative',
-              overflow: 'visible',
+              background: 'rgba(10,10,10,0.82)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
+              padding: '1rem 1.5rem',
+              position: 'sticky',
+              top: 44,
+              zIndex: 40,
+              margin: '0 -1.5rem',
             }}
           >
-            {/* thin gradient bar at the top */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 4,
-                background: `linear-gradient(90deg, ${displayStageColor}, ${displayStageColor}88)`,
-                pointerEvents: 'none',
-                borderRadius: '20px 20px 0 0',
-              }}
-            />
 
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
-                gap: '1.75rem',
-                alignItems: 'start',
+                gap: '1.25rem',
+                alignItems: 'center',
               }}
               className="tool-header-grid"
             >
@@ -499,20 +488,19 @@ export default function ToolPage({ toolId, transversalStage }: { toolId: string;
                       style={{
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: '0.5rem',
+                        gap: '0.375rem',
                         fontFamily: 'var(--font-body)',
-                        fontSize: '0.8125rem',
-                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.6875rem',
+                        color: 'rgba(255,255,255,0.60)',
                         lineHeight: 1.4,
                       }}
                     >
                       <CheckCircle2
-                        size={13}
-                        color={displayStageColor}
-                        strokeWidth={2.25}
-                        style={{ flexShrink: 0, marginTop: 2 }}
+                        size={11}
+                        color="#3B82F6"
+                        style={{ flexShrink: 0, marginTop: 1 }}
                       />
-                      <span>{out}</span>
+                      {out}
                     </li>
                   ))}
                 </ul>

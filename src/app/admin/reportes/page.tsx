@@ -242,10 +242,10 @@ export default function ReportesPage() {
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-sm)',
                   border: `1.5px solid ${selectedType === type.value
-                    ? 'var(--color-accent-primary)'
+                    ? '#1D4ED8'
                     : 'var(--color-border)'}`,
                   background: selectedType === type.value
-                    ? 'rgba(31,119,246,0.04)' : 'var(--color-bg-card)',
+                    ? 'rgba(29,78,216,0.06)' : 'var(--color-bg-card)',
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.15s',
@@ -255,7 +255,7 @@ export default function ReportesPage() {
                   fontFamily: 'var(--font-body)', fontSize: '0.875rem',
                   fontWeight: 600,
                   color: selectedType === type.value
-                    ? 'var(--color-accent-primary)'
+                    ? '#1D4ED8'
                     : 'var(--color-text-primary)',
                 }}>
                   {type.label}
@@ -292,7 +292,7 @@ export default function ReportesPage() {
             padding: '0.625rem 1.5rem', borderRadius: 'var(--radius-sm)',
             background: !selectedCohort
               ? 'var(--color-text-muted)'
-              : 'var(--color-accent-primary)',
+              : '#1D4ED8',
             color: '#fff', border: 'none', cursor: 'pointer',
             fontFamily: 'var(--font-body)', fontSize: '0.875rem', fontWeight: 600,
             transition: 'background 0.15s',
@@ -348,11 +348,11 @@ export default function ReportesPage() {
                 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(218,78,36,0.10)',
+                    background: 'rgba(29,78,216,0.10)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
                   }}>
-                    <FileBarChart size={16} color="#DA4E24" />
+                    <FileBarChart size={16} color="#1D4ED8" />
                   </div>
                   <div style={{
                     display: 'flex', gap: '0.4rem',
@@ -427,7 +427,7 @@ export default function ReportesPage() {
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
                       padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)',
-                      background: 'var(--color-accent-primary)', color: '#fff',
+                      background: '#1D4ED8', color: '#fff',
                       fontFamily: 'var(--font-body)', fontSize: '0.7rem',
                       fontWeight: 600, border: 'none', cursor: 'pointer',
                     }}

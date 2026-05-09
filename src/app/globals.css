@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ─── Mluvka — S4C primary typeface ─── */
@@ -128,6 +129,7 @@
   /* === Z-INDEX SCALE === */
   --z-base: 1;
   --z-dropdown: 20;
+  --z-tool-header: 40;
   --z-nav: 50;
   --z-modal-backdrop: 90;
   --z-modal: 100;
@@ -227,8 +229,25 @@
 
   /* === ADMIN / TOOLS SIDEBAR === */
   --color-admin-sidebar-bg:      #000000;
-  --color-admin-sidebar-active:  #DA4E24;
+  --color-admin-sidebar-active:  #1D4ED8;
   --color-admin-sidebar-text:    rgba(255,255,255,0.60);
+
+  /* === COBALT (admin accent + founders "done" state) === */
+  --cobalt-400:              #60A5FA;
+  --cobalt-500:              #3B82F6;
+  --cobalt-600:              #1D4ED8;
+  --cobalt-700:              #1E40AF;
+  --color-cobalt:            #1D4ED8;
+  --color-cobalt-hover:      #3B82F6;
+  --color-cobalt-light:      rgba(29, 78, 216, 0.12);
+  --color-cobalt-border:     rgba(29, 78, 216, 0.30);
+
+  /* === SURFACE HIERARCHY (glass + carbon) === */
+  --color-surface-1:         #0A0A0A;
+  --color-surface-2:         #111111;
+  --color-surface-3:         #1A1A1A;
+  --color-surface-input:     #141414;
+  --color-surface-glass:     rgba(10,10,10,0.75);
 
   /* === EASINGS === */
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
@@ -297,6 +316,9 @@
   --text-body: 1.05rem;
   --section-py: clamp(4rem, 8vw, 8rem);
   --section-py-sm: clamp(3rem, 6vw, 5rem);
+
+  --font-body: 'Geist', 'General Sans', system-ui, sans-serif;
+  --font-sans: 'Geist', 'General Sans', system-ui, sans-serif;
 
   color-scheme: dark;
 }
@@ -711,5 +733,30 @@
   .hero-stage {
     padding-top: 8rem;
     padding-bottom: 5rem;
+  }
+}
+
+/* === PREFERS-REDUCED-MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === RESPONSIVE — App Interior === */
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .tool-header-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tool-header-grid > *:last-child {
+    display: none; /* hide outputs checklist on mobile — saves space */
   }
 }

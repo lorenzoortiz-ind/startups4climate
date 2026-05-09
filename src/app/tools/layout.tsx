@@ -23,6 +23,10 @@ import {
   Activity,
   LineChart,
   Lock,
+  Lightbulb,
+  FlaskConical,
+  Rocket,
+  TrendingUp,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import S4CLogo from '@/components/S4CLogo'
@@ -41,6 +45,8 @@ const STAGE_CONFIG = {
   3: { label: 'Aceleración', color: '#F0721D' },
   4: { label: 'Escalamiento', color: '#5BB4FF' },
 } as const
+
+const STAGE_ICONS = [Lightbulb, FlaskConical, Rocket, Building2, TrendingUp] as const
 
 /* ─── Sidebar palette — uses CSS vars for consistency with admin/superadmin ─── */
 const SB = {
@@ -96,15 +102,16 @@ function StageSidebarSection({
         onMouseLeave={(e) => { if (!open) e.currentTarget.style.background = 'transparent' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div
-            style={{
-              width: 5,
-              height: 5,
-              borderRadius: '50%',
-              background: cfg.color,
-              flexShrink: 0,
-            }}
-          />
+          {(() => {
+            const StageIcon = STAGE_ICONS[stageNum] ?? Lightbulb
+            return (
+              <StageIcon
+                size={14}
+                color={open ? '#DA4E24' : 'rgba(255,255,255,0.35)'}
+                strokeWidth={1.75}
+              />
+            )
+          })()}
           <span
             style={{
               fontFamily: 'var(--font-body)',
@@ -159,16 +166,24 @@ function StageSidebarSection({
                       alignItems: 'center',
                       gap: '0.5rem',
                       padding: '0.375rem 0.625rem',
+                      paddingLeft: 'calc(0.625rem - 2px)',
                       borderRadius: 6,
-                      background: active ? 'rgba(218,78,36,0.12)' : 'transparent',
+                      background: active ? 'rgba(218,78,36,0.10)' : 'transparent',
+                      borderLeft: active ? '2px solid #DA4E24' : '2px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
                     onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.background = SB.hoverBg
+                      if (!active) {
+                        e.currentTarget.style.background = SB.hoverBg
+                        e.currentTarget.style.borderLeft = '2px solid transparent'
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      if (!active) e.currentTarget.style.background = 'transparent'
+                      if (!active) {
+                        e.currentTarget.style.background = 'transparent'
+                        e.currentTarget.style.borderLeft = '2px solid transparent'
+                      }
                     }}
                   >
                     {done ? (
@@ -215,16 +230,24 @@ function StageSidebarSection({
                       alignItems: 'center',
                       gap: '0.5rem',
                       padding: '0.375rem 0.625rem',
+                      paddingLeft: 'calc(0.625rem - 2px)',
                       borderRadius: 6,
-                      background: active ? 'rgba(218,78,36,0.12)' : 'transparent',
+                      background: active ? 'rgba(218,78,36,0.10)' : 'transparent',
+                      borderLeft: active ? '2px solid #DA4E24' : '2px solid transparent',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
                     }}
                     onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.background = SB.hoverBg
+                      if (!active) {
+                        e.currentTarget.style.background = SB.hoverBg
+                        e.currentTarget.style.borderLeft = '2px solid transparent'
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      if (!active) e.currentTarget.style.background = 'transparent'
+                      if (!active) {
+                        e.currentTarget.style.background = 'transparent'
+                        e.currentTarget.style.borderLeft = '2px solid transparent'
+                      }
                     }}
                   >
                     {done ? (
@@ -299,6 +322,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0)
+  }, [pathname])
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileOpen(false)
   }, [pathname])
 
   useEffect(() => {
@@ -859,6 +887,63 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
           Perfil
         </Link>
 
+        {/* User avatar + name */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.625rem',
+          padding: '0.625rem 0.75rem',
+          borderRadius: 10,
+          background: 'rgba(255,255,255,0.04)',
+          marginBottom: '0.5rem',
+        }}>
+          <div style={{
+            width: 30,
+            height: 30,
+            borderRadius: '50%',
+            background: 'rgba(218,78,36,0.20)',
+            border: '1px solid rgba(218,78,36,0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.625rem',
+            fontWeight: 700,
+            color: '#DA4E24',
+            flexShrink: 0,
+            textTransform: 'uppercase' as const,
+          }}>
+            {appUser?.full_name
+              ?.split(' ')
+              .map((n: string) => n[0])
+              .slice(0, 2)
+              .join('') ?? '?'}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.6875rem',
+              fontWeight: 600,
+              color: '#F1F5F9',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {appUser?.full_name ?? '—'}
+            </div>
+            <div style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.5625rem',
+              color: 'rgba(255,255,255,0.40)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {user?.email ?? ''}
+            </div>
+          </div>
+        </div>
+
         <button
           onClick={logout}
           style={{
@@ -1023,9 +1108,11 @@ function ToolsLayoutInner({ children }: { children: React.ReactNode }) {
         {/* Desktop top bar — matches admin/superadmin structure */}
         <div
           style={{
-            height: 56,
-            background: 'var(--color-bg-card)',
-            borderBottom: '1px solid var(--color-border)',
+            height: 44,
+            background: 'rgba(10,10,10,0.82)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0 1.5rem',

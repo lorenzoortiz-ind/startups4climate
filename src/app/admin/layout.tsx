@@ -188,8 +188,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Role badge */}
       <div style={{
         display: 'inline-block',
-        background: 'rgba(31,119,246,0.15)',
-        color: '#1F77F6',
+        background: 'rgba(29,78,216,0.15)',
+        color: '#3B82F6',
         fontFamily: 'var(--font-body)',
         fontSize: '0.5625rem',
         fontWeight: 600,
@@ -221,8 +221,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               }}
               onMouseEnter={(e) => {
                 if (!active) {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-                  e.currentTarget.style.color = '#F1F5F9'
+                  e.currentTarget.style.background = 'rgba(29,78,216,0.08)'
+                  e.currentTarget.style.color = '#93C5FD'
                 }
               }}
               onMouseLeave={(e) => {
@@ -336,7 +336,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className="hidden lg:flex"
         style={{
           width: 260, flexShrink: 0,
-          background: 'var(--color-admin-sidebar-bg)',
+          background: 'rgba(5,5,5,0.95)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderRight: '1px solid rgba(255,255,255,0.06)',
           position: 'fixed', top: 0, left: 0, bottom: 0,
           zIndex: 40, flexDirection: 'column',
         }}
@@ -349,7 +352,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         className="flex lg:hidden"
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-          height: 56, background: 'var(--color-admin-sidebar-bg)',
+          height: 56, background: 'rgba(5,5,5,0.95)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
           alignItems: 'center', justifyContent: 'space-between',
           padding: '0 1rem',
         }}
@@ -399,7 +405,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               style={{
                 position: 'fixed', top: 0, left: 0, bottom: 0,
                 width: 280, zIndex: 60,
-                background: 'var(--color-admin-sidebar-bg)',
+                background: 'rgba(5,5,5,0.95)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                borderRight: '1px solid rgba(255,255,255,0.06)',
               }}
               onClick={(e) => e.stopPropagation()}
             >

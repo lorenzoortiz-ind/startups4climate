@@ -65,7 +65,7 @@ export default function CohortesPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         minHeight: '60vh',
       }}>
-        <Loader2 size={28} color="var(--color-accent-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+        <Loader2 size={28} color="#1D4ED8" style={{ animation: 'spin 1s linear infinite' }} />
       </div>
     )
   }
@@ -100,7 +100,7 @@ export default function CohortesPage() {
           onClick={() => window.location.reload()}
           style={{
             padding: '0.5rem 1.5rem', borderRadius: 'var(--radius-sm)',
-            background: 'var(--color-accent-primary)', color: '#fff',
+            background: '#1D4ED8', color: '#fff',
             border: 'none', fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)',
             fontWeight: 600, cursor: 'pointer',
           }}
@@ -164,12 +164,12 @@ export default function CohortesPage() {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             padding: '0.5rem 1rem', borderRadius: 8,
-            background: 'var(--color-accent-primary)', color: '#fff',
+            background: '#1D4ED8', color: '#fff',
             fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
             textDecoration: 'none', transition: 'background 0.15s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-accent-hover)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-accent-primary)')}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#3B82F6')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#1D4ED8')}
         >
           <Plus size={16} />
           Crear nueva cohorte
@@ -211,7 +211,7 @@ export default function CohortesPage() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
               padding: '0.5rem 1rem', borderRadius: 8,
-              background: 'var(--color-accent-primary)', color: '#fff',
+              background: '#1D4ED8', color: '#fff',
               fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 600,
               textDecoration: 'none',
             }}

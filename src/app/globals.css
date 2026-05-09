@@ -129,6 +129,7 @@
   /* === Z-INDEX SCALE === */
   --z-base: 1;
   --z-dropdown: 20;
+  --z-tool-header: 40;
   --z-nav: 50;
   --z-modal-backdrop: 90;
   --z-modal: 100;
@@ -248,9 +249,6 @@
   --color-surface-input:     #141414;
   --color-surface-glass:     rgba(10,10,10,0.75);
 
-  /* === Z-INDEX: tool header === */
-  --z-tool-header: 40;
-
   /* === EASINGS === */
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.1);
   --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
@@ -319,6 +317,9 @@
   --section-py: clamp(4rem, 8vw, 8rem);
   --section-py-sm: clamp(3rem, 6vw, 5rem);
 
+  --font-body: 'Geist', 'General Sans', system-ui, sans-serif;
+  --font-sans: 'Geist', 'General Sans', system-ui, sans-serif;
+
   color-scheme: dark;
 }
 
@@ -360,9 +361,9 @@
 
 @theme inline {
   --font-heading: 'Mluvka', 'General Sans', system-ui, sans-serif;
-  --font-body: 'Geist', 'General Sans', system-ui, sans-serif;
+  --font-body: 'Mluvka', 'General Sans', system-ui, sans-serif;
   --font-display: 'Mluvka', 'General Sans', system-ui, sans-serif;
-  --font-sans: 'Geist', 'General Sans', system-ui, sans-serif;
+  --font-sans: 'Mluvka', 'General Sans', system-ui, sans-serif;
   --font-serif: 'Mluvka', Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
   --font-mluvka: 'Mluvka', 'General Sans', system-ui, sans-serif;

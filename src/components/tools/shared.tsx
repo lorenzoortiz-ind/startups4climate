@@ -161,104 +161,198 @@ export function InsightPanel({
 
 /* ─── ToolActionBar: unified save/complete/report buttons ─── */
 
-export interface ToolActionBarProps {
+interface ToolActionBarProps {
+  status: 'not_started' | 'in_progress' | 'completed'
   onSave?: () => void
-  onComplete: () => void
-  onReport: () => void
-  saved?: boolean
-  accentColor?: string
+  onComplete?: () => void
+  onGenerateReport?: () => void
+  saving?: boolean
+  completing?: boolean
+  reportGenerated?: boolean
+  disabled?: boolean
 }
 
-export function ToolActionBar({ onSave, onComplete, onReport, saved = false, accentColor = '#1F77F6' }: ToolActionBarProps) {
+export function ToolActionBar({
+  status,
+  onSave,
+  onComplete,
+  onGenerateReport,
+  saving = false,
+  completing = false,
+  reportGenerated = false,
+  disabled = false,
+}: ToolActionBarProps) {
+  const statusLabel =
+    status === 'completed'
+      ? 'Completada'
+      : status === 'in_progress'
+      ? 'En progreso'
+      : 'Sin empezar'
+
+  const statusColor =
+    status === 'completed'
+      ? '#3B82F6'
+      : status === 'in_progress'
+      ? '#DA4E24'
+      : 'rgba(255,255,255,0.35)'
+
   return (
-    <div style={{
-      display: 'flex',
-      gap: '0.75rem',
-      flexWrap: 'wrap',
-      marginTop: '1rem',
-      padding: '1.25rem 1.5rem',
-      borderRadius: 14,
-      background: 'var(--color-bg-card)',
-      border: '1px solid var(--color-border)',
-    }}>
-      {onSave && (
-        <button onClick={onSave} style={{
-          ...btnBase,
-          color: accentColor,
-          border: `1.5px solid ${accentColor}40`,
-          background: 'transparent',
+    <div
+      style={{
+        position: 'sticky',
+        bottom: 0,
+        zIndex: 30,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1rem',
+        minHeight: 56,
+        paddingTop: '0.75rem',
+        paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+        paddingLeft: '1.5rem',
+        paddingRight: '1.5rem',
+        background: 'rgba(10,10,10,0.92)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: 0,
+        margin: '0 -1.5rem',
+      }}
+    >
+      {/* Left: status indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{
+          width: 6, height: 6, borderRadius: '50%',
+          background: statusColor,
+          flexShrink: 0,
+        }} />
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          fontWeight: 600,
+          color: statusColor,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
         }}>
-          <Save size={15} /> {saved ? '¡Guardado!' : 'Guardar progreso'}
-        </button>
-      )}
-      <button onClick={onComplete} style={{
-        ...btnBase,
-        color: 'white',
-        background: accentColor,
-        border: 'none',
-        boxShadow: `0 2px 8px ${accentColor}40`,
-      }}>
-        <CheckCircle2 size={15} /> Marcar como completada
-      </button>
-      <button onClick={onReport} style={{
-        ...btnBase,
-        color: 'var(--color-text-secondary)',
-        border: '1.5px solid var(--color-border)',
-        background: 'transparent',
-      }}>
-        <FileText size={15} /> Generar reporte
-      </button>
+          {statusLabel}
+        </span>
+      </div>
+
+      {/* Right: action buttons */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {onSave && status !== 'completed' && (
+          <button
+            onClick={onSave}
+            disabled={saving || disabled}
+            style={{
+              height: 36,
+              padding: '0 1rem',
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'transparent',
+              color: 'rgba(255,255,255,0.70)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              cursor: saving || disabled ? 'not-allowed' : 'pointer',
+              opacity: saving || disabled ? 0.5 : 1,
+              transition: 'border-color 0.15s, color 0.15s',
+            }}
+          >
+            {saving ? 'Guardando…' : 'Guardar'}
+          </button>
+        )}
+
+        {onGenerateReport && status === 'completed' && (
+          <button
+            onClick={onGenerateReport}
+            disabled={reportGenerated || disabled}
+            style={{
+              height: 36,
+              padding: '0 1rem',
+              borderRadius: 8,
+              border: '1px solid rgba(29,78,216,0.35)',
+              background: 'rgba(29,78,216,0.10)',
+              color: '#60A5FA',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              cursor: reportGenerated || disabled ? 'not-allowed' : 'pointer',
+              opacity: reportGenerated || disabled ? 0.5 : 1,
+            }}
+          >
+            {reportGenerated ? 'Reporte generado' : 'Generar reporte'}
+          </button>
+        )}
+
+        {onComplete && status !== 'completed' && (
+          <button
+            onClick={onComplete}
+            disabled={completing || disabled}
+            style={{
+              height: 36,
+              padding: '0 1.25rem',
+              borderRadius: 8,
+              border: 'none',
+              background: completing || disabled ? 'rgba(218,78,36,0.40)' : '#DA4E24',
+              color: '#fff',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: completing || disabled ? 'not-allowed' : 'pointer',
+              transition: 'background 0.15s',
+            }}
+          >
+            {completing ? 'Completando…' : 'Marcar completada'}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
 
 /* ─── ToolProgress: inline completion indicator ─── */
 
-export function ToolProgress({ filled, total, accentColor = 'var(--color-accent-primary)' }: {
-  filled: number
+interface ToolProgressProps {
+  current: number
   total: number
-  accentColor?: string
-}) {
-  const pct = total > 0 ? Math.round((filled / total) * 100) : 0
+  label?: string
+}
+
+export function ToolProgress({ current, total, label }: ToolProgressProps) {
   return (
-    <div style={{
-      background: 'var(--color-bg-card)',
-      borderRadius: 12,
-      border: '1px solid var(--color-border)',
-      padding: '1rem 1.25rem',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '1rem',
-    }}>
-      <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-            Progreso
-          </span>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', fontWeight: 700, color: accentColor }}>
-            {filled}/{total} secciones
-          </span>
-        </div>
-        <div style={{ height: 6, borderRadius: 3, background: 'var(--color-border)' }}>
-          <div style={{
-            height: '100%',
-            borderRadius: 3,
-            background: `linear-gradient(90deg, ${accentColor}, ${accentColor}CC)`,
-            width: `${pct}%`,
-            transition: 'width 0.4s ease',
-          }} />
-        </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', gap: '4px' }}>
+        {Array.from({ length: total }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: i < current ? 20 : 8,
+              height: 4,
+              borderRadius: 2,
+              background: i < current ? '#DA4E24' : 'rgba(255,255,255,0.12)',
+              transition: 'width 0.25s ease, background 0.25s ease',
+            }}
+          />
+        ))}
       </div>
-      <div style={{
-        fontFamily: 'var(--font-heading)',
-        fontSize: '1.25rem',
-        fontWeight: 700,
-        color: accentColor,
-        minWidth: 45,
-        textAlign: 'right',
+      <span style={{
+        fontFamily: 'var(--font-body)',
+        fontSize: '0.6875rem',
+        color: 'rgba(255,255,255,0.45)',
+        fontWeight: 500,
       }}>
-        {pct}%
-      </div>
+        {current} / {total}
+      </span>
+      {label && (
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          color: 'rgba(255,255,255,0.45)',
+        }}>
+          {label}
+        </span>
+      )}
     </div>
   )
 }
@@ -267,32 +361,35 @@ export function ToolProgress({ filled, total, accentColor = 'var(--color-accent-
 
 export const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '0.75rem 1rem',
-  borderRadius: 10,
-  border: '1px solid var(--color-border)',
-  background: 'var(--color-bg-primary)',
+  padding: '0.625rem 0.875rem',
+  borderRadius: 8,
+  border: '1px solid rgba(255,255,255,0.09)',
+  background: '#141414',
+  color: '#FFFFFF',
   fontFamily: 'var(--font-body)',
-  fontSize: '0.875rem',
-  color: 'var(--color-text-primary)',
+  fontSize: '0.8125rem',
+  fontWeight: 400,
+  lineHeight: 1.5,
   outline: 'none',
-  transition: 'border-color 0.2s, box-shadow 0.2s',
+  transition: 'border-color 0.15s ease',
+  boxSizing: 'border-box',
 }
 
 export const textareaStyle: React.CSSProperties = {
   ...inputStyle,
-  resize: 'vertical' as const,
-  lineHeight: 1.7,
   minHeight: 100,
+  resize: 'vertical',
 }
 
 export const labelStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-heading)',
-  fontSize: '0.75rem',
-  fontWeight: 600,
-  color: 'var(--color-text-secondary)',
   display: 'block',
+  fontFamily: 'var(--font-body)',
+  fontSize: '0.5625rem',
+  fontWeight: 700,
+  letterSpacing: '0.09em',
+  textTransform: 'uppercase',
+  color: 'rgba(255,255,255,0.45)',
   marginBottom: '0.375rem',
-  letterSpacing: '0.01em',
 }
 
 export const btnSmall: React.CSSProperties = {

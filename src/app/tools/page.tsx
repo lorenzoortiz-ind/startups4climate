@@ -397,11 +397,16 @@ export default function ToolsDashboard() {
   const userStageNum = useMemo(() => {
     // appUser.stage is a string like 'ideacion', 'pre-incubacion', etc.
     // Map to numeric stage for display and locking logic
-    let baseStage: 0 | 1 | 2 | 3 | 4 = appUser?.stage === 'ideacion' ? 0 : 1
-    if (appUser?.stage && appUser.stage !== 'ideacion') {
-      const parsed = parseInt(user?.stage ?? '', 10)
-      if (parsed >= 1 && parsed <= 4) baseStage = parsed as 1 | 2 | 3 | 4
+    const stageMap: Record<string, 0 | 1 | 2 | 3 | 4> = {
+      'ideacion': 0,
+      'pre-incubacion': 1,
+      'incubacion': 2,
+      'aceleracion': 3,
+      'escalamiento': 4,
     }
+    const baseStage: 0 | 1 | 2 | 3 | 4 = appUser?.stage != null
+      ? (stageMap[appUser.stage] ?? 0)
+      : 0
     let effectiveStage: number = baseStage
     for (let s = 1; s <= 4; s++) {
       const stageTools = TOOLS_BY_STAGE[s as 1 | 2 | 3 | 4]
@@ -411,7 +416,7 @@ export default function ToolsDashboard() {
       }
     }
     return Math.max(baseStage, effectiveStage)
-  }, [user, appUser, completedIds])
+  }, [appUser, completedIds])
 
   const totalCompleted = completedIds.size
   const total = TOOLS.length

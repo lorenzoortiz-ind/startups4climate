@@ -162,7 +162,8 @@ export function InsightPanel({
 /* ─── ToolActionBar: unified save/complete/report buttons ─── */
 
 interface ToolActionBarProps {
-  status: 'not_started' | 'in_progress' | 'completed'
+  // New API
+  status?: 'not_started' | 'in_progress' | 'completed'
   onSave?: () => void
   onComplete?: () => void
   onGenerateReport?: () => void
@@ -170,18 +171,37 @@ interface ToolActionBarProps {
   completing?: boolean
   reportGenerated?: boolean
   disabled?: boolean
+
+  // Legacy props (backward compat — mapped internally)
+  onReport?: () => void          // alias for onGenerateReport
+  saved?: boolean                // alias for reportGenerated
+  accentColor?: string           // ignored (color is now state-driven)
+  completed?: boolean            // infer status='completed' if true
 }
 
 export function ToolActionBar({
-  status,
+  status: statusProp,
   onSave,
   onComplete,
   onGenerateReport,
+  onReport,              // legacy
   saving = false,
   completing = false,
-  reportGenerated = false,
+  reportGenerated,
+  saved,                 // legacy alias
   disabled = false,
+  completed: completedProp,  // legacy
+  accentColor: _accentColor, // ignored
 }: ToolActionBarProps) {
+  // Resolve legacy → new API
+  const resolvedReportHandler = onGenerateReport ?? onReport
+  const resolvedReportGenerated = reportGenerated ?? saved ?? false
+
+  // Infer status from props if not explicitly provided
+  const status: 'not_started' | 'in_progress' | 'completed' =
+    statusProp ??
+    (completedProp ? 'completed' : 'in_progress')  // default to in_progress for legacy callers
+
   const statusLabel =
     status === 'completed'
       ? 'Completada'
@@ -263,10 +283,10 @@ export function ToolActionBar({
           </button>
         )}
 
-        {onGenerateReport && status === 'completed' && (
+        {resolvedReportHandler && status === 'completed' && (
           <button
-            onClick={onGenerateReport}
-            disabled={reportGenerated || disabled}
+            onClick={resolvedReportHandler}
+            disabled={resolvedReportGenerated || disabled}
             style={{
               height: 36,
               padding: '0 1rem',
@@ -277,11 +297,11 @@ export function ToolActionBar({
               fontFamily: 'var(--font-body)',
               fontSize: '0.75rem',
               fontWeight: 500,
-              cursor: reportGenerated || disabled ? 'not-allowed' : 'pointer',
-              opacity: reportGenerated || disabled ? 0.5 : 1,
+              cursor: resolvedReportGenerated || disabled ? 'not-allowed' : 'pointer',
+              opacity: resolvedReportGenerated || disabled ? 0.5 : 1,
             }}
           >
-            {reportGenerated ? 'Reporte generado' : 'Generar reporte'}
+            {resolvedReportGenerated ? 'Reporte generado' : 'Generar reporte'}
           </button>
         )}
 

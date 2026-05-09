@@ -55,6 +55,7 @@ const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> =
   'ltv-unit-economics': dynamic(() => import('./UnitEconomics')),
   'sales-process-map': dynamic(() => import('./SalesProcessMap')),
   'key-assumptions': dynamic(() => import('./KeyAssumptions')),
+  'key-experiments': dynamic(() => import('./KeyExperiments'), { ssr: false }),
   'mvbp-definition': dynamic(() => import('./MVBPDefinition')),
   'traction-validation': dynamic(() => import('./TractionValidation')),
   'product-plan-scaling': dynamic(() => import('./ProductPlanScaling')),

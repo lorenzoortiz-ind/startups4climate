@@ -166,13 +166,36 @@ function Chips({
   )
 }
 
+const STAGE_OPTIONS = [
+  { value: 'ideacion' as const, label: 'Ideación', desc: 'No tengo problema ni solución clara aún. Quiero descubrirlos.', color: '#16A34A' },
+  { value: 'pre-incubacion' as const, label: 'Pre-incubación', desc: 'Tengo un problema identificado. Estoy validando el mercado.', color: '#DA4E24' },
+  { value: 'incubacion' as const, label: 'Incubación', desc: 'Tengo clientes potenciales y estoy construyendo el producto.', color: '#1F77F6' },
+  { value: 'aceleracion' as const, label: 'Aceleración', desc: 'Tengo un producto y clientes. Estoy escalando el modelo.', color: '#F0721D' },
+  { value: 'escalamiento' as const, label: 'Escalamiento', desc: 'Tengo tracción probada y busco capital o expansión.', color: '#5BB4FF' },
+  { value: null, label: 'No lo sé aún', desc: 'Te recomendamos empezar por Ideación.', color: '#9CA3AF' },
+]
+
+type StageValue = 'ideacion' | 'pre-incubacion' | 'incubacion' | 'aceleracion' | 'escalamiento'
+
 export default function CompletarPerfilPage() {
   const { user, isDemo } = useAuth()
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
 
-  // Step 1 — quién eres
+  // Step 1 — etapa de la startup
+  async function saveStage(stageValue: StageValue) {
+    if (!user?.id) return
+    const { error } = await supabase
+      .from('profiles')
+      .update({ stage: stageValue })
+      .eq('id', user.id)
+    if (error) {
+      console.error('[S4C Sync] Error saving stage:', error)
+    }
+  }
+
+  // Step 2 — quién eres
   const [vertical, setVertical] = useState('')
   const [country, setCountry] = useState('')
   const [region, setRegion] = useState('')
@@ -472,7 +495,7 @@ export default function CompletarPerfilPage() {
             flexWrap: 'wrap',
           }}
         >
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3, 4].map((s) => (
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div
                 style={{
@@ -500,9 +523,9 @@ export default function CompletarPerfilPage() {
                   color: step === s ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                 }}
               >
-                Paso {s} de 3
+                Paso {s} de 4
               </span>
-              {s < 3 && (
+              {s < 4 && (
                 <div
                   style={{
                     width: 24,
@@ -521,7 +544,55 @@ export default function CompletarPerfilPage() {
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
-              key="step1"
+              key="step-stage"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div style={{ marginBottom: '1rem' }}>
+                <p style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', margin: '0 0 0.25rem' }}>
+                  ¿En qué etapa está tu startup?
+                </p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-muted)', margin: 0 }}>
+                  Esto nos ayuda a personalizar las herramientas que verás.
+                </p>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+                {STAGE_OPTIONS.map((option) => (
+                  <button
+                    key={option.label}
+                    onClick={async () => {
+                      const stageToSave = option.value ?? 'ideacion'
+                      await saveStage(stageToSave)
+                      setStep(2)
+                    }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '1rem',
+                      padding: '0.875rem 1.125rem', borderRadius: 12, width: '100%',
+                      border: '1.5px solid var(--color-border)',
+                      background: 'var(--color-bg-card)', cursor: 'pointer',
+                      textAlign: 'left', transition: 'all 0.15s',
+                    }}
+                  >
+                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: option.color, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-heading)', fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                        {option.label}
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-body)', fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
+                        {option.desc}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div
+              key="step2"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
@@ -630,37 +701,59 @@ export default function CompletarPerfilPage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => setStep(2)}
-                disabled={!step1Valid}
-                style={{
-                  width: '100%',
-                  marginTop: '1.75rem',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: 10,
-                  border: 'none',
-                  background: step1Valid ? 'var(--color-accent-secondary)' : 'var(--color-border)',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  cursor: step1Valid ? 'pointer' : 'not-allowed',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  transition: 'background 0.2s ease',
-                }}
-              >
-                Siguiente
-                <ArrowRight size={16} />
-              </button>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem' }}>
+                <button
+                  onClick={() => setStep(1)}
+                  style={{
+                    padding: '0.75rem 1.25rem',
+                    borderRadius: 10,
+                    border: '1px solid var(--color-border)',
+                    background: 'var(--color-bg-card)',
+                    color: 'var(--color-text-secondary)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.375rem',
+                  }}
+                >
+                  <ArrowLeft size={16} />
+                  Atrás
+                </button>
+                <button
+                  onClick={() => setStep(3)}
+                  disabled={!step1Valid}
+                  style={{
+                    flex: 1,
+                    marginTop: 0,
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: 10,
+                    border: 'none',
+                    background: step1Valid ? 'var(--color-accent-secondary)' : 'var(--color-border)',
+                    color: '#fff',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    cursor: step1Valid ? 'pointer' : 'not-allowed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    transition: 'background 0.2s ease',
+                  }}
+                >
+                  Siguiente
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </motion.div>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <motion.div
-              key="step2"
+              key="step3"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -754,7 +847,7 @@ export default function CompletarPerfilPage() {
 
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem' }}>
                 <button
-                  onClick={() => setStep(1)}
+                  onClick={() => setStep(2)}
                   style={{
                     padding: '0.75rem 1.25rem',
                     borderRadius: 10,
@@ -774,7 +867,7 @@ export default function CompletarPerfilPage() {
                   Atrás
                 </button>
                 <button
-                  onClick={() => setStep(3)}
+                  onClick={() => setStep(4)}
                   disabled={!step2Valid}
                   style={{
                     flex: 1,
@@ -800,9 +893,9 @@ export default function CompletarPerfilPage() {
             </motion.div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <motion.div
-              key="step3"
+              key="step4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -896,7 +989,7 @@ export default function CompletarPerfilPage() {
 
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem' }}>
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => setStep(3)}
                   style={{
                     padding: '0.75rem 1.25rem',
                     borderRadius: 10,

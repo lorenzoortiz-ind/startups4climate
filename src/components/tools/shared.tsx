@@ -3,151 +3,105 @@
 import React, { useState } from 'react'
 import { ChevronDown, Save, CheckCircle2, FileText, Lightbulb, BookOpen } from 'lucide-react'
 
-/* ─── ToolSection: numbered, collapsible section with optional insight ─── */
+/* ─── ToolSection: 3-state flat carbon surface section ─── */
 
-export interface ToolSectionProps {
-  number: number
+type ToolSectionState = 'idle' | 'active' | 'done'
+
+interface ToolSectionProps {
   title: string
-  subtitle?: string
-  insight?: string          // Academic or strategic insight shown as inline tip
-  insightSource?: string    // e.g. "MIT Disciplined Entrepreneurship"
-  defaultOpen?: boolean
-  accentColor?: string
+  step?: number
+  number?: number               // legacy alias for step — kept for backward compat
+  subtitle?: string             // legacy prop — ignored in new design
+  insight?: string              // legacy prop — ignored in new design
+  insightSource?: string        // legacy prop — ignored in new design
+  defaultOpen?: boolean         // legacy prop — ignored in new design
   children: React.ReactNode
+  accentColor?: string          // legacy prop — kept for backward compat, overrides to 'active' state
+  state?: ToolSectionState
+  className?: string
+  style?: React.CSSProperties
 }
 
 export function ToolSection({
-  number,
   title,
-  subtitle,
-  insight,
-  insightSource,
-  defaultOpen = false,
-  accentColor = 'var(--color-accent-primary)',
+  step,
+  number,
   children,
+  accentColor,
+  state = 'idle',
+  className,
+  style,
 }: ToolSectionProps) {
-  const [open, setOpen] = useState(defaultOpen)
+  const resolvedStep = step ?? number
+  const resolvedState: ToolSectionState =
+    accentColor && state === 'idle' ? 'active' : state
+
+  const borderMap: Record<ToolSectionState, string> = {
+    idle:   '1px solid rgba(255,255,255,0.07)',
+    active: '1px solid rgba(218,78,36,0.50)',
+    done:   '1px solid rgba(29,78,216,0.40)',
+  }
+  const badgeBgMap: Record<ToolSectionState, string> = {
+    idle:   'rgba(255,255,255,0.07)',
+    active: 'rgba(218,78,36,0.18)',
+    done:   'rgba(29,78,216,0.18)',
+  }
+  const badgeColorMap: Record<ToolSectionState, string> = {
+    idle:   'rgba(255,255,255,0.45)',
+    active: '#DA4E24',
+    done:   '#3B82F6',
+  }
 
   return (
-    <div style={{
-      background: 'var(--color-bg-card)',
-      borderRadius: 16,
-      border: '1px solid var(--color-border)',
-      overflow: 'hidden',
-      boxShadow: 'var(--shadow-card)',
-    }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          padding: '1.125rem 1.5rem',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-        }}
-      >
-        {/* Step number badge */}
-        <div style={{
-          width: 36,
-          height: 36,
-          borderRadius: 10,
-          background: `${accentColor}10`,
-          border: `1px solid ${accentColor}22`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}>
+    <div
+      className={className}
+      style={{
+        background: '#111111',
+        borderRadius: 14,
+        border: borderMap[resolvedState],
+        padding: '1.5rem',
+        marginBottom: '1.25rem',
+        transition: 'border-color 0.2s ease',
+        ...style,
+      }}
+    >
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.625rem',
+        marginBottom: '1.25rem',
+      }}>
+        {resolvedStep !== undefined && (
           <span style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '0.8125rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 26,
+            height: 26,
+            borderRadius: 8,
+            background: badgeBgMap[resolvedState],
+            color: badgeColorMap[resolvedState],
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.6875rem',
             fontWeight: 700,
-            color: accentColor,
-          }}>
-            {number.toString().padStart(2, '0')}
-          </span>
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <span style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '0.9375rem',
-            fontWeight: 700,
-            color: 'var(--color-text-primary)',
-            display: 'block',
-          }}>
-            {title}
-          </span>
-          {subtitle && (
-            <span style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.75rem',
-              color: 'var(--color-text-muted)',
-              display: 'block',
-              marginTop: '0.125rem',
-            }}>
-              {subtitle}
-            </span>
-          )}
-        </div>
-
-        <ChevronDown
-          size={18}
-          color="var(--color-text-muted)"
-          style={{
-            transition: 'transform 0.2s',
-            transform: open ? 'rotate(180deg)' : 'rotate(0)',
+            letterSpacing: '-0.01em',
             flexShrink: 0,
-          }}
-        />
-      </button>
-
-      {open && (
-        <div style={{ padding: '0 1.5rem 1.5rem' }}>
-          {/* Insight panel (inline academic reference) */}
-          {insight && (
-            <div style={{
-              display: 'flex',
-              gap: '0.75rem',
-              padding: '0.875rem 1rem',
-              borderRadius: 10,
-              background: `${accentColor}06`,
-              border: `1px solid ${accentColor}15`,
-              marginBottom: '1.125rem',
-            }}>
-              <Lightbulb size={16} color={accentColor} style={{ flexShrink: 0, marginTop: 2 }} />
-              <div>
-                <p style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
-                  lineHeight: 1.6,
-                  color: 'var(--color-text-secondary)',
-                  margin: 0,
-                }}>
-                  {insight}
-                </p>
-                {insightSource && (
-                  <span style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.6875rem',
-                    color: 'var(--color-text-muted)',
-                    fontStyle: 'italic',
-                    marginTop: '0.25rem',
-                    display: 'block',
-                  }}>
-                    — {insightSource}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-          {children}
-        </div>
-      )}
+            transition: 'background 0.2s ease, color 0.2s ease',
+          }}>
+            {resolvedState === 'done' ? <CheckCircle2 size={13} /> : resolvedStep}
+          </span>
+        )}
+        <span style={{
+          fontFamily: 'var(--font-heading)',
+          fontSize: '0.9375rem',
+          fontWeight: 700,
+          color: resolvedState === 'idle' ? 'rgba(255,255,255,0.75)' : '#FFFFFF',
+          letterSpacing: '-0.02em',
+        }}>
+          {title}
+        </span>
+      </div>
+      {children}
     </div>
   )
 }

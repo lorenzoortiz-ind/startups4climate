@@ -19,7 +19,7 @@ export interface AppUser {
   org_id: string | null
   full_name: string
   startup_name: string | null
-  stage: string | null
+  stage?: 'ideacion' | 'pre-incubacion' | 'incubacion' | 'aceleracion' | 'escalamiento' | null
   diagnosticScore: number | null
   created_at: string
 }
@@ -56,8 +56,9 @@ interface AuthContextType {
   closeAuthModal: () => void
   authModalOpen: boolean
   authModalMode: 'login' | 'register'
-  updateUserStage: (stage: string, score: number) => void
+  updateUserStage: (stage: AppUser['stage'], score: number) => void
   enterDemoMode: (role: 'founder' | 'admin_org' | 'superadmin') => void
+  refreshUser: () => Promise<void>
 }
 
 /* ─── Demo user fixtures ─── */
@@ -73,7 +74,7 @@ const DEMO_FOUNDER_USER: AppUser = {
   org_id: null,
   full_name: 'Ana Quispe (Demo)',
   startup_name: 'EcoBio Perú',
-  stage: '3',
+  stage: 'ideacion',
   diagnosticScore: 84,
   created_at: new Date().toISOString(),
 }
@@ -985,7 +986,7 @@ function appUserToUser(appUser: AppUser): User {
     name: appUser.full_name,
     email: appUser.email,
     startup: appUser.startup_name || '',
-    stage: appUser.stage,
+    stage: appUser.stage ?? null,
     diagnosticScore: appUser.diagnosticScore,
     createdAt: appUser.created_at,
   }
@@ -1046,7 +1047,7 @@ async function loadProfile(userId: string): Promise<AppUser | null> {
       org_id: data.org_id || null,
       full_name: data.full_name || '',
       startup_name: data.startup_name || null,
-      stage: data.stage || null,
+      stage: (data.stage as AppUser['stage']) ?? null,
       diagnosticScore: data.diagnostic_score ?? null,
       created_at: data.created_at || new Date().toISOString(),
     }
@@ -1525,7 +1526,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateUserStage = useCallback(
-    (stage: string, score: number) => {
+    (stage: AppUser['stage'], score: number) => {
       if (!appUser) return
 
       setAppUser((prev) => prev ? { ...prev, stage, diagnosticScore: score } : prev)
@@ -1539,6 +1540,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [appUser]
   )
+
+  const refreshUser = useCallback(async () => {
+    if (!appUser) return
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id, full_name, email, role, org_id, startup_name, stage')
+      .eq('id', appUser.id)
+      .maybeSingle()
+    if (profile) {
+      setAppUser({
+        id: profile.id,
+        full_name: profile.full_name,
+        email: profile.email ?? appUser.email,
+        role: profile.role,
+        org_id: profile.org_id ?? null,
+        startup_name: profile.startup_name ?? undefined,
+        stage: (profile.stage as AppUser['stage']) ?? null,
+        diagnosticScore: appUser.diagnosticScore,
+        created_at: appUser.created_at,
+      })
+    }
+  }, [appUser])
 
   return (
     <AuthContext.Provider
@@ -1557,6 +1580,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authModalMode,
         updateUserStage,
         enterDemoMode,
+        refreshUser,
       }}
     >
       {children}

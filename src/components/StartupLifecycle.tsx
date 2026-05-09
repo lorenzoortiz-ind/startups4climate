@@ -35,6 +35,21 @@ import {
 
 const stages = [
   {
+    id: 'ideacion',
+    icon: Lightbulb,
+    number: '00',
+    title: 'Ideación',
+    focus: 'Descubre un problema real que vale la pena resolver, entiende a quién le duele y formula tu primera hipótesis de solución',
+    accent: 'green' as const,
+    tools: [
+      { name: 'Exploración de problemas', icon: Map, desc: 'Mapea fricciones e injusticias en un territorio que conoces bien.' },
+      { name: 'Selección del problema', icon: Target, desc: 'Evalúa cada problema con criterios de urgencia, mercado e impacto.' },
+      { name: 'Mapa de empatía', icon: UserCircle, desc: 'Describe cómo piensa, ve, dice y escucha la persona afectada.' },
+      { name: 'Guía de entrevista', icon: FileText, desc: 'Diseña preguntas que revelan la verdad sobre el problema.' },
+      { name: 'Idea inicial', icon: Lightbulb, desc: 'Hipótesis articulada de problema, cliente y solución con evidencia.' },
+    ],
+  },
+  {
     id: 'pre-incubacion',
     icon: FlaskConical,
     number: '01',
@@ -103,8 +118,10 @@ const stages = [
 export default function StartupLifecycle() {
   const [activeStage, setActiveStage] = useState(0)
   const stage = stages[activeStage]
-  const isEmber = stage.accent === 'ember'
-  const accentColor = isEmber ? '#F0721D' : '#5C9BFF'
+  const accentColor =
+    stage.accent === 'ember' ? '#F0721D'
+    : stage.accent === 'green' ? '#16A34A'
+    : '#5C9BFF'
 
   return (
     <section
@@ -174,8 +191,10 @@ export default function StartupLifecycle() {
         >
           {stages.map((s, i) => {
             const isActive = activeStage === i
-            const sIsEmber = s.accent === 'ember'
-            const sAccent = sIsEmber ? '#F0721D' : '#5C9BFF'
+            const sAccent =
+              s.accent === 'ember' ? '#F0721D'
+              : s.accent === 'green' ? '#16A34A'
+              : '#5C9BFF'
             return (
               <button
                 key={s.id}
@@ -187,8 +206,10 @@ export default function StartupLifecycle() {
                     ? `1px solid ${sAccent}55`
                     : '1px solid rgba(255,255,255,0.08)',
                   background: isActive
-                    ? sIsEmber
+                    ? s.accent === 'ember'
                       ? 'rgba(218,78,36,0.08)'
+                      : s.accent === 'green'
+                      ? 'rgba(22,163,74,0.08)'
                       : 'rgba(31,119,246,0.08)'
                     : 'rgba(14,14,14,0.6)',
                   color: 'var(--color-text-primary)',
@@ -266,8 +287,10 @@ export default function StartupLifecycle() {
                   width: 38,
                   height: 38,
                   borderRadius: 10,
-                  background: isEmber
+                  background: stage.accent === 'ember'
                     ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+                    : stage.accent === 'green'
+                    ? 'linear-gradient(135deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08))'
                     : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
                   border: `1px solid ${accentColor}55`,
                   display: 'flex',
@@ -323,8 +346,10 @@ export default function StartupLifecycle() {
                         width: 38,
                         height: 38,
                         borderRadius: 10,
-                        background: isEmber
+                        background: stage.accent === 'ember'
                           ? 'linear-gradient(135deg, rgba(218,78,36,0.18), rgba(255,137,24,0.10))'
+                          : stage.accent === 'green'
+                          ? 'linear-gradient(135deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08))'
                           : 'linear-gradient(135deg, rgba(31,119,246,0.18), rgba(31,119,246,0.08))',
                         border: `1px solid ${accentColor}40`,
                         display: 'flex',

@@ -25,18 +25,18 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 
 /* ─── URL helpers ─── */
-function getNewsLinkInfo(sourceUrl: string | null, title: string): { href: string; label: string } {
-  if (!sourceUrl) {
-    return { href: `https://news.google.com/search?q=${encodeURIComponent(title.slice(0, 100))}&hl=es-419`, label: 'Buscar noticia' }
-  }
+// Returns null href for AI-curated items (Google News search URLs) — titles are synthetic so searches fail
+function getNewsLinkInfo(sourceUrl: string | null): { href: string; label: string } | null {
+  if (!sourceUrl) return null
   const url = sourceUrl.startsWith('http') ? sourceUrl : `https://${sourceUrl}`
-  if (url.includes('news.google.com/search')) return { href: url, label: 'Buscar noticia' }
+  // AI-generated items use a Google News search URL as unique key — don't expose as a link
+  if (url.includes('news.google.com/search')) return null
   try {
     const parsed = new URL(url)
     if (parsed.pathname.length > 1) return { href: url, label: 'Leer artículo' }
-  } catch { /* fall through */ }
-  const q = encodeURIComponent(title.slice(0, 100))
-  return { href: `https://news.google.com/search?q=${q}&hl=es-419`, label: 'Buscar noticia' }
+    // Bare homepage — not useful as a specific article link
+    return null
+  } catch { return null }
 }
 
 /* ─── Types ─── */
@@ -164,7 +164,8 @@ function CategoryPill({ type }: { type: ContentType }) {
 
 function NewsCard({ item, index }: { item: NewsRow; index: number }) {
   const accent = TYPE_COLORS[item.content_type].color
-  const { href, label } = getNewsLinkInfo(item.source_url, item.title)
+  const linkInfo = getNewsLinkInfo(item.source_url)
+  const isAICurated = !linkInfo // no real URL = AI-generated content
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -205,25 +206,34 @@ function NewsCard({ item, index }: { item: NewsRow; index: number }) {
         </p>
       )}
 
-      {/* Footer: source + link */}
+      {/* Footer: source + link or AI badge */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4, gap: 8, flexWrap: 'wrap' }}>
         {item.source_name && (
           <span style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
             {item.source_name}
           </span>
         )}
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
-            color: accent, textDecoration: 'none',
-          }}
-        >
-          {label} <ExternalLink size={11} />
-        </a>
+        {linkInfo ? (
+          <a
+            href={linkInfo.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              fontFamily: 'var(--font-body)', fontSize: '0.75rem', fontWeight: 600,
+              color: accent, textDecoration: 'none',
+            }}
+          >
+            {linkInfo.label} <ExternalLink size={11} />
+          </a>
+        ) : isAICurated && (
+          <span style={{
+            fontFamily: 'var(--font-body)', fontSize: 'var(--text-2xs)', fontWeight: 600,
+            color: 'var(--color-text-muted)', opacity: 0.7,
+          }}>
+            ✦ Curado por IA
+          </span>
+        )}
       </div>
     </motion.div>
   )

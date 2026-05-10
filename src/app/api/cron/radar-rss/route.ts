@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-// Curated LATAM climate + startup ecosystem feeds
+// Curated LATAM + Global climate & startup ecosystem feeds
 const FEEDS: Array<{
   url: string
   source_name: string
@@ -13,76 +13,30 @@ const FEEDS: Array<{
   default_country: string | null
   default_type: 'news' | 'investment' | 'trend'
 }> = [
-  {
-    url: 'https://latamlist.com/feed/',
-    source_name: 'LatamList',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'news',
-  },
-  {
-    url: 'https://contxto.com/en/feed/',
-    source_name: 'Contxto',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'investment',
-  },
-  {
-    url: 'https://labsnews.com/en/feed/',
-    source_name: 'LABS News',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'news',
-  },
-  {
-    url: 'https://agfundernews.com/feed/',
-    source_name: 'AgFunder News',
-    default_vertical: 'agritech_foodtech',
-    default_country: null,
-    default_type: 'trend',
-  },
-  {
-    url: 'https://techcrunch.com/tag/latin-america/feed/',
-    source_name: 'TechCrunch LATAM',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'investment',
-  },
-  {
-    url: 'https://ecosistemastartup.com/feed/',
-    source_name: 'Ecosistema Startup',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'news',
-  },
-  {
-    url: 'https://cleantechnica.com/feed/',
-    source_name: 'CleanTechnica',
-    default_vertical: 'cleantech_climatech',
-    default_country: null,
-    default_type: 'trend',
-  },
-  {
-    url: 'https://www.pv-magazine-latam.com/feed/',
-    source_name: 'PV Magazine LATAM',
-    default_vertical: 'cleantech_climatech',
-    default_country: null,
-    default_type: 'news',
-  },
-  {
-    url: 'https://startupeable.com/feed/',
-    source_name: 'Startupeable',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'news',
-  },
-  {
-    url: 'https://news.crunchbase.com/feed/',
-    source_name: 'Crunchbase News',
-    default_vertical: null,
-    default_country: null,
-    default_type: 'investment',
-  },
+  // ── LATAM ecosystem ──
+  { url: 'https://latamlist.com/feed/',              source_name: 'LatamList',           default_vertical: null,                  default_country: null, default_type: 'news' },
+  { url: 'https://contxto.com/en/feed/',             source_name: 'Contxto',             default_vertical: null,                  default_country: null, default_type: 'investment' },
+  { url: 'https://labsnews.com/en/feed/',            source_name: 'LABS News',           default_vertical: null,                  default_country: null, default_type: 'news' },
+  { url: 'https://techcrunch.com/tag/latin-america/feed/', source_name: 'TechCrunch LATAM', default_vertical: null,              default_country: null, default_type: 'investment' },
+  { url: 'https://www.pv-magazine-latam.com/feed/',  source_name: 'PV Magazine LATAM',   default_vertical: 'cleantech_climatech', default_country: null, default_type: 'news' },
+  { url: 'https://startupeable.com/feed/',           source_name: 'Startupeable',        default_vertical: null,                  default_country: null, default_type: 'news' },
+  { url: 'https://agfundernews.com/feed/',           source_name: 'AgFunder News',       default_vertical: 'agritech_foodtech',   default_country: null, default_type: 'trend' },
+  { url: 'https://es.mongabay.com/feed/',            source_name: 'Mongabay LATAM',      default_vertical: 'cleantech_climatech', default_country: null, default_type: 'news' },
+  // ── Global — USA ──
+  { url: 'https://electrek.co/feed/',                source_name: 'Electrek',            default_vertical: 'cleantech_climatech', default_country: 'US', default_type: 'trend' },
+  { url: 'https://cleantechnica.com/feed/',          source_name: 'CleanTechnica',       default_vertical: 'cleantech_climatech', default_country: 'US', default_type: 'trend' },
+  { url: 'https://insideclimatenews.org/feed/',      source_name: 'Inside Climate News', default_vertical: 'cleantech_climatech', default_country: 'US', default_type: 'news' },
+  { url: 'https://techcrunch.com/tag/climate/feed/', source_name: 'TechCrunch Climate',  default_vertical: 'cleantech_climatech', default_country: 'US', default_type: 'trend' },
+  { url: 'https://www.canarymedia.com/rss',          source_name: 'Canary Media',        default_vertical: 'cleantech_climatech', default_country: 'US', default_type: 'trend' },
+  { url: 'https://news.crunchbase.com/feed/',        source_name: 'Crunchbase News',     default_vertical: null,                  default_country: 'US', default_type: 'investment' },
+  // ── Global — UK / Europa ──
+  { url: 'https://www.carbonbrief.org/feed/',        source_name: 'Carbon Brief',        default_vertical: 'cleantech_climatech', default_country: 'GB', default_type: 'news' },
+  { url: 'https://www.climatechangenews.com/feed/',  source_name: 'Climate Home News',   default_vertical: 'cleantech_climatech', default_country: 'GB', default_type: 'news' },
+  { url: 'https://www.theguardian.com/environment/rss', source_name: 'The Guardian Environment', default_vertical: 'cleantech_climatech', default_country: 'GB', default_type: 'news' },
+  { url: 'https://eu-startups.com/feed/',            source_name: 'EU Startups',         default_vertical: null,                  default_country: 'DE', default_type: 'investment' },
+  // ── Global — Asia ──
+  { url: 'https://www.techinasia.com/feed',          source_name: 'Tech in Asia',        default_vertical: null,                  default_country: 'SG', default_type: 'news' },
+  { url: 'https://kr.asia/feed/',                    source_name: 'KrASIA',              default_vertical: null,                  default_country: 'SG', default_type: 'investment' },
 ]
 
 // Vertical keywords for auto-tagging
@@ -96,12 +50,30 @@ const VERTICAL_KEYWORDS: Record<string, string[]> = {
 }
 
 const COUNTRY_KEYWORDS: Record<string, string[]> = {
+  // LATAM
   PE: ['peru', 'perú', 'lima'],
   CL: ['chile', 'santiago'],
   CO: ['colombia', 'bogotá', 'bogota', 'medellín', 'medellin'],
   MX: ['mexico', 'méxico'],
   AR: ['argentina', 'buenos aires'],
   BR: ['brazil', 'brasil', 'são paulo', 'sao paulo'],
+  // Global — Norte América
+  US: ['united states', 'u.s.', 'usa', 'silicon valley', 'new york', 'california', 'washington d.c.', 'boston', 'chicago'],
+  CA: ['canada', 'toronto', 'vancouver', 'montreal'],
+  // Global — Europa
+  GB: ['united kingdom', 'britain', 'u.k.', 'london', 'england', 'scotland'],
+  DE: ['germany', 'deutschland', 'berlin', 'munich', 'münchen', 'hamburg'],
+  FR: ['france', 'paris', 'lyon'],
+  ES: ['spain', 'españa', 'madrid', 'barcelona'],
+  NL: ['netherlands', 'amsterdam'],
+  SE: ['sweden', 'stockholm'],
+  // Global — Asia-Pacífico
+  CN: ['china', 'beijing', 'shanghai', 'shenzhen', 'guangzhou'],
+  IN: ['india', 'bangalore', 'mumbai', 'delhi', 'bengaluru'],
+  JP: ['japan', 'tokyo', 'osaka'],
+  KR: ['south korea', 'korea', 'seoul'],
+  SG: ['singapore'],
+  AU: ['australia', 'sydney', 'melbourne'],
 }
 
 function decodeHtml(s: string): string {
@@ -262,20 +234,32 @@ export async function GET(request: NextRequest) {
     try {
       // Note: source_url for AI items is set server-side as a Google News search URL
       // (unique per title, always working, finds the actual article)
-      const aiPrompt = `Eres un curador de noticias del ecosistema de startups de impacto en Latinoamérica.
-Genera exactamente 8 noticias recientes y relevantes del ecosistema LATAM de startups de clima, agritech, fintech, healthtech y emprendimiento de impacto.
+      const aiPrompt = `Eres un curador de noticias globales de clima, cleantech y startups de impacto.
+Genera exactamente 12 noticias (2025-2026). DISTRIBUCIÓN OBLIGATORIA:
+
+BLOQUE LATAM (7 noticias):
+- 2 energía/cleantech en LATAM
+- 2 agritech/food en LATAM
+- 1 movilidad sostenible en LATAM
+- 2 inversión/fondos de impacto en LATAM
+
+BLOQUE GLOBAL (5 noticias):
+- 2 de USA (US): cleantech, VC o política climática
+- 2 de Europa (GB/DE/FR/ES/NL/SE): clima o startups de impacto
+- 1 de Asia (CN/IN/JP/KR/SG/AU): energía renovable o agritech
+
 Responde SOLO con un array JSON válido, sin texto adicional:
 [
   {
-    "title": "Título de la noticia en español (máx 120 caracteres). Sé específico: empresa, monto, país.",
-    "summary": "Resumen en español de 80-120 palabras. Datos concretos: montos, porcentajes, países, nombres. Sin clichés.",
-    "source_name": "Nombre del medio real (e.g. Contxto, LatamList, Bloomberg Línea, Reuters, Gestión)",
+    "title": "Título en español (máx 120 caracteres). Específico: empresa, monto, país.",
+    "summary": "80-120 palabras. Datos concretos: montos, porcentajes, países, nombres.",
+    "source_name": "Medio real: Reuters, Bloomberg, TechCrunch, Guardian, Carbon Brief, Contxto, AgFunder, Nikkei Asia",
     "content_type": "news|investment|trend|regulation|event|report",
-    "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|edtech|logistics_mobility|other",
-    "country": "PE|CL|CO|MX|AR|BR o null si es LATAM regional"
+    "vertical": "cleantech_climatech|agritech_foodtech|fintech|healthtech|logistics_mobility|other",
+    "country": "Código ISO 2 letras (PE|CL|CO|MX|AR|BR|US|GB|DE|FR|CN|IN|JP|KR|SG|AU|CA|ES|NL|SE|null para LATAM regional)"
   }
 ]
-NO incluyas campo source_url. Enfócate en: rondas de inversión, regulación ambiental, tendencias de mercado, fondos de impacto. Usa datos realistas de 2025-2026.`
+NO incluyas campo source_url. Usa datos realistas de 2025-2026.`
 
       const aiRes = await fetch(
         'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',

@@ -22,6 +22,7 @@ export interface AppUser {
   stage?: 'ideacion' | 'pre-incubacion' | 'incubacion' | 'aceleracion' | 'escalamiento' | null
   diagnosticScore: number | null
   created_at: string
+  gender?: 'masculino' | 'femenino' | 'otro' | 'prefiero_no_decir' | null
 }
 
 /**
@@ -51,7 +52,7 @@ interface AuthContextType {
     startup: string
   ) => Promise<{ error?: string; role?: string }>
   logout: () => Promise<void>
-  updateProfile: (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => Promise<{ error?: string }>
+  updateProfile: (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore' | 'gender'>>) => Promise<{ error?: string }>
   openAuthModal: (mode?: 'login' | 'register') => void
   closeAuthModal: () => void
   authModalOpen: boolean
@@ -1028,7 +1029,7 @@ async function loadProfile(userId: string): Promise<AppUser | null> {
     const result = await Promise.race([
       supabase
         .from('profiles')
-        .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score, created_at')
+        .select('id, email, full_name, role, org_id, startup_name, stage, diagnostic_score, created_at, gender')
         .eq('id', userId)
         .maybeSingle(),
       new Promise<{ data: null; error: { message: string } }>((resolve) =>
@@ -1050,6 +1051,7 @@ async function loadProfile(userId: string): Promise<AppUser | null> {
       stage: (data.stage as AppUser['stage']) ?? null,
       diagnosticScore: data.diagnostic_score ?? null,
       created_at: data.created_at || new Date().toISOString(),
+      gender: (data.gender as AppUser['gender']) ?? null,
     }
   } catch {
     // Network or unexpected errors — caller should use fallback
@@ -1492,7 +1494,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [appUser])
 
   const updateProfile = useCallback(
-    async (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore'>>) => {
+    async (updates: Partial<Pick<AppUser, 'full_name' | 'startup_name' | 'stage' | 'diagnosticScore' | 'gender'>>) => {
       if (!appUser) return { error: 'No hay sesión activa.' }
 
       const dbUpdates: Record<string, unknown> = {}
@@ -1500,6 +1502,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (updates.startup_name !== undefined) dbUpdates.startup_name = updates.startup_name
       if (updates.stage !== undefined) dbUpdates.stage = updates.stage
       if (updates.diagnosticScore !== undefined) dbUpdates.diagnostic_score = updates.diagnosticScore
+      if (updates.gender !== undefined) dbUpdates.gender = updates.gender
 
       const { error } = await supabase
         .from('profiles')
@@ -1545,7 +1548,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!appUser) return
     const { data: profile } = await supabase
       .from('profiles')
-      .select('id, full_name, email, role, org_id, startup_name, stage')
+      .select('id, full_name, email, role, org_id, startup_name, stage, gender')
       .eq('id', appUser.id)
       .maybeSingle()
     if (profile) {

@@ -197,6 +197,7 @@ export default function PerfilPage() {
   const { user, appUser, updateProfile } = useAuth()
 
   const [nombre, setNombre] = useState('')
+  const [gender, setGender] = useState<'masculino' | 'femenino' | 'otro' | 'prefiero_no_decir' | ''>('')
   const [startupName, setStartupName] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [vertical, setVertical] = useState('')
@@ -220,6 +221,7 @@ export default function PerfilPage() {
       setNombre(user.name || '')
       setStartupName(user.startup || '')
     }
+    if (appUser?.gender) setGender(appUser.gender)
 
     async function loadStartupData() {
       if (!appUser) return
@@ -334,7 +336,7 @@ export default function PerfilPage() {
     if (!user) return
     setSaving(true)
 
-    await updateProfile({ full_name: nombre, startup_name: startupName })
+    await updateProfile({ full_name: nombre, startup_name: startupName, gender: gender || null })
 
     const extraData = { role, linkedin, descripcion, vertical, country, phone, website, teamSize, radarNewsletter, oppsNewsletter }
     const extraKey = appUser ? `s4c_${appUser.id}_profile_extra` : 's4c_profile_extra'
@@ -660,6 +662,19 @@ export default function PerfilPage() {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Tu nombre completo"
+              />
+
+              <TFSelect
+                label="Género"
+                value={gender}
+                onChange={(e) => setGender(e.target.value as typeof gender)}
+                options={[
+                  { value: 'masculino',        label: 'Masculino' },
+                  { value: 'femenino',         label: 'Femenino' },
+                  { value: 'otro',             label: 'Otro' },
+                  { value: 'prefiero_no_decir',label: 'Prefiero no decir' },
+                ]}
+                placeholder="Selecciona tu género"
               />
 
               <TFInput

@@ -449,6 +449,7 @@ export default function ToolsDashboard() {
   if (!user) return null
 
   const firstName = user.name?.split(' ')[0] || user.name
+  const greeting = appUser?.gender === 'femenino' ? 'Bienvenida' : 'Bienvenido'
   const startupName = user.startup || 'Tu startup'
   const currentStageMeta = STAGE_META[userStageNum as 0 | 1 | 2 | 3 | 4]
   const CurrentStageIcon = STAGE_ICONS[userStageNum as 0 | 1 | 2 | 3 | 4]
@@ -564,7 +565,7 @@ export default function ToolsDashboard() {
                   minWidth: 0,
                 }}
               >
-                Bienvenida, {firstName}
+                {greeting}, {firstName}
                 <span
                   style={{
                     color: 'var(--color-text-muted)',

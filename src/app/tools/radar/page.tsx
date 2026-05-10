@@ -25,17 +25,19 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 
 /* ─── URL helpers ─── */
-// Returns null href for AI-curated items (Google News search URLs) — titles are synthetic so searches fail
-function getNewsLinkInfo(sourceUrl: string | null): { href: string; label: string } | null {
+// Returns null for AI-curated items (Google News search URL = synthetic title, search fails)
+// RSS items with real article paths → "Leer artículo"
+// RSS items with only a homepage → "Buscar noticia" via Google News search
+function getNewsLinkInfo(sourceUrl: string | null, title: string): { href: string; label: string } | null {
   if (!sourceUrl) return null
   const url = sourceUrl.startsWith('http') ? sourceUrl : `https://${sourceUrl}`
-  // AI-generated items use a Google News search URL as unique key — don't expose as a link
-  if (url.includes('news.google.com/search')) return null
+  if (url.includes('news.google.com/search')) return null // AI-generated — no link
   try {
     const parsed = new URL(url)
     if (parsed.pathname.length > 1) return { href: url, label: 'Leer artículo' }
-    // Bare homepage — not useful as a specific article link
-    return null
+    // Bare homepage — fall back to Google News search so the user can still find the story
+    const q = encodeURIComponent(title.slice(0, 100))
+    return { href: `https://news.google.com/search?q=${q}&hl=es-419`, label: 'Buscar noticia' }
   } catch { return null }
 }
 
@@ -164,7 +166,7 @@ function CategoryPill({ type }: { type: ContentType }) {
 
 function NewsCard({ item, index }: { item: NewsRow; index: number }) {
   const accent = TYPE_COLORS[item.content_type].color
-  const linkInfo = getNewsLinkInfo(item.source_url)
+  const linkInfo = getNewsLinkInfo(item.source_url, item.title)
   const isAICurated = !linkInfo // no real URL = AI-generated content
   return (
     <motion.div

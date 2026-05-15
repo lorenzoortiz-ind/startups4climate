@@ -34,6 +34,7 @@ import { ContextPanel } from '@/components/tools/ContextPanel'
 // Dynamic imports — only loads the tool component the user navigates to (bundle-dynamic-imports)
 // Note: New tools will show "en construcción" until their components are created
 const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolComponentProps>> = {
+  'founder-profile': dynamic(() => import('./FounderProfile')),
   'problem-exploration': dynamic(() => import('./ProblemExploration')),
   'problem-selection': dynamic(() => import('./ProblemSelection')),
   'empathy-map': dynamic(() => import('./EmpathyMap')),

@@ -27,6 +27,7 @@ export interface ToolDef {
   relatedProduct?: string
   stepNumber: number
   transversal?: boolean
+  featured?: boolean   // Herramienta destacada — se renderiza antes del grid con diseño especial
 }
 
 export const STAGE_META = {
@@ -96,7 +97,30 @@ const stageProps = (stage: 0 | 1 | 2 | 3 | 4) => ({
 })
 
 export const TOOLS: ToolDef[] = [
-  // ── Stage 0: Ideación (5 herramientas) ──────────────────────────
+  // ── Stage 0: Ideación (6 herramientas) ──────────────────────────
+  {
+    id: 'founder-profile',
+    name: 'Perfil del Founder',
+    shortName: 'Perfil del Founder',
+    description:
+      'Define quién eres como founder, por qué estás mejor posicionado que nadie para resolver este problema, y cómo tus fortalezas se alinean con el desafío que elegiste.',
+    guidingQuestion: '¿Por qué TÚ eres la persona correcta para resolver este problema en este momento?',
+    preambulo:
+      'La mayoría de los founders invierten todo su tiempo en el problema y olvidan una pregunta igualmente crítica: ¿por qué yo? Los mejores inversores del mundo (Y Combinator, First Round, Sequoia) evalúan al equipo antes que la idea, porque las ideas cambian pero las personas permanecen. Esta herramienta te ayuda a articular tu ventaja como founder — no para convencer a otros, sino para entenderte a ti mismo.',
+    ...stageProps(0),
+    category: 'Equipo',
+    estimatedTime: '40 min',
+    outputs: [
+      'Perfil completo de hasta 2 founders con roles y background',
+      'Founder-Problem Fit: tu historia personal con el problema',
+      'Ikigai del founder: intersección de pasión, habilidades y mercado',
+      'Ventaja injusta documentada',
+      'Respuesta a ¿por qué nosotros? y ¿por qué ahora?',
+    ],
+    feedsInto: ['initial-idea', 'passion-purpose'],
+    stepNumber: -1,
+    featured: true,
+  },
   {
     id: 'problem-exploration',
     name: 'Exploración de Problemas',

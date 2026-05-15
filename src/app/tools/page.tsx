@@ -43,6 +43,7 @@ import {
   type ToolDef,
   type ToolCategory,
 } from '@/lib/tools-data'
+import { Users } from 'lucide-react'
 import { getProgress, hydrateProgressFromSupabase, type ProgressMap } from '@/lib/progress'
 import { generateGlobalReport as generateGlobalReportUtil } from '@/lib/global-report'
 
@@ -1347,6 +1348,104 @@ export default function ToolsDashboard() {
               />
             </div>
 
+            {/* Featured tool — Perfil del Founder (stage 0 only) */}
+            {stageNum === 0 && (() => {
+              const featuredTool = TOOLS_BY_STAGE[0].find(t => t.featured)
+              if (!featuredTool) return null
+              const isDone = completedIds.has(featuredTool.id)
+              return (
+                <Link href={`/tools/${featuredTool.id}`} style={{ textDecoration: 'none', display: 'block', marginBottom: '1.25rem', opacity: isLocked ? 0.5 : 1, pointerEvents: isLocked ? 'none' : 'auto' }}>
+                  <div style={{
+                    padding: '1.25rem 1.5rem',
+                    borderRadius: 14,
+                    border: isDone ? '1px solid rgba(22,163,74,0.4)' : '1px solid rgba(22,163,74,0.3)',
+                    background: isDone
+                      ? 'linear-gradient(135deg, rgba(22,163,74,0.1), rgba(22,163,74,0.05))'
+                      : 'linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.03))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                    cursor: 'pointer',
+                  }}>
+                    {/* glow orb */}
+                    <div style={{
+                      position: 'absolute', top: -40, right: -40, width: 120, height: 120,
+                      borderRadius: '50%', background: 'radial-gradient(circle, rgba(22,163,74,0.15), transparent)',
+                      pointerEvents: 'none',
+                    }} />
+                    <div style={{
+                      width: 46,
+                      height: 46,
+                      borderRadius: 12,
+                      background: isDone ? 'rgba(22,163,74,0.2)' : 'rgba(22,163,74,0.12)',
+                      border: '1px solid rgba(22,163,74,0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}>
+                      <Users size={20} color="#16A34A" strokeWidth={2} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          color: '#16A34A',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.1em',
+                        }}>
+                          Destacada · Empieza aquí
+                        </span>
+                        {isDone && (
+                          <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                            padding: '1px 7px', borderRadius: 20,
+                            background: 'rgba(22,163,74,0.12)',
+                            fontFamily: 'var(--font-body)', fontSize: '0.7rem', fontWeight: 700, color: '#16A34A',
+                          }}>
+                            <CheckCircle2 size={9} /> Completada
+                          </span>
+                        )}
+                      </div>
+                      <div style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1rem',
+                        fontWeight: 700,
+                        color: 'var(--color-ink)',
+                        letterSpacing: '-0.02em',
+                        marginBottom: '0.25rem',
+                      }}>
+                        {featuredTool.name}
+                      </div>
+                      <p style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.8125rem',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: 1.5,
+                        margin: 0,
+                      }}>
+                        {featuredTool.description}
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.375rem', flexShrink: 0 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <Clock size={11} color="var(--color-text-muted)" />
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                          {featuredTool.estimatedTime}
+                        </span>
+                      </span>
+                      <ArrowRight size={16} color="#16A34A" />
+                    </div>
+                  </div>
+                </Link>
+              )
+            })()}
+
             {/* Tools grid */}
             <div
               style={{
@@ -1361,8 +1460,8 @@ export default function ToolsDashboard() {
                   gap: '0.875rem',
                 }}
               >
-                {stageTools.length > 0 ? (
-                  stageTools.map((tool, i) => (
+                {stageTools.filter(t => !t.featured).length > 0 ? (
+                  stageTools.filter(t => !t.featured).map((tool, i) => (
                     <ToolCard
                       key={tool.id}
                       tool={tool}
